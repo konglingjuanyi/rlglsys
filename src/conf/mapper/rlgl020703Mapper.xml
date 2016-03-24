@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020703Mapper">
+	<!-- 获得课程列表 -->
+	<select id="getCourseList" resultType="com.rlglsys.entity.Mtb62Credit">
+        SELECT 
+        	e.course_id,
+        	t.area_id,
+        	e.course_name,
+        	e.begin_date,
+        	e.end_date,
+        	t.credits,
+        	(select adm_name from m_tb02_adm where adm_type_cd='104' and adm_num=e.course_catagory) as credit_category
+        FROM m_tb63_courseware e 
+		left join m_tb62_credit t
+        on e.COURSE_ID =t.COURSE_ID
+        where 1=1
+        <if test="credit.class_id != ''">
+        	and COURSE_CATAGORY = #{credit.class_id}
+        </if>
+       <if test="credit.pageCount != 0 and credit.pageCount != null">
+       LIMIT #{credit.pageNo},#{credit.pageCount}
+       </if>
+    </select>
+	<!-- 获得此课程对应的学分是否存在 -->
+	<select id="getCreditCount" resultType="int">
+        SELECT count(*)
+        FROM m_tb62_credit
+        WHERE course_id = #{credit.course_id}
+    </select>
+    <!-- 插入学分 -->
+    <insert id="insertCredit">
+       INSERT INTO m_tb62_credit
+			(course_id,
+			credits,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+			)
+        VALUES (#{credit.course_id},
+				#{credit.credits},
+				#{credit.ex_key},
+				#{credit.expend_01},
+				#{credit.expend_02},
+				#{credit.expend_03},
+				#{credit.expend_04},
+				#{credit.expend_05},
+				#{credit.login_user_id},
+				#{credit.login_date},
+				#{credit.update_user_id},
+				#{credit.update_date}
+			   )
+    </insert>
+    <!-- 更新学分 -->
+    <insert id="updateCredit">
+       UPDATE 
+       	m_tb62_credit 
+       SET 
+       	credits=#{credit.credits}
+       WHERE 
+       	course_id = #{credit.course_id}
+    </insert>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 备案项目申报 -->
+<struts>
+    <package name="rlgl020402" extends="rlgl" namespace="/">
+        <!-- 备案项目申报一览页面  -->
+        <action name="rlgl020402Init"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402ListInitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020431.jsp</result>
+        </action>
+        <!-- 新建备案项目申报  -->
+        <action name="rlgl020402Add"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402AddAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020402.jsp</result>
+        </action>
+        <action name="rlgl020402Confirm"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402ConfirmAction"
+            method="execute">
+            <!-- <result name="init">/WEB-INF/jsp/rlgl020402.jsp</result> -->
+            <result name="success" type="redirectAction">
+				<param name="actionName">rlgl020402Init</param>
+	    	</result>
+	    	<result name="error">/WEB-INF/jsp/rlgl020431.jsp</result>
+        </action>
+        <!-- 查询备案项目 -->
+		<action name="rlgl020402Search"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl020431.jsp</result>
+		</action>
+		<action name="rlgl020402RedirectView"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402RedirectAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020402View</result>
+		</action>
+		<action name="rlgl020402View"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402ViewAction" method="execute">
+			<result name="rlgl020432">/WEB-INF/jsp/rlgl020432.jsp</result>
+		</action>
+		<action name="rlgl020402Back"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402BackAction" method="execute">
+			<result name="rlgl020431" type="redirectAction">rlgl020402Init</result>
+		</action>
+		<action name="rlgl020402RedirectEdit"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402RedirectEditAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020402Edit</result>
+		</action>
+		<action name="rlgl020402Edit"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402EditAction" method="execute">
+			<result name="rlgl020433">/WEB-INF/jsp/rlgl020433.jsp</result>
+		</action>
+		<action name="rlgl020402Update"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402UpdateAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020402RedirectReturn</result>
+		</action>
+		<action name="rlgl020402RedirectReturn"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402RedirectReturnAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020402Init</result>
+		</action>
+		<action name="rlgl020402UpdateBack"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020402UpdateBackAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020402Init</result>
+		</action>
+    </package>
+</struts>
+

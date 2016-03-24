@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010601Mapper">
+<resultMap type="com.rlglsys.bean.Rlgl010601Bean" id="infoList">
+      <result property="unit_no" column="unit_no"/>
+      <result property="name" column="name"/>
+      <result property="id_number" column="id_number"/>
+      <result property="department_value" column="department_value"/>
+      <result property="work_message" column="work_message"/>
+      <result property="check_message" column="check_message"/>
+  </resultMap>
+    <!-- 待办事项一览查询SQL -->
+    <select id="getTodoInfo" parameterType="String" resultMap="infoList">
+        SELECT 
+           tb12.PERSONNEL_ID as id_number,
+           tb12.PERSONNEL_NM as name,
+           tb01.UNIT_NO as unit_no,
+           tb01.SECTION_ID as department_value           
+        FROM 
+            m_tb01_user tb01,
+            m_tb12_personnel tb12
+        WHERE 
+            tb01.DEL_KBN = '0'
+            and tb12.DEL_KBN = '0'
+            and tb01.PERSONNEL_ID = tb12.PERSONNEL_ID
+            and tb01.UNIT_NO = #{unit_no}
+            <!-- 不包括游离人员 -->
+            and PERSONNEL_STATUS != '006'
+            <!-- 不包括退休人员 -->
+            and RETIRE_FLAG != '1'
+
+    </select>
+    <!-- 查询M_TB11表中的主键信息  身份证号-->
+     <select id="getIdNumber" resultType="String">
+     select ID_NUMBER as personnel_Id,ANNUAL_STATEMENT as year 
+     from  M_TB11_AnnualStatement
+     where  ID_NUMBER = #{id_number}
+       AND  ANNUAL_STATEMENT =#{year}
+     </select>
+     <!-- 查询M_TB11表中的主键信息  考核年度-->
+    <select id="getIdAnnualstatement" resultType="String">
+     select ANNUAL_STATEMENT as year 
+     from  M_TB11_AnnualStatement
+     where  ID_NUMBER = #{id_number}
+       AND  ANNUAL_STATEMENT =#{year}
+     </select>
+     <!-- 提交处理 -->
+    <update id="updateUnit" parameterType="AnnualStatement">
+          Update M_TB11_AnnualStatement
+          Set 
+             NAME = #{todoInfo.name},
+             ID_NUMBER = #{todoInfo.id_number},
+             DEPARTMENT_NAME = #{todoInfo.department_name},  
+             CHECK_MESSAGE = #{todoInfo.check_message}
+          WHERE
+            DEL_KBN = '0'
+            And ID_NUMBER =#{todoInfo.id_number}	
+            
+    </update>
+    <update id="updateMtb11" parameterType="com.rlglsys.bean.Rlgl010601Bean">
+       Update M_TB11_AnnualStatement
+          SET
+            ANNUAL_STATEMENT =#{rlgl010601Bean.annual_statement},
+            UNIT_NM = #{rlgl010601Bean.unit_nm},
+            UNIT_NO = #{rlgl010601Bean.unit_no},
+            NAME = #{rlgl010601Bean.name},
+            DEPARTMENT_VALUE = #{rlgl010601Bean.department_value},
+            DEPARTMENT_NAME = #{rlgl010601Bean.department_name}, 
+            CHECK_MESSAGE = #{rlgl010601Bean.check_message},
+            EX_KEY = '1',
+            DEL_KBN = '0',
+            LOGIN_USER_ID = #{rlgl010601Bean.login_user_id},
+            LOGIN_DATE = #{rlgl010601Bean.login_date},
+            UPDATE_USER_ID =#{rlgl010601Bean.login_user_id},
+            UPDATE_DATE =#{rlgl010601Bean.login_date}
+                 
+        WHERE ID_NUMBER =  #{rlgl010601Bean.id_number}
+              AND ANNUAL_STATEMENT =#{rlgl010601Bean.annual_statement}
+   </update>    
+   <insert id="insertUnit" parameterType="com.rlglsys.bean.Rlgl010601Bean">
+        INSERT INTO  m_tb11_annualstatement
+        (
+            ANNUAL_STATEMENT,
+            UNIT_NM,
+            UNIT_NO,
+            NAME,
+            ID_NUMBER,
+            DEPARTMENT_VALUE,
+            DEPARTMENT_NAME,
+            CHECK_MESSAGE,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{rlgl010601Bean.annual_statement},
+            #{rlgl010601Bean.unit_nm},
+            #{rlgl010601Bean.unit_no},
+            #{rlgl010601Bean.name},
+            #{rlgl010601Bean.id_number},
+            #{rlgl010601Bean.department_value},
+            #{rlgl010601Bean.department_name},
+            #{rlgl010601Bean.check_message},
+            '1',
+            '0',
+            #{rlgl010601Bean.login_user_id},
+            #{rlgl010601Bean.login_date},
+            #{rlgl010601Bean.login_user_id},
+            #{rlgl010601Bean.login_date}
+        )
+    </insert>
+    <!--根据提交的年度查询审核表  -->
+    <select id="getMtb11InfoList" parameterType="String" resultType="com.rlglsys.entity.Mtb11AnnualStatement">
+       SELECT * FROM m_tb11_annualstatement 
+       WHERE
+        DEL_KBN = '0'
+           <if test="year_submit !=''">
+            AND ANNUAL_STATEMENT = #{year_submit}
+           </if>
+           <if test="unit_no !=''">
+            AND  UNIT_NO = #{unit_no}
+           </if>
+    </select>
+    <!--得到符合提交年度和单位编码的数据条数  -->
+    <select id="getKaoHeInfoListCountByYear" parameterType="String" resultType="int">
+        SELECT count(*) 
+        FROM  m_tb11_annualstatement 
+        WHERE 
+            DEL_KBN = '0'
+           <if test="year_submit !=''">
+            AND ANNUAL_STATEMENT = #{year_submit}
+           </if>
+           <if test="unitno !=''">
+            AND  UNIT_NO = #{unitno}
+           </if>
+     </select>
+    
+    
+    <!-- 根据考核年度得到考核list -->
+     <select id="getKaoHeInfoListByYear" parameterType="com.rlglsys.bean.Rlgl010601Bean" resultType="com.rlglsys.bean.Rlgl010601Bean">
+	 SELECT DISTINCT(M2.SECTION_ID) as DEPARTMENT_VALUE,
+		M3.SECTION_NAME as DEPARTMENT_NAME,
+		M1.UNIT_NM, M1.UNIT_NO, M1.NAME, M1.ID_NUMBER,
+		M1.CHECK_MESSAGE,M1.ANNUAL_STATEMENT
+	FROM m_tb11_annualstatement M1
+	LEFT JOIN m_tb01_user M2 
+	LEFT JOIN m_tb22_hospital_section M3 ON
+		M2.SECTION_ID = M3.SECTION_ID
+	AND M3.UNIT_NO = #{rlgl010601Bean.unit_no}
+	AND M3.DEL_KBN = '0'
+	ON
+	M1.ID_NUMBER = M2.PERSONNEL_ID
+	AND M2.DEL_KBN = '0'
+	WHERE M1.DEL_KBN = '0' 
+		AND M1.ANNUAL_STATEMENT = #{rlgl010601Bean.annual_statement} 
+		AND M1.UNIT_NO = #{rlgl010601Bean.unit_no}
+     </select>
+     
+     
+     
+     
+     <!-- 根据考核年度，单位名称，身份证号得到考核结果list，年度考核查询调用 -->
+     <select id="getAssessResultList" parameterType="com.rlglsys.bean.Rlgl010601Bean"  resultType="com.rlglsys.bean.Rlgl010601Bean">
+        SELECT * 
+        FROM  m_tb11_annualstatement 
+        WHERE  DEL_KBN = '0'
+         <if test="rlgl010601Bean.annual_statement !=''">
+            AND ANNUAL_STATEMENT = #{rlgl010601Bean.annual_statement}
+           </if>
+           <if test="rlgl010601Bean.unit_no !=''">
+            AND  UNIT_NO = #{rlgl010601Bean.unit_no}
+           </if>
+           <if test="rlgl010601Bean.id_number !=''">
+            AND  ID_NUMBER = #{rlgl010601Bean.id_number}
+           </if>
+            <if test="rlgl010601Bean.pageCount != null and  rlgl010601Bean.pageCount != 0">
+               LIMIT #{rlgl010601Bean.pageNo},#{rlgl010601Bean.pageCount}
+           </if>
+     </select>
+     <!-- 根据用户单位编码，考核年度，身份证号码，查询符合条件的数据条数 -->
+     <select id="getAssessResultCount" parameterType="com.rlglsys.bean.Rlgl010601Bean" resultType="int">
+        select count(*) 
+        from m_tb11_annualstatement
+        where 
+            DEL_KBN = '0'
+           <if test="rlgl010601Bean.annual_statement !=''">
+            AND ANNUAL_STATEMENT = #{rlgl010601Bean.annual_statement}
+           </if>
+           <if test="rlgl010601Bean.unit_no !=''">
+            AND  UNIT_NO = #{rlgl010601Bean.unit_no}
+           </if>
+           <if test="rlgl010601Bean.id_number !=''">
+            AND  ID_NUMBER = #{rlgl010601Bean.id_number}
+           </if>
+     </select>
+     <!-- 根据人员身份证号码更新人员基本信息表中的年度审核判定 -->
+     <update id="updatePersonnelCheckByPersonnelId"  parameterType="String"> 
+       UPDATE m_tb12_personnel 
+         SET PERSONNEL_CHECK = #{checkResult}
+       WHERE
+          PERSONNEL_ID = #{personnelId}
+     </update>
+     
+</mapper>

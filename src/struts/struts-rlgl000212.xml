@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl000212" extends="rlgl" namespace="/">
+		<action name="rlgl000212SaveUserRole" class="com.rlglsys.action.rlgl.main.Rlgl000212SaveUserRoleAction"
+			method="execute">
+			<result name="userSuccess" type="redirectAction">
+			  <param name="actionName">rlgl000211Search</param>
+			  <param name="user_name">${user_name}</param>
+			  <param name="userName">${user_id}</param>
+			  <param name="userSaveType">${userSaveType}</param>
+			</result>
+			<result name="unitSuccess" type="redirectAction">
+			  <param name="actionName">rlgl000213Search</param>
+			  <param name="unit_no">${unit_no}</param>
+			  <param name="unit_nm">${unit_nm}</param>
+			  <param name="userName">${unitNo}</param>
+			  <param name="unitSaveType">${unitSaveType}</param>
+			</result>
+			
+		</action>
+	</package>
+</struts>

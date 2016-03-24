@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010203Mapper">
+    <!-- 件数取得SQL -->
+    <select id="getCount" resultType="int">
+        SELECT
+            count(*)
+        FROM m_tb09_irin
+        WHERE
+            unit_no = #{unit_no} 
+        AND DEL_KBN = '0'
+    </select>
+    <!-- 获得聘任信息 -->
+    <select id="getEmpolyList" resultType="com.rlglsys.entity.Mtb09Irin">
+        SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            unit_no = #{unit_no} 
+        AND DEL_KBN = '0'
+            ORDER BY hiring_no
+    </select>
+    <!-- 检索页面用 -->
+    <select id="getEmployList1" resultType="com.rlglsys.entity.Mtb09Irin">
+        SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            unit_no = #{unit_no} 
+        AND DEL_KBN = '0'
+        <if test="person_no != ''" >
+            AND PERSON_NO = #{person_no}
+        </if>
+        <if test="person_nm != ''" >
+            AND PERSON_NM LIKE CONCAT('%', #{person_nm}, '%')
+        </if>
+            ORDER BY EMPLOY_KBN1, hiring_no
+        <if test="rlgl010203Bean.pageCount != 0 and rlgl010203Bean.pageCount != null">
+        LIMIT #{rlgl010203Bean.pageNo},#{rlgl010203Bean.pageCount}
+        </if>
+    </select>
+    <select id="getEmployList2" resultType="com.rlglsys.entity.Mtb09Irin">
+        SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            unit_no = #{unit_no} 
+        AND DEL_KBN = '0'
+        <if test="person_no != ''" >
+            AND PERSON_NO = #{person_no}
+        </if>
+        <if test="person_nm != ''" >
+            AND PERSON_NM LIKE CONCAT('%', #{person_nm}, '%')
+        </if>
+            ORDER BY EMPLOY_KBN2, hiring_no
+        <if test="rlgl010203Bean1.pageCount != 0 and rlgl010203Bean1.pageCount != null">
+        LIMIT #{rlgl010203Bean1.pageNo},#{rlgl010203Bean1.pageCount}
+        </if>
+    </select>
+    <!-- 获得个人聘任信息 -->
+    <select id="getPersonInfo" resultType="com.rlglsys.entity.Mtb09Irin">
+        SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            PERSON_NO = #{person_no}
+        AND DEL_KBN = '0'
+    </select>
+    <!-- 获得个人信息 -->
+    <select id="getPerson" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            PERSONNEL_ID = #{person_no}
+        AND DEL_KBN = '0'
+    </select>
+    <!-- 更新信息 -->
+    <update id="updateEmploy" parameterType="String">
+        UPDATE m_tb09_irin
+        SET DEL_KBN = '1'
+        WHERE
+            PERSON_NO = #{person_no}
+    </update>
+    <!-- 获得人员信息 -->
+    <select id="getPersonalList" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        LEFT JOIN 
+            m_tb12_personnel
+        ON 
+            m_tb01_user.PERSONNEL_ID = m_tb12_personnel.PERSONNEL_ID
+        WHERE
+            m_tb01_user.UNIT_NO = #{unit_no} 
+        AND m_tb01_user.DEL_KBN = '0'
+        AND m_tb01_user.SECTION_ID != ''
+        AND m_tb12_personnel.PERSONNEL_REGULAR = '001'
+            ORDER BY m_tb01_user.PERSONNEL_ID
+    </select>
+    <!-- 更新前判定 -->
+    <select id="getEmpolyListForUp" resultType="com.rlglsys.entity.Mtb09Irin">
+        SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            HIRING_NO = #{hiring_no} 
+    </select>
+    <!-- 插入信息 -->
+    <insert id="insertEmployInfo"  parameterType="com.rlglsys.entity.Mtb09Irin">
+        INSERT INTO m_tb09_irin (
+        HIRING_NO,
+        UNIT_NO,
+        PERSON_NO,
+        PERSON_NM,
+        HEADS_NM,
+        EMPLOY_KBN1,
+        EMPLOY_KBN2,
+        EX_KEY,
+        LOGIN_USER_ID,
+        LOGIN_DATE,
+        UPDATE_USER_ID,
+        UPDATE_DATE
+        )VALUES(#{irin.hiring_no}
+            ,#{irin.unit_no}
+            ,#{irin.person_no}
+            ,#{irin.person_nm}
+            ,#{irin.heads_nm}
+            ,'0'
+            ,'0'
+            ,0
+            ,#{irin.login_user_id}
+            ,#{irin.login_date}
+            ,#{irin.update_user_id}
+            ,#{irin.update_date}
+            )
+    </insert>
+    <!-- 更新信息(正聘) -->
+    <update id="updateEmployInfo" parameterType="com.rlglsys.entity.Mtb09Irin">
+        UPDATE m_tb09_irin
+        SET HIRING_NO = #{irin.hiring_no},
+        UNIT_NO = #{irin.unit_no},
+        PERSON_NO = #{irin.person_no},
+        PERSON_NM = #{irin.person_nm},
+        EMPLOY_KBN1 = '1',
+        HEADS_NM  = #{irin.heads_nm},
+        PUBLISH_NO = #{irin.publish_no},
+        POST_KBN = #{irin.post_kbn},
+        POST_LEVEL = #{irin.post_level},
+        POST_NAME = #{irin.post_name},
+        HIRING_FROM = #{irin.hiring_from},
+        HIRING_TO = #{irin.hiring_to},
+        UPDATE_USER_ID = #{irin.update_user_id},
+        UPDATE_DATE = #{irin.update_date}
+        WHERE
+            HIRING_NO = #{irin.hiring_no}
+    </update>
+    <!-- 更新信息(内聘) -->
+    <update id="updateInEmployInfo" parameterType="com.rlglsys.entity.Mtb09Irin">
+        UPDATE m_tb09_irin
+        SET HIRING_NO = #{irin.hiring_no},
+        UNIT_NO = #{irin.unit_no},
+        PERSON_NO = #{irin.person_no},
+        PERSON_NM = #{irin.person_nm},
+        EMPLOY_KBN2 = '1',
+        HEADS_NM  = #{irin.heads_nm},
+        IN_PUBLISH_NO = #{irin.in_publish_no},
+        IN_POST_KBN = #{irin.in_post_kbn},
+        IN_POST_LEVEL = #{irin.in_post_level},
+        IN_POST_NAME = #{irin.in_post_name},
+        IN_HIRING_FROM = #{irin.in_hiring_from},
+        IN_HIRING_TO = #{irin.in_hiring_to},
+        UPDATE_USER_ID = #{irin.update_user_id},
+        UPDATE_DATE = #{irin.update_date},
+        OTHER_POST_NM = #{irin.other_post_nm},
+        IN_OTHER_POST_LEVEL = #{irin.in_other_post_level},
+        IN_OTHERPOST_FROM = #{irin.in_otherpost_from},
+        IN_OTHERPOST_TO = #{irin.in_otherpost_to}
+        WHERE
+            HIRING_NO = #{irin.hiring_no}
+    </update>
+    <!-- 删除信息 -->
+    <delete id="deleteEmployInfo" parameterType="String">
+        DELETE
+            FROM
+                m_tb09_irin
+            WHERE
+                HIRING_NO = #{hiring_no}
+    </delete>
+    <!-- 获得科室名称 -->
+    <select id="getSectionName" resultType="String">
+        SELECT
+            SECTION_NAME
+        FROM m_tb22_hospital_section
+        WHERE
+            SECTION_ID = #{section_id}
+        AND UNIT_NO = #{unit_no}
+    </select>
+</mapper>

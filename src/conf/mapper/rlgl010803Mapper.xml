@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010803Mapper">
+  <resultMap type="com.rlglsys.bean.Rlgl010803Bean" id="personInfoList">
+      <!-- 总人数 -->
+      <result property="zry" column="zry"/>
+      <!-- 在岗护士 -->
+      <result property="zghsry" column="zghsry"/>
+      <!-- 卫生专业技术人员 -->
+      <result property="wszyjsry" column="wszyjsry"/>
+      <!-- 工程技术人员 -->
+      <result property="gcjsry" column="gcjsry"/>
+      <!-- 技术人员 -->
+      <result property="jsry" column="jsry"/>
+      <!-- 执业医师 -->
+      <result property="zyysry" column="zyysry"/>
+      <!-- 所有护士 -->
+      <result property="hsry" column="hsry"/>
+      <!-- 执业助理医师 -->
+      <result property="zyzlysry" column="zyzlysry"/>
+      <!-- 大专学历以上护士 -->
+      <result property="dzyshsry" column="dzyshsry"/>
+      <!-- 临床科室主任 -->
+      <result property="kszury" column="kszury"/>
+      <!-- 临床科室主任具有高级职称人数-->
+      <result property="gjzcry" column="gjzcry"/>
+      <!-- 临床科室主任具有正高级职称人数 -->
+      <result property="zgjzcry" column="zgjzcry"/>
+      <!-- 医技人员 -->
+      <result property="yjry" column="yjry"/>
+      <!-- 所有专业技术人员 -->
+      <result property="syzyjsry" column="syzyjsry"/>
+      <!-- 专职管理人员 -->
+      <result property="zzglry" column="zzglry"/>
+      <!-- 在编人员 -->
+      <result property="zbry" column="zbry"/>
+      <!-- 在编护士 -->
+      <result property="zbhsry" column="zbhsry"/>
+      <!-- 合同制护士 -->
+      <result property="htzhsry" column="htzhsry"/>
+      <!-- 硕士生、博士生导师 -->
+      <result property="ssbsdsry" column="ssbsdsry"/>
+      <!-- 硕士生导师 -->
+      <result property="sssdsry" column="sssdsry"/>
+      <!-- 博士生导师 -->
+      <result property="bssdsry" column="bssdsry"/>
+      <!-- 在岗人员 -->
+      <result property="zgry" column="zgry"/>
+      <!-- 年度考核 -->
+      <result property="ndkhhgry" column="ndkhhgry"/>
+  </resultMap>
+  <!--卫生行政部门-按地区统计-地区详细比例一览list取得处理SQL-->
+  <select id="searchList" resultMap="personInfoList">
+     SELECT 
+           <!-- 总人数 -->
+           count(*) as zry,
+           <!-- 在岗护士 -->
+           (SELECT count(*)
+               FROM
+                 M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+               WHERE 
+                 tb19.DEL_KBN = '0'
+                 and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+                 <!-- 在职 -->
+                 and tb12.PERSONNEL_STATUS = '001'
+                 <!-- 护士资格 -->
+                 and tb19.TYPE = '002') as zghsry,
+           <!-- 卫生专业技术人员 -->
+            (SELECT count(*)
+              FROM
+                M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+              WHERE
+                tb19.DEL_KBN = '0'
+                and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID) as wszyjsry,
+            <!-- 工程技术人员-->
+            (SELECT count(*)
+             FROM
+               M_TB18_PERSONNEL_PROFESSIONAL_INFO tb18
+             WHERE
+                tb18.DEL_KBN = '0'
+                and tb12.PERSONNEL_ID = tb18.PERSONNEL_ID) as gcjsry,
+            <!-- 技术人员 -->
+             (SELECT count(*)
+               FROM
+                 M_TB18_PERSONNEL_PROFESSIONAL_INFO tb18
+               WHERE 
+                 tb18.DEL_KBN = '0'
+                 and tb12.PERSONNEL_ID = tb18.PERSONNEL_ID) as jsry,
+            <!-- 执业医师  -->
+            (SELECT count(*)
+             FROM
+               M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+             WHERE
+               tb19.DEL_KBN = '0'
+               and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+               <!--执业资格  医师资格 -->
+               and tb19.TYPE = '001'
+               <!--执业级别  执业医师 -->
+               and tb19.LEVEL = '001') as zyysry,
+            <!-- 所有护士 -->
+            (SELECT count(*)
+               FROM
+                 M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+               WHERE 
+                 tb19.DEL_KBN = '0'
+                 and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+                 <!--执业资格  护士资格 -->
+                 and tb19.TYPE = '002') as hsry,
+             <!-- 执业助理医师  -->
+            (SELECT count(*)
+             FROM
+               M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+             WHERE
+               tb19.DEL_KBN = '0'
+               and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+               <!-- 执业资格 - 医师资格 -->
+               and tb19.TYPE = '001'
+               <!-- 执业级别 - 执业助理医师 -->
+               and tb19.LEVEL = '002') as zyzlysry,
+            <!-- 大专学历以上护士 -->
+            (SELECT count(*)
+            FROM
+               M_TB15_PERSONNEL_EDU_INFO tb15,
+               M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+            WHERE
+               tb15.DEL_KBN = '0'
+               and tb19.DEL_KBN = '0'
+               and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+               and tb12.PERSONNEL_ID = tb15.PERSONNEL_ID
+               <!-- 大专学历以上 -->
+               and tb15.EDUCATIONAL_BG in ('003','004','005','006')
+               <!-- 执业资格 - 护士资格 -->
+               and tb19.TYPE = '002') as dzyshsry,
+           <!-- 临床科室主任高级人员  -->
+           (SELECT count(*)
+            FROM
+               M_TB18_PERSONNEL_PROFESSIONAL_INFO tb18,
+               m_tb22_hospital_section tb22
+            WHERE
+               tb18.DEL_KBN = '0'
+               and tb22.DEL_KBN = '0'
+               and tb12.PERSONNEL_ID = tb18.PERSONNEL_ID
+               and u.SECTION_ID = tb22.SECTION_ID
+               <!-- 科室性质-临床科室 -->
+               and tb22.SECTION_PROPERTY = '1'
+               <!-- 科室主任 -->
+               and tb18.NAME  like '%${'主任'}%'
+               <!-- 高级 -->
+               and mid(tb18.LEVEL,1,2) = '01') as gjzcry,
+           <!-- 临床科室主任正高级人员  -->
+           (SELECT count(*)
+            FROM
+               M_TB18_PERSONNEL_PROFESSIONAL_INFO tb18,
+               m_tb22_hospital_section tb22
+            WHERE
+               tb18.DEL_KBN = '0'
+               and tb22.DEL_KBN = '0'
+               and tb12.PERSONNEL_ID = tb18.PERSONNEL_ID
+               and u.SECTION_ID = tb22.SECTION_ID
+               <!-- 科室性质-临床科室 -->
+               and tb22.SECTION_PROPERTY = '1'
+               <!-- 科室主任 -->
+               and tb18.NAME  like '%${'主任'}%'
+               <!-- 正高级 -->
+               and mid(tb18.LEVEL,3,2) = '01') as zgjzcry,
+           <!-- 医技人员 -->
+           (SELECT count(*)
+            FROM
+              M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+            WHERE
+             tb19.DEL_KBN = '0'
+             and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+             <!-- 药剂资格 -->
+             and tb19.TYPE = '003') as yjry,
+           <!-- 所有专业技术人员 -->
+           (SELECT count(*)
+            FROM
+               M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+            WHERE 
+                tb19.DEL_KBN = '0'
+                and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID) as syzyjsry,
+           <!-- 专职管理人员  -->
+           (SELECT count(*)
+            FROM
+               <!-- 聘任管理信息表 -->
+               M_TB09_IRIN tb09
+            WHERE
+               tb09.DEL_KBN = '0'
+               and u.UNIT_NO = tb09.UNIT_NO
+               and u.PERSONNEL_ID = tb09.PERSON_NO
+               <!-- 内聘岗位类别-管理岗位 -->
+               and tb09.IN_POST_KBN = '001') as zzglry,
+           <!-- 在编人员 -->
+           (SELECT count(*)
+            FROM
+              M_TB12_PERSONNEL tb
+            WHERE
+              <!-- 岗位状态-在编人员 -->
+              tb.PERSONNEL_REGULAR = '001') as zbry,
+           <!--在编护士 -->
+           (SELECT count(*)
+            FROM
+              M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+            WHERE
+              tb19.DEL_KBN = '0'
+              and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+              <!-- 在编人员 -->
+              and tb12.PERSONNEL_REGULAR = '001'
+              <!-- 护士资格 -->
+              and tb19.TYPE = '002') as zbhsry,
+           <!--合同制护士 -->
+           (SELECT count(*)
+           FROM
+             M_TB19_PERSONNEL_PRACTITIONERS_INFO tb19
+           WHERE 
+              tb19.DEL_KBN = '0'
+              and tb12.PERSONNEL_ID = tb19.PERSONNEL_ID
+              <!-- 用工形式 -合同工-->
+              and tb12.PERSONNEL_EMPLOYMENT_FORMS = '002'
+              <!-- 执业资格 -护士资格 -->
+              and tb19.TYPE = '002') as htzhsry,
+           <!--硕士生、博士生导师人数 -->
+           (SELECT count(*)
+           FROM
+             <!-- 导师信息表 -->
+             m_tb58_personnel_tutor_info tb58
+           WHERE 
+             tb58.DEL_KBN = '0'
+             and tb12.PERSONNEL_ID = tb58.PERSONNEL_ID
+             <!-- 硕士生、博士生导师 -->
+             and (1= 2
+                  or tb58.TEACHERTYPE = '001' 
+                  or tb58.TEACHERTYPE = '002'
+                  )
+             ) as ssbsdsry,
+          <!--在岗人员数 -->
+          (SELECT count(*)
+          FROM
+            M_TB12_PERSONNEL tb1
+          WHERE 
+            <!-- 岗位状态 -在岗 -->
+            tb1.PERSONNEL_STATUS = '001') as zgry,
+          <!--年度考核合格数 -->
+          (SELECT count(*)
+           FROM
+             M_TB12_PERSONNEL tb2
+           WHERE 
+             tb2.PERSONNEL_CHECK = '001') as ndkhhgry
+     FROM 
+       m_tb01_user u,
+       m_tb04_unit tb04,
+       m_tb12_personnel tb12
+       <if test="rlgl010803.majorValue != ''">
+         ,m_tb19_personnel_practitioners_info t19
+       </if>
+       <if test="rlgl010803.masterValue != ''">
+         ,m_tb09_irin tb9
+       </if>
+     WHERE
+       u.DEL_KBN = '0'
+       and tb04.DEL_KBN = '0'
+       and tb12.DEL_KBN = '0'
+       and u.UNIT_NO = tb04.UNIT_NO
+       and u.PERSONNEL_ID = tb12.PERSONNEL_ID
+       <!-- 医疗机构 -->
+       and tb04.UNIT_ASSORT = '002'
+       <!-- 默认统计在职和停薪留职的人员 -->
+       and (tb12.PERSONNEL_STATUS in (001,002)
+           <!-- 含不在岗返聘 -->
+           <if test="rlgl010803.selectJobRetireFlag">
+             or tb12.PERSONNEL_REGULAR in ('003','004')
+           </if>)
+       <!-- 默认统计在编人员 -->
+       and (tb12.PERSONNEL_REGULAR = '001'
+           <!-- 含非在编 -->
+           <if test="rlgl010803.selectWeaveFlag">
+             or tb12.PERSONNEL_REGULAR in ('002','003')
+           </if>)
+       <!-- 按地区统计-省，市，区县范围 -->
+       <if test="valueKey != '' and rlgl010803.statisticsValue != 006">
+       and tb04.AREA_ID like CONCAT('${valueKey}','%')
+       </if>
+       <!-- 按医院统计 -->
+       <if test="rlgl010803.unit_no != '' and rlgl010803.statisticsValue == 002">
+         and u.UNIT_NO = #{rlgl010803.unit_no}
+       </if>
+       <!-- 按执业医师及相关专业统计 -->
+       <if test="rlgl010803.majorValue != '' and rlgl010803.statisticsValue == 003">
+         and t19.DEL_KBN = '0'
+         and tb12.PERSONNEL_ID = t19.PERSONNEL_ID
+         and t19.TYPE = #{rlgl010803.majorValue}
+       </if>
+       <!-- 按医院管理人员和技术人员统计 -->
+       <if test="rlgl010803.masterValue != '' and rlgl010803.statisticsValue == 004">
+         and tb9.DEL_KBN = '0'
+         and u.PERSONNEL_ID = tb9.PERSON_NO
+         and u.UNIT_NO = tb9.UNIT_NO
+         and tb9.IN_POST_KBN = #{rlgl010803.masterValue}
+       </if>
+       <!-- 事业单位用人方式情况 -->
+       <if test="rlgl010803.joinModeValue != '' and rlgl010803.statisticsValue == 005">
+         and tb12.PERSONNEL_JOINMODE = #{rlgl010803.joinModeValue}
+       </if>
+       <!-- 按管辖统计-省，市，区县范围 -->
+       <if test="valueKey != '' and rlgl010803.statisticsValue == 006">
+       and tb04.UNIT_MANAGE_SCALE_NM like CONCAT('${valueKey}','%')
+       </if>
+       ;
+  </select>
+  <select id="hospitalList" resultType="String">
+    select tb04.UNIT_NO
+    from m_tb04_unit tb04
+    where
+       tb04.DEL_KBN = '0'
+       and tb04.UNIT_ASSORT = '002'
+       <if test="valueKey != ''">
+       and tb04.AREA_ID like CONCAT('${valueKey}','%')
+       </if>
+  </select>
+</mapper>

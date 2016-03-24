@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060203Mapper">
+    <select id="getSubject" resultType="String">
+        SELECT
+            SUBJECT_KB
+        FROM
+            m_tb103_exam_setting
+        WHERE
+            EXAM_NO = #{exam_no}
+    </select>
+    <select id="getExistInfo" resultType="int">
+       SELECT
+            count(*)
+        FROM
+            m_tb102_score_setting
+        WHERE EXAM_NO = #{subject_kb}
+    </select>
+    <select id="getMtb102Info" resultType="com.rlglsys.entity.Mtb102ScoreSetting">
+       SELECT
+            A.*,
+            B.EXAMINATION_NAME AS exam_name
+        FROM
+            m_tb102_score_setting A
+        LEFT JOIN m_tb103_exam_setting B ON A.EXAM_NO = B.EXAM_NO
+        WHERE A.EXAM_NO = #{subject_kb}
+    </select>
+    <select id="getMtb103Info" resultType="com.rlglsys.entity.Mtb103ExamSetting">
+       SELECT
+            *
+        FROM
+            m_tb103_exam_setting
+    </select>
+    <select id="getInfo" resultType="com.rlglsys.entity.Mtb102ScoreSetting">
+       SELECT
+            B.EXAMINATION_NAME AS exam_name,
+            A.*
+        FROM
+            m_tb102_score_setting A
+        LEFT JOIN m_tb103_exam_setting B ON A.EXAM_NO = B.EXAM_NO
+        <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <select id="getCount" resultType="int">
+       SELECT
+            count(*)
+        FROM
+            m_tb102_score_setting
+    </select>
+    <insert id="insertMtb102Info">
+        INSERT m_tb102_score_setting (
+            EXAM_NO,
+            EXAM_TIME,
+            VACANCY_NUMBER,
+            VACANCY_SCORE,
+            SINGLE_CHOICE_NUMBER,
+            SINGLE_CHOICE_SCORE,
+            MULTIPLE_CHOICE_NUMBER,
+            MULTIPLE_CHOICE_SCORE,
+            JUDGMENT_NUMBER,
+            JUDGMENT_SCORE,
+            SHORT_ANSWER_NUMBER,
+            SHORT_ANSWER_SCORE,
+            EX_KEY,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES (
+            #{mtb102.exam_no},
+            #{mtb102.exam_time},
+            #{mtb102.vacancy_number},
+            #{mtb102.vacancy_score},
+            #{mtb102.single_choice_number},
+            #{mtb102.single_choice_score},
+            #{mtb102.multiple_choice_number},
+            #{mtb102.multiple_choice_score},
+            #{mtb102.judgment_number},
+            #{mtb102.judgment_score},
+            #{mtb102.short_answer_number},
+            #{mtb102.short_answer_score},
+            '0',
+            #{mtb102.login_user_id},
+            #{mtb102.login_date},
+            #{mtb102.update_user_id},
+            #{mtb102.update_date}
+        )
+    </insert>
+    <update id="updateMtb102Info">
+        UPDATE m_tb102_score_setting SET
+            EXAM_NO = #{mtb102.exam_no},
+            EXAM_TIME = #{mtb102.exam_time},
+            VACANCY_NUMBER = #{mtb102.vacancy_number},
+            VACANCY_SCORE = #{mtb102.vacancy_score},
+            SINGLE_CHOICE_NUMBER = #{mtb102.single_choice_number},
+            SINGLE_CHOICE_SCORE = #{mtb102.single_choice_score},
+            MULTIPLE_CHOICE_NUMBER = #{mtb102.multiple_choice_number},
+            MULTIPLE_CHOICE_SCORE = #{mtb102.multiple_choice_score},
+            JUDGMENT_NUMBER = #{mtb102.judgment_number},
+            JUDGMENT_SCORE = #{mtb102.judgment_score},
+            SHORT_ANSWER_NUMBER = #{mtb102.short_answer_number},
+            SHORT_ANSWER_SCORE = #{mtb102.short_answer_score},
+            UPDATE_USER_ID = #{mtb102.update_user_id},
+            UPDATE_DATE = #{mtb102.update_date}
+        WHERE EXAM_NO = #{mtb102.exam_no}
+    </update>
+</mapper>

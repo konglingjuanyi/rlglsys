@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IMTb20AreaMapper">
+    <select id="getAreaInfo" resultType="MTb20Area">
+        SELECT
+            *
+        FROM m_tb20_area
+        WHERE area_id=#{area_id}
+    </select>
+    <select id="getAreaProvince" resultType="MTb20Area">
+        SELECT
+           SUBSTR(MIN(area_id),1,2) as area_id, province
+        FROM m_tb20_area
+        GROUP BY 
+        	province
+        ORDER BY
+        area_id
+    </select>
+    <select id="getAreaCity" resultType="MTb20Area">
+        SELECT
+            SUBSTR(MIN(area_id),3,2) as area_id, city
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${province}' ,'%')
+        GROUP BY 
+        	city
+        ORDER BY
+        area_id
+    </select>
+    <select id="getAreaZone" resultType="MTb20Area">
+        SELECT
+            SUBSTR(MIN(area_id),5,2) as area_id, zone
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${province}' ,'${city}' ,'%')
+        GROUP BY 
+        	zone
+        ORDER BY
+        area_id
+    </select>
+    <select id="getProvinceName" resultType="String">
+        SELECT
+            province
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${area_id}' ,'%')
+        	and LENGTH('${area_id}') >= 2
+        LIMIT 
+        	0,1
+    </select>
+    <select id="getCityName" resultType="String">
+        SELECT
+            city
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${area_id}' ,'%')
+        	and LENGTH('${area_id}') >= 4
+        LIMIT 
+        	0,1
+    </select>
+    <select id="getZoneName" resultType="String">
+        SELECT
+            zone
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${area_id}' ,'%')
+        	and LENGTH('${area_id}') = 6
+        LIMIT 
+        	0,1
+    </select>
+</mapper>

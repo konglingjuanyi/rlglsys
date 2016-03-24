@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+        <struts>
+<package name="rlgl050101" extends="rlgl" namespace="/">
+      <!--  初期化处理 -->
+       <action name="rlgl050101Init"
+        class="com.rlglsys.action.credityearset.Rlgl050101InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl050101.jsp</result>
+       </action>
+       <!--  删除处理 -->
+       <!-- <action name="rlgl050101Delete"
+        class="com.rlglsys.action.continumedicaleducation.creditreport.Rlgl020601DeleteAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020601Init</result>
+       </action> -->
+    </package>
+</struts>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 三名申请>名院申请 -->
+<struts>
+    <package name="rlgl010403" extends="rlgl" namespace="/">
+       <!-- 名院申请初始化 -->
+       <action name="rlgl010403Init" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010403InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl010403.jsp</result>
+       </action>
+       <!-- 名科信息查看 -->
+       <action name="rlgl010403ViewSection" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010403ViewSectionAction" method="execute">
+           <result name="error">/WEB-INF/jsp/rlgl010414.jsp</result>
+           <result name="rlgl010414">/WEB-INF/jsp/rlgl010414.jsp</result>
+       </action>
+       <!-- 名院申请提交 -->
+       <action name="rlgl010403Commit" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010403CommitAction" method="execute">
+           <result name="success" type="redirectAction">rlgl010400Init</result>
+           <result name="error" type="redirectAction">
+              <param name="actionName">rlgl010403Init</param>
+              <param name="error_flg">${error_flg}</param>
+           </result>
+       </action>
+    </package>
+</struts>
+

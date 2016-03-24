@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022004Mapper">
+	<!-- 依据用户编号和学分年度得到通过考试的课程信息 -->
+	<select id="getCourseExamsList" parameterType="com.rlglsys.entity.MTb81CourseExams"
+		resultType="com.rlglsys.entity.MTb81CourseExams">
+		SELECT * ,m63.COURSE_PRICE AS course_price FROM m_tb81_course_exams
+		m81
+		left join m_tb63_courseware m63
+		on m81.COURSE_ID = m63.COURSE_ID
+		where m81.DEL_KBN ='0'
+		<if test="courseExam.user_id !=null and courseExam.user_id != ''">
+			and m81.USER_ID = #{courseExam.user_id}
+		</if>
+		<if test="courseExam.user_id == null or courseExam.user_id == ''">
+			and 1=2
+		</if>
+		<if
+			test="courseExam.credit_category !=null and courseExam.credit_category != ''">
+			and m81.credit_category = #{courseExam.credit_category}
+		</if>
+		<if test="courseExam.credit_year !=null and courseExam.credit_year != ''">
+			and m81.CREDIT_YEAR = #{courseExam.credit_year}
+		</if>
+		<if test="courseExam.course_name !=null and courseExam.course_name != ''">
+			and m81.COURSE_NAME = #{courseExam.course_name}
+		</if>
+		<if
+			test="courseExam.credit_category !=null and courseExam.credit_category != ''">
+			and m81.CREDIT_CATEGORY = #{courseExam.credit_category}
+		</if>
+		<if
+			test="courseExam.pageCount != null and  courseExam.pageCount != 0 and courseExam!=null">
+			LIMIT #{courseExam.pageNo},#{courseExam.pageCount}
+		</if>
+	</select>
+	<!-- 根据条件得到数据条数 -->
+	<select id="getCourseExamsCount" resultType="int" parameterType="String">
+		select count(*) from m_tb81_course_exams
+		where DEL_KBN ='0'
+		<if test="userId !=null and userId != ''">
+			and USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			and CREDIT_YEAR = #{credit_year}
+		</if>
+		<if test="course_name !=null and course_name != ''">
+			and COURSE_NAME = #{course_name}
+		</if>
+		<if test="course_name !=null and course_name != ''">
+			and COURSE_NAME = #{course_name}
+		</if>
+		<if test="credit_category !=null and credit_category != ''">
+			and CREDIT_CATEGORY = #{credit_category}
+		</if>
+		
+	</select>
+
+	<!-- 根据条件得到学分所得学分条数 -->
+	<select id="getCourseCreditCount" resultType="int"
+		parameterType="String">
+		SELECT
+		COUNT(*)
+		FROM
+		(
+		SELECT
+		COURSE_ID
+		FROM
+		m_tb81_course_exams M1
+		WHERE
+		M1.DEL_KBN = '0'
+		<if test="userId !=null and userId != ''">
+			AND M1.USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			AND M1.CREDIT_YEAR = #{credit_year}
+		</if>
+		AND M1.IsApply = '1'
+		UNION
+		SELECT
+		COURSE_ID
+		FROM
+		m_tb122_public_course_exams M2
+		WHERE
+		M2.DEL_KBN = '0'
+		<if test="userId !=null and userId != ''">
+			AND M2.USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			AND M2.CREDIT_YEAR = #{credit_year}
+		</if>
+		) m3
+	</select>
+
+	<!-- 根据条件得到学分所得学分情况 -->
+	<select id="getCourseCreditList" parameterType="com.rlglsys.entity.MTb81CourseExams"
+		resultType="com.rlglsys.entity.MTb81CourseExams">
+		SELECT
+		COURSE_ID,
+		COURSE_NAME,
+		CREDIT,
+		EXAMS_TIME,
+		CREDIT_YEAR,
+		CREDIT_CATEGORY
+		FROM
+		(
+		SELECT
+		COURSE_ID,
+		COURSE_NAME,
+		CREDIT,
+		EXAMS_TIME,
+		CREDIT_YEAR,
+		CREDIT_CATEGORY
+		FROM
+		m_tb81_course_exams M1
+		WHERE
+		M1.DEL_KBN = '0'
+		AND M1.IsApply = '1'
+		<if test="courseExam.user_id !=null and courseExam.user_id != ''">
+			AND M1.USER_ID = #{courseExam.user_id}
+		</if>
+		<if test="courseExam.credit_year !=null and courseExam.credit_year != ''">
+			AND M1.CREDIT_YEAR = #{courseExam.credit_year}
+		</if>
+		UNION
+		SELECT
+		COURSE_ID,
+		COURSE_NAME,
+		CREDIT,
+		EXAMS_TIME,
+		CREDIT_YEAR,
+		CREDIT_CATEGORY
+		FROM
+		m_tb122_public_course_exams
+		M2
+		WHERE
+		M2.DEL_KBN = '0'
+		<if test="courseExam.user_id !=null and courseExam.user_id != ''">
+			AND M2.USER_ID = #{courseExam.user_id}
+		</if>
+		<if test="courseExam.credit_year !=null and courseExam.credit_year != ''">
+			AND M2.CREDIT_YEAR = #{courseExam.credit_year}
+		</if>
+		) m3
+		<if
+			test="courseExam.pageCount != null and  courseExam.pageCount != 0 and courseExam!=null">
+			LIMIT #{courseExam.pageNo},#{courseExam.pageCount}
+		</if>
+	</select>
+
+	<!-- 根据条件得到学分所得学分条数 -->
+	<select id="getCourseCreditSum" resultType="int" parameterType="String">
+		SELECT
+		sum(CREDIT)
+		FROM
+		(
+		SELECT
+		CREDIT,
+		USER_ID
+		FROM
+		m_tb81_course_exams M1
+		WHERE
+		M1.DEL_KBN = '0'
+		<if test="userId !=null and userId != ''">
+			AND M1.USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			AND M1.CREDIT_YEAR = #{credit_year}
+		</if>
+		<if test="credit_category !=null and credit_category != ''">
+			AND M1.CREDIT_CATEGORY = #{credit_category}
+		</if>
+		AND M1.IsApply = '1'
+		UNION
+		SELECT
+		CREDIT,
+		USER_ID
+		FROM
+		m_tb122_public_course_exams M2
+		WHERE
+		M2.DEL_KBN = '0'
+		<if test="userId !=null and userId != ''">
+			AND M2.USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			AND M2.CREDIT_YEAR = #{credit_year}
+		</if>
+		<if test="credit_category !=null and credit_category != ''">
+			AND M2.CREDIT_CATEGORY = #{credit_category}
+		</if>
+		) m3
+		GROUP BY
+		USER_ID
+	</select>
+</mapper>

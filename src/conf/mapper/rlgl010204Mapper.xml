@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010204Mapper">
+    <!-- 获得单位名称 -->
+    <select id="getUnitName" resultType="String">
+        SELECT
+            unit_nm
+        FROM m_tb04_unit
+        WHERE
+            unit_no = #{unit_no} 
+    </select>
+    <!-- 获得岗位等级 -->
+    <select id="getPostLevel" resultType="String">
+        SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE
+            adm_type_cd = #{postKbn}
+            AND adm_num = #{postLevel}
+    </select>
+    <!-- 获得岗位类别 -->
+    <select id="getPostKbn" resultType="String">
+         SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE
+            adm_type_cd = '029'
+            AND adm_num = #{lpLevel}
+    </select>
+    <!-- 获得聘任信息 -->
+    <select id="getEmployList" resultType="com.rlglsys.entity.Mtb09Irin">
+        SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            unit_no = #{unit_no} 
+        AND DEL_KBN = '0'
+            ORDER BY hiring_no
+        <if test="rlgl010204Bean.pageCount != 0 and rlgl010204Bean.pageCount != null">
+        LIMIT #{rlgl010204Bean.pageNo},#{rlgl010204Bean.pageCount}
+        </if>
+    </select>
+</mapper>

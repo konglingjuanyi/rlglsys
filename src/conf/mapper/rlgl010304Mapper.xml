@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010304Mapper">
+	<!--查询-->
+	<!--人员基本信息-->
+    <select id="getPersonnel" resultType="Mtb12Personnel">
+    	SELECT
+            *
+        FROM m_tb39_personnel
+        WHERE personnel_id=#{personnel_id}
+    </select>
+    <!--人员基本信息-专业技术职务信息-->
+	<select id="getProfessionalInfo" resultType="Mtb18PersonnelProfessionalInfo">
+		SELECT
+            *
+        FROM m_tb45_personnel_professional_info
+        WHERE personnel_id=#{personnel_id}
+    </select>
+    <!--人员基本信息-行政职务信息-->
+    <select id="getJobInfo" resultType="Mtb17PersonnelJobInfo">
+    	SELECT
+            *
+        FROM m_tb44_personnel_job_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-社会关系-->
+   	<select id="getSocialInfo" resultType="Mtb16PersonnelSocialInfo">
+   		SELECT
+            *
+        FROM m_tb43_personnel_social_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-教育经历-->
+   	<select id="getEduInfo" resultType="Mtb15PersonnelEduInfo">
+   		SELECT
+            *
+        FROM m_tb42_personnel_edu_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-工作经历-->
+   	<select id="getWorkInfo" resultType="Mtb14PersonnelWorkInfo">
+   		SELECT
+            *
+        FROM m_tb41_personnel_work_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-党派信息-->
+   	<select id="getPartisanInfo" resultType="Mtb13PersonnelPartisanInfo">
+   		SELECT
+            *
+        FROM m_tb40_personnel_partisan_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-执业资格信息-->
+   	<select id="getPractitionersInfo" resultType="Mtb19PersonnelPractitionersInfo">
+   		SELECT
+            *
+        FROM m_tb46_personnel_practitioners_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+</mapper>

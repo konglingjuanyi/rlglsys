@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- houyc add 20130829 人事信息管理>单位申请>退休申请 -->
+<struts>
+    <package name="rlgl010315" extends="rlgl" namespace="/">
+       <!-- 退休申请页面 -->
+       <action name="rlgl010315Init"
+          class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010315InitAction" method="execute">
+          <result name="success">/WEB-INF/jsp/rlgl010315.jsp</result>
+        </action>
+        <!-- 提交退休申请 -->
+        <action name="rlgl010315Commit"
+          class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010315CommitAction" method="execute">
+          <result name="success">/WEB-INF/jsp/rlgl010315.jsp</result>
+          <result name="error">/WEB-INF/jsp/rlgl010315.jsp</result>
+        </action>
+        <!-- 返回单位人员列表 -->
+        <action name="rlgl010315Back"
+          class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010315BackAction" method="execute">
+          <result name="rlgl010317" type="redirectAction">rlgl010317Search</result>
+        </action>
+        <!-- 查看退休申请明细 -->
+        <action name="rlgl010315View"
+          class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010315ViewAction" method="execute">
+          <result name="error">/WEB-INF/jsp/rlgl010322.jsp</result>
+          <result name="success">/WEB-INF/jsp/rlgl010322.jsp</result>
+        </action>
+        <!-- 退休申请明细返回按钮事件 -->
+        <action name="rlgl010315ViewBack"
+          class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010315ViewBackAction" method="execute">
+          <result name="rlgl010316" type="redirectAction">rlgl010316Search</result>
+        </action>
+    </package>
+</struts>
+

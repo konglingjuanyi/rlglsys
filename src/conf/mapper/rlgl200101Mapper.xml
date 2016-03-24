@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl200101Mapper">
+         <!--国通表信息查询 -->
+    <select id="getExcelTableInfoList" resultType="com.rlglsys.bean.Rlgl200101Bean" statementType="STATEMENT" >
+     <![CDATA[
+         ${rlgl200101Bean.strSql}
+          ]]>
+    </select>
+</mapper>

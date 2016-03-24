@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020802Mapper">
+<resultMap type="com.rlglsys.bean.Rlgl020802Bean" id="pastKaoheInfoList">
+      <result property="personnel_id" column="PERSONAL_ID"/>
+      <result property="personnel_name" column="PERSONAL_NM"/>
+      <result property="unit_no" column="PERSONNEL_UNIT_NO"/>
+      <result property="keshi" column="PERSONNEL_OFFICE"/>
+      <result property="credit_1" column="CREDIT_I"/>
+      <result property="credit_2" column="CREDIT_II"/>
+      <result property="niandu" column="YEAR"/>
+      <result property="zhicheng" column="IN_POST_NAME"/>
+  </resultMap>
+    <!-- 待办事项一览查询SQL -->
+    <select id="getpastKaoheInfoList" parameterType="String" resultMap="pastKaoheInfoList">
+
+		    SELECT mtb66.CREDIT_I,mtb66.CREDIT_II,mtb66.YEAR,
+					mtb66.PERSONAL_NM ,mtb66.PERSONAL_ID,
+					mtb66.PERSONNEL_UNIT_NO,
+					mtb12.PERSONNEL_OFFICE
+ 					,mtb09.IN_POST_NAME
+			FROM  m_tb66_total_credit AS mtb66
+			LEFT JOIN m_tb12_personnel AS mtb12
+			ON mtb66.PERSONAL_ID  = mtb12.PERSONNEL_ID
+				AND mtb12.CONTINUE_EDUCATION_FLAG = '1'
+			LEFT JOIN m_tb09_irin as mtb09
+ 			ON mtb66.PERSONAL_ID = mtb09.person_no
+ 				AND mtb09.UNIT_NO = #{unit_no}
+			WHERE 
+				mtb66.PERSONNEL_UNIT_NO = #{unit_no}
+				<if test="niandu_year !=''">
+		     		AND mtb66.`YEAR` = #{niandu_year}
+		     	</if>
+				<if test="personnel_id !=''">
+		     		and mtb66.PERSONAL_ID = #{personnel_id}
+		     	</if>
+			<if test=  "pagecount!=null and  pagecount!=0">
+		       LIMIT #{pageNum},#{pagecount}
+		     </if>	
+    </select>
+    <!-- 按照年度和身份证号码查询数据 -->
+    <select id="getSingleByYearAndPersonnelId" parameterType="String" resultType="com.rlglsys.entity.Mtb66TotalCredit">
+        select * from  m_tb66_total_credit
+        where DEL_KBN = '0'
+        and YEAR =#{year}
+        and PERSONAL_ID =#{personnel_id}
+    </select>
+    <!-- 根据个人身份证号码得到所在科室Id -->
+    <select id="getKeShiIdByPersonnelId" parameterType="String" resultType="String">
+      select SECTION_ID 
+      from m_tb01_user 
+      where DEL_KBN = '0'
+      and USER_ID = #{personnel_id}
+    </select>
+    
+    <!-- 根据年度得到该年度下的数据条数 -->
+    <select id="getCount" resultType="int"  parameterType="String">
+        select count(*) from 
+        (SELECT mtb66.CREDIT_I,mtb66.CREDIT_II,mtb66.YEAR,
+					mtb66.PERSONAL_NM ,mtb66.PERSONAL_ID,
+					mtb66.PERSONNEL_UNIT_NO,
+					mtb12.PERSONNEL_OFFICE
+ 					,mtb09.IN_POST_NAME
+			FROM  m_tb66_total_credit AS mtb66
+			LEFT JOIN m_tb12_personnel AS mtb12
+			ON mtb66.PERSONAL_ID  = mtb12.PERSONNEL_ID
+				AND mtb12.CONTINUE_EDUCATION_FLAG = '1'
+			LEFT JOIN m_tb09_irin as mtb09
+ 			ON mtb66.PERSONAL_ID = mtb09.person_no
+ 				AND mtb09.UNIT_NO = #{unit_no}
+			WHERE 
+				mtb66.PERSONNEL_UNIT_NO = #{unit_no}
+				<if test="niandu_year !=''">
+		     		AND mtb66.`YEAR` = #{niandu_year}
+		     	</if>
+				<if test="personnel_id !=''">
+		     		and mtb66.PERSONAL_ID = #{personnel_id}
+		     	</if>) as A 
+    </select>
+</mapper>

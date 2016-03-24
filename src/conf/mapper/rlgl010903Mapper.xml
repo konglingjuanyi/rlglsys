@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010903Mapper">
+  <resultMap type="com.rlglsys.bean.Rlgl010903Bean" id="unitInforList">
+    <!-- 单位编号 -->
+    <result property="unit_no" column="unit_no"/>
+    <!-- 单位名称-->
+    <result property="unit_nm" column="unit_nm"/>
+    <!-- 单位状态-->
+    <result property="unit_status" column="unit_status"/>
+    <!-- 科室编号-->
+    <result property="section_id" column="section_id"/>
+    <!-- 人员姓名-->
+    <result property="personnal_name" column="personnal_name"/>
+    <!-- 身份证号-->
+    <result property="personnal_cardid" column="personnal_cardid"/>
+    <!--人员数量-->
+    <result property="section_number" column="section_number"/>
+  </resultMap>
+  <!-- 人事账号建立数量统计(行政单位的情况，统计下级单位账号建立数量)SQL -->
+  <select id="getSearchUnitInfo" resultMap="unitInforList">
+      SELECT 
+        M_TB04_UNIT.UNIT_NO as unit_no,
+        M_TB04_UNIT.UNIT_NM as unit_nm,
+        M_TB04_UNIT.UNIT_STATUS as unit_status,
+        M_TB04_UNIT.LOGIN_DATE as login_time
+      FROM 
+        M_TB04_UNIT
+      WHERE 
+          DEL_KBN = '0'
+         <if test="rlgl010903.unit_no != ''">
+          AND M_TB04_UNIT.UNIT_SUPER = #{rlgl010903.unit_no}
+         </if>
+         <if test="rlgl010903.startTime != ''">
+          AND mid(M_TB04_UNIT.LOGIN_DATE,1,8) >= #{rlgl010903.startTime}
+         </if>
+         <if test="rlgl010903.endTime != ''">
+         <![CDATA[AND mid(M_TB04_UNIT.LOGIN_DATE,1,8) <= #{rlgl010903.endTime}]]>
+         </if>
+         order by LOGIN_DATE asc
+         <if test="rlgl010903.pageCount != 0 and rlgl010903.pageCount != null">
+           LIMIT #{rlgl010903.pageNo},#{rlgl010903.pageCount}
+         </if>
+         ;
+  </select>
+  <!-- 人事账号建立数量统计(医疗单位的情况，统计单位科室人员账号建立数量)SQL -->
+  <select id="searchSectionPerson" resultMap="unitInforList">
+      SELECT 
+        m_tb01_user.SECTION_ID as section_id,
+        m_tb01_user.USER_NAME as personnal_name,
+        m_tb01_user.PERSONNEL_ID as personnal_cardid,
+        m_tb01_user.LOGIN_DATE as login_time
+      FROM 
+        m_tb01_user
+      WHERE 
+          DEL_KBN = '0'
+          <!-- 个人用户 -->
+          and USER_TYPE = '0'
+         <if test="rlgl010903.unit_no != ''">
+          AND m_tb01_user.UNIT_NO = #{rlgl010903.unit_no}
+         </if>
+         <if test="rlgl010903.startTime != ''">
+          AND mid(m_tb01_user.LOGIN_DATE,1,8) >= #{rlgl010903.startTime}
+         </if>
+         <if test="rlgl010903.endTime != ''">
+         <![CDATA[AND mid(m_tb01_user.LOGIN_DATE,1,8) <= #{rlgl010903.endTime}]]>
+         </if>
+         order by SECTION_ID asc
+         <if test="rlgl010903.pageCount != 0 and rlgl010903.pageCount != null">
+           LIMIT #{rlgl010903.pageNo},#{rlgl010903.pageCount}
+         </if>
+         ;
+  </select>
+  <!-- 人事账号建立数量记录查询(下级单位)SQL -->
+  <select id="getCountUnitinfo" resultType="int">
+      SELECT count(*)
+      FROM 
+        M_TB04_UNIT
+      WHERE 
+          DEL_KBN = '0'
+         <if test="rlgl010903.unit_no != ''">
+          AND M_TB04_UNIT.UNIT_SUPER = #{rlgl010903.unit_no}
+         </if>
+         <if test="rlgl010903.startTime != ''">
+          AND mid(M_TB04_UNIT.LOGIN_DATE,1,8) >= #{rlgl010903.startTime}
+         </if>
+         <if test="rlgl010903.endTime != ''">
+         <![CDATA[AND mid(M_TB04_UNIT.LOGIN_DATE,1,8) <= #{rlgl010903.endTime}]]>
+         </if>
+         order by LOGIN_DATE asc 
+         ;
+  </select>
+  <!-- 人事账号建立数量记录查询(科室人员)SQL -->
+  <select id="getCountSectionPerson" resultType="int">
+      SELECT count(*)
+      FROM 
+        m_tb01_user
+      WHERE 
+          DEL_KBN = '0'
+          <!-- 个人用户 -->
+          and USER_TYPE = '0'
+         <if test="rlgl010903.unit_no != ''">
+          AND m_tb01_user.UNIT_NO = #{rlgl010903.unit_no}
+         </if>
+         <if test="rlgl010903.startTime != ''">
+          AND mid(m_tb01_user.LOGIN_DATE,1,8) >= #{rlgl010903.startTime}
+         </if>
+         <if test="rlgl010903.endTime != ''">
+         <![CDATA[AND mid(m_tb01_user.LOGIN_DATE,1,8) <= #{rlgl010903.endTime}]]>
+         </if>
+         order by SECTION_ID asc 
+         ;
+  </select>
+</mapper>

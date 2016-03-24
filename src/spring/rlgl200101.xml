@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- houyc add -->
+<beans>
+    <bean id="rlgl200101Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.rlglsys.mapper.IRlgl200101Mapper" />
+    </bean>
+    <bean id="rlgl200101Service" parent="baseTxProxy">
+        <property name="target">
+            <bean class="com.rlglsys.service.impl.Rlgl200101ServiceImpl"
+                autowire="byName" />
+        </property>
+    </bean>
+</beans>

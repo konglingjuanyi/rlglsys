@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020405Mapper">
+
+  <!-- 获取项目个数 -->
+  <select id="getProjectListCount" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb07_unitapply
+    WHERE
+      APPLY_KBN IN ('056','057','059')
+    AND
+      CHECK_RESULT = '002'
+    AND
+      DEL_KBN = 0
+  </select>
+  
+  <!-- 获取项目列表一览 -->
+  <select id="getProjectList" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      M2.PROJECT_ID,
+      M2.PROJECT_NM,
+      M2.PROJECT_LEVEL,
+      M2.DECLARE_UNIT,
+      M2.PROJECT_LIABLE_NM,
+      M2.PROJECT_LIABLE_PHONE,
+      M1.APPLY_KBN
+    FROM
+      m_tb07_unitapply M1
+    LEFT JOIN
+      m_tb87_new_project_declare M2
+    ON
+      M1.APPLY_NO = M2.APPLY_ID
+    AND
+      M1.APPLY_KBN = '056'
+    AND
+      M1.CHECK_RESULT = '002'
+    AND
+      M1.DEL_KBN = 0
+    WHERE
+      M2.DEL_KBN = 0
+    UNION ALL
+    SELECT
+      M2.PROJECT_ID,
+      M2.PROJECT_NM,
+      M2.PROJECT_LEVEL,
+      M2.DECLARE_UNIT,
+      M2.PROJECT_LIABLE_NM,
+      M2.PROJECT_LIABLE_PHONE,
+      M1.APPLY_KBN
+    FROM
+      m_tb07_unitapply M1
+    LEFT JOIN
+      m_tb93_record_project_declare M2
+    ON
+      M1.APPLY_NO = M2.APPLY_ID
+    AND
+      M1.APPLY_KBN = '057'
+    AND
+      M1.CHECK_RESULT = '002'
+    AND
+      M1.DEL_KBN = 0
+    WHERE
+      M2.DEL_KBN = 0
+    UNION ALL
+    SELECT
+      M2.PROJECT_ID,
+      M2.PROJECT_NM,
+      M2.PROJECT_LEVEL,
+      M2.DECLARE_UNIT,
+      M2.PROJECT_LIABLE_NM,
+      M2.PROJECT_LIABLE_PHONE,
+      M1.APPLY_KBN
+    FROM
+      m_tb07_unitapply M1
+    LEFT JOIN
+      m_tb97_interim_project_apply M2
+    ON
+      M1.APPLY_NO = M2.APPLY_ID
+    AND
+      M1.APPLY_KBN = '059'
+    AND
+      M1.CHECK_RESULT = '002'
+    AND
+      M1.DEL_KBN = 0
+    WHERE
+      M2.DEL_KBN = 0
+    <if test="pageCount != 0 and pageCount != null">
+    LIMIT #{pageNo},#{pageCount}
+    </if>
+  </select>
+  
+  <!-- 通过项目申请编号获取待举办项目明细 -->
+  <select id="getProjectInfoByApplyId" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      APPLY_ID,
+      PROJECT_ID,
+      PROJECT_NM,
+      PROJECT_LIABLE_NM,
+      PROJECT_LIABLE_POST,
+      PROJECT_LIABLE_UNIT,
+      PROJECT_LIABLE_PHONE
+    FROM
+      m_tb87_new_project_declare
+    WHERE
+      APPLY_ID = #{apply_id}
+    AND
+      DEL_KBN = 0
+  </select>
+  
+  <!-- 更新个人人事信息 -->
+  <update id="updateTb29Info">
+      UPDATE m_tb29_personalapplication
+      SET
+          MAX_NUMBER = #{tb29Info.max_number},
+          APPLY_DATE = #{tb29Info.apply_date},
+          CHECK_RESULT = "001",
+          END_MARK = #{tb29Info.end_mark},
+          NOW_MARK = #{tb29Info.now_mark},
+          WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+          UPDATE_USER_ID = #{tb29Info.personal_id},
+          UPDATE_DATE = #{tb29Info.apply_date}
+      WHERE
+          APPLY_NO = #{tb29Info.apply_no}
+  </update>
+  
+  <!-- 插入申请信息到项目举办申请明细表 -->
+  <insert id="insertProjectHoldApplyInfoToMtb90">
+    insert into
+      m_tb90_project_hold_apply_detail (
+        APPLY_NO, 
+        APPLY_NUMBER,
+        PROJECT_ID,
+        PROJECT_NM,
+        PROJECT_LIABLE_NM,
+        PROJECT_LIABLE_POST,
+        PROJECT_LIABLE_UNIT,
+        PROJECT_LIABLE_PHONE,
+        UNIT_NO,
+        UNIT_NM,
+        CONDUCT_START_DATE,
+        CONDUCT_END_DATE,
+        CONDUCT_PATTERN,
+        CONDUCT_PLACE,
+        EDUCATION_OBJECT,
+        EDUCATION_ALL_PERIOD,
+        PEOFESS_THEORY_PERIOD,
+        EXPERIMENT_PERIOD,
+        EXAMINE_PATTERN,
+        PROTOCOL_CONFER_CREDIT,
+        APPLY_TIME,
+        REMARKS,
+        NOW_MARK,
+        EX_KEY,
+        DEL_KBN,
+        LOGIN_USER_ID,
+        LOGIN_DATE,
+        UPDATE_USER_ID,
+        UPDATE_DATE,
+        CONDUCT_FLG,
+        PROJECT_LEVEL
+      ) values (
+        #{mtb90ProjectHoldApplyInfo.apply_no},
+        #{mtb90ProjectHoldApplyInfo.apply_number},
+        #{mtb90ProjectHoldApplyInfo.project_id},
+        #{mtb90ProjectHoldApplyInfo.project_nm},
+        #{mtb90ProjectHoldApplyInfo.project_liable_nm},
+        #{mtb90ProjectHoldApplyInfo.project_liable_post},
+        #{mtb90ProjectHoldApplyInfo.project_liable_unit},
+        #{mtb90ProjectHoldApplyInfo.project_liable_phone},
+        #{mtb90ProjectHoldApplyInfo.unit_no},
+        #{mtb90ProjectHoldApplyInfo.unit_nm},
+        #{mtb90ProjectHoldApplyInfo.conduct_start_date},
+        #{mtb90ProjectHoldApplyInfo.conduct_end_date},
+        #{mtb90ProjectHoldApplyInfo.conduct_pattern},
+        #{mtb90ProjectHoldApplyInfo.conduct_place},
+        #{mtb90ProjectHoldApplyInfo.education_object},
+        #{mtb90ProjectHoldApplyInfo.education_all_period},
+        #{mtb90ProjectHoldApplyInfo.peofess_theory_period},
+        #{mtb90ProjectHoldApplyInfo.experiment_period},
+        #{mtb90ProjectHoldApplyInfo.examine_pattern},
+        #{mtb90ProjectHoldApplyInfo.protocol_confer_credit},
+        #{mtb90ProjectHoldApplyInfo.apply_time},
+        #{mtb90ProjectHoldApplyInfo.remarks},
+        #{mtb90ProjectHoldApplyInfo.now_mark},
+        #{mtb90ProjectHoldApplyInfo.ex_key},
+        #{mtb90ProjectHoldApplyInfo.del_kbn},
+        #{mtb90ProjectHoldApplyInfo.login_user_id},
+        #{mtb90ProjectHoldApplyInfo.login_date},
+        #{mtb90ProjectHoldApplyInfo.update_user_id},
+        #{mtb90ProjectHoldApplyInfo.update_date},
+        #{mtb90ProjectHoldApplyInfo.conduct_flg},
+        #{mtb90ProjectHoldApplyInfo.project_level}
+      )
+  </insert>
+  
+  <!-- 更新审核流程信息 -->
+  <update id="updateNoInfo">
+      UPDATE 
+          t_tb01_auto_getnum
+      SET
+          sequenceNo = sequenceNo + 1
+      WHERE
+          table_id = #{noInfo.table_id}
+      AND 
+          col_id = #{noInfo.col_id}
+  </update>
+  
+  <!-- 插入进修信息 -->
+  <insert id="insertToTb29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+      INSERT INTO m_tb29_personalapplication
+      (
+          APPLY_NO,
+          MAX_NUMBER,
+          APPLY_KBN,
+          PERSONAL_ID,
+          PERSONAL_NM,
+          PERSONAL_UNITNO,
+          APPLY_DATE,
+          CHECK_USER,
+          CHECK_UNITNO,
+          CHECK_RESULT,
+          END_MARK,
+          NOW_MARK,
+          WILL_CHECKUNITNO,
+          EX_KEY,
+          DEL_KBN,
+          LOGIN_USER_ID,
+          LOGIN_DATE,
+          UPDATE_USER_ID,
+          UPDATE_DATE
+      ) VALUES(
+          #{tb29Info.apply_no},
+          #{tb29Info.max_number},
+          #{tb29Info.apply_kbn},
+          #{tb29Info.personal_id},
+          #{tb29Info.personal_nm},
+          #{tb29Info.personal_unitno},
+          #{tb29Info.apply_date},
+          #{tb29Info.check_user},
+          #{tb29Info.check_unitno},
+          #{tb29Info.check_result},
+          #{tb29Info.end_mark},
+          #{tb29Info.now_mark},
+          #{tb29Info.will_checkunitno},
+          #{tb29Info.ex_key},
+          #{tb29Info.del_kbn},
+          #{tb29Info.login_user_id},
+          #{tb29Info.login_date},
+          #{tb29Info.update_user_id},
+          #{tb29Info.update_date}
+      )
+  </insert>
+  
+  <!-- 通过单位编号和项目编号查询检查是否已经申请举办该项目 -->
+  <select id="checkIfApply" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb90_project_hold_apply_detail
+    WHERE
+      UNIT_NO = #{unit_no}
+    AND
+      PROJECT_ID = #{project_id}
+    AND
+      DEL_KBN = 0
+  </select>
+  
+  <!-- 通过项目编号查询待申请举办新项目信息 -->
+  <select id="getProjectInfoFromMtb87" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      M1.PROJECT_ID,
+      M1.PROJECT_NM,
+      M1.PROJECT_LIABLE_NM,
+      M1.PROJECT_LIABLE_PHONE,
+      M1.DECLARE_UNIT,
+      M1.PROJECT_LEVEL,
+      M2.ADM_NAME AS project_level_nm
+    FROM
+      m_tb87_new_project_declare M1
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = '224'
+    AND
+      M2.ADM_NUM = M1.PROJECT_LEVEL
+    AND
+      M2.DEL_KBN = 0
+    WHERE
+      M1.PROJECT_ID = #{project_id}
+    AND
+      M1.DEL_KBN = 0
+  </select>
+  
+  <!-- 通过项目编号查询待申请举办备案项目信息 -->
+  <select id="getProjectInfoFromMtb93" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      M1.PROJECT_ID,
+      M1.PROJECT_NM,
+      M1.PROJECT_LIABLE_NM,
+      M1.PROJECT_LIABLE_PHONE,
+      M1.DECLARE_UNIT,
+      M1.PROJECT_LEVEL,
+      M2.ADM_NAME AS project_level_nm
+    FROM
+      m_tb93_record_project_declare M1
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = '224'
+    AND
+      M2.ADM_NUM = M1.PROJECT_LEVEL
+    AND
+      M2.DEL_KBN = 0
+    WHERE
+      M1.PROJECT_ID = #{project_id}
+    AND
+      M1.DEL_KBN = 0
+  </select>
+  
+  <!-- 通过项目编号查询待申请举办临时项目信息 -->
+  <select id="getProjectInfoFromMtb97" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      M1.PROJECT_ID,
+      M1.PROJECT_NM,
+      M1.PROJECT_LIABLE_NM,
+      M1.PROJECT_LIABLE_PHONE,
+      M1.DECLARE_UNIT,
+      M1.PROJECT_LEVEL,
+      M2.ADM_NAME AS project_level_nm
+    FROM
+      m_tb97_interim_project_apply M1
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = '224'
+    AND
+      M2.ADM_NUM = M1.PROJECT_LEVEL
+    AND
+      M2.DEL_KBN = 0
+    WHERE
+      M1.PROJECT_ID = #{project_id}
+    AND
+      M1.DEL_KBN = 0
+  </select>
+  
+  
+  
+</mapper>

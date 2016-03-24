@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl000212Mapper">
+   <insert id="insertUserRole" parameterType="int">
+       insert into m_tb72_userrole
+       (
+         role_id,
+         user_id,
+         unit_role,
+       <!--    user_enter,-->
+         ex_key  ,                   
+		del_kbn ,                   
+		expend_01 ,               
+		expend_02 ,                
+		expend_03 ,                 
+		expend_04 ,                 
+		expend_05 ,                 
+		login_user_id,            
+		login_date ,                
+		update_user_id ,            
+		update_date    
+       )VALUES
+       (
+         #{userrole.role_id},       
+		#{userrole.user_id},
+		 #{userrole.unit_role},
+	 <!--   #{userrole.user_enter}, -->	
+        #{userrole.ex_key},             
+		#{userrole.del_kbn},                       
+		#{userrole.expend_01},       
+		#{userrole.expend_02},       
+        #{userrole.expend_03},       
+        #{userrole.expend_04},       
+        #{userrole.expend_05},       
+        #{userrole.login_user_id},         
+        #{userrole.login_date},                  
+        #{userrole.update_user_id},          
+        #{userrole.update_date}
+       )
+       
+   </insert>
+   <delete id="deleteUserRole" parameterType="int">
+      DELETE FROM m_tb72_userrole WHERE USER_ID=#{userrole.user_id}
+      <!-- 判断是否为个人用户 -->
+      <!--  <if test="userrole.user_enter != ''">
+          and user_enter=#{userrole.user_enter}
+       </if> -->
+   </delete>
+</mapper>

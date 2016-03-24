@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100103Mapper">
+    <!-- 查询该分类用户没有选择的课件 -->
+    <select id="jnwsjCourseList" resultType="com.rlglsys.bean.Rlgl022003Bean" >
+          SELECT  A.*,
+              B.ADM_NAME as course_catagory_nm
+          FROM m_tb63_courseware A
+          LEFT JOIN m_tb02_adm B ON 
+			A.course_catagory  = B.ADM_NUM  
+			AND B.ADM_TYPE_CD ='212'
+			AND B.DEL_KBN='0'
+          WHERE A.DEL_KBN='0'
+          <if test="rlgl022003Bean.xuefen_leibie != null and rlgl022003Bean.xuefen_leibie !=''">
+         AND  A.xuefen_leibie =  #{rlgl022003Bean.xuefen_leibie}
+          </if>
+          <if test="rlgl022003Bean.unitCourseFlg != null and rlgl022003Bean.unitCourseFlg !=''">
+	          AND A.COURSE_SUPPORT IN
+	          <foreach collection="rlgl022003Bean.unitCourseInfoList" index="index" item="unitCourseInfo" open="(" separator="," close=")">
+		         #{unitCourseInfo.course_support}
+		     </foreach>
+          </if>
+		<if test="course_catagory !=''">
+			          AND (A.COURSE_CATAGORY  LIKE CONCAT(#{course_catagory}, '%')
+          or A.COURSE_CATAGORY2 LIKE CONCAT(#{course_catagory}, '%') 
+          or A.COURSE_CATAGORY3 LIKE CONCAT(#{course_catagory}, '%') 
+          or A.ISALLCOURSE ='001'
+          )
+		</if>
+          AND A.END_DATE>#{rlgl022003Bean.current_date} AND A.COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			            USER_ID=#{user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			            USER_ID=#{user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID in (#{user_id},#{rlgl022003Bean.personnel_id})
+							)
+							order by convert(A.COURSE_NAME using gbk)
+	 <if test="rlgl022003Bean.pageCount != 0 and rlgl022003Bean.pageCount != null">
+           LIMIT #{rlgl022003Bean.pageNo},#{rlgl022003Bean.pageCount}
+     </if>
+    </select>
+    <!-- 查询该分类用户没有选择的课件 -->
+    <select id="getJnwsjCourseCount" resultType="int" >
+          SELECT  count(*)  FROM m_tb63_courseware WHERE DEL_KBN='0'
+          <if test="rlgl022003Bean.unitCourseFlg != null and rlgl022003Bean.unitCourseFlg !=''">
+	          AND COURSE_SUPPORT IN
+	          <foreach collection="rlgl022003Bean.unitCourseInfoList" index="index" item="unitCourseInfo" open="(" separator="," close=")">
+		         #{unitCourseInfo.course_support}
+		     </foreach>
+          </if>
+          AND COURSE_CATAGORY=#{course_catagory} AND END_DATE>#{rlgl022003Bean.current_date} AND COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			            USER_ID=#{user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			            USER_ID=#{user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID  in (#{user_id},#{rlgl022003Bean.personnel_id})
+							)
+    </select>
+    <insert id="insertSelCourse" parameterType="com.rlglsys.entity.MTb80CourseSelected">
+          INSERT INTO m_tb80_course_selected(
+					COURSE_ID,
+					COURSE_NAME,	      
+					CREDIT_YEAR,
+					USER_ID,        
+					TransactionID,
+					EX_KEY,        
+					DEL_KBN,       
+					LOGIN_USER_ID,
+					LOGIN_DATE  
+		   )
+		   VALUES 
+		  (
+					#{mtb80.course_id},	       
+					#{mtb80.course_name},       
+					#{mtb80.credit_year},       
+					#{mtb80.user_id	},         
+					#{mtb80.TransactionID},         
+					#{mtb80.ex_key	},           
+					#{mtb80.del_kbn	 },        
+					#{mtb80.login_user_id}, 
+					#{mtb80.login_date}     
+           )
+    </insert>
+    <!--培训列表查询-->
+     <select id="JnwsjcourseList" resultType="com.rlglsys.bean.Rlgl022002Bean" >
+          SELECT A.ADM_NAME,A.ADM_NUM,IFNULL(C.SUMNUM,'0') sumnum
+          FROM (
+               SELECT * FROM m_tb02_adm  WHERE ADM_TYPE_CD='212') A 
+               LEFT JOIN 
+              (SELECT
+					E.COURSE_CATAGORY,
+					COUNT(*) SUMNUM
+				   FROM
+					(
+						SELECT
+							*
+						FROM
+							m_tb63_courseware
+						WHERE  DEL_KBN='0'
+				          <if test="rlgl022002Bean.unitCourseFlg != null and rlgl022002Bean.unitCourseFlg !=''">
+					          AND COURSE_SUPPORT IN
+					          <foreach collection="rlgl022002Bean.unitCourseInfoList" index="index" item="unitCourseInfo" open="(" separator="," close=")">
+						         #{unitCourseInfo.course_support}
+						     </foreach>
+				          </if>
+							 AND END_DATE>#{rlgl022002Bean.current_date} AND COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			           USER_ID=#{rlgl022002Bean.user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			           USER_ID=#{rlgl022002Bean.user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID in (#{rlgl022002Bean.user_id},#{rlgl022002Bean.personnel_id})
+							)
+					)E
+				    GROUP BY
+				E.COURSE_CATAGORY)  C 
+               ON(A.ADM_NUM=C.COURSE_CATAGORY)
+    </select>
+    <select id="coursesList" resultType="com.rlglsys.bean.Rlgl100103Bean" >
+          SELECT A.ADM_NAME,A.ADM_NUM,IFNULL(C.SUMNUM,'0') sumnum
+          FROM (
+               SELECT * FROM m_tb02_adm  WHERE ADM_TYPE_CD=126) A 
+               LEFT JOIN 
+              (SELECT
+					E.COURSE_CATAGORY,
+					COUNT(*) SUMNUM
+				   FROM
+					(
+						SELECT
+							*
+						FROM
+							m_tb63_courseware
+						WHERE  DEL_KBN='0'
+				          <if test="rlgl022002Bean.unitCourseFlg != null and rlgl022002Bean.unitCourseFlg !=''">
+					          AND COURSE_SUPPORT IN
+					          <foreach collection="rlgl022002Bean.unitCourseInfoList" index="index" item="unitCourseInfo" open="(" separator="," close=")">
+						         #{unitCourseInfo.course_support}
+						     </foreach>
+				          </if>
+							 AND END_DATE>#{rlgl022002Bean.current_date} AND COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			           USER_ID=#{rlgl022002Bean.user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			           USER_ID=#{rlgl022002Bean.user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID in (#{rlgl022002Bean.user_id},#{rlgl022002Bean.personnel_id})
+							)
+					)E
+				    GROUP BY
+				E.COURSE_CATAGORY)  C 
+               ON(A.ADM_NUM=C.COURSE_CATAGORY)
+    </select>
+    <select id="getYxkcCount" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM m_tb80_course_selected M 
+        WHERE M.USER_ID = #{user_id}
+        AND SUBSTRING(M.LOGIN_DATE,1,4) = #{niandu}
+        AND DEL_KBN='0'
+    </select>
+</mapper>

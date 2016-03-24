@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl012003Mapper">
+   <select id="getNoBiXiuList"  resultType="com.rlglsys.bean.Rlgl012001Bean">
+		SELECT * FROM m_tb12_personnel m12
+		WHERE PERSONNEL_CARD_ID  NOT IN
+		(
+			SELECT PERSONNEL_ID FROM m_tb01_user where user_id IN(
+			SELECT  DISTINCT B.user_id FROM m_tb63_courseware as A ,  m_tb80_course_selected as B    
+			WHERE A.COURSE_ID = B.COURSE_ID AND A.bixiu_flag ='1' and m12.del_kbn = '0' and  A.COURSE_ID IN      
+		 		(SELECT COURSE_ID FROM m_tb80_course_selected WHERE USER_ID in
+				(SELECT user_id from  m_tb01_user 
+					      <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+					         WHERE UNIT_NO IN 
+					         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+					           	 open="(" close=")" separator=",">
+					            #{lowUnitNo}
+					        	</foreach>
+				          </if>
+				))
+			)
+		)
+	<if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+         and PERSONNEL_UNIT  IN
+         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+           	 open="(" close=")" separator=",">
+            #{lowUnitNo}
+        	</foreach>
+     </if>
+		ORDER BY  PERSONNEL_CARD_ID
+   <if test="rlgl012001Bean.pageCount != null and rlgl012001Bean.pageCount != 0 ">
+   		 LIMIT #{rlgl012001Bean.pageNo},#{rlgl012001Bean.pageCount}
+    </if>
+   </select>
+   <!-- 该方法主要是为了得到list的size值和在导出文件的时候调用，全部导出 -->
+   <select id="getNoSelBiXiuList" resultType="com.rlglsys.bean.Rlgl012001Bean">
+		SELECT * FROM m_tb12_personnel m12
+		WHERE PERSONNEL_CARD_ID  NOT IN
+		(
+			SELECT PERSONNEL_ID FROM m_tb01_user where user_id IN(
+			SELECT  DISTINCT B.user_id FROM m_tb63_courseware as A , m_tb80_course_selected as B   
+			WHERE A.COURSE_ID = B.COURSE_ID  AND  A.bixiu_flag ='1' and m12.del_kbn = '0' and  A.COURSE_ID IN      
+		 		(SELECT COURSE_ID FROM m_tb80_course_selected WHERE USER_ID in
+				(SELECT user_id from  m_tb01_user 
+					      <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+					         WHERE UNIT_NO IN 
+					         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+					           	 open="(" close=")" separator=",">
+					            #{lowUnitNo}
+					        	</foreach>
+				          </if>
+				))
+			)
+		)
+	<if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+         and PERSONNEL_UNIT  IN
+         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+           	 open="(" close=")" separator=",">
+            #{lowUnitNo}
+          </foreach>
+     </if>
+		ORDER BY  PERSONNEL_CARD_ID
+   </select>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <!-- 指定文件上传大小的配置  100M -->
+    <constant name="struts.multipart.maxSize" value="104857600"></constant>
+	<package name="rlgl090601" extends="rlgl" namespace="/">
+	   <action name="rlgl090601Search" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601SearchAction"
+            method="execute">
+            <result name="input">/WEB-INF/jsp/rlgl090601.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl090601.jsp</result>
+        </action>
+       <action name="rlgl090601Add" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601AddAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl090601create.jsp</result>
+        </action> 
+        <action name="rlgl090601Create" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601CreateAction"
+            method="execute">
+            <result name="input">/WEB-INF/jsp/rlgl090601create.jsp</result>
+            <result name="success" type="redirectAction">
+            	<param name="actionName">rlgl090601Search</param>
+				<param name="pageFlg">${pageFlg}</param>
+            </result>
+        </action> 
+        <action name="rlgl090601Modify" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601ModifyAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl090601modify.jsp</result>
+        </action>
+        <action name="rlgl090601Update" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601UpdateAction"
+            method="execute">
+            <result name="success" type="redirectAction">
+            	<param name="actionName">rlgl090601Search</param>
+            	<param name="backFlg">1</param>
+				<param name="pageFlg">${pageFlg}</param>
+            </result>
+        </action>
+        <!-- 删除 -->
+	    <action name="rlgl090601Delete" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601DeleteAction"
+		    method="execute">
+		   <result name="success" type="redirectAction">
+		   		<param name="actionName">rlgl090601Search</param>
+		   		<param name="backFlg">1</param>
+				<param name="pageFlg">${pageFlg}</param>
+		   </result>
+	    </action>
+	    <!-- 详细和设置必修课的初始化页面 -->
+	    <action name="rlgl090601Detail" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601DetailAction"
+		    method="execute">
+		    <result name="bixiu">/WEB-INF/jsp/rlgl090602.jsp</result>
+		   <result name="success">/WEB-INF/jsp/rlgl090601detail.jsp</result>
+	    </action>
+	    <!-- 自有课程上传 -->
+	    <action name="rlgl090601FileUp" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601FileUpLoadAction">
+	        <result name="success" type="redirectAction">
+	        	<param name="actionName">rlgl090601Search</param>
+				<param name="pageFlg">${pageFlg}</param>
+	        </result>
+	     </action>
+	     <!-- 设置必修课 -->
+		 <action name="rlgl090601bixiu" class="com.rlglsys.action.sysmanage.coursemanage.Rlgl090601BiXiuAction">
+	        <result name="success" type="redirectAction">
+	       		<param name="actionName">rlgl090601Search</param>
+	       		<param name="backFlg">1</param>
+				<param name="pageFlg">${pageFlg}</param>
+	        </result>
+	     </action>
+	</package>
+</struts>
+
+

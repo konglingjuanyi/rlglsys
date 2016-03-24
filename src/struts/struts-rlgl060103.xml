@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<package name="rlgl060103" extends="rlgl" namespace="/">
+    <!-- 抽出题目处理 -->
+    <action name="rlgl060103Init" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060103InitAction" method="execute">
+        <result name="success">/WEB-INF/jsp/rlgl060103.jsp</result>
+    </action>
+    <action name="rlgl060103Search" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060103SearchAction" method="execute">
+        <result name="success">/WEB-INF/jsp/rlgl060103.jsp</result>
+    </action>
+    <action name="rlgl060103Export" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060103ExportAction" method="execute">
+        <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-word;charset=utf-8</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.doc"</param>
+                <param name="inputName">inputStream</param>
+            </result>
+    </action>
+</package>
+</struts>

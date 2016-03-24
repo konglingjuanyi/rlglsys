@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.ICommonMapper">
+
+  <sql id = "personalGetageCommon">
+    CASE 
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5))
+     &lt;=25 
+     then '001' 
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     between 26 and 30 
+     then '002' 
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     between 31 and 35 
+     then '003' 
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     between 36 and 40 
+     then '004' 
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     between 41 and 45 
+     then '005'
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     between 46 and 50 
+     then '006'
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     between 51 and 55 
+     then '007' 
+     when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+     &gt;=56 
+     then '008'
+     else 0 
+    END AS ageErea
+  </sql>
+<!-- 日常报表查询和个人综合查询用 -->
+<sql id = "personalDetailWhereCommon1">
+        WHERE DEL_KBN=0
+       <if test="personnelBean.personnelId != ''">
+              AND personnel_id like '%${personnelBean.personnelId}%'
+       </if>
+       <if test="personnelBean.personnelNm != ''">
+              AND personnel_nm like '%${personnelBean.personnelNm}%'
+       </if>
+       <if test="personnelBean.personnelOffice != ''">
+            <if test="personnelBean.personnelOffice != '-1'">
+            AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb01_user
+             WHERE section_id = #{personnelBean.personnelOffice}
+             AND unit_no  = #{personnelBean.unitNo}
+             )
+            </if>
+       </if>
+       <if test="personnelBean.unitNo != ''">
+              AND personnel_unit = #{personnelBean.unitNo}
+       </if>
+        <!-- 专业技术职务二级 (查询最终职务)-->
+       <if test="personnelBean.twoGradeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb18_personnel_professional_info
+             WHERE GET_TIME IN 
+                (
+                Select Max(GET_TIME) 
+                From  m_tb18_personnel_professional_info 
+                WHERE
+                MID(LEVEL,3,2) in
+                    <foreach collection="personnelBean.twoGradeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                GROUP BY 
+                PERSONNEL_ID
+                )
+            )
+       </if>
+        <!-- 专业技术职务三级 (查询最终职务)-->
+       <if test="personnelBean.threeGradeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb18_personnel_professional_info
+             WHERE GET_TIME IN 
+                (
+                Select Max(GET_TIME) 
+                From  m_tb18_personnel_professional_info 
+                WHERE
+                MID(LEVEL,5,3) in
+                    <foreach collection="personnelBean.threeGradeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                GROUP BY 
+                PERSONNEL_ID
+                )
+            )
+       </if>
+       <!-- 年龄段-->
+       <if test="personnelBean.ageList != null">
+        AND personnel_id in 
+            (
+            select personnel_id from 
+                (select
+                personnel_id,
+                case 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5))
+                    &lt;=25 
+                    then '001' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 26 and 30 
+                    then '002' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 31 and 35 
+                    then '003' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 36 and 40 
+                    then '004' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 41 and 45 
+                    then '005'
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 46 and 50 
+                    then '006'
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 51 and 55 
+                    then '007' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    &gt;=56 
+                    then '008'
+                    else 0 
+                    end as age
+                from m_tb12_personnel
+                where not PERSONNEL_BIRTHDAY is null
+                ) as ages
+            where ages.age in 
+            <foreach collection="personnelBean.ageList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            )
+       </if>
+        <!-- 学历 (查询最终学历) -->
+       <if test="personnelBean.eduList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb15_personnel_edu_info 
+             WHERE 
+             EDUCATIONAL_BG in 
+                 <foreach collection="personnelBean.eduList" index="index" item="item" open="(" separator="," close=")">
+                 #{item}
+                 </foreach>                
+            )
+       </if>
+        <!-- 学位 (查询最终学位) -->
+       <if test="personnelBean.degreeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb15_personnel_edu_info 
+             WHERE 
+             DEGREE in 
+                 <foreach collection="personnelBean.degreeList" index="index" item="item" open="(" separator="," close=")">
+                 #{item}
+                 </foreach>             
+            )
+       </if>
+        <!-- 执业类别 -->
+       <if test="personnelBean.protypeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb19_personnel_practitioners_info
+             WHERE TYPE in
+                    <foreach collection="personnelBean.protypeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+             GROUP BY 
+             PERSONNEL_ID
+            )
+       </if>
+        <!-- 在岗状态 -->
+       <if test="personnelBean.jobStatusList != null">
+            AND personnel_status in
+            <foreach collection="personnelBean.jobStatusList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 政治面貌 -->
+       <if test="personnelBean.partisanList != null">
+            AND personnel_political_landscape in
+            <foreach collection="personnelBean.partisanList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 管理状态 -->
+       <if test="personnelBean.adminTypeList != null">
+            AND personnel_id in 
+            (SELECT PERSON_NO 
+             FROM m_tb09_irin
+             WHERE post_kbn in
+                    <foreach collection="personnelBean.adminTypeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+             GROUP BY 
+             PERSON_NO
+            )
+       </if>
+        <!-- 在编状态 -->
+       <if test="personnelBean.regularList != null">
+            AND personnel_regular in
+            <foreach collection="personnelBean.regularList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 人员进入方式 -->
+       <if test="personnelBean.joinModeList != null">
+            AND personnel_joinmode in
+            <foreach collection="personnelBean.joinModeList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 人员离开方式 -->
+       <if test="personnelBean.outModeList != null">
+            AND personnel_outmode in
+            <foreach collection="personnelBean.outModeList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+  </sql>
+
+  <!-- 个人基本信息更改用 -->
+  <sql id = "personalDetailWhereCommon">
+        WHERE DEL_KBN=0
+       <if test="personnelBean.personnelId != ''">
+              AND personnel_id like '%${personnelBean.personnelId}%'
+       </if>
+       <if test="personnelBean.personnelNm != ''">
+              AND personnel_nm like '%${personnelBean.personnelNm}%'
+       </if>
+       <if test="personnelBean.personnelOffice != ''">
+            <if test="personnelBean.personnelOffice != '-1'">
+            AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb01_user
+             WHERE section_id = #{personnelBean.personnelOffice}
+             AND unit_no  = #{personnelBean.unitNo}
+             )
+            </if>
+       </if>
+       <if test="personnelBean.unitNo != ''">
+              AND personnel_unit = #{personnelBean.unitNo}
+       </if>
+        <!-- 专业技术职务二级 (查询最终职务)-->
+       <if test="personnelBean.twoGradeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb45_personnel_professional_info
+             WHERE GET_TIME IN 
+                (
+                Select Max(GET_TIME) 
+                From  m_tb45_personnel_professional_info 
+                WHERE
+                MID(LEVEL,3,2) in
+                    <foreach collection="personnelBean.twoGradeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                GROUP BY 
+                PERSONNEL_ID
+                )
+            )
+       </if>
+        <!-- 专业技术职务三级 (查询最终职务)-->
+       <if test="personnelBean.threeGradeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb45_personnel_professional_info
+             WHERE GET_TIME IN 
+                (
+                Select Max(GET_TIME) 
+                From  m_tb45_personnel_professional_info 
+                WHERE
+                MID(LEVEL,5,3) in
+                    <foreach collection="personnelBean.threeGradeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                GROUP BY 
+                PERSONNEL_ID
+                )
+            )
+       </if>
+       <!-- 年龄段-->
+       <if test="personnelBean.ageList != null">
+        AND personnel_id in 
+            (
+            select personnel_id from 
+                (select
+                personnel_id,
+                case 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5))
+                    &lt;=25 
+                    then '001' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 26 and 30 
+                    then '002' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 31 and 35 
+                    then '003' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 36 and 40 
+                    then '004' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 41 and 45 
+                    then '005'
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 46 and 50 
+                    then '006'
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    between 51 and 55 
+                    then '007' 
+                    when (YEAR(CURRENT_DATE())-YEAR(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d')))-(RIGHT(CURRENT_DATE(),5)&lt;RIGHT(DATE_FORMAT(PERSONNEL_BIRTHDAY,'%Y-%m-%d'),5)) 
+                    &gt;=56 
+                    then '008'
+                    else 0 
+                end as age
+                from m_tb39_personnel
+                where not PERSONNEL_BIRTHDAY is null
+                ) as ages
+            where ages.age in 
+            <foreach collection="personnelBean.ageList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            )
+       </if>
+        <!-- 学历 (查询最终学历) -->
+       <if test="personnelBean.eduList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb42_personnel_edu_info
+             WHERE GRADUATION_TIME IN 
+                (
+                Select Max(GRADUATION_TIME) 
+                From  m_tb42_personnel_edu_info 
+                WHERE
+                EDUCATIONAL_BG in
+                    <foreach collection="personnelBean.eduList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                GROUP BY 
+                PERSONNEL_ID
+                )
+            )
+       </if>
+        <!-- 学位 (查询最终学位) -->
+       <if test="personnelBean.degreeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb42_personnel_edu_info
+             WHERE GRADUATION_TIME IN 
+                (
+                Select Max(GRADUATION_TIME) 
+                From  m_tb42_personnel_edu_info 
+                WHERE
+                DEGREE in
+                    <foreach collection="personnelBean.degreeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                GROUP BY 
+                PERSONNEL_ID
+                )
+            )
+       </if>
+        <!-- 执业类别 -->
+       <if test="personnelBean.protypeList != null">
+        AND personnel_id in 
+            (SELECT personnel_id 
+             FROM m_tb46_personnel_practitioners_info
+             WHERE TYPE in
+                    <foreach collection="personnelBean.protypeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+             GROUP BY 
+             PERSONNEL_ID
+            )
+       </if>
+        <!-- 在岗状态 -->
+       <if test="personnelBean.jobStatusList != null">
+            AND personnel_status in
+            <foreach collection="personnelBean.jobStatusList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 政治面貌 -->
+       <if test="personnelBean.partisanList != null">
+            AND personnel_political_landscape in
+            <foreach collection="personnelBean.partisanList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 管理状态 -->
+       <if test="personnelBean.adminTypeList != null">
+            AND personnel_id in 
+            (SELECT PERSON_NO 
+             FROM m_tb09_irin
+             WHERE post_kbn in
+                    <foreach collection="personnelBean.adminTypeList" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+             GROUP BY 
+             PERSON_NO
+            )
+       </if>
+        <!-- 在编状态 -->
+       <if test="personnelBean.regularList != null">
+            AND personnel_regular in
+            <foreach collection="personnelBean.regularList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 人员进入方式 -->
+       <if test="personnelBean.joinModeList != null">
+            AND personnel_joinmode in
+            <foreach collection="personnelBean.joinModeList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+        <!-- 人员离开方式 -->
+       <if test="personnelBean.outModeList != null">
+            AND personnel_outmode in
+            <foreach collection="personnelBean.outModeList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="personnelBean.pageCount != 0 and personnelBean.pageCount != null">
+        LIMIT #{personnelBean.pageNo},#{personnelBean.pageCount}
+        </if>
+  </sql>
+  <!-- 日常报表查询和单位综合查询用 -->
+<sql id = "unitPersonalDetailWhereCommon">
+   WHERE DEL_KBN=0 AND  personnel_unit IN
+   <foreach collection="rlgl010910Bean.unitList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+    </foreach>
+</sql>
+</mapper>

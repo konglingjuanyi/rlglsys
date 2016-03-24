@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- houyc add 20130825 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010110Mapper">
+  
+    <!-- 通过医院编号查询该医院科室信息 -->
+    <select id="getSectionInfoByHospitalID" resultType="com.rlglsys.bean.Rlgl010110Bean">
+        select 
+          SECTION_ID,SECTION_NAME,
+          HOSPITAL_ID,HOSPITAL_NAME
+        from 
+          m_tb22_hospital_section
+        where
+          HOSPITAL_ID = #{hospital_id}
+        and
+          DEL_KBN = 0
+    </select>
+    
+    <!-- 通过医院编号，科室编号查询该科室人员信息 -->
+    <select id="getAdminInfoById" resultType="com.rlglsys.bean.Rlgl010110Bean">
+        select 
+          PERSONNEL_ID,PERSONNEL_NM
+        from 
+          m_tb12_personnel
+        where
+          PERSONNEL_UNIT = #{hospital_id}
+        AND 
+          PERSONNEL_OFFICE = #{section_id}
+        and
+          DEL_KBN = 0
+    </select>
+    
+    <!-- 通过医院编号查询该科室人员信息 -->
+    <select id="getAdminInfoByHospital" resultType="com.rlglsys.bean.Rlgl010110Bean">
+        select 
+          PERSONNEL_ID,PERSONNEL_NM
+        from 
+          m_tb12_personnel
+        where
+          PERSONNEL_UNIT = #{hospital_id}
+        and
+          DEL_KBN = 0
+    </select>
+    
+    <!-- 插入管理员信息到用户表 -->
+    <insert id="insertIntoUserTable" parameterType="int">
+        INSERT INTO m_tb01_user(
+            USER_ID,
+            USER_NAME,
+            PASSWORD,
+            USER_TYPE,
+            ACTING_KBN,
+            UNIT_NO,
+            personal_ID,
+            MANAGE_CALIBER_ID,
+            PUBLIC_KBN
+        )
+        values(
+            #{user_id},
+            #{user_name},
+            #{password},
+            #{user_type},
+            #{acting_kbn},
+            #{unit_no},
+            #{personnel_id},
+            #{manage_caliber_id},
+            #{public_kbn}
+            )
+    </insert>
+    
+    <update id="updateAdminInfo" parameterType="int">
+        update 
+          m_tb01_user 
+        set 
+          UPDATE_USER_ID = #{update_user_id},
+          UPDATE_DATE = #{update_date},
+          MANAGER_KBN = 1,
+          MANAGE_CALIBER_ID = #{manage_caliber_id},
+          PUBLIC_KBN = #{public_kbn}
+        where 
+          personal_ID = #{personnel_id}
+        and
+          DEL_KBN = 0
+    </update>
+    
+    <!-- 通过单位编号查询本单位管理员信息 -->
+    <select id="getUnitAdministratorInfoByUnitID" resultType="com.rlglsys.bean.Rlgl010110Bean">
+      select
+        *
+      from
+        m_tb33_unit_administrator_info
+      where
+        UNIT_NO = #{unit_id}
+      and
+        PUBLIC_KBN = 1
+      and
+        DEL_KBN = 0     
+    </select>
+    
+    <select id="getUnitAdministratorInfoByUnitID1" resultType="com.rlglsys.bean.Rlgl010110Bean">
+      SELECT 
+        A.*,
+        B.ADM_NAME as manage_nm,
+        C.SECTION_NAME as section_nm
+      FROM 
+        (SELECT * FROM m_tb33_unit_administrator_info WHERE UNIT_NO IN(
+         SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_SUPER=#{unit_id}
+         UNION  
+         SELECT  UNIT_NO  FROM m_tb04_unit WHERE UNIT_NO = #{unit_id}) AND MANAGE_CALIBER_ID !='00000' ) A
+      LEFT JOIN (
+         SELECT * FROM   m_tb02_adm WHERE ADM_TYPE_CD = '024' AND DEL_KBN = '0') B ON(A.MANAGE_CALIBER_ID=B.ADM_NUM) 
+      LEFT JOIN m_tb22_hospital_section  C ON (A.SECTION_ID = C.SECTION_ID AND A.UNIT_NO = C.UNIT_NO)
+      where A.DEL_KBN = 0
+      <if test="pageCount != 0 and pageCount != null">
+      LIMIT #{pageNo},#{pageCount}
+      </if>
+    </select>
+    
+    <!-- 通过用户ID获取单位管理员信息 -->
+    <select id="getUnitAdministratorInfoByUserID" resultType="com.rlglsys.bean.Rlgl010110Bean">
+      select 
+        *
+      from 
+        m_tb33_unit_administrator_info
+      where
+        USER_ID = #{user_id}
+      and
+        DEL_KBN = 0
+    </select>
+    <!-- 通过用户ID删除单位管理员信息 -->
+    <delete id="deleteUnitAdministratorInfoByUserID">
+      delete from 
+        m_tb33_unit_administrator_info
+      where
+        USER_ID = #{user_id}
+      and 
+        MANAGE_CALIBER_ID = #{manage_caliber_id}
+    </delete>
+    <!-- 通过用户ID查询用户信息和职务 -->
+    <select id="getUserInfoByUserId" resultType="com.rlglsys.bean.Rlgl010111Bean">
+      <!-- select 
+        M_TB12_PERSONNEL.PERSONNEL_ID,
+        PERSONNEL_NM,
+        PERSONNEL_EMAIL,
+        PERSONNEL_TEL
+      from
+        M_TB12_PERSONNEL
+      where
+        M_TB12_PERSONNEL.PERSONNEL_ID = #{user_id}
+      and
+        DEL_KBN = 0 -->
+        SELECT
+          M.PERSONNEL_ID,
+          M.PERSONNEL_NM,
+          M.PERSONNEL_EMAIL,
+          M.PERSONNEL_TEL,
+          M1.POSITION_NM
+        FROM
+          m_tb12_personnel M
+        LEFT JOIN (
+            SELECT 
+                * 
+            FROM 
+                m_tb17_personnel_job_info
+            WHERE 
+                APPOINT_TIME 
+            IN(
+            SELECT
+              MAX(APPOINT_TIME)
+            FROM
+              m_tb17_personnel_job_info
+            GROUP BY
+              PERSONNEL_ID
+            ))M1
+        ON
+          M.PERSONNEL_ID = M1.PERSONNEL_ID
+        WHERE
+          M.PERSONNEL_ID = #{user_id}
+        AND
+          M.DEL_KBN = 0
+
+    </select>
+    <!-- 保存单位管理员信息 -->
+    <insert id="insertAdministratorInfoToDB" >
+      insert into
+        m_tb33_unit_administrator_info(
+          UNIT_NO,
+          UNIT_NM,
+          MANAGE_CALIBER_ID,
+          PUBLIC_KBN,
+          USER_ID,
+          USER_NAME,
+          POSITION_NUM,
+          CELLPHONE,
+          EMAIL,
+          QQNUMBER,
+          TELEPHONE,
+          FAX,
+          EX_KEY,
+          DEL_KBN,
+          LOGIN_USER_ID,
+          LOGIN_DATE,
+          UPDATE_USER_ID,
+          UPDATE_DATE,
+          SECTION_ID,
+          CONTACT_MARK
+        )
+      values(
+        #{rlgl010110Bean.unit_no},
+        #{rlgl010110Bean.unit_nm},
+        #{rlgl010110Bean.manage_caliber_id},
+        #{rlgl010110Bean.public_kbn},
+        #{rlgl010110Bean.user_id},
+        #{rlgl010110Bean.user_name},
+        #{rlgl010110Bean.position_num},
+        #{rlgl010110Bean.cellphone},
+        #{rlgl010110Bean.email},
+        #{rlgl010110Bean.qqnumber},
+        #{rlgl010110Bean.telephone},
+        #{rlgl010110Bean.fax},
+        0,
+        0,
+        #{rlgl010110Bean.login_user_id},
+        #{rlgl010110Bean.login_date},
+        #{rlgl010110Bean.update_user_id},
+        #{rlgl010110Bean.update_date},
+        #{rlgl010110Bean.section_id},
+        #{rlgl010110Bean.contact_mark}
+      )
+    </insert>
+    
+    <!-- 更新单位管理员信息表 -->
+    <update id="updateAdministratorInfoByUserID">
+      update 
+        m_tb33_unit_administrator_info
+      set 
+        MANAGE_CALIBER_ID = #{rlgl010110Bean.manage_caliber_id},
+        telephone=#{rlgl010110Bean.telephone},
+        public_kbn=#{rlgl010110Bean.public_kbn},
+        section_id= #{rlgl010110Bean.section_id},
+        contact_mark=#{rlgl010110Bean.contact_mark}
+      where
+        USER_ID = #{rlgl010110Bean.user_id}
+      and
+        MANAGE_CALIBER_ID = #{old_manage_id}
+    </update>
+    <!-- 通过单位编号查询人员信息 -->
+    <select id="getUserInfoByUnitID" resultType="com.rlglsys.bean.Rlgl010111Bean">
+        SELECT
+          M.PERSONNEL_ID,
+          M.PERSONNEL_NM,
+          M.PERSONNEL_EMAIL,
+          M.PERSONNEL_TEL,
+          M1.POSITION_NM
+        FROM
+          m_tb12_personnel M
+        LEFT JOIN (
+            SELECT 
+                * 
+            FROM 
+                m_tb17_personnel_job_info
+            WHERE 
+                APPOINT_TIME 
+            IN(
+            SELECT
+              MAX(APPOINT_TIME)
+            FROM
+              m_tb17_personnel_job_info
+            GROUP BY
+              PERSONNEL_ID
+            ))M1
+        ON
+          M.PERSONNEL_ID = M1.PERSONNEL_ID
+        WHERE
+          M.PERSONNEL_UNIT = #{unit_no}
+        AND
+          M.DEL_KBN = 0
+        <if test="section_id != ''">
+        AND
+          M.PERSONNEL_OFFICE = #{section_id}
+        </if>
+        <if test="pageCount != 0 and pageCount != null">
+        LIMIT #{pageNo},#{pageCount}
+        </if>
+    </select>
+    
+    <!-- 通过人员ID和管理口径查询用户信息  -->
+    <select id="getUnitAdministratorInfoByUserIdAndManageID" resultType="com.rlglsys.bean.Rlgl010110Bean">
+      <!-- select
+        M.*,
+        M1.ADM_NAME as manage_nm,
+        M2.SECTION_NAME as section_nm
+      from
+        M_TB33_UNIT_ADMINISTRATOR_INFO M
+      LEFT JOIN 
+        m_tb02_adm M1 
+      ON
+        M.MANAGE_CALIBER_ID = M1.ADM_NUM
+      AND 
+        M1.ADM_TYPE_CD = '024'
+      AND 
+        M1.DEL_KBN = '0'
+      LEFT JOIN 
+        m_tb22_hospital_section M2
+      ON
+        M.SECTION_ID = M2.SECTION_ID
+      AND
+        M.UNIT_NO = M2.UNIT_NO
+      where
+        USER_ID = #{user_id}
+      and
+        MANAGE_CALIBER_ID = #{manage_id} -->
+        SELECT
+          M.*,
+          M1.ADM_NAME AS manage_nm,
+          M2.SECTION_NAME AS section_nm,
+          M3.PERSONNEL_IMGNAME AS personnel_imgname
+        FROM
+          m_tb33_unit_administrator_info M
+        LEFT JOIN
+          m_tb02_adm M1
+        ON
+          M.MANAGE_CALIBER_ID = M1.ADM_NUM
+        AND 
+            M1.ADM_TYPE_CD = '024'
+        LEFT JOIN
+            m_tb22_hospital_section M2
+        ON
+            M.SECTION_ID = M2.SECTION_ID
+        AND
+            M.UNIT_NO = M2.UNIT_NO
+        LEFT JOIN
+          m_tb12_personnel M3
+        ON
+          M.USER_ID = M3.PERSONNEL_ID
+        WHERE
+          M.USER_ID = #{user_id}
+        AND
+          M.MANAGE_CALIBER_ID = #{manage_id}
+        AND
+          M.DEL_KBN = 0
+    </select>
+    <!-- 指定管理员后，更新用户表 -->
+    <update id="updateMtb01User">
+      update 
+        m_tb01_user
+      set
+        MANAGER_KBN = 1,
+        PUBLIC_KBN = #{rlgl010110Bean.public_kbn},
+        UPDATE_USER_ID = #{rlgl010110Bean.update_user_id},
+        UPDATE_DATE = #{rlgl010110Bean.update_date}
+      where
+        USER_ID = #{rlgl010110Bean.user_id}
+      and
+        DEL_KBN = 0
+    </update>
+    <!-- 删除管理员后，更新用户表 -->
+    <update id="updateMtb01UserAfterDel">
+      update 
+        m_tb01_user
+      set
+        MANAGER_KBN = 0,
+        PUBLIC_KBN = 0
+      where
+        USER_ID = #{user_id}
+      and
+        DEL_KBN = 0      
+    </update>
+    <!-- 查询下级单位管理员信息 -->
+    <select id="selectLowerUnitByUnitId" resultType="com.rlglsys.bean.Rlgl010110Bean">
+      SELECT 
+        M.*,
+        M1.UNIT_NO as unitb_no,
+        M1.UNIT_NM as unitb_nm
+      FROM 
+        M_TB33_UNIT_ADMINISTRATOR_INFO M
+      LEFT JOIN 
+        m_tb04_unit M1 
+      ON 
+        M.UNIT_NO = M1.UNIT_SUPER
+      WHERE 
+        M.UNIT_NO = #{unit_id}
+      AND
+        M.USER_ID = #{user_id}
+      AND 
+        M.DEL_KBN = 0
+    </select>
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb33_unit_administrator_info M
+        WHERE M.UNIT_NO IN(
+            SELECT M1.UNIT_NO 
+            FROM m_tb04_unit M1
+            WHERE M1.UNIT_SUPER = #{unit_id}
+            UNION
+                SELECT M2.UNIT_NO 
+                FROM m_tb04_unit M2
+                WHERE M2.UNIT_NO = #{unit_id}
+        ) 
+        AND M.DEL_KBN = 0
+        AND M.MANAGE_CALIBER_ID != '00000' 
+    </select>
+    <select id="getUnitUserCount" resultType="int">
+        SELECT
+          COUNT(*)
+        FROM
+          m_tb12_personnel 
+        WHERE
+          PERSONNEL_UNIT = #{unit_id}
+        AND
+          DEL_KBN = 0
+        <if test="section_id != ''">
+        AND
+          PERSONNEL_OFFICE = #{section_id}
+        </if>
+    </select>
+    <update id="insertUnitUser" parameterType="int">
+      UPDATE m_tb04_unit SET CONTACT=#{user_id}
+      WHERE UNIT_NO=#{unit_id}
+    </update>
+     <!-- 通过人员ID和单位联系人标识查询联系人详细信息-->
+    <select id="getUnitContactInfo" resultType="com.rlglsys.bean.Rlgl010110Bean">
+        SELECT
+          M.*,
+          M1.ADM_NAME AS manage_nm,
+          M2.SECTION_NAME AS section_nm,
+          M3.PERSONNEL_IMGNAME AS personnel_imgname
+        FROM
+          m_tb33_unit_administrator_info M
+        LEFT JOIN
+          m_tb02_adm M1
+        ON
+          M.MANAGE_CALIBER_ID = M1.ADM_NUM
+        AND 
+            M1.ADM_TYPE_CD = '024'
+        LEFT JOIN
+            m_tb22_hospital_section M2
+        ON
+            M.SECTION_ID = M2.SECTION_ID
+        AND
+            M.UNIT_NO = M2.UNIT_NO
+        LEFT JOIN
+          m_tb12_personnel M3
+        ON
+          M.USER_ID = M3.PERSONNEL_ID
+        WHERE
+          M.USER_ID = #{user_id}
+        AND
+          M.CONTACT_MARK ='1'
+        AND
+          M.DEL_KBN = 0
+    </select>
+    <select id="getUnitContactCount" resultType="int">
+        SELECT
+          COUNT(*)
+        FROM
+          m_tb33_unit_administrator_info 
+        WHERE
+          PERSONNEL_UNIT = #{unit_id}
+        AND
+            DEL_KBN = 0
+        AND PUBLIC_KBN=1
+    </select>
+    <select id="getUnitContactList" resultType="com.rlglsys.bean.Rlgl010110Bean">
+       SELECT 
+        A.*,
+        B.ADM_NAME as manage_nm,
+        C.SECTION_NAME as section_nm
+      FROM 
+          (SELECT * FROM m_tb33_unit_administrator_info WHERE UNIT_NO=3701000001 AND MANAGE_CALIBER_ID !='00000' AND PUBLIC_KBN = 1 ) A
+      LEFT JOIN (
+         SELECT * FROM   m_tb02_adm WHERE ADM_TYPE_CD = '024' AND DEL_KBN = '0') B ON(A.MANAGE_CALIBER_ID=B.ADM_NUM) 
+      LEFT JOIN m_tb22_hospital_section  C ON (A.SECTION_ID = C.SECTION_ID AND A.UNIT_NO = C.UNIT_NO)
+      where A.DEL_KBN = 0
+      <if test="pageCount != 0 and pageCount != null">
+      LIMIT #{pageNo},#{pageCount}
+      </if>
+    </select>
+</mapper>

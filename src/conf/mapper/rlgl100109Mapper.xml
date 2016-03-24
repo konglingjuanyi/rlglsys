@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100109Mapper">
+    <!-- 查询本单位所有人员申请退费列表数 -->
+    <select id="getRefundPrepayMsgCount" resultType="int">
+        SELECT
+          COUNT(*)
+        FROM
+          t_tb02_prepay_msg
+        WHERE
+          userId 
+        IN
+        (SELECT USER_ID FROM m_tb01_user WHERE UNIT_NO IN 
+        (SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO = #{unit_no} AND DEL_KBN = 0 AND UNIT_STATUS = '1')
+        or UNIT_NO LIKE CONCAT('', #{unit_no}, '%')
+        )
+        AND(
+          clum007 = #{refund_flag1}
+        OR
+          clum007 = #{refund_flag2}
+          )
+        AND
+          DEL_KBN = '0'
+        AND
+          clum004 = CONCAT(clum003,#{succeed})
+    </select>
+    <!-- 查询个人缴费明细列表 -->
+    <select id="getRefundPrepayMsgList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+        SELECT 
+        clum003 as TransactionID
+        ,clum006 as pay_year
+        ,clum007 as refund_flag
+        ,
+        
+        CASE 
+		WHEN LENGTH(replace(CLUM008,CLUM003,'')) >= LENGTH(CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(CLUM008,CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(CLUM004,CLUM003,'')) >= LENGTH(CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(CLUM004,CLUM003,'') 
+		END AS Succeed
+        
+        ,clum009 as refund_time
+        ,M1.*
+         , M2.MerchantNM AS MerchantNM
+        FROM
+          t_tb02_prepay_msg M1
+        LEFT JOIN
+          m_tb119_merchant_info M2
+        ON
+          M1.MerchantID = M2.MerchantID
+        AND
+          M2.DEL_KBN = '0'
+        WHERE
+          M1.userId 
+        IN
+        (SELECT USER_ID FROM m_tb01_user WHERE UNIT_NO IN 
+        (SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO = #{unit_no} AND DEL_KBN = 0 AND UNIT_STATUS = '1')
+        or UNIT_NO LIKE CONCAT('', #{unit_no}, '%')
+        )
+        AND(
+          M1.clum007 = #{refund_flag1}
+        OR
+          M1.clum007 = #{refund_flag2}
+          )
+        AND
+          M1.DEL_KBN = '0'
+        AND
+          M1.clum004 = CONCAT(M1.clum003,#{succeed})
+        <if test="pageCount != 0 and pageCount != null">
+        LIMIT #{pageNo},#{pageCount}
+        </if>
+    </select>
+    <!-- 更新缴费申请退款状态 -->
+    <update id="updateRefundPrepayMsg">
+        UPDATE
+          t_tb02_prepay_msg
+        SET
+          CLUM007 = #{refund_flag}
+        WHERE
+          CLUM003 = #{transactionIds};
+    </update>
+</mapper>

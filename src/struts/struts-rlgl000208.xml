@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl000208" extends="rlgl" namespace="/">
+		<action name="rlgl000208Init" class="com.rlglsys.action.rlgl.role.Rlgl000208InitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl000208.jsp</result>
+		</action>
+	</package>
+</struts>
+

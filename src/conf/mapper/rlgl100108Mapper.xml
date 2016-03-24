@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100108Mapper">
+   <!--查询下级单位信息-->
+    <select id="getLowUnitList"  parameterType="com.rlglsys.bean.Rlgl090805Bean" resultType="com.rlglsys.bean.Rlgl090805Bean"> 
+        SELECT *
+        FROM m_tb04_unit
+        WHERE unit_super=#{rlgl090805Bean.unit_no}
+     <if test="rlgl090805Bean.pageCount != null and rlgl090805Bean.pageCount != 0 ">
+   		 LIMIT #{rlgl090805Bean.pageNo},#{rlgl090805Bean.pageCount}
+     </if>
+    </select>
+    <!--下级单位数量查询 -->
+    <select id="getLowUnitCount" resultType="int" parameterType="String">
+        SELECT COUNT(*)
+        FROM m_tb04_unit 
+        WHERE unit_super=#{unit_no};
+    </select>
+    <!-- 依据单位 编号查询单位课件来源信息-->
+    <select id="getUnitCourseByUnitNo" resultType="com.rlglsys.entity.UnitCourse" parameterType="String">
+     	SELECT * FROM t_unit_course WHERE UNIT_NO = #{unit_no}
+    </select>
+    <!-- 插入操作 -->
+    <insert id="insertUnitCourse" parameterType="com.rlglsys.entity.UnitCourse" >
+    	insert into t_unit_course(
+    		UNIT_NO
+    		,COURSE_SUPPORT
+    		,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+    	VALUES(
+    		#{unitCourse.unit_no}
+    		,#{unitCourse.course_support}
+    		,#{unitCourse.ex_key}
+            ,#{unitCourse.del_kbn}
+            ,#{unitCourse.expend_01}
+            ,#{unitCourse.expend_02}
+            ,#{unitCourse.expend_03}
+            ,#{unitCourse.expend_04}
+            ,#{unitCourse.expend_05}
+            ,#{unitCourse.login_user_id}
+            ,#{unitCourse.login_date}
+            ,#{unitCourse.update_user_id}
+            ,#{unitCourse.update_date}
+            )
+    </insert>
+    <!-- 删除操作 -->
+    <delete id="deleteUnitCourse" parameterType="String">
+    	delete from t_unit_course
+    	where UNIT_NO = #{unit_no}
+    </delete>
+</mapper>

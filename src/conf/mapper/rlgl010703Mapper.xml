@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010703Mapper">
+    <!-- 获得申请明细信息 -->
+    <select id="getApplyInfo1" resultType="com.rlglsys.entity.Mtb85ExpertsBankApplyDetail">
+        SELECT
+		    *
+		FROM
+		    m_tb85_experts_bank_apply_detail
+		WHERE
+		    DEL_KBN = '0'
+		AND APPLY_NO = #{apply_no}
+		AND APPLY_NUMBER = #{apply_num}
+		AND APPLY_KBN = #{apply_kbn}
+    </select>
+    <!-- 获得申请明细信息 -->
+    <select id="getApplyInfo" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT
+		    *
+		FROM
+		    m_tb29_personalapplication
+		WHERE
+		    DEL_KBN = '0'
+		AND WILL_CHECKUNITNO = #{unit_no}
+		AND (CHECK_RESULT = '001' OR CHECK_RESULT = '002' OR CHECK_RESULT = '003')
+		AND APPLY_KBN IN (
+		    SELECT
+		        ADM_NUM
+		    FROM
+		        m_tb02_adm
+		    WHERE
+		        ADM_TYPE_CD = '041'
+		    AND EXPEND_01 = '5'
+		)
+		order by APPLY_DATE
+		<if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!-- 获得申请明细信息 -->
+    <select id="getCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            m_tb29_personalapplication
+        WHERE
+            DEL_KBN = '0'
+        AND WILL_CHECKUNITNO = #{unit_no}
+        AND CHECK_RESULT = '001'
+        AND APPLY_KBN IN (
+            SELECT
+                ADM_NUM
+            FROM
+                m_tb02_adm
+            WHERE
+                ADM_TYPE_CD = '041'
+            AND EXPEND_01 = '5'
+        )
+    </select>
+    <!-- 更新个人人事申请表 -->
+    <update id="updatetb29Info">
+        UPDATE 
+            m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{mtb29.check_result},
+            NOW_MARK = #{mtb29.now_mark},
+            WILL_CHECKUNITNO = #{mtb29.will_checkunitno},
+            UPDATE_USER_ID = #{mtb29.update_user_id},
+            UPDATE_DATE = #{mtb29.update_date}
+        WHERE
+            APPLY_NO = #{mtb29.apply_no}
+    </update>
+    <!-- 更新专家申请明细表 -->
+    <update id="updateMtb85Info">
+      update 
+        m_tb85_experts_bank_apply_detail
+      set
+        CHECKOK_TIME = #{mtb85.checkok_time},
+        UNIT_CHECKER = #{mtb85.unit_checker},
+        UNIT_CHECK_DATE = #{mtb85.unit_check_date},
+        UNIT_CHECK_VIEWS = #{mtb85.unit_check_views},
+        UNIT_CHECK_RESULT = #{mtb85.unit_check_result},
+        COUNTY_CHECKER = #{mtb85.county_checker},
+        COUNTY_CHECK_DATE = #{mtb85.county_check_date},
+        COUNTY_CHECK_VIEWS = #{mtb85.county_check_views},
+        COUNTY_CHECK_RESULT = #{mtb85.county_check_result},
+        DOWNTOWN_CHECKER = #{mtb85.downtown_checker},
+        DOWNTOWN_CHECK_DATE = #{mtb85.downtown_check_date},
+        DOWNTOWN_CHECK_VIEWS = #{mtb85.downtown_check_views},
+        DOWNTOWN_CHECK_RESULT = #{mtb85.downtown_check_result},
+        MINISTRY_CHECKER = #{mtb85.ministry_checker},
+        MINISTRY_CHECK_DATE = #{mtb85.ministry_check_date},
+        MINISTRY_CHECK_VIEWS = #{mtb85.ministry_check_views},
+        MINISTRY_CHECK_RESULT = #{mtb85.ministry_check_result},
+        NOW_MARK = #{mtb85.now_mark},
+        CHECK_RESULT = #{mtb85.check_result},
+        UPDATE_USER_ID = #{mtb85.update_user_id},
+        UPDATE_DATE = #{mtb85.update_date}
+      where
+        APPLY_NO = #{mtb85.apply_no}
+      and
+        APPLY_NUMBER = #{mtb85.apply_number}
+    </update>
+    <!-- 保存专家信息 -->
+    <insert id="insertTb89Info"  parameterType="com.rlglsys.entity.Mtb85ExpertsBankApplyDetail">
+        INSERT INTO m_tb89_experts_bank (
+            PERSONAL_ID,
+            PERSONAL_NM,
+            UNIT_NO,
+            UNIT_NM,
+            EXPERTSBANK_KIND,
+            EXPERTSBANK_LEVEL,
+            RESEARCH_DIRECTION1,
+            RESEARCH_DIRECTION2,
+            SUBJECT1,
+            SUBJECT2,
+            START_TIME,
+            END_TIME,
+            JOBPERFORMANCE,
+            APPLY_TIME,
+            CHECKOK_TIME,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES (
+            #{mtb85.personal_id},
+            #{mtb85.personal_nm},
+            #{mtb85.unit_no},
+            #{mtb85.unit_nm},
+            #{mtb85.expertsbank_kind},
+            #{mtb85.expertsbank_level},
+            #{mtb85.research_direction1},
+            #{mtb85.research_direction2},
+            #{mtb85.subject1},
+            #{mtb85.subject2},
+            #{mtb85.start_time},
+            #{mtb85.end_time},
+            #{mtb85.jobperformance},
+            #{mtb85.apply_time},
+            #{mtb85.checkok_time},
+            0,
+            #{mtb85.login_user_id},
+            #{mtb85.login_date}, 
+            #{mtb85.login_user_id},
+            #{mtb85.login_date}
+        )
+    </insert>
+    <!-- 更新专家信息 -->
+    <update id="updateTb89Info">
+        UPDATE m_tb89_experts_bank
+		SET START_TIME = #{mtb85.start_time},
+		SET END_TIME = #{mtb85.end_time},
+		SET UPDATE_USER_ID = #{mtb85.login_user_id},
+		SET UPDATE_DATE = #{mtb85.login_date}
+		WHERE
+		    PERSONAL_ID = #{mtb85.personal_id}
+		AND EXPERTSBANK_KIND = #{mtb85.expertsbank_kind}
+		AND EXPERTSBANK_LEVEL = #{mtb85.expertsbank_level}
+    </update>
+    <!-- 获得专家基本表信息 -->
+    <select id="getTb89Info" resultType="int">
+        SELECT
+		    count(*)
+		FROM
+		    m_tb89_experts_bank
+		WHERE
+		    DEL_KBN = '0'
+		AND PERSONAL_ID = #{mtb85.personal_id}
+		AND EXPERTSBANK_KIND = #{mtb85.expertsbank_kind}
+		AND EXPERTSBANK_LEVEL = #{mtb85.expertsbank_level}
+    </select>
+</mapper>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060311Mapper">
+
+  <!-- 插入试卷信息 -->
+  <insert id="insertExamWareInfoData">
+	insert into m_tb121_public_courseware
+	(
+		COURSE_ID,
+		COURSE_NAME,
+		COURSE_EXPERT,
+		COURSE_EXPERT_UNIT,
+		XUEFEN_LEIBIE,
+		XUEFEN,
+		COURSE_LEVEL,
+		COURSE_CATAGORY,
+		COURSE_CATAGORY2,
+		COURSE_CATAGORY3,
+		ISALLCOURSE,
+		COURSE_PRICE,
+		COURSE_SUPPORT,
+		BEGIN_DATE,
+		END_DATE,
+		COURSE_EXPLAIN,
+		BIXIU_FLAG,
+		YOUHUI_FLAG,
+		YOUHUI_PRICE,
+		VIDEO_FLAG,
+		COURSE_URL,
+		COURSE_IMAGE_URL,
+		LOCAL_FLAG,
+		EX_KEY,
+		DEL_KBN,
+		EXPEND_01,
+		EXPEND_02,
+		EXPEND_03,
+		EXPEND_04,
+		EXPEND_05,
+		LOGIN_USER_ID,
+		LOGIN_DATE,
+		UPDATE_USER_ID,
+		UPDATE_DATE
+	)
+	VALUES
+	<foreach collection="rlgl060311BeanInfoList" item="rlgl100102Bean" index="index" separator=",">  
+	(
+	  #{rlgl100102Bean.course_id},
+	  #{rlgl100102Bean.course_name},
+	  #{rlgl100102Bean.course_expert},
+	  #{rlgl100102Bean.course_expert_unit},
+	  #{rlgl100102Bean.xuefen_leibie},
+	  #{rlgl100102Bean.xuefen},
+	  #{rlgl100102Bean.course_level},
+	  #{rlgl100102Bean.course_catagory},
+	  #{rlgl100102Bean.course_catagory2},
+	  #{rlgl100102Bean.course_catagory3},
+	  #{rlgl100102Bean.isallcourse},
+	  #{rlgl100102Bean.course_price},
+	  #{rlgl100102Bean.course_support},
+	  #{rlgl100102Bean.begin_date},
+	  #{rlgl100102Bean.end_date},
+	  #{rlgl100102Bean.course_explain},
+	  #{rlgl100102Bean.bixiu_flag},
+	  #{rlgl100102Bean.youhui_flag},
+	  #{rlgl100102Bean.youhui_price},
+	  #{rlgl100102Bean.video_flag},
+	  #{rlgl100102Bean.course_url},
+	  #{rlgl100102Bean.course_image_url},
+	  #{rlgl100102Bean.local_flag},
+	  '1',
+	  '0',
+	  #{rlgl100102Bean.expend_01},
+	  #{rlgl100102Bean.expend_02},
+	  #{rlgl100102Bean.expend_03},
+	  #{rlgl100102Bean.expend_04},
+	  #{rlgl100102Bean.expend_05},
+	  #{rlgl100102Bean.login_user_id},
+	  #{rlgl100102Bean.login_date},
+	  #{rlgl100102Bean.update_user_id},
+	  #{rlgl100102Bean.update_date}
+	)
+	</foreach>
+    </insert>
+    
+    <!-- 插入试卷选择信息 -->
+  <insert id="insertExamWareSelectData" parameterType="com.rlglsys.entity.Mtb121PublicCourseWare">
+	insert into m_tb122_public_course_Select
+	(
+	    USER_ID,
+		COURSE_ID,
+		COURSE_NAME,
+		COURSE_EXPERT,
+		COURSE_EXPERT_UNIT,
+		XUEFEN_LEIBIE,
+		XUEFEN,
+		COURSE_LEVEL,
+		COURSE_CATAGORY,
+		COURSE_CATAGORY2,
+		COURSE_CATAGORY3,
+		ISALLCOURSE,
+		COURSE_PRICE,
+		COURSE_SUPPORT,
+		BEGIN_DATE,
+		END_DATE,
+		COURSE_EXPLAIN,
+		BIXIU_FLAG,
+		YOUHUI_FLAG,
+		YOUHUI_PRICE,
+		VIDEO_FLAG,
+		COURSE_URL,
+		COURSE_IMAGE_URL,
+		LOCAL_FLAG,
+		EX_KEY,
+		DEL_KBN,
+		EXPEND_01,
+		EXPEND_02,
+		EXPEND_03,
+		EXPEND_04,
+		EXPEND_05,
+		LOGIN_USER_ID,
+		LOGIN_DATE,
+		UPDATE_USER_ID,
+		CREDIT_YEAR,
+		UPDATE_DATE
+	)
+	VALUES
+	(
+	  #{rlgl100102Bean.user_id},
+	  #{rlgl100102Bean.course_id},
+	  #{rlgl100102Bean.course_name},
+	  #{rlgl100102Bean.course_expert},
+	  #{rlgl100102Bean.course_expert_unit},
+	  #{rlgl100102Bean.xuefen_leibie},
+	  #{rlgl100102Bean.xuefen},
+	  #{rlgl100102Bean.course_level},
+	  #{rlgl100102Bean.course_catagory},
+	  #{rlgl100102Bean.course_catagory2},
+	  #{rlgl100102Bean.course_catagory3},
+	  #{rlgl100102Bean.isallcourse},
+	  #{rlgl100102Bean.course_price},
+	  #{rlgl100102Bean.course_support},
+	  #{rlgl100102Bean.begin_date},
+	  #{rlgl100102Bean.end_date},
+	  #{rlgl100102Bean.course_explain},
+	  #{rlgl100102Bean.bixiu_flag},
+	  #{rlgl100102Bean.youhui_flag},
+	  #{rlgl100102Bean.youhui_price},
+	  #{rlgl100102Bean.video_flag},
+	  #{rlgl100102Bean.course_url},
+	  #{rlgl100102Bean.course_image_url},
+	  #{rlgl100102Bean.local_flag},
+	  #{rlgl100102Bean.ex_key},
+	  #{rlgl100102Bean.del_kbn},
+	  #{rlgl100102Bean.expend_01},
+	  #{rlgl100102Bean.expend_02},
+	  #{rlgl100102Bean.expend_03},
+	  #{rlgl100102Bean.expend_04},
+	  #{rlgl100102Bean.expend_05},
+	  #{rlgl100102Bean.login_user_id},
+	  #{rlgl100102Bean.login_date},
+	  #{rlgl100102Bean.update_user_id},
+	  #{rlgl100102Bean.credit_year},
+	  #{rlgl100102Bean.update_date}
+	)
+    </insert>
+    
+    <!--根据编号来查询试卷总数  -->
+    <select id="getExamWareCountById" resultType="int">
+       select count(*) from  m_tb121_public_courseware
+       where  DEL_KBN ='0'
+       AND COURSE_ID = #{coursewareInfo.course_id}
+    </select>    
+    <!--根据类别，名称，编号来查询试卷  -->
+    <select id="getExamWareByBean" parameterType="com.rlglsys.entity.Mtb121PublicCourseWare" resultType="com.rlglsys.entity.Mtb121PublicCourseWare">
+       select 
+		A.*,
+		B.ADM_NAME as bixiu,
+		C.ADM_NAME as course_catagory_nm,
+		D.ADM_NAME as course_level_nm,
+		E.ADM_NAME as course_support_nm
+		FROM m_tb121_public_courseware A
+		
+		LEFT JOIN m_tb02_adm B ON 
+		A.BIXIU_FLAG  = B.ADM_NUM  
+		AND B.ADM_TYPE_CD ='231'
+		AND B.DEL_KBN='0'
+		
+		LEFT JOIN m_tb02_adm C ON 
+		A.course_catagory  = C.ADM_NUM  
+		AND C.ADM_TYPE_CD ='212'
+		AND C.DEL_KBN='0'
+		
+		LEFT JOIN m_tb02_adm D ON 
+		A.course_level  = D.ADM_NUM  
+		AND D.ADM_TYPE_CD ='190'
+		AND D.DEL_KBN='0'
+		
+		LEFT JOIN m_tb02_adm E ON 
+		A.course_support  = E.ADM_NUM  
+		AND E.ADM_TYPE_CD ='193'
+		AND E.DEL_KBN='0'
+		where  A.DEL_KBN ='0'
+       <if test="coursewareInfo.course_catagory !=null and coursewareInfo.course_catagory !=''">
+         AND COURSE_CATAGORY like CONCAT('${coursewareInfo.course_catagory}' ,'%')
+       </if>
+       <if test="coursewareInfo.course_name != null and coursewareInfo.course_name !=''">
+         AND COURSE_NAME like '%${coursewareInfo.course_name}%'
+       </if>
+       <if test="coursewareInfo.course_id != null and coursewareInfo.course_id !=''">
+         AND COURSE_ID = #{coursewareInfo.course_id}
+       </if>
+       <if test="coursewareInfo.pageCount != null and  coursewareInfo.pageCount != 0 and coursewareInfo!=null">
+         LIMIT #{coursewareInfo.pageNo},#{coursewareInfo.pageCount}
+       </if>
+    </select>
+    <!--查询试卷总数  -->
+    <select id="getExamWareCount" parameterType="com.rlglsys.entity.Mtb121PublicCourseWare" resultType="int">
+       select count(*) from  m_tb121_public_courseware
+       where  DEL_KBN ='0'
+       <if test="coursewareInfo.course_catagory !=null and coursewareInfo.course_catagory !=''">
+         AND COURSE_CATAGORY like CONCAT('${coursewareInfo.course_catagory}','%')
+       </if>
+       <if test="coursewareInfo.course_name != null and coursewareInfo.course_name !=''">
+         AND COURSE_NAME like '%${coursewareInfo.course_name}%'
+       </if>
+       <if test="coursewareInfo.course_id != null and coursewareInfo.course_id !=''">
+         AND COURSE_ID = #{coursewareInfo.course_id}
+       </if>
+    </select>    
+	<!-- 根据课件id删除课件信息 --> 
+    <update id="deleteCourseWare" parameterType="String">
+      update m_tb121_public_courseware 
+      set DEL_KBN ='1'
+      where COURSE_ID = #{course_id}
+    </update>
+</mapper>

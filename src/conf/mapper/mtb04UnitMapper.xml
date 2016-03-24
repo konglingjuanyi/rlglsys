@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IMTb04UnitMapper">
+   <!--单位详细列表查询 -->
+    <select id="getUnitList" resultType="Mtb04Unit">
+        SELECT
+            unit_no,  
+		    unit_nm
+        FROM m_tb04_unit
+        WHERE unit_no like CONCAT('${area_id}' ,'%');
+    </select>
+    <!--单位名称查询 -->
+    <select id="getUnitName" resultType="String">
+        SELECT
+		    unit_nm   
+        FROM m_tb04_unit 
+        WHERE unit_no=#{unit_id};
+    </select>
+    <select id="getUnitNo" resultType="String">
+        SELECT
+		  unit_no  
+        FROM m_tb04_unit 
+        WHERE Guid =#{guid};
+    </select>
+</mapper>

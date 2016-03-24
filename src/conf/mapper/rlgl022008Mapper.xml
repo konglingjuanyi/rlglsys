@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022008Mapper">
+	<!-- 查询用户是否已经考试通过 -->
+	<select id="getPassExamCourse" resultType= "com.rlglsys.entity.MTb81CourseExams">
+		 select *  from  m_tb81_course_exams 
+		 where DEL_KBN = '0'
+		 and COURSE_ID = #{mtb81Bean.course_id}
+		 and USER_ID = #{mtb81Bean.user_id} 
+	</select>
+
+
+    <!-- 查询该分类用户没有选择的课件 -->
+    <select id="selectCourseSelected" resultType="com.rlglsys.bean.Rlgl022008Bean" >
+        SELECT  *  FROM m_tb63_courseware WHERE  
+           COURSE_ID 
+           IN
+           (SELECT COURSE_ID FROM m_tb80_course_selected WHERE USER_ID=#{rlgl022008Bean.user_id} AND CREDIT_YEAR =#{rlgl022008Bean.credit_year} AND IS_PREP !='1' AND DEL_KBN ='0')
+	</select>
+    <insert id="insertCourseSelected">
+          INSERT INTO m_tb80_course_selected 
+				(
+						COURSE_ID,          
+						COURSE_NAME,        
+						BANK_CODE,          
+						BANK_ORDER_NO,      
+						PAYMENT_TIME,      
+						BANK_NAME,        
+						USER_ACCOUNT,      
+						PAYMENT_MONEY,      
+						IS_DISCOUNTS,      
+						USER_ID  ,          
+						EX_KEY	 ,           
+						DEL_KBN	   ,         
+						EXPEND_01   ,        
+						EXPEND_02	 ,         
+						EXPEND_03	 ,         
+						EXPEND_04	  ,        
+						EXPEND_05	  ,        
+						LOGIN_USER_ID  ,     
+						LOGIN_DATE	 ,       
+						UPDATE_USER_ID	,    
+						UPDATE_DATE	        
+						)
+						VALUES (
+						#{rlgl022006Bean.course_id},       
+						#{rlgl022006Bean.course_name},     
+						#{rlgl022006Bean.bank_code},       
+						#{rlgl022006Bean.bank_order_no}, 
+						#{rlgl022006Bean.payment_time},  
+						#{rlgl022006Bean.bank_name},   
+						#{rlgl022006Bean.user_account}, 
+						#{rlgl022006Bean.payment_money}, 
+						#{rlgl022006Bean.is_discounts},
+						#{rlgl022006Bean.user_id},   
+						#{rlgl022006Bean.ex_key},      
+						#{rlgl022006Bean.del_kbn}, 
+						#{rlgl022006Bean.expend_01},
+						#{rlgl022006Bean.expend_02},  
+						#{rlgl022006Bean.expend_03},   
+						#{rlgl022006Bean.expend_04},
+						#{rlgl022006Bean.expend_05},   
+						#{rlgl022006Bean.login_user_id },
+						#{rlgl022006Bean.login_date}, 
+						#{rlgl022006Bean.update_user_id},
+						#{rlgl022006Bean.update_date}	     
+						);
+    </insert>
+   <insert id="insertMtb81CourseExams">
+          INSERT INTO m_tb81_course_exams 
+				(
+						COURSE_ID	,          
+						COURSE_NAME	,        
+						CREDIT	,          
+						EXAMS_TIME	,      
+						CREDIT_YEAR	,      
+						CREDIT_CATEGORY	  ,        
+						USER_ID	,      
+						EX_KEY	 ,           
+						DEL_KBN	   ,         
+						EXPEND_01   ,        
+						EXPEND_02	 ,         
+						EXPEND_03	 ,         
+						EXPEND_04	  ,        
+						EXPEND_05	  ,        
+						LOGIN_USER_ID  ,     
+						LOGIN_DATE	 ,       
+						UPDATE_USER_ID	,    
+						UPDATE_DATE	        
+						)
+						VALUES (
+						#{mtb81Bean.course_id},       
+						#{mtb81Bean.course_name},     
+						#{mtb81Bean.credit},       
+						#{mtb81Bean.exams_time}, 
+						#{mtb81Bean.credit_year},  
+						#{mtb81Bean.credit_category},   
+						#{mtb81Bean.user_id}, 
+						#{mtb81Bean.ex_key},      
+						#{mtb81Bean.del_kbn}, 
+						#{mtb81Bean.expend_01},
+						#{mtb81Bean.expend_02},  
+						#{mtb81Bean.expend_03},   
+						#{mtb81Bean.expend_04},
+						#{mtb81Bean.expend_05},   
+						#{mtb81Bean.login_user_id },
+						#{mtb81Bean.login_date}, 
+						#{mtb81Bean.update_user_id},
+						#{mtb81Bean.update_date}
+						);
+    </insert>
+    <insert id="insertMtb122PublicCourseExams">
+          INSERT INTO m_tb122_public_course_exams 
+				(
+						COURSE_ID	,          
+						COURSE_NAME	,        
+						CREDIT	,          
+						EXAMS_TIME	,      
+						CREDIT_YEAR	,      
+						CREDIT_CATEGORY	  ,        
+						USER_ID	,      
+						EX_KEY	 ,           
+						DEL_KBN	   ,         
+						EXPEND_01   ,        
+						EXPEND_02	 ,         
+						EXPEND_03	 ,         
+						EXPEND_04	  ,        
+						EXPEND_05	  ,        
+						LOGIN_USER_ID  ,     
+						LOGIN_DATE	 ,       
+						UPDATE_USER_ID	,    
+						UPDATE_DATE	        
+						)
+						VALUES (
+						#{mtb81Bean.course_id},       
+						#{mtb81Bean.course_name},     
+						#{mtb81Bean.credit},       
+						#{mtb81Bean.exams_time}, 
+						#{mtb81Bean.credit_year},  
+						#{mtb81Bean.credit_category},   
+						#{mtb81Bean.user_id}, 
+						#{mtb81Bean.ex_key},      
+						#{mtb81Bean.del_kbn}, 
+						#{mtb81Bean.expend_01},
+						#{mtb81Bean.expend_02},  
+						#{mtb81Bean.expend_03},   
+						#{mtb81Bean.expend_04},
+						#{mtb81Bean.expend_05},   
+						#{mtb81Bean.login_user_id },
+						#{mtb81Bean.login_date}, 
+						#{mtb81Bean.update_user_id},
+						#{mtb81Bean.update_date}
+						);
+    </insert>
+    <delete id="deleteCourseTemporary" parameterType="int">
+        DELETE FROM m_tb79_course_temporary WHERE USER_ID=#{rlgl022005Bean.user_id} AND course_id=#{rlgl022005Bean.course_id}
+    </delete>
+</mapper>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020603Mapper">
+    <!-- 个人信息查询SQL -->
+    <select id="getPersonInfo" resultType="com.rlglsys.entity.Mtb12Personnel">
+        SELECT *
+        FROM m_tb12_personnel 
+        WHERE 
+        PERSONNEL_ID = #{person_no}
+    </select>
+    <!-- 件数取得SQL -->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND PERSONAL_ID = #{person_no}
+            AND APPLY_KBN = #{apply_kbn}
+    </select>
+    <!-- 待办事项一览查询SQL -->
+    <select id="search" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND WILL_CHECKUNITNO = #{unit_no}
+            AND PERSONAL_ID = #{person_no}
+            AND APPLY_KBN = #{apply_kbn}
+        <if test="rlgl020603Bean.pageCount != 0 and rlgl020603Bean.pageCount != null">
+        LIMIT #{rlgl020603Bean.pageNo},#{rlgl020603Bean.pageCount}
+        </if>
+    </select>
+    <!-- 待审核查询SQL -->
+    <select id="getSearchInfo" resultType="com.rlglsys.entity.Mtb56creditreportingdetail">
+        SELECT *
+        FROM m_tb56_credit_reporting_detail M
+        LEFT JOIN
+        m_tb01_user M1
+        ON M.personal_id = M1.user_id
+        WHERE 1=1
+        <if test="apply_No != ''">
+            AND apply_no=#{ apply_No}
+        </if>
+    </select>
+    <!-- 待办事项一览查询SQL -->
+    <insert id="submitForReview">
+        INSERT INTO m_tb56_credit_reporting_detail
+        (APPLY_NO
+        ,PERSONAL_ID
+        ,UNIT_NO
+        ,SUBSCRIPTION_YEAR
+        ,TIME_QUANTUM
+        ,APPLY_STATUS
+        ,CHECK_RESULT
+        ,APPLICATION_TIME
+        ,CREDIT
+        ,SCORE_YEAR
+        ,CREDIT_CATEGORY
+        ,NOW_MARK
+        ,END_MARK
+        ,WILL_CHECKUNITNO)
+        VALUES (#{rlgl020603.apply_no}
+        ,#{rlgl020603.personal_id}
+        ,#{rlgl020603.unit_no}
+        ,#{rlgl020603.subscription_year}
+        ,#{rlgl020603.time_quantum}
+        ,#{rlgl020603.apply_status}
+        ,#{rlgl020603.check_result}
+        ,#{rlgl020603.application_time}
+        ,#{rlgl020603.credit}
+        ,#{rlgl020603.score_year}
+        ,#{rlgl020603.credit_category}
+        ,#{rlgl020603.now_mark}
+        ,#{rlgl020603.end_mark}
+        ,#{rlgl020603.will_checkunitno})
+    </insert>
+    <!-- 获得NAVI值SQL -->
+    <select id="getNavi" resultType="String">
+        SELECT
+            A.NAVI
+        FROM
+            m_tb56_credit_reporting_detail A
+        LEFT JOIN   
+            m_tb29_personalapplication B
+        ON
+            A.APPLY_NO = B.APPLY_NO
+            AND A.PERSONAL_ID = B.PERSONAL_ID   
+        WHERE   
+            B.PERSONAL_ID = #{person_id}
+            AND B.APPLY_NO = #{apply_no}
+            AND B.APPLY_KBN = #{apply_kbn}
+    </select>
+    <!-- 获得页面显示信息SQL -->
+    <select id="getMtb60Info" resultType="com.rlglsys.entity.Mtb60formlist">
+        SELECT
+            *
+        FROM
+            m_tb60_form_list
+        WHERE
+            NAVI = #{navi}
+        ORDER BY SHOW_SORT_FLAG
+    </select>
+    <!-- 获得申请信息 -->
+    <select id="getMtb56Info" resultType="com.rlglsys.entity.Mtb56creditreportingdetail">
+        SELECT
+            *
+        FROM
+            m_tb56_credit_reporting_detail M
+        LEFT JOIN m_tb01_user M1 ON M.personal_id = M1.user_id
+        WHERE
+            NAVI = #{navi}
+        AND APPLY_NO = #{apply_no}
+        AND PERSONAL_ID = #{person_id}
+        AND CREDIT_CATEGORY = #{credit_category}
+    </select>
+    <!-- 个人人事申请信息查询SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{apply_no}
+    </select>
+    <!-- 获得所有该人员相关navi值 -->
+    <select id="getAllNavi" resultType="com.rlglsys.bean.Rlgl020604Bean">
+        SELECT
+            A.PERSONAL_ID,
+            A.NAVI,
+            B.MENU_NAME
+        FROM
+            m_tb56_credit_reporting_detail A
+        LEFT JOIN 
+            m_tb03_menu B
+        ON
+            A.NAVI = B.EXPEND_01
+        WHERE
+            A.PERSONAL_ID = #{person_id}
+            AND A.WILL_CHECKUNITNO = #{unit_no}
+            AND A.DEL_KBN = '0'
+        GROUP BY
+            A.NAVI
+    </select>
+    <!-- 获得页面个人信息 -->
+    <select id="getAllInfo" resultType="com.rlglsys.bean.Rlgl020605Bean">
+        SELECT
+            A.PERSONNEL_NM,
+            A.PERSONNEL_CARD_ID,
+            A.PERSONNEL_UNIT_NM,
+            A.PERSONNEL_OFFICETEL,
+            A.PERSONNEL_TEL,
+            A.PERSONNEL_IMGNAME,
+            B.SECTION_NAME,
+            B.SECTION_TEL,
+            C.LEV,
+            D.EDU,
+            E.PRACTITION,
+            E.ISSUE_TIME,
+            F.JOB,
+            G.ESCROW_UNIT_NM
+        FROM
+            m_tb12_personnel A
+        /* 科室 */
+        LEFT JOIN (
+            SELECT
+                t1.UNIT_NO,
+                t1.SECTION_NAME,
+                t1.SECTION_TEL
+            FROM
+                m_tb22_hospital_section t1
+            LEFT JOIN m_tb01_user t2 ON t2.UNIT_NO = t1.UNIT_NO
+            AND t1.SECTION_ID = t2.SECTION_ID
+            WHERE
+                t2.PERSONNEL_ID = #{mtb12.personnel_id}
+        ) B ON A.PERSONNEL_UNIT = B.UNIT_NO
+        /* 职称 */
+        LEFT JOIN (
+            SELECT
+                t4.PERSONNEL_ID,
+                t3.ADM_NAME AS LEV
+            FROM
+                m_tb02_adm t3
+            LEFT JOIN (
+                SELECT
+                    PERSONNEL_ID,
+                    LEVEL,
+                    SUBSTRING(LEVEL, 3, 2) AS LEVEL1
+                FROM
+                    m_tb18_personnel_professional_info
+                WHERE
+                    PERSONNEL_ID = #{mtb12.personnel_id}
+                ORDER BY
+                    LEVEL
+                LIMIT 0,
+                1
+            ) t4 ON t3.ADM_TYPE_CD = '087'
+            AND t3.ADM_NUM = t4.LEVEL1
+            WHERE
+                t4.PERSONNEL_ID = #{mtb12.personnel_id}
+        ) C ON A.PERSONNEL_CARD_ID = C.PERSONNEL_ID
+        /* 学历 */
+        LEFT JOIN (
+            SELECT
+                t5.PERSONNEL_ID,
+                t5.EDUCATIONAL_BG,
+                t6.ADM_NAME AS EDU
+            FROM
+                m_tb15_personnel_edu_info t5
+            LEFT JOIN m_tb02_adm t6 ON t6.ADM_TYPE_CD = '090'
+            AND t5.EDUCATIONAL_BG = t6.ADM_NUM
+            WHERE
+                t5.PERSONNEL_ID = #{mtb12.personnel_id}
+            ORDER BY
+                EDUCATIONAL_BG DESC
+            LIMIT 0,
+            1
+        ) D ON A.PERSONNEL_CARD_ID = D.PERSONNEL_ID
+        /* 执业资格 */
+        LEFT JOIN (
+            SELECT
+                t7.PERSONNEL_ID,
+                t7.TYPE,
+                t7. LEVEL,
+                t7.ISSUE_TIME,
+                t8.ADM_NAME AS PRACTITION
+            FROM
+                m_tb19_personnel_practitioners_info t7
+            LEFT JOIN m_tb02_adm t8 ON t8.ADM_TYPE_CD = '008'
+            AND t8.ADM_NUM = t7.TYPE
+            WHERE
+                t7.PERSONNEL_ID = #{mtb12.personnel_id}
+            ORDER BY
+                t7.TYPE,
+                t7. LEVEL
+            LIMIT 0,
+            1
+        ) E ON A.PERSONNEL_CARD_ID = E.PERSONNEL_ID
+        /* 行政级别 */
+        LEFT JOIN (
+            SELECT
+                t9.PERSONNEL_ID,
+                t9. LEVEL,
+                t10.ADM_NAME AS JOB
+            FROM
+                m_tb17_personnel_job_info t9
+            LEFT JOIN m_tb02_adm t10 ON t10.ADM_TYPE_CD = '006'
+            AND t9. LEVEL = t10.ADM_NUM
+            WHERE
+                PERSONNEL_ID = #{mtb12.personnel_id}
+            ORDER BY
+                t9. LEVEL
+            LIMIT 0,
+            1
+        ) F ON A.PERSONNEL_CARD_ID = F.PERSONNEL_ID
+        /* 代管单位 */
+        LEFT JOIN(SELECT 
+        t11.UNIT_NO,
+        t11.ESCROW_UNIT_NO,
+        t12.UNIT_NM AS ESCROW_UNIT_NM
+        FROM m_tb04_unit t11
+        LEFT JOIN m_tb04_unit t12
+        ON t11.ESCROW_UNIT_NO = t12.UNIT_NO
+        WHERE
+        t11.UNIT_NO = #{mtb12.personnel_unit}) G
+        ON A.PERSONNEL_UNIT = G.UNIT_NO
+        WHERE
+            A.PERSONNEL_CARD_ID = #{mtb12.personnel_id}
+    </select>
+    <!-- 获得学分年度 -->
+    <select id="getCreditYear" resultType="String">
+        SELECT
+            CREDIT_YEAR_ID
+        FROM
+            m_tb76_credit_year_set
+        WHERE
+            AREA_ID = SUBSTRING(#{unit_no},1,2)
+    </select>
+    <!-- 获得学分-->
+    <select id="getCredit" resultType="com.rlglsys.entity.Mtb66TotalCredit">
+        SELECT
+            *
+        FROM
+            m_tb66_total_credit
+        WHERE
+            PERSONAL_ID = #{person_id}
+        AND YEAR = #{year}
+    </select>
+    <!-- 获得本级审批通过学分-->
+    <select id="getCreditByUnitNo" resultType="String">
+        SELECT SUM(credit)
+        from m_tb56_credit_reporting_detail
+        WHERE 
+        PERSONAL_ID = #{person_id}
+        AND SCORE_YEAR = #{year}
+        AND(
+        (UNIT_CHECKER = #{unit_no} AND UNIT_CHECK_RESULT = '001')
+        OR(COUNTY_CHECKER = #{unit_no} and COUNTY_CHECK_RESULT = '001')
+        OR(DOWNTOWN_CHECKER = #{unit_no} AND DOWNTOWN_CHECK_RESULT = '001')
+        OR(MINISTRY_CHECKER = #{unit_no} AND MINISTRY_CHECK_RESULT = '001'))
+    </select>
+</mapper>

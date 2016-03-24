@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<package name="rlgl060105" extends="rlgl" namespace="/">
+    <action name="rlgl060105Init" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060105InitAction" method="execute">
+        <result name="success">/WEB-INF/jsp/rlgl060102.jsp</result>
+    </action>
+    <action name="rlgl060105Apply" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060105ApplyAction" method="execute">
+        <result name="success">/WEB-INF/jsp/rlgl060104.jsp</result>
+    </action>
+    <action name="rlgl060105Update" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060105UpdateAction" method="execute">
+        <result name="success" type="redirectAction">rlgl060105Init</result>
+        <result name="error" >/WEB-INF/jsp/rlgl060104.jsp</result>
+    </action>
+    <action name="rlgl060105Change" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060105ChangeAction" method="execute">
+        <result name="success">/WEB-INF/jsp/rlgl060104.jsp</result>
+    </action>
+    <action name="rlgl060105Detail" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060105DetailAction" method="execute">
+        <result name="success">/WEB-INF/jsp/rlgl060105.jsp</result>
+    </action>
+    <action name="rlgl060105Back" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060105BackAction" method="execute">
+        <result name="success" type="redirectAction">rlgl060105Init</result>
+    </action>
+</package>
+</struts>

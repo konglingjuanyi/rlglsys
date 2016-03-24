@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl100101" extends="rlgl"  namespace="/">
+       <!-- 网银支付初期化处理 -->
+       <action name="rlgl100101Init"
+        class="com.rlglsys.action.learnonline.Rlgl100101InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl100101.jsp</result>
+            <result name="input" type="redirectAction">
+            	<param name="actionName">rlgl010319Init</param>
+            </result>
+       </action>
+       <!-- 网上支付 -->
+       <action name="rlgl100101Prepay"
+        class="com.rlglsys.action.learnonline.Rlgl100101PrepayAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl10010101.jsp</result>
+       </action>
+       <!-- 账户查询余额 -->
+       <action name="Rlgl1001003Init"
+        class="com.rlglsys.action.learnonline.Rlgl1001003InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl10010103.jsp</result>
+       </action>
+       <!-- 网上支付 -->
+       <action name="rlgl100101Select"
+        class="com.rlglsys.action.learnonline.Rlgl100101SelectAction"
+            method="execute">
+            <result name="success" type="redirectAction">
+                <param name="actionName">rlgl100101Prepay</param>
+			    <param name="flg">${successFlg}</param>
+			    <param name="TransactionID">${TransactionID}</param>
+            </result>
+       </action>
+    </package>
+</struts>
+

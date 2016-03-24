@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 必修课管理 -->
+<struts>
+    <package name="rlgl020807" extends="rlgl" namespace="/">
+       <!-- 必修课程一览 -->
+       <action name="rlgl020807Init"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807InitAction" method="execute">
+           <result name="success">/WEB-INF/jsp/rlgl020807.jsp</result>
+       </action>
+       <!-- 必修课程查看 -->
+       <action name="rlgl020807View"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807ViewAction" method="execute">
+           <result name="rlgl020808">/WEB-INF/jsp/rlgl020808.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl020808.jsp</result>
+       </action>
+       <!-- 返回 -->
+       <action name="rlgl020807Back"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807BackAction" method="execute">
+           <result name="back" type="redirectAction">rlgl020807Init</result>
+       </action>
+       <!-- 删除课程 -->
+       <action name="rlgl020807Delete"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807DeleteAction" method="execute">
+           <result name="back" type="redirectAction">rlgl020807Init</result>
+       </action>
+       <!--必修课程编辑 -->
+       <action name="rlgl020807Edit"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807EditAction" method="execute">
+           <result name="rlgl020809">/WEB-INF/jsp/rlgl020809.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl020809.jsp</result>
+       </action>
+       <!-- 添加课程 -->
+       <action name="rlgl020807Add"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807AddAction" method="execute">
+           <result name="rlgl020810">/WEB-INF/jsp/rlgl020810.jsp</result>
+       </action>
+       <!-- 提交添加课程 -->
+       <action name="rlgl020807Commit"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807CommitAction" method="execute">
+           <result name="success" type="redirectAction">rlgl020807Init</result>
+           <result name="error">/WEB-INF/jsp/rlgl020810.jsp</result>
+       </action>
+       <!-- 提交编辑后课程信息 -->
+       <action name="rlgl020807EditCommit"
+           class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020807EditCommitAction" method="execute">
+           <result name="success" type="redirectAction">rlgl020807Init</result>
+           <result name="error">/WEB-INF/jsp/rlgl020809.jsp</result>
+       </action>
+    </package>
+</struts>
+

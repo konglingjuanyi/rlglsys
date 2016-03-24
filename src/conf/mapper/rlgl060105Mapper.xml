@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060105Mapper">
+    <!-- 获得考试信息 -->
+    <select id="getInfo" resultType="com.rlglsys.entity.Mtb103ExamSetting">
+       SELECT
+		    A.EXAM_NO,
+		    A.SUBJECT_KB,
+		    B.ADM_NAME AS SUBJECT_KBNM,
+            C.UNIT_NM,
+		    A.EXAMINATION_NAME,
+		    A.EXAM_PLACE,
+		    A.EXAM_START_DATE,
+		    A.EXAM_END_DATE,
+		    A.START_UNIT,
+		    A.APPLY_START_DATE,
+		    A.APPLY_END_DATE
+		FROM
+		    m_tb103_exam_setting A
+		LEFT JOIN m_tb02_adm B ON A.SUBJECT_KB = B.ADM_NUM
+		AND B.ADM_TYPE_CD = '008'
+        LEFT JOIN m_tb04_unit C ON A.START_UNIT = C.UNIT_NO
+		WHERE
+		    A.DEL_KBN = '0'
+		AND 
+		(A.start_unit = #{unit_no} or A.start_unit = mid(#{unit_no},1,4))
+        <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <select id="getCount" resultType="int">
+       SELECT
+            count(*)
+        FROM
+            m_tb103_exam_setting A
+        WHERE
+            A.DEL_KBN = '0'
+        AND 
+        (A.start_unit = #{unit_no} or A.start_unit = mid(#{unit_no},1,4))
+    </select>
+    <!-- 获得考试信息 -->
+    <select id="getMtb103Info" resultType="com.rlglsys.entity.Mtb103ExamSetting">
+        SELECT
+            *
+        FROM
+            m_tb103_exam_setting
+        WHERE
+            DEL_KBN = '0'
+        AND EXAM_NO = #{exam_no}
+    </select>
+    <insert id="insertMtb103Info">
+        INSERT m_tb103_exam_setting (
+		    EXAM_NO,
+		    SUBJECT_KB,
+		    EXAMINATION_NAME,
+		    EXAM_PLACE,
+		    EXAM_START_DATE,
+		    EXAM_END_DATE,
+		    START_UNIT,
+		    APPLY_START_DATE,
+		    APPLY_END_DATE,
+		    APPLY_SCOPE,
+		    EXAM_TIME,
+		    EVENT_NO,
+		    EX_KEY,
+		    LOGIN_USER_ID,
+		    LOGIN_DATE,
+		    UPDATE_USER_ID,
+		    UPDATE_DATE
+		)
+		VALUES
+		    (
+		        #{mtb103.exam_no},
+		        #{mtb103.subject_kb},
+		        #{mtb103.examination_name},
+		        #{mtb103.exam_place},
+		        #{mtb103.exam_start_date},
+		        #{mtb103.exam_end_date},
+		        #{mtb103.start_unit},
+		        #{mtb103.apply_start_date},
+		        #{mtb103.apply_end_date},
+		        #{mtb103.apply_scope},
+		        #{mtb103.exam_time},
+		        #{mtb103.event_no},
+		        #{mtb103.ex_key},
+		        #{mtb103.login_user_id},
+		        #{mtb103.login_date},
+		        #{mtb103.update_user_id},
+		        #{mtb103.update_date}
+		    )
+    </insert>
+    <update id="updateMtb103Info">
+        UPDATE
+            m_tb103_exam_setting
+		SET 
+			EXAM_NO = #{mtb103.exam_no},
+			SUBJECT_KB = #{mtb103.subject_kb},
+			EXAMINATION_NAME = #{mtb103.examination_name},
+			EXAM_PLACE = #{mtb103.exam_place},
+			EXAM_START_DATE = #{mtb103.exam_start_date},
+			EXAM_END_DATE = #{mtb103.exam_end_date},
+			START_UNIT = #{mtb103.start_unit},
+			APPLY_START_DATE = #{mtb103.apply_start_date},
+			APPLY_END_DATE = #{mtb103.apply_end_date},
+			EXAM_TIME = #{mtb103.exam_time},
+			UPDATE_USER_ID = #{mtb103.update_user_id},
+			UPDATE_DATE = #{mtb103.update_date}
+			WHERE
+			    EXAM_NO = #{mtb103.exam_no}
+    </update>
+    <!-- 获得场次 -->
+    <select id="getEventNo" resultType="String">
+        SELECT
+		    MAX(EVENT_NO)
+		FROM
+		    m_tb103_exam_setting
+		WHERE
+		    SUBSTRING(EXAM_START_DATE, 1, 4) = #{year}
+    </select>
+</mapper>

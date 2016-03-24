@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020904Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020904Bean" id="resultInfoList">
+      <!-- 机构名称 -->
+      <result property="agencyLevel" column="agencyLevel"/>
+      <!-- 机构数量 -->
+      <result property="agencyCount" column="agencyCount"/>
+      <!-- 职称级别-正高 -->
+      <result property="level1" column="level1"/>
+      <!-- 职称级别-副高 -->
+      <result property="level2" column="level2"/>
+      <!-- 职称级别-中级 -->
+      <result property="level3" column="level3"/>
+      <!-- 职称级别-助理级 -->
+      <result property="level4" column="level4"/>
+      <!-- 职称级别-员级 -->
+      <result property="level5" column="level5"/>
+      <!-- 职称级别-未定级 -->
+      <result property="level6" column="level6"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-医疗机构数量统计查询SQL -->
+  <select id="doResultList1" resultMap="resultInfoList">
+     select 
+         (select count(*)
+         from m_tb04_unit
+         where
+            DEL_KBN = '0'
+            <!-- 单位分类：002医疗机构 -->
+            and UNIT_ASSORT = '002'
+            <!-- 是否统计 -->
+            and STATISTIC_KBN = '1'
+            <!-- 单位业务层次:地市级医疗机构 -->
+            and UNIT_LEVEL in ('03','04')
+            <!-- 区域划分 -->
+            <if test="rlgl020904.area_id != ''">
+            and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+            </if>
+            ) + 2*(select count(*)
+                   from m_tb04_unit
+                   where
+                      DEL_KBN = '0'
+                      <!-- 单位分类：002医疗机构 -->
+                      and UNIT_ASSORT = '002'
+                      <!-- 是否统计 -->
+                      and STATISTIC_KBN = '2'
+                      <!-- 单位业务层次:地市级医疗机构 -->
+                      and UNIT_LEVEL in ('03','04')
+                      <!-- 区域划分 -->
+                      <if test="rlgl020904.area_id != ''">
+                      and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+                      </if>
+                      ) as agencyCount
+  </select>
+  <select id="doResultList2" resultMap="resultInfoList">
+     select 
+         (select count(*)
+         from m_tb04_unit
+         where
+            DEL_KBN = '0'
+            <!-- 单位分类：002医疗机构 -->
+            and UNIT_ASSORT = '002'
+            <!-- 是否统计 -->
+            and STATISTIC_KBN = '1'
+            <!-- 单位业务层次:区县级医疗机构 -->
+            and UNIT_LEVEL in ('02')
+            <!-- 区域划分 -->
+            <if test="rlgl020904.area_id != ''">
+            and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+            </if>
+            ) + 2*(select count(*)
+                   from m_tb04_unit
+                   where
+                      DEL_KBN = '0'
+                      <!-- 单位分类：002医疗机构 -->
+                      and UNIT_ASSORT = '002'
+                      <!-- 是否统计 -->
+                      and STATISTIC_KBN = '2'
+                      <!-- 单位业务层次:地市级医疗机构 -->
+                      and UNIT_LEVEL in ('02')
+                      <!-- 区域划分 -->
+                      <if test="rlgl020904.area_id != ''">
+                      and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+                      </if>
+                      ) as agencyCount
+  </select>
+  <select id="doResultList3" resultMap="resultInfoList">
+     select 
+         (select count(*)
+         from m_tb04_unit
+         where
+            DEL_KBN = '0'
+            <!-- 单位分类：002医疗机构 -->
+            and UNIT_ASSORT = '002'
+            <!-- 是否统计 -->
+            and STATISTIC_KBN = '1'
+            <!-- 单位业务层次:乡（镇）级医疗机构 -->
+            and UNIT_LEVEL in ('01')
+            <!-- 区域划分 -->
+            <if test="rlgl020904.area_id != ''">
+            and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+            </if>
+            ) + 2*(select count(*)
+                   from m_tb04_unit
+                   where
+                      DEL_KBN = '0'
+                      <!-- 单位分类：002医疗机构 -->
+                      and UNIT_ASSORT = '002'
+                      <!-- 是否统计 -->
+                      and STATISTIC_KBN = '2'
+                      <!-- 单位业务层次:乡（镇）级医疗机构 -->
+                      and UNIT_LEVEL in ('01')
+                      <!-- 区域划分 -->
+                      <if test="rlgl020904.area_id != ''">
+                      and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+                      </if>
+                      ) as agencyCount
+  </select>
+  <!-- 企事业所属医疗卫生机构 -->
+  <select id="doResultList4" resultMap="resultInfoList">
+     select
+        (select count(*)
+         from m_tb04_unit
+         where
+            DEL_KBN = '0'
+            <!-- 是否统计 -->
+            and STATISTIC_KBN = '1'
+            <!-- 单位性质-->
+            and (
+                1 = 2
+                or 
+                (
+                 UNIT_NATURE = '056'
+                 <!-- 1.事业单位（公益1类（全额），公益2类（差额），自收自支）  -->
+                 and UNIT_NATURE_TOW in ('001','002','003')
+                 )
+                 or 
+                 (
+                 UNIT_NATURE = '059'
+                 <!-- 2.企业（国有企业，集体企业） -->
+                 and UNIT_NATURE_TOW in ('001','002')
+                 )
+                )
+            <!-- 行业划分不为：卫生 -->
+            and UNIT_PROPERTY != '004'
+            <!-- 区域划分 -->
+            <if test="rlgl020904.area_id != ''">
+            and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+            </if>
+            ) + 2*(select count(*)
+                   from m_tb04_unit
+                   where
+                      DEL_KBN = '0'
+                      <!-- 是否统计 -->
+                      and STATISTIC_KBN = '2'
+                      <!-- 单位性质-->
+                      and (
+                          1 = 2
+                          or 
+                          (
+                           UNIT_NATURE = '056'
+                           <!-- 1.事业单位（公益1类（全额），公益2类（差额），自收自支）  -->
+                           and UNIT_NATURE_TOW in ('001','002','003')
+                           )
+                           or 
+                           (
+                           UNIT_NATURE = '059'
+                           <!-- 2.企业（国有企业，集体企业） -->
+                           and UNIT_NATURE_TOW in ('001','002')
+                           )
+                          )
+                      <!-- 行业划分不为：卫生 -->
+                      and UNIT_PROPERTY != '004'
+                      <!-- 区域划分 -->
+                      <if test="rlgl020904.area_id != ''">
+                      and AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+                      </if>
+                      ) as agencyCount
+  </select>
+  <select id="doResultListLevel" resultMap="resultInfoList">
+     select count(*) as agencyCount
+     from 
+        m_tb04_unit tb04,
+        m_tb01_user tb01,
+        m_tb18_personnel_professional_info tb18
+     where
+        tb04.DEL_KBN = '0'
+        and tb01.DEL_KBN = '0'
+        and tb18.DEL_KBN = '0'
+        and tb04.UNIT_NO = tb01.UNIT_NO
+        and tb01.PERSONNEL_ID = tb18.PERSONNEL_ID
+        <!-- 单位分类：002医疗机构 -->
+        and tb04.UNIT_ASSORT = '002'
+        <!-- 是否统计 -->
+        and tb04.STATISTIC_KBN != '0'
+        <!-- 单位业务层次:地市级医疗机构 -->
+        <if test="rlgl020904.agencyLevel == 0">
+        and tb04.UNIT_LEVEL in ('03','04')
+        </if>
+        <if test="rlgl020904.agencyLevel == 1">
+        and tb04.UNIT_LEVEL in ('02')
+        </if>
+        <if test="rlgl020904.agencyLevel == 2">
+        and tb04.UNIT_LEVEL in ('01')
+        </if>
+        <if test="rlgl020904.agencyLevel == 3">
+        and (
+             1 = 2
+             or 
+             (
+              UNIT_NATURE = '056'
+              <!-- 1.事业单位（公益1类（全额），公益2类（差额），自收自支）  -->
+              and UNIT_NATURE_TOW in ('001','002','003')
+              )
+              or 
+              (
+              UNIT_NATURE = '059'
+              <!-- 2.企业（国有企业，集体企业） -->
+              and UNIT_NATURE_TOW in ('001','002')
+              )
+             )
+             <!-- 行业划分不为：卫生 -->
+             and UNIT_PROPERTY != '004'
+        </if>
+        <!-- 区域划分 -->
+        <if test="rlgl020904.area_id != ''">
+        and tb04.AREA_ID like CONCAT('${rlgl020904.area_id}','%')
+        </if>
+        <!-- 职称级别 -->
+        <if test="rlgl020904.level != ''">
+        and mid(tb18.LEVEL,3,2) = #{rlgl020904.level}
+        </if>
+        group by mid(tb18.LEVEL,3,2) = #{rlgl020904.level}
+  </select>
+</mapper>

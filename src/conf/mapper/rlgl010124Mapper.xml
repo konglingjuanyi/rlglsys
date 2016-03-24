@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010124Mapper">
+    <!-- 获得下级单位列表 -->
+     <select id="getLowerUnitlList" resultType="Mtb04Unit">
+        SELECT A.UNIT_NO,A.UNIT_NM ,A.STATISTIC_KBN,A.UNIT_LOWER,B.UNIT_NM  UNIT_SUPER,D.UNIT_NM ESCROW_UNIT_NO
+		FROM ( SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} AND DEL_KBN=0 AND UNIT_STATUS='1'
+          <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+           <if test="unit.pageCount != 0 and unit.pageCount != null">
+              LIMIT #{unit.pageNo},#{unit.pageCount}
+          </if>
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+     <!-- 获得下级单位列表 -->
+    <select id="getCountbyUnit" resultType="int">
+        SELECT COUNT(*)
+		FROM ( SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} AND DEL_KBN=0 AND UNIT_STATUS='1'
+          <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+</mapper>

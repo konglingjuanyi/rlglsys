@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl050102Mapper">
+
+	<!-- 登录一条新的记录SQL -->
+    <insert id="submitForCreditYear" parameterType="String">
+       INSERT INTO m_tb76_credit_year_set
+			(AREA_ID
+			,CREDIT_YEAR_ID
+			,EX_KEY
+			,DEL_KBN
+			,EXPEND_01
+			,EXPEND_02
+			,EXPEND_03
+			,EXPEND_04
+			,EXPEND_05
+			,LOGIN_USER_ID
+			,LOGIN_DATE
+			,UPDATE_USER_ID
+			,UPDATE_DATE
+			)
+        VALUES (#{ mtb76credityearset.area_id}
+				,#{ mtb76credityearset.credit_year_id}
+            	,#{ mtb76credityearset.ex_key}
+            	,#{ mtb76credityearset.del_kbn}
+            	,#{ mtb76credityearset.expend_01}
+            	,#{ mtb76credityearset.expend_02}
+            	,#{ mtb76credityearset.expend_03}
+            	,#{ mtb76credityearset.expend_04}
+            	,#{ mtb76credityearset.expend_05}
+            	,#{ mtb76credityearset.login_user_id}
+            	,#{ mtb76credityearset.login_date}
+            	,#{ mtb76credityearset.update_user_id}
+            	,#{ mtb76credityearset.update_date})
+    </insert>
+    <delete id="updateForCreditYear" parameterType="String">
+    	update m_tb76_credit_year_set 
+    	set credit_year_id = #{ mtb76credityearset.credit_year_id},
+    		update_user_id = #{ mtb76credityearset.update_user_id},
+    		update_date = #{ mtb76credityearset.update_date}
+    	where area_id= #{ mtb76credityearset.area_id};
+    </delete>
+</mapper>

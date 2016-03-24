@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IMerchantInfoMapper">
+
+    <select id="getMerchantInfo" resultType="com.rlglsys.entity.Mtb119MerchantInfo">
+        SELECT
+            *
+        FROM m_tb119_merchant_info
+        WHERE DEL_KBN = 0
+    </select>
+</mapper>

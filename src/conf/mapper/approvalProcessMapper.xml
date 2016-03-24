@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IApprovalProcessMapper">
+    <select id="getProcessInfo" resultType="com.rlglsys.entity.Mtb31ApprovalProcess">
+        SELECT *
+        FROM m_tb31_approval_process
+        WHERE 
+            DEL_KBN = '0'
+            AND USE_MARK = '1'
+            AND APPLY_KBN = #{processInfo.apply_kbn}
+            AND UNIT_NO = #{processInfo.unit_no}
+    </select>
+    <select id="getProcessInfobyId" resultType="com.rlglsys.entity.Mtb31ApprovalProcess">
+        SELECT *
+        FROM m_tb31_approval_process
+        WHERE 
+            DEL_KBN = '0'
+            AND USE_MARK = '1'
+            AND PROCESS_ID = #{processId}
+    </select>
+    
+     <select id="getMaxProcessIdInfo" resultType="String">
+        SELECT 
+          Max(PROCESS_ID)
+        FROM m_tb31_approval_process
+        WHERE UNIT_NO = #{unit_no}
+    </select>
+    
+    <select id="getProcessInfobyCityList" resultType="com.rlglsys.bean.Rlgl090301Bean">
+        SELECT M.*
+               ,M1.UNIT_NM AS UNIT_NM
+               ,M2.ADM_NAME AS APPLY_KBN_NM
+               ,M3.ADM_NAME AS END_MARK_NM
+               ,M4.ADM_NAME AS USE_MARK_NM
+        FROM m_tb31_approval_process M
+	        LEFT JOIN m_tb04_unit M1 ON
+	        M.UNIT_NO = M1.UNIT_NO
+	        AND M1.DEL_KBN = '0'
+	        
+	        LEFT JOIN m_tb02_adm M2 ON
+	        M.APPLY_KBN = M2.ADM_NUM
+	        AND M2.ADM_TYPE_CD = '041'
+	        AND M2.DEL_KBN = '0'
+	        
+	        LEFT JOIN m_tb02_adm M3 ON 
+	        M.END_MARK = M3.ADM_NUM
+	        AND M3.ADM_TYPE_CD = '047'
+	        AND M3.DEL_KBN = '0'
+	        
+	        LEFT JOIN m_tb02_adm M4 ON 
+	        M.USE_MARK = M4.ADM_NUM
+	        AND M4.ADM_TYPE_CD = '048'
+	        AND M4.DEL_KBN = '0'
+	   WHERE 
+	       M.UNIT_NO = #{processInfo.unit_no}
+	       <if test="processInfo.process_kbn != '' and processInfo.process_kbn != null">
+	          AND M.DEL_KBN = #{processInfo.process_kbn}
+	        </if>
+	        <if test="processInfo.apply_kbn != '' and processInfo.apply_kbn != null">
+                AND M.apply_kbn = #{processInfo.apply_kbn}
+           </if>
+           <if test="processInfo.end_mark != '' and processInfo.end_mark != null">
+                AND M.end_mark = #{processInfo.end_mark}
+           </if>
+           <if test="processInfo.pageCount != 0 and processInfo.pageCount != null">
+           LIMIT #{processInfo.pageNo},#{processInfo.pageCount}
+           </if>
+    </select>
+
+    <select id="getCountbyCity" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb31_approval_process
+	    WHERE 
+	       UNIT_NO = #{processInfo.unit_no}
+	       <if test="processInfo.process_kbn != '' and processInfo.process_kbn != null">
+	          AND DEL_KBN = #{processInfo.process_kbn}
+	        </if>
+	        <if test="processInfo.apply_kbn != '' and processInfo.apply_kbn != null">
+                AND apply_kbn = #{processInfo.apply_kbn}
+           </if>
+           <if test="processInfo.end_mark != '' and processInfo.end_mark != null">
+                AND end_mark = #{processInfo.end_mark}
+           </if>
+    </select>
+    
+    <delete id="delProcessInfoByKey">
+        DELETE
+        FROM m_tb31_approval_process
+        WHERE UNIT_NO = #{processInfo.unit_no}
+	        AND apply_kbn = #{processInfo.apply_kbn}
+	        AND process_id = #{processInfo.process_id}
+    </delete>
+    <!-- 审批流程表信息逻辑删除 -->
+    <update id="updateMtb31ApprovalProcessInfoWithLogic">
+        UPDATE m_tb31_approval_process
+        SET DEL_KBN = #{processInfo.del_kbn}
+            ,UPDATE_USER_ID = #{processInfo.update_user_id}
+            ,UPDATE_DATE = #{processInfo.update_date}
+        WHERE UNIT_NO = #{processInfo.unit_no}
+	        AND apply_kbn = #{processInfo.apply_kbn}
+	        AND process_id = #{processInfo.process_id}
+    </update>
+    
+    <!-- 审批流程表信息登录 -->
+    <insert id="insertMtb31ApprovalProcessInfo">
+       INSERT INTO m_tb31_approval_process
+            (PROCESS_ID
+            ,UNIT_NO
+            ,APPLY_KBN
+            ,END_MARK
+            ,USE_MARK
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{processInfo.process_id}
+            ,#{processInfo.unit_no}
+            ,#{processInfo.apply_kbn}
+            ,#{processInfo.end_mark}
+            ,#{processInfo.use_mark}
+            ,#{processInfo.ex_key}
+            ,#{processInfo.del_kbn}
+            ,#{processInfo.expend_01}
+            ,#{processInfo.expend_02}
+            ,#{processInfo.expend_03}
+            ,#{processInfo.expend_04}
+            ,#{processInfo.expend_05}
+            ,#{processInfo.login_user_id}
+            ,#{processInfo.login_date}
+            ,#{processInfo.update_user_id}
+            ,#{processInfo.update_date})
+    </insert>
+    
+    <!-- 审批流程信息修改（终审节点） -->
+    <update id="updateMtb31ApprovalProcessEndMarkInfo">
+        UPDATE m_tb31_approval_process
+        SET END_MARK = #{processInfo.end_mark}
+            ,UPDATE_USER_ID = #{processInfo.update_user_id}
+            ,UPDATE_DATE = #{processInfo.update_date}
+        WHERE UNIT_NO = #{processInfo.unit_no}
+	        AND apply_kbn = #{processInfo.apply_kbn}
+	        AND process_id = #{processInfo.process_id}
+    </update>
+</mapper>

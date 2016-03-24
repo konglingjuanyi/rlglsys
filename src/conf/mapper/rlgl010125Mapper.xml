@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010125Mapper">
+    <!-- 获得代管单位列表 -->
+     <select id="getEscrowUnitlList" resultType="Mtb04Unit">
+    <!--       SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo}  AND DEL_KBN=0-->
+         SELECT * FROM m_tb04_unit WHERE  ESCROW_UNIT_NO=#{unitNo} AND DEL_KBN=0 AND UNIT_STATUS='1'
+         <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+           <if test="unit.pageCount != 0 and unit.pageCount != null">
+              LIMIT #{unit.pageNo},#{unit.pageCount}
+          </if>
+     </select> 
+      <!-- 获得下级单位条数 -->
+    <select id="getCountbyUnit" resultType="int">
+        SELECT COUNT(*) FROM m_tb04_unit WHERE  ESCROW_UNIT_NO=#{unitNo} AND DEL_KBN=0  AND UNIT_STATUS='1'
+         <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+   </select>
+    <select id="getContact" resultType="com.rlglsys.bean.Rlgl010110Bean">
+        SELECT * FROM  m_tb33_unit_administrator_info WHERE user_id=${user_id} AND  CONTACT_MARK='1';
+   </select> 
+   
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl070103Mapper">
+   <select id="getApplyInvoiceUserList" resultType="java.lang.String" >
+       SELECT CLUM001 FROM m_tb109_apply_invoice 
+       GROUP BY CLUM001
+   </select>
+	<select id="getUserList" resultType="com.rlglsys.bean.Rlgl070103Bean">
+		SELECT A.*,U.UNIT_NM,S.SECTION_NAME FROM 
+		(SELECT * FROM m_tb01_user WHERE USER_ID IN
+	    <foreach collection="rlgl070103Bean.clum001List"  index="index" item="item" open="(" separator="," close=")">
+	                    #{item}
+	     </foreach>
+	    <if test="rlgl070103Bean.user_id !='' ">
+             AND USER_ID   LIKE CONCAT('%', #{rlgl070103Bean.user_id}, '%')
+        </if>
+	    <if test="rlgl070103Bean.user_name !='' ">
+             AND USER_NAME   LIKE CONCAT('%', #{rlgl070103Bean.user_name}, '%')
+        </if>
+	    ) A 
+		LEFT JOIN m_tb04_unit U 
+		   ON(A.UNIT_NO=U.UNIT_NO ) 
+		LEFT JOIN m_tb22_hospital_section S 
+	       ON(A.SECTION_ID=S.SECTION_ID AND A.UNIT_NO=S.UNIT_NO) 
+        <if test="rlgl070103Bean.pageCount != 0 and rlgl070103Bean.pageCount != null">
+            LIMIT #{rlgl070103Bean.pageNo},#{rlgl070103Bean.pageCount}
+        </if>
+	</select>
+	<select id="getCountUserList" resultType="int">
+		SELECT count(*) FROM 
+		(SELECT * FROM m_tb01_user WHERE USER_ID IN
+	    <foreach collection="rlgl070103Bean.clum001List"  index="index" item="item" open="(" separator="," close=")">
+	                    #{item}
+	     </foreach>
+	     <if test="rlgl070103Bean.user_id !='' ">
+	           AND USER_ID   LIKE CONCAT('%', #{rlgl070103Bean.user_id}, '%')
+	     </if>
+	     <if test="rlgl070103Bean.user_name !='' ">
+	           AND USER_NAME   LIKE CONCAT('%', #{rlgl070103Bean.user_name}, '%')
+	     </if>
+	    ) A 
+		LEFT JOIN m_tb04_unit U 
+		   ON(A.UNIT_NO=U.UNIT_NO ) 
+		LEFT JOIN m_tb22_hospital_section S 
+	       ON(A.SECTION_ID=S.SECTION_ID AND A.UNIT_NO=S.UNIT_NO) 
+	</select>
+	<!-- 查询该用户打印订单信息列表  -->
+	<select id="getApplyInvoice" resultType="com.rlglsys.bean.Rlgl070104Bean">
+	    SELECT * FROM  m_tb109_apply_invoice WHERE CLUM001=#{rlgl070104Bean.clum001} 
+	    <if test="rlgl070104Bean.clum005 !='QY8+EI0gLuQ=' ">
+	           AND clum005=#{rlgl070104Bean.clum005}
+	    </if>
+	    <if test="rlgl070104Bean.clum006 !='QY8+EI0gLuQ=' ">
+	           AND clum006=#{rlgl070104Bean.clum006}
+	    </if>  
+	    <if test="rlgl070104Bean.startDate != 0 and rlgl070104Bean != null">
+           <![CDATA[  AND CLUM007 >=#{rlgl070104Bean.startDate} ]]>
+        </if>
+        <if test="rlgl070104Bean.endDate != 0 and rlgl070104Bean.endDate != null">
+           <![CDATA[   AND CLUM007<=#{rlgl070104Bean.endDate}]]>
+        </if>
+	     <if test="rlgl070104Bean.clum008 !='' ">
+	           AND clum008=#{rlgl070104Bean.clum008}
+	    </if> 
+	    <if test="rlgl070104Bean.clum009 !='' ">
+	           AND clum009=#{rlgl070104Bean.clum009}
+	    </if> 
+	    order by clum009
+	    <if test="rlgl070104Bean.pageCount != 0 and rlgl070104Bean.pageCount != null">
+            LIMIT #{rlgl070104Bean.pageNo},#{rlgl070104Bean.pageCount}
+        </if>
+	</select>
+	<!-- 查询该用户打印订单信息列表数目  -->
+	<select id="getCountApplyInvoice" resultType="int">
+	    SELECT count(*) FROM  m_tb109_apply_invoice WHERE CLUM001=#{rlgl070104Bean.clum001} 
+	    <if test="rlgl070104Bean.clum005 !='QY8+EI0gLuQ=' ">
+	           AND clum005=#{rlgl070104Bean.clum005}
+	    </if>
+	    <if test="rlgl070104Bean.clum006 !='QY8+EI0gLuQ=' ">
+	           AND clum006=#{rlgl070104Bean.clum006}
+	    </if>  
+	    <if test="rlgl070104Bean.startDate != 0 and rlgl070104Bean != null">
+           <![CDATA[  AND CLUM007 >=#{rlgl070104Bean.startDate} ]]>
+        </if>
+        <if test="rlgl070104Bean.endDate != 0 and rlgl070104Bean.endDate != null">
+           <![CDATA[   AND CLUM007<=#{rlgl070104Bean.endDate}]]>
+        </if>
+	     <if test="rlgl070104Bean.clum008 !='' ">
+	           AND clum008=#{rlgl070104Bean.clum008}
+	    </if> 
+	    <if test="rlgl070104Bean.clum009 !='' ">
+	           AND clum009=#{rlgl070104Bean.clum009}
+	    </if> 
+	    <if test="rlgl070104Bean.pageCount != 0 and rlgl070104Bean.pageCount != null">
+            LIMIT #{rlgl070104Bean.pageNo},#{rlgl070104Bean.pageCount}
+        </if>
+	</select>
+	<!-- 查询用户的订单详细信息 -->
+	<select id="getOrderDetail" resultType="com.rlglsys.bean.Rlgl070104Bean">
+		SELECT * FROM  m_tb109_apply_invoice 
+		WHERE CLUM001=#{rlgl070104Bean.clum001} 
+		  AND CLUM005 =#{rlgl070104Bean.clum005}
+	</select>
+</mapper>

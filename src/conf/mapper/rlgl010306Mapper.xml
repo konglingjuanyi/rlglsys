@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010306Mapper">
+	<!-- 删除 -->
+	<delete id="deleteRlgl010306">
+    	delete
+        FROM m_tb39_personnel 
+        WHERE 1='1' and m_tb39_personnel.personnel_id=#{rlgl010306.personnel_id}
+    </delete>
+    <!--人员基本信息-专业技术职务信息-->
+	<delete id="deleteRlgl010306ProfessionalInfo">
+		delete
+        FROM m_tb45_personnel_professional_info 
+        WHERE 1='1' and m_tb45_personnel_professional_info.personnel_id=#{rlgl010306.personnel_id}
+    </delete>
+    <!--人员基本信息-行政职务信息-->
+    <delete id="deleteRlgl010306JobInfo">
+    	delete
+        FROM m_tb44_personnel_job_info 
+        WHERE 1='1' and m_tb44_personnel_job_info.personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-社会关系-->
+   	<delete id="deleteRlgl010306SocialInfo">
+   		delete
+        FROM m_tb43_personnel_social_info 
+        WHERE 1='1' and m_tb43_personnel_social_info.personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-教育经历-->
+   	<delete id="deleteRlgl010306EduInfo">
+   		delete
+        FROM m_tb42_personnel_edu_info 
+        WHERE 1='1' and m_tb42_personnel_edu_info.personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-工作经历-->
+   	<delete id="deleteRlgl010306WorkInfo">
+   		delete
+        FROM m_tb41_personnel_work_info 
+        WHERE 1='1' and m_tb41_personnel_work_info.personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-党派信息-->
+   	<delete id="deleteRlgl010306PartisanInfo">
+   		delete
+        FROM m_tb40_personnel_partisan_info 
+        WHERE 1='1' and m_tb40_personnel_partisan_info.personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-资格信息-->
+   	<delete id="deleteRlgl010306PractitionersInfo">
+   		delete
+        FROM m_tb46_personnel_practitioners_info 
+        WHERE 1='1' and m_tb46_personnel_practitioners_info.personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-执业信息-->
+   	<delete id="deleteRlgl010306PracticeInfo">
+   		delete
+        FROM m_tb78_personnel_practice_info 
+        WHERE 1='1' and personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+   	<!--人员基本信息-导师信息-->
+   	<delete id="deleteRlgl010306TutorInfo">
+   		delete
+        FROM m_tb59_personnel_tutor_info 
+        WHERE 1='1' and personnel_id=#{rlgl010306.personnel_id}
+   	</delete>
+	<!--查询-->
+	<!--人员基本信息-->
+    <select id="searchRlgl010306" resultType="Mtb39Personnel">
+    	SELECT
+            *
+        FROM m_tb39_personnel t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+    </select>
+    <!--人员基本信息-专业技术职务信息-->
+	<select id="searchRlgl010306ProfessionalInfo" resultType="Mtb45PersonnelProfessionalInfo">
+		SELECT
+            PERSONNEL_ID
+            ,LEVEL
+            ,NAME
+            ,DATE_FORMAT(GET_TIME,'%Y-%m-%d') as GET_TIME
+            ,WHETHER_APPOINT
+            ,DATE_FORMAT(APPOINT_TIME,'%Y-%m-%d') as APPOINT_TIME
+            ,WHETHER_HIGHEST
+            ,ORIGINAL
+            ,mid(LEVEL,1,2) AS ONELEVEL
+            ,mid(LEVEL,3,2) AS TWOLEVEL
+            ,mid(LEVEL,5,3) AS THREELEVEL
+        FROM m_tb45_personnel_professional_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+    </select>
+    <!--人员基本信息-行政职务信息-->
+    <select id="searchRlgl010306JobInfo" resultType="Mtb44PersonnelJobInfo">
+    	SELECT
+            PERSONNEL_ID
+            ,POSITION_NM
+            ,MODE
+            ,TYPE
+            ,LEVEL
+            ,DATE_FORMAT(APPOINT_TIME,'%Y-%m-%d') as APPOINT_TIME
+            ,APPOINT_NO
+        FROM m_tb44_personnel_job_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-社会关系-->
+   	<select id="searchRlgl010306SocialInfo" resultType="Mtb43PersonnelSocialInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,RELATIONSHIP
+            ,NAME
+            ,DATE_FORMAT(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY
+            ,POLITICAL_LANDSCAPE
+            ,WORKUNIT
+            ,POSITION
+            ,TEL
+        FROM m_tb43_personnel_social_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-教育经历-->
+   	<select id="searchRlgl010306EduInfo" resultType="Mtb42PersonnelEduInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,LEARNING_FORMAT
+            ,DATE_FORMAT(ADMISSION_TIME,'%Y-%m-%d') as ADMISSION_TIME
+            ,DATE_FORMAT(GRADUATION_TIME,'%Y-%m-%d') as GRADUATION_TIME
+            ,SCHOOL
+            ,COLLEGE_TYPE
+            ,PROFESSION
+            ,PROOF_PEOPLE
+            ,EDUCATIONAL_BG
+            ,DEGREE
+        FROM m_tb42_personnel_edu_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-工作经历-->
+   	<select id="searchRlgl010306WorkInfo" resultType="Mtb41PersonnelWorkInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,DATE_FORMAT(STARTTIME,'%Y-%m-%d') as STARTTIME
+            ,DATE_FORMAT(ENDTIME,'%Y-%m-%d') as ENDTIME
+            ,WORKUNIT
+            ,PROOFPEOPLE
+            ,POSITION
+            ,TEL
+        FROM m_tb41_personnel_work_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-党派信息-->
+   	<select id="searchRlgl010306PartisanInfo" resultType="Mtb40PersonnelPartisanInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,DATE_FORMAT(JOINTIME,'%Y-%m-%d') as JOINTIME
+            ,PARTISAN_NM
+            ,PREP_OR_OFFICIALLY
+        FROM m_tb40_personnel_partisan_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-资格信息-->
+   	<select id="searchRlgl010306PractitionersInfo" resultType="Mtb46PersonnelPractitionersInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,CERTIFICATE_NO
+            ,ISSUING_AUTHORITY
+            ,DATE_FORMAT(ISSUE_TIME,'%Y-%m-%d') as ISSUE_TIME
+            ,LEVEL
+            ,TYPE
+            ,AREA
+            ,UPD_RECORD
+            ,ASSESS_RECORD
+        FROM m_tb46_personnel_practitioners_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-执业信息-->
+   	<select id="searchRlgl010306PracticeInfo" resultType="Mtb78PersonnelPracticeInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,CERTIFICATE_NO
+            ,ISSUING_AUTHORITY
+            ,DATE_FORMAT(ISSUE_TIME,'%Y-%m-%d') as ISSUE_TIME
+            ,LEVEL
+            ,TYPE
+            ,AREA
+            ,UPD_RECORD
+            ,ASSESS_RECORD
+            ,PRO_TYPE
+            ,AREA1
+            ,AREA2
+            ,PLACE1
+            ,PLACE2
+        FROM m_tb78_personnel_practice_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!--人员基本信息-导师信息-->
+   	<select id="searchRlgl010306TutorInfo" resultType="Mtb59PersonnelTutorInfo">
+   		SELECT
+            *
+        FROM m_tb59_personnel_tutor_info t
+        WHERE 1='1' and t.personnel_id=#{rlgl010306.personnel_id}
+   	</select>
+   	<!-- 获得个人岗位信息 -->
+    <select id="getPersonInfo" resultType="com.rlglsys.entity.Mtb09Irin">
+		SELECT
+            *
+        FROM m_tb09_irin
+        WHERE
+            PERSON_NO = #{rlgl010306.personnel_id}
+        AND DEL_KBN = '0'
+        AND EMPLOY_KBN1 = '1'
+        limit 0,1
+    </select>
+   	<!-- 获得用户信息 -->
+    <select id="searchUser" resultType="com.rlglsys.entity.Mtb01User">
+		SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            PERSONNEL_ID = #{rlgl010306.personnel_id}
+        AND DEL_KBN = '0'
+    </select>
+   	<!--登录-->
+    <!--人员基本信息-->
+    <insert id="doSaveRlgl010306">
+        INSERT
+        INTO m_tb39_personnel(
+            personnel_id,
+            apply_no,
+            apply_number,
+            now_mark,
+			personnel_nm,
+			personnel_card_id,
+			personnel_birthday,
+			personnel_gender,
+			personnel_ethnic,
+			personnel_hometown,
+			personnel_account_location,
+			personnel_worktime,
+			personnel_personal_identification,
+			personnel_political_landscape,
+			personnel_joinpartytime,
+			personnel_employment_forms,
+			personnel_marital_status,
+			personnel_health_status,
+			personnel_foreignlanguage_level,
+			personnel_hobbies,
+			personnel_archive_unit,
+			personnel_filelocation,
+			personnel_area,
+			personnel_address,
+			personnel_email,
+			personnel_tel,
+			personnel_status,
+			personnel_check,
+			personnel_unit,
+			personnel_unit_nm,
+			personnel_office,
+			personnel_office_nm,
+			personnel_officetel,
+			personnel_beforename,
+			personnel_regular,
+			change_value,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date,
+			personnel_isApproval,
+			personnel_imgName
+		)
+        values(
+            #{rlgl010306.personnel_id},
+            #{rlgl010306.apply_no},
+            #{rlgl010306.apply_number},
+            #{rlgl010306.now_mark},
+			#{rlgl010306.personnel_nm},
+			#{rlgl010306.personnel_card_id},
+			replace(#{rlgl010306.personnel_birthday},"-",""),
+			#{rlgl010306.personnel_gender},
+			#{rlgl010306.personnel_ethnic},
+			#{rlgl010306.personnel_hometown},
+			#{rlgl010306.personnel_account_location},
+			replace(#{rlgl010306.personnel_worktime},"-",""),
+			#{rlgl010306.personnel_personal_identification},
+			#{rlgl010306.personnel_political_landscape},
+			replace(#{rlgl010306.personnel_joinpartytime},"-",""),
+			#{rlgl010306.personnel_employment_forms},
+			#{rlgl010306.personnel_marital_status},
+			#{rlgl010306.personnel_health_status},
+			#{rlgl010306.personnel_foreignlanguage_level},
+			#{rlgl010306.personnel_hobbies},
+			#{rlgl010306.personnel_archive_unit},
+			#{rlgl010306.personnel_filelocation},
+			#{rlgl010306.personnel_area},
+			#{rlgl010306.personnel_address},
+			#{rlgl010306.personnel_email},
+			#{rlgl010306.personnel_tel},
+			#{rlgl010306.personnel_status},
+			#{rlgl010306.personnel_check},
+			#{rlgl010306.personnel_unit},
+			#{rlgl010306.personnel_unit_nm},
+			#{rlgl010306.personnel_office},
+			#{rlgl010306.personnel_office_nm},
+			#{rlgl010306.personnel_officetel},
+			#{rlgl010306.personnel_beforename},
+			#{rlgl010306.personnel_regular},
+			#{rlgl010306.change_value},
+			#{rlgl010306.ex_key},
+			#{rlgl010306.expend_01},
+			#{rlgl010306.expend_02},
+			#{rlgl010306.expend_03},
+			#{rlgl010306.expend_04},
+			#{rlgl010306.expend_05},
+			#{rlgl010306.login_user_id},
+			#{rlgl010306.login_date},
+			#{rlgl010306.update_user_id},
+			#{rlgl010306.update_date},
+			#{rlgl010306.personnel_isapproval},
+			#{rlgl010306.personnel_imgname}
+			)
+    </insert>
+    <!-- 更新人员基本信息表 -->
+    <update id="updateRlgl010306" >
+       update m_tb39_personnel
+       set 
+            apply_no = #{rlgl010306.apply_no},
+            apply_number = #{rlgl010306.apply_number},
+            now_mark = #{rlgl010306.now_mark},
+			personnel_nm = #{rlgl010306.personnel_nm},
+			personnel_card_id = #{rlgl010306.personnel_card_id},
+			personnel_birthday = replace(#{rlgl010306.personnel_birthday},"-",""),
+			personnel_gender = #{rlgl010306.personnel_gender},
+			personnel_ethnic = #{rlgl010306.personnel_ethnic},
+			personnel_hometown = #{rlgl010306.personnel_hometown},
+			personnel_account_location = #{rlgl010306.personnel_account_location},
+			personnel_worktime = replace(#{rlgl010306.personnel_worktime},"-",""),
+			personnel_personal_identification = #{rlgl010306.personnel_personal_identification},
+			personnel_political_landscape = #{rlgl010306.personnel_political_landscape},
+			personnel_joinpartytime = replace(#{rlgl010306.personnel_joinpartytime},"-",""),
+			personnel_employment_forms =	#{rlgl010306.personnel_employment_forms},
+			personnel_marital_status = #{rlgl010306.personnel_marital_status},
+			personnel_health_status = #{rlgl010306.personnel_health_status},
+			personnel_foreignlanguage_level = #{rlgl010306.personnel_foreignlanguage_level},
+			personnel_hobbies = #{rlgl010306.personnel_hobbies},
+			personnel_archive_unit = #{rlgl010306.personnel_archive_unit},
+			personnel_filelocation = #{rlgl010306.personnel_filelocation},
+			personnel_area = #{rlgl010306.personnel_area},
+			personnel_address =#{rlgl010306.personnel_address},
+			personnel_email = #{rlgl010306.personnel_email},
+			personnel_tel = #{rlgl010306.personnel_tel},
+			personnel_status = #{rlgl010306.personnel_status},
+			personnel_check = #{rlgl010306.personnel_check},
+			personnel_unit = #{rlgl010306.personnel_unit},
+			personnel_unit_nm = #{rlgl010306.personnel_unit_nm},
+			personnel_office = #{rlgl010306.personnel_office},
+			personnel_office_nm = #{rlgl010306.personnel_office_nm},
+			personnel_officetel = #{rlgl010306.personnel_officetel},
+			personnel_beforename = #{rlgl010306.personnel_beforename},
+			personnel_regular = #{rlgl010306.personnel_regular},
+			change_value =  #{rlgl010306.change_value},
+			ex_key = #{rlgl010306.ex_key},
+			expend_01 = #{rlgl010306.expend_01},
+			expend_02 = #{rlgl010306.expend_02},
+			expend_03 = #{rlgl010306.expend_03},
+			expend_04 = #{rlgl010306.expend_04},
+			expend_05 = #{rlgl010306.expend_05},
+			login_user_id = #{rlgl010306.login_user_id},
+			login_date= #{rlgl010306.login_date},
+			update_user_id= #{rlgl010306.update_user_id},
+			update_date= #{rlgl010306.update_date},
+			personnel_isApproval = #{rlgl010306.personnel_isapproval},
+			personnel_imgName = #{rlgl010306.personnel_imgname}
+     where
+           personnel_id = #{rlgl010306.personnel_id}
+    </update>
+    <!--人员基本信息-专业技术职务信息-->
+	<insert id="doSaveRlgl010306ProfessionalInfo">
+        INSERT
+        INTO m_tb45_personnel_professional_info(
+	        personnel_id,
+			level,
+			name,
+			get_time,
+			whether_appoint,
+			appoint_time,
+			whether_highest,
+			original,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306ProfessionalInfo.personnel_id},
+			#{rlgl010306ProfessionalInfo.level},
+			#{rlgl010306ProfessionalInfo.name},
+			replace(#{rlgl010306ProfessionalInfo.get_time},"-",""),
+			#{rlgl010306ProfessionalInfo.whether_appoint},
+			replace(#{rlgl010306ProfessionalInfo.appoint_time},"-",""),
+			#{rlgl010306ProfessionalInfo.whether_highest},
+			#{rlgl010306ProfessionalInfo.original},
+			#{rlgl010306ProfessionalInfo.ex_key},
+			#{rlgl010306ProfessionalInfo.expend_01},
+			#{rlgl010306ProfessionalInfo.expend_02},
+			#{rlgl010306ProfessionalInfo.expend_03},
+			#{rlgl010306ProfessionalInfo.expend_04},
+			#{rlgl010306ProfessionalInfo.expend_05},
+			#{rlgl010306ProfessionalInfo.login_user_id},
+			#{rlgl010306ProfessionalInfo.login_date},
+			#{rlgl010306ProfessionalInfo.update_user_id},
+			#{rlgl010306ProfessionalInfo.update_date}
+			)
+    </insert>
+    <!--人员基本信息-行政职务信息-->
+    <insert id="doSaveRlgl010306JobInfo">
+    	 INSERT
+        INTO m_tb44_personnel_job_info(
+	        personnel_id,
+			position_nm,
+			mode,
+			type,
+			level,
+			appoint_time,
+			appoint_no,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306JobInfo.personnel_id},
+			#{rlgl010306JobInfo.position_nm},
+			#{rlgl010306JobInfo.mode},
+			#{rlgl010306JobInfo.type},
+			#{rlgl010306JobInfo.level},
+			replace(#{rlgl010306JobInfo.appoint_time},"-",""),
+			#{rlgl010306JobInfo.appoint_no},
+			#{rlgl010306JobInfo.ex_key},
+			#{rlgl010306JobInfo.expend_01},
+			#{rlgl010306JobInfo.expend_02},
+			#{rlgl010306JobInfo.expend_03},
+			#{rlgl010306JobInfo.expend_04},
+			#{rlgl010306JobInfo.expend_05},
+			#{rlgl010306JobInfo.login_user_id},
+			#{rlgl010306JobInfo.login_date},
+			#{rlgl010306JobInfo.update_user_id},
+			#{rlgl010306JobInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-社会关系-->
+   	<insert id="doSaveRlgl010306SocialInfo">
+    	 INSERT
+        INTO m_tb43_personnel_social_info(
+	        personnel_id,
+			relationship,
+			name,
+			birthday,
+			political_landscape,
+			workunit,
+			position,
+			tel,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306SocialInfo.personnel_id},
+			#{rlgl010306SocialInfo.relationship},
+			#{rlgl010306SocialInfo.name},
+			replace(#{rlgl010306SocialInfo.birthday},"-",""),
+			#{rlgl010306SocialInfo.political_landscape},
+			#{rlgl010306SocialInfo.workunit},
+			#{rlgl010306SocialInfo.position},
+			#{rlgl010306SocialInfo.tel},
+			#{rlgl010306SocialInfo.ex_key},
+			#{rlgl010306SocialInfo.expend_01},
+			#{rlgl010306SocialInfo.expend_02},
+			#{rlgl010306SocialInfo.expend_03},
+			#{rlgl010306SocialInfo.expend_04},
+			#{rlgl010306SocialInfo.expend_05},
+			#{rlgl010306SocialInfo.login_user_id},
+			#{rlgl010306SocialInfo.login_date},
+			#{rlgl010306SocialInfo.update_user_id},
+			#{rlgl010306SocialInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-教育经历-->
+   	<insert id="doSaveRlgl010306EduInfo">
+    	 INSERT
+        INTO m_tb42_personnel_edu_info(
+	       	personnel_id,
+			learning_format,
+			admission_time,
+			graduation_time,
+			school,
+			college_type,
+			profession,
+			proof_people,
+			educational_bg,
+			degree,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306EduInfo.personnel_id},
+			#{rlgl010306EduInfo.learning_format},
+			replace(#{rlgl010306EduInfo.admission_time},"-",""),
+			replace(#{rlgl010306EduInfo.graduation_time},"-",""),
+			#{rlgl010306EduInfo.school},
+			#{rlgl010306EduInfo.college_type},
+			#{rlgl010306EduInfo.profession},
+			#{rlgl010306EduInfo.proof_people},
+			#{rlgl010306EduInfo.educational_bg},
+			#{rlgl010306EduInfo.degree},
+			#{rlgl010306EduInfo.ex_key},
+			#{rlgl010306EduInfo.expend_01},
+			#{rlgl010306EduInfo.expend_02},
+			#{rlgl010306EduInfo.expend_03},
+			#{rlgl010306EduInfo.expend_04},
+			#{rlgl010306EduInfo.expend_05},
+			#{rlgl010306EduInfo.login_user_id},
+			#{rlgl010306EduInfo.login_date},
+			#{rlgl010306EduInfo.update_user_id},
+			#{rlgl010306EduInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-工作经历-->
+   	<insert id="doSaveRlgl010306WorkInfo">
+    	 INSERT
+        INTO m_tb41_personnel_work_info(
+	       	personnel_id,
+			starttime,
+			endtime,
+			workunit,
+			proofpeople,
+			position,
+			tel,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306WorkInfo.personnel_id},
+			replace(#{rlgl010306WorkInfo.starttime},"-",""),
+			replace(#{rlgl010306WorkInfo.endtime},"-",""),
+			#{rlgl010306WorkInfo.workunit},
+			#{rlgl010306WorkInfo.proofpeople},
+			#{rlgl010306WorkInfo.position},
+			#{rlgl010306WorkInfo.tel},
+			#{rlgl010306WorkInfo.ex_key},
+			#{rlgl010306WorkInfo.expend_01},
+			#{rlgl010306WorkInfo.expend_02},
+			#{rlgl010306WorkInfo.expend_03},
+			#{rlgl010306WorkInfo.expend_04},
+			#{rlgl010306WorkInfo.expend_05},
+			#{rlgl010306WorkInfo.login_user_id},
+			#{rlgl010306WorkInfo.login_date},
+			#{rlgl010306WorkInfo.update_user_id},
+			#{rlgl010306WorkInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-党派信息-->
+   	<insert id="doSaveRlgl010306PartisanInfo">
+    	 INSERT
+        INTO m_tb40_personnel_partisan_info(
+	       	personnel_id,
+			jointime,
+			partisan_nm,
+			prep_or_officially,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306PartisanInfo.personnel_id},
+			replace(#{rlgl010306PartisanInfo.jointime},"-",""),
+			#{rlgl010306PartisanInfo.partisan_nm},
+			#{rlgl010306PartisanInfo.prep_or_officially},
+			#{rlgl010306PartisanInfo.ex_key},
+			#{rlgl010306PartisanInfo.expend_01},
+			#{rlgl010306PartisanInfo.expend_02},
+			#{rlgl010306PartisanInfo.expend_03},
+			#{rlgl010306PartisanInfo.expend_04},
+			#{rlgl010306PartisanInfo.expend_05},
+			#{rlgl010306PartisanInfo.login_user_id},
+			#{rlgl010306PartisanInfo.login_date},
+			#{rlgl010306PartisanInfo.update_user_id},
+			#{rlgl010306PartisanInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-资格信息-->
+   	<insert id="doSaveRlgl010306PractitionersInfo">
+    	 INSERT
+        INTO m_tb46_personnel_practitioners_info(
+	       	personnel_id,
+			certificate_no,
+			issuing_authority,
+			issue_time,
+			level,
+			type,
+			area,
+			upd_record,
+			assess_record,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306PractitionersInfo.personnel_id},
+			#{rlgl010306PractitionersInfo.certificate_no},
+			#{rlgl010306PractitionersInfo.issuing_authority},
+			replace(#{rlgl010306PractitionersInfo.issue_time},"-",""),
+			#{rlgl010306PractitionersInfo.level},
+			#{rlgl010306PractitionersInfo.type},
+			#{rlgl010306PractitionersInfo.area},
+			#{rlgl010306PractitionersInfo.upd_record},
+			#{rlgl010306PractitionersInfo.assess_record},
+			#{rlgl010306PractitionersInfo.ex_key},
+			#{rlgl010306PractitionersInfo.expend_01},
+			#{rlgl010306PractitionersInfo.expend_02},
+			#{rlgl010306PractitionersInfo.expend_03},
+			#{rlgl010306PractitionersInfo.expend_04},
+			#{rlgl010306PractitionersInfo.expend_05},
+			#{rlgl010306PractitionersInfo.login_user_id},
+			#{rlgl010306PractitionersInfo.login_date},
+			#{rlgl010306PractitionersInfo.update_user_id},
+			#{rlgl010306PractitionersInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-执业信息-->
+   	<insert id="doSaveRlgl010306PracticeInfo">
+    	 INSERT
+        INTO m_tb78_personnel_practice_info(
+	       	personnel_id,
+			certificate_no,
+			issuing_authority,
+			issue_time,
+			level,
+			PRO_TYPE,
+			type,
+			area,
+			area1,
+			area2,
+			place1,
+			place2,
+			upd_record,
+			assess_record,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306PracticeInfo.personnel_id},
+			#{rlgl010306PracticeInfo.certificate_no},
+			#{rlgl010306PracticeInfo.issuing_authority},
+			replace(#{rlgl010306PracticeInfo.issue_time},"-",""),
+			#{rlgl010306PracticeInfo.level},
+			#{rlgl010306PracticeInfo.pro_type},
+			#{rlgl010306PracticeInfo.type},
+			#{rlgl010306PracticeInfo.area},
+			#{rlgl010306PracticeInfo.area1},
+			#{rlgl010306PracticeInfo.area2},
+			#{rlgl010306PracticeInfo.place1},
+			#{rlgl010306PracticeInfo.place2},
+			#{rlgl010306PracticeInfo.upd_record},
+			#{rlgl010306PracticeInfo.assess_record},
+			#{rlgl010306PracticeInfo.ex_key},
+			#{rlgl010306PracticeInfo.expend_01},
+			#{rlgl010306PracticeInfo.expend_02},
+			#{rlgl010306PracticeInfo.expend_03},
+			#{rlgl010306PracticeInfo.expend_04},
+			#{rlgl010306PracticeInfo.expend_05},
+			#{rlgl010306PracticeInfo.login_user_id},
+			#{rlgl010306PracticeInfo.login_date},
+			#{rlgl010306PracticeInfo.update_user_id},
+			#{rlgl010306PracticeInfo.update_date}
+			)
+   	</insert>
+   	<!--人员基本信息-导师信息-->
+   	<insert id="doSaveRlgl010306TutorInfo">
+    	 INSERT
+        INTO m_tb59_personnel_tutor_info(
+	       	personnel_id,
+			teachertype,
+			name,
+			school,
+			researcharea,
+			ex_key,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date
+		)
+        values(
+        	#{rlgl010306TutorInfo.personnel_id},
+        	#{rlgl010306TutorInfo.teachertype},
+        	#{rlgl010306TutorInfo.name},
+			#{rlgl010306TutorInfo.school},
+			#{rlgl010306TutorInfo.researcharea},
+			#{rlgl010306TutorInfo.ex_key},
+			#{rlgl010306TutorInfo.expend_01},
+			#{rlgl010306TutorInfo.expend_02},
+			#{rlgl010306TutorInfo.expend_03},
+			#{rlgl010306TutorInfo.expend_04},
+			#{rlgl010306TutorInfo.expend_05},
+			#{rlgl010306TutorInfo.login_user_id},
+			#{rlgl010306TutorInfo.login_date},
+			#{rlgl010306TutorInfo.update_user_id},
+			#{rlgl010306TutorInfo.update_date}
+			)
+   	</insert>
+   	
+   	<insert id="saveChangePersonForMtb113Personnelupdate" parameterType="int">
+      INSERT INTO m_tb113_personnelupdate (
+             PERSONNEL_ID
+			,admTb_updateTime
+			,bisic
+			,professionalTechnical
+			,administrativePost
+			,socialRelations
+			,learningExperience
+			,personnelPractitioners
+			,personnelPractice
+			,personnelWork
+			,personnelPartisan
+			,personnelTutor
+			,personnelrewardspunishment
+			,personnelgoabroad
+			,personnelrecords
+			,personnelawardedhonor
+			,personnelinsurers
+			,PERSONNEL_NM
+			,PERSONNEL_CARD_ID
+			,PERSONNEL_BIRTHDAY
+			,PERSONNEL_GENDER
+			,PERSONNEL_ETHNIC
+			,PERSONNEL_HOMETOWN
+			,PERSONNEL_ACCOUNT_LOCATION
+			,PERSONNEL_WORKTIME
+			,PERSONNEL_PERSONAL_IDENTIFICATION
+			,PERSONNEL_POLITICAL_LANDSCAPE
+			,PERSONNEL_JOINPARTYTIME
+			,PERSONNEL_EMPLOYMENT_FORMS
+			,PERSONNEL_MARITAL_STATUS
+			,PERSONNEL_HEALTH_STATUS
+			,PERSONNEL_FOREIGNLANGUAGE_LEVEL
+			,PERSONNEL_HOBBIES
+			,PERSONNEL_ARCHIVE_UNIT
+			,PERSONNEL_FILELOCATION
+			,PERSONNEL_AREA
+			,PERSONNEL_ADDRESS
+			,PERSONNEL_EMAIL
+			,PERSONNEL_TEL
+			,PERSONNEL_QQ
+			,PERSONNEL_MIBLOG
+			,PERSONNEL_STATUS
+			,PERSONNEL_CHECK
+			,PERSONNEL_UNIT
+			,PERSONNEL_UNIT_NM
+			,PERSONNEL_UNIT_AREA
+			,PERSONNEL_OFFICE
+			,PERSONNEL_OFFICE_NM
+			,PERSONNEL_OFFICETEL
+			,RETIRE_FLAG
+			,RETIRE_TIME
+			,RE_EMPLOY_FLAG
+			,RE_EMPLOY_TIME
+			,RE_EMPLOY_UNIT_NO
+			,PERSONNEL_ISAPPROVAL
+			,PERSONNEL_IMGNAME
+			,PERSONNEL_BEFORENAME
+			,PERSONNEL_REGULAR
+			,PERSONNEL_REGULARNUM
+			,PERSONNEL_REGULARNUM_TIME
+			,PERSONNEL_JOINMODE
+			,PERSONNEL_OUTMODE
+			,CONTINUE_EDUCATION_FLAG
+			,PERSONNEL_BIKO
+			,PERSONNEL_INOUTTIME
+			,DOCTOR_LEVEL
+			,EX_KEY
+			,DEL_KBN
+			,EXPEND_01
+			,EXPEND_02
+			,EXPEND_03
+			,EXPEND_04
+			,EXPEND_05
+			,LOGIN_USER_ID
+			,LOGIN_DATE
+			,UPDATE_USER_ID
+			,UPDATE_DATE
+		)VALUES (
+			#{personnelInfo.personnel_id},
+			#{personnelInfo.admtb_updatetime},
+			#{personnelInfo.bisic},
+			#{personnelInfo.professionalTechnical},
+			#{personnelInfo.administrativePost},
+			#{personnelInfo.socialRelations},
+			#{personnelInfo.learningExperience},
+			#{personnelInfo.personnelPractitioners},
+			#{personnelInfo.personnelPractice},
+			#{personnelInfo.personnelWork},
+			#{personnelInfo.personnelPartisan},
+			#{personnelInfo.personnelTutor},
+			#{personnelInfo.personnelrewardspunishment},
+			#{personnelInfo.personnelgoabroad},
+			#{personnelInfo.personnelrecords},
+			#{personnelInfo.personnelawardedhonor},
+			#{personnelInfo.personnelinsurers},
+			#{personnelInfo.personnel_nm},
+			#{personnelInfo.personnel_card_id},
+			#{personnelInfo.personnel_birthday},
+			#{personnelInfo.personnel_gender},
+			#{personnelInfo.personnel_ethnic},
+			#{personnelInfo.personnel_hometown},
+			#{personnelInfo.personnel_account_location},
+			#{personnelInfo.personnel_worktime},
+			#{personnelInfo.personnel_personal_identification},
+			#{personnelInfo.personnel_political_landscape},
+			#{personnelInfo.personnel_joinpartytime},
+			#{personnelInfo.personnel_employment_forms},
+			#{personnelInfo.personnel_marital_status},
+			#{personnelInfo.personnel_health_status},
+			#{personnelInfo.personnel_foreignlanguage_level},
+			#{personnelInfo.personnel_hobbies},
+			#{personnelInfo.personnel_archive_unit},
+			#{personnelInfo.personnel_filelocation},
+			#{personnelInfo.personnel_area},
+			#{personnelInfo.personnel_address},
+			#{personnelInfo.personnel_email},
+			#{personnelInfo.personnel_tel},
+			#{personnelInfo.personnel_qq},
+			#{personnelInfo.personnel_miblog},
+			#{personnelInfo.personnel_status},
+			#{personnelInfo.personnel_check},
+			#{personnelInfo.personnel_unit},
+			#{personnelInfo.personnel_unit_nm},
+			#{personnelInfo.personnel_unit_area},
+			#{personnelInfo.personnel_office},
+			#{personnelInfo.personnel_office_nm},
+			#{personnelInfo.personnel_officetel},
+			#{personnelInfo.retire_flag},
+			#{personnelInfo.retire_time},
+			#{personnelInfo.re_employ_flag},
+			#{personnelInfo.re_employ_time},
+			#{personnelInfo.re_employ_unit_no},
+			#{personnelInfo.personnel_isapproval},
+			#{personnelInfo.personnel_imgname},
+			#{personnelInfo.personnel_beforename},
+			#{personnelInfo.personnel_regular},
+			#{personnelInfo.personnel_regularnum},
+			#{personnelInfo.personnel_regularnum_time},
+			#{personnelInfo.personnel_joinmode},
+			#{personnelInfo.personnel_outmode},
+			#{personnelInfo.continue_education_flag},
+			#{personnelInfo.personnel_biko},
+			#{personnelInfo.personnel_inouttime},
+			#{personnelInfo.doctor_level},
+			#{personnelInfo.ex_key},
+			#{personnelInfo.del_kbn},
+			#{personnelInfo.expend_01},
+			#{personnelInfo.expend_02},
+			#{personnelInfo.expend_03},
+			#{personnelInfo.expend_04},
+			#{personnelInfo.expend_05},
+			#{personnelInfo.login_user_id},
+			#{personnelInfo.login_date},
+			#{personnelInfo.update_user_id},
+			#{personnelInfo.update_date}
+		);
+   </insert>
+</mapper>

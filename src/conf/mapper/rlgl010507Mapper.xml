@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 单位退休申请  houyc -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010507Mapper">
+    <!-- 获取退休申请人员信息明细 -->
+    <select id="getApplyRetireUserDetails" resultType="com.rlglsys.entity.Mtb50UserRetireApplyDetailInfo">
+      select 
+        *
+      from 
+        m_tb50_user_apply_retire_detail
+      where
+        APPLY_NO = #{apply_no}
+      and
+        APPLY_NUMBER = #{apply_number}
+      and
+        DEL_KBN = 0
+    </select>
+    <!-- 更新退休申请人员信息 -->
+    <update id="updateMtb50Info">
+      update 
+        m_tb50_user_apply_retire_detail
+      set
+        UNIT_CHECKER = #{mtb50UserRetireApplyDetailInfo.unit_checker},
+        UNIT_CHECK_DATE = #{mtb50UserRetireApplyDetailInfo.unit_check_date},
+        UNIT_CHECK_VIEWS = #{mtb50UserRetireApplyDetailInfo.unit_check_views},
+        UNIT_CHECK_RESULT = #{mtb50UserRetireApplyDetailInfo.unit_check_result},
+        COUNTY_CHECKER = #{mtb50UserRetireApplyDetailInfo.county_checker},
+        COUNTY_CHECK_DATE = #{mtb50UserRetireApplyDetailInfo.county_check_date},
+        COUNTY_CHECK_VIEWS = #{mtb50UserRetireApplyDetailInfo.county_check_views},
+        COUNTY_CHECK_RESULT = #{mtb50UserRetireApplyDetailInfo.county_check_result},
+        DOWNTOWN_CHECKER = #{mtb50UserRetireApplyDetailInfo.downtown_checker},
+        DOWNTOWN_CHECK_DATE = #{mtb50UserRetireApplyDetailInfo.downtown_check_date},
+        DOWNTOWN_CHECK_VIEWS = #{mtb50UserRetireApplyDetailInfo.downtown_check_views},
+        DOWNTOWN_CHECK_RESULT = #{mtb50UserRetireApplyDetailInfo.downtown_check_result},
+        MINISTRY_CHECKER = #{mtb50UserRetireApplyDetailInfo.ministry_checker},
+        MINISTRY_CHECK_DATE = #{mtb50UserRetireApplyDetailInfo.ministry_check_date},
+        MINISTRY_CHECK_VIEWS = #{mtb50UserRetireApplyDetailInfo.ministry_check_views},
+        MINISTRY_CHECK_RESULT = #{mtb50UserRetireApplyDetailInfo.ministry_check_result},
+        NOW_MARK = #{mtb50UserRetireApplyDetailInfo.now_mark},
+        UPDATE_USER_ID = #{mtb50UserRetireApplyDetailInfo.update_user_id},
+        UPDATE_DATE = #{mtb50UserRetireApplyDetailInfo.update_date}
+      where
+        APPLY_NO = #{mtb50UserRetireApplyDetailInfo.apply_no}
+      and
+        APPLY_NUMBER = #{mtb50UserRetireApplyDetailInfo.apply_number}
+    </update>
+    <!-- 个人人事申请信息查询SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT 
+          *
+        FROM 
+          m_tb29_personalapplication
+        WHERE 
+          DEL_KBN = 0
+        AND 
+          APPLY_NO = #{apply_no}
+        AND
+          MAX_NUMBER = #{apply_number}
+    </select>
+    <!-- 更新人员基本信息表 -->
+    <update id="updateMtb12ByUserId">
+		UPDATE
+		  m_tb12_personnel
+		SET
+		  RETIRE_FLAG = 1,
+		  RETIRE_TIME = #{date},
+		  DEL_KBN = 1
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </update>
+    <!-- 更新用户表 -->
+    <update id="updateMtb01ByUserId">
+		UPDATE
+		  m_tb01_user
+		SET
+		  DEL_KBN = 1
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </update>
+    <!-- 更新用户表 -->
+    <update id="updateMtb39ByUserId">
+		UPDATE
+		  m_tb39_personnel
+		SET
+		  RETIRE_FLAG = 1,
+		  RETIRE_TIME = #{date},
+		  DEL_KBN = 1
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </update>
+    <!-- 更新个人人事申请信息 -->
+    <update id="updateTb29Info">
+        UPDATE 
+            m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{updatetb29Info.check_result},
+            NOW_MARK = #{updatetb29Info.now_mark},
+            WILL_CHECKUNITNO = #{updatetb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{updatetb29Info.update_user_id},
+            UPDATE_DATE = #{updatetb29Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb29Info.apply_no}
+    </update>
+</mapper>

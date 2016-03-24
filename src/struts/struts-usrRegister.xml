@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="usrRegiter" extends="rlgl" namespace="/">
+		<!-- 初期化处理 -->
+		<action name="rlglregiter"
+			class="com.rlglsys.action.register.RegInitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlglregister.jsp</result>
+		</action>
+		<action name="doregiter"
+			class="com.rlglsys.action.register.RegisterAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlglregister.jsp</result>
+			<result name="comeback">/index.jsp</result>
+		</action>
+	</package>
+</struts>

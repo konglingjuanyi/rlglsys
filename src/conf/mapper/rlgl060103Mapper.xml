@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060103Mapper">
+    <!-- 获得科室信息 -->
+    <select id="getSectionInfo" resultType="com.rlglsys.entity.Mtb22HospitalSection">
+        SELECT
+		    *
+		FROM
+		    m_tb22_hospital_section
+		WHERE
+		    UNIT_NO = #{unit_no}
+    </select>
+    <!-- 获得打印信息 -->
+    <select id="getCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            m_tb100_exam_result A
+        LEFT JOIN m_tb103_exam_setting B ON A.EXAM_NO = B.EXAM_NO
+        LEFT JOIN m_tb01_user C ON A.PERSONNEL_ID = C.PERSONNEL_ID
+        WHERE
+            A.DEL_KBN = '0'
+        AND C.UNIT_NO = #{unit_no}
+        <if test="exam_no != ''">
+        AND A.EXAM_NO = #{exam_no}
+        </if>
+        <if test="person_id != ''">
+        AND C.PERSONNEL_ID = #{person_id}
+        </if>
+        <if test="section_id != '' and section_id != '-1'">
+        AND C.SECTION_ID = #{section_id}
+        </if>
+    </select>
+    <!-- 获得打印信息 -->
+    <select id="getExportInfo1" resultType="com.rlglsys.bean.Rlgl060103Bean">
+        SELECT
+            A.PERSONNEL_ID AS personal_id,
+            A.EXAM_DATE,
+            A.SCORE,
+            B.EXAMINATION_NAME AS exam_nm,
+            B.START_UNIT,
+            C.UNIT_NO,
+            C.SECTION_ID
+        FROM
+            m_tb100_exam_result A
+        LEFT JOIN m_tb103_exam_setting B ON A.EXAM_NO = B.EXAM_NO
+        LEFT JOIN m_tb01_user C ON A.PERSONNEL_ID = C.PERSONNEL_ID
+        WHERE
+            A.DEL_KBN = '0'
+        AND C.UNIT_NO = #{unit_no}
+        <if test="exam_no != ''">
+        AND A.EXAM_NO = #{exam_no}
+        </if>
+        <if test="person_id != ''">
+        AND C.PERSONNEL_ID = #{person_id}
+        </if>
+        <if test="section_id != '' and section_id != '-1'">
+        AND C.SECTION_ID = #{section_id}
+        </if>
+         <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!-- 获得打印信息 -->
+    <select id="getExportInfo" resultType="com.rlglsys.bean.Rlgl060103Bean">
+        SELECT
+		    A.PERSONNEL_ID AS personal_id,
+		    A.EXAM_DATE,
+		    A.SCORE,
+		    B.EXAMINATION_NAME AS exam_nm,
+            B.START_UNIT,
+		    C.UNIT_NO,
+		    C.SECTION_ID
+		FROM
+		    m_tb100_exam_result A
+		LEFT JOIN m_tb103_exam_setting B ON A.EXAM_NO = B.EXAM_NO
+		LEFT JOIN m_tb01_user C ON A.PERSONNEL_ID = C.PERSONNEL_ID
+		WHERE
+		    A.DEL_KBN = '0'
+		AND C.UNIT_NO = #{unit_no}
+        <if test="exam_no != ''">
+        AND A.EXAM_NO = #{exam_no}
+        </if>
+		<if test="person_id != ''">
+		AND C.PERSONNEL_ID = #{person_id}
+		</if>
+		<if test="section_id != '' and section_id != '-1'">
+        AND C.SECTION_ID = #{section_id}
+        </if>
+    </select>
+    <!-- 获得科室名称 -->
+    <select id="getSectionNm" resultType="String">
+        SELECT
+            SECTION_NAME
+		FROM
+		    m_tb22_hospital_section
+		WHERE
+		    SECTION_ID = #{section_id}
+		AND UNIT_NO = #{unit_no}
+    </select>
+    <!-- 获得发起单位名称 -->
+    <select id="getStartUnitNm" resultType="String">
+        SELECT
+		    UNIT_NM
+		FROM
+		    m_tb04_unit
+		WHERE
+		    UNIT_NO = #{unit_no}
+    </select>
+    <!-- 获得人员姓名 -->
+    <select id="getPersonNm" resultType="String">
+        SELECT
+		    PERSONNEL_NM
+		FROM
+		    m_tb12_personnel
+		WHERE
+		    PERSONNEL_ID = #{person_id}
+    </select>
+</mapper>

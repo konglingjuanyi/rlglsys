@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl010701" extends="rlgl" namespace="/">
+       <action name="rlgl010701Init" class="com.rlglsys.action.hiringmanage.expertsbank.Rlgl010701InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010701.jsp</result>
+        </action>
+        <action name="rlgl010701Update" class="com.rlglsys.action.hiringmanage.expertsbank.Rlgl010701UpdateAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010701.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010701.jsp</result>
+        </action>
+        <action name="rlgl010702Init" class="com.rlglsys.action.hiringmanage.expertsbank.Rlgl010702InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010702.jsp</result>
+        </action>
+        <action name="rlgl010702Search" class="com.rlglsys.action.hiringmanage.expertsbank.Rlgl010702SearchAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010702.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010702.jsp</result>
+        </action>
+        <action name="rlgl010702Update" class="com.rlglsys.action.hiringmanage.expertsbank.Rlgl010702UpdateAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010702.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010702.jsp</result>
+        </action>
+    </package>
+</struts>

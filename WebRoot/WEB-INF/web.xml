@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" id="WebApp_1398674532935">
+
+   <!-- 用户是否登录的filter -->
+	<filter>
+		<filter-name>CheckLoginFilter</filter-name>
+		<filter-class>com.rlglsys.filter.CheckLoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CheckLoginFilter</filter-name>
+		<url-pattern>*.action</url-pattern>
+	</filter-mapping>
+	
+     <!-- 加载struts2核心 -->
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>
+            org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>*.action</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher> 
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher> 
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/struts/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher> 
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/kindeditor/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher> 
+    </filter-mapping>
+    
+   
+
+    <!-- 指明spring配置文件在何处 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/*.xml</param-value>
+    </context-param>
+
+    <!-- 加载spring配置文件 -->
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    	<listener>
+		<listener-class>
+			com.rlglsys.filter.ApplicationStatusListner
+		</listener-class>
+	</listener>
+
+    <!-- 欢迎页面 -->
+    <welcome-file-list>
+        <welcome-file>test.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!--  图形验证码  --> 
+    <servlet>
+        <servlet-name>authImg</servlet-name> 
+        <servlet-class>com.rlglsys.util.RandomCodeServlet</servlet-class> 
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>authImg</servlet-name> 
+        <url-pattern>/authImg</url-pattern> 
+    </servlet-mapping>
+    
+    <!-- 处理不存在的页面 
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/jsp/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/jsp/error.jsp</location>
+	</error-page>
+-->
+</web-app>

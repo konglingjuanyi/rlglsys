@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- houyc 保存退休申请明细到单位人员退休申请明细表 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010315Mapper">
+    <insert id="insertInfoToMtb50">
+      insert into 
+        m_tb50_user_apply_retire_detail(
+            APPLY_NO,
+            APPLY_NUMBER,
+            PERSONNEL_ID,
+            PERSONNEL_NM,
+            PERSONNEL_CARD_ID,
+            UNIT_NO,
+            UNIT_NM,
+            APPLY_TIME,
+            REMARKS,
+            CITY_TYPE,
+            UNIT_CHECKER,
+            UNIT_CHECK_DATE,
+            UNIT_CHECK_VIEWS,
+            UNIT_CHECK_RESULT,
+            COUNTY_CHECKER,
+            COUNTY_CHECK_DATE,
+            COUNTY_CHECK_VIEWS,
+            COUNTY_CHECK_RESULT,
+            DOWNTOWN_CHECKER,
+            DOWNTOWN_CHECK_DATE,
+            DOWNTOWN_CHECK_VIEWS,
+            DOWNTOWN_CHECK_RESULT,
+            MINISTRY_CHECKER,
+            MINISTRY_CHECK_DATE,
+            MINISTRY_CHECK_VIEWS,
+            MINISTRY_CHECK_RESULT,
+            NOW_MARK,
+         EX_KEY,
+         DEL_KBN,
+         LOGIN_USER_ID,
+         LOGIN_DATE,
+         UPDATE_USER_ID,
+         UPDATE_DATE
+        ) values (
+            #{mtb50UserRetireApplyDetailInfo.apply_no},
+            #{mtb50UserRetireApplyDetailInfo.apply_number},
+            #{mtb50UserRetireApplyDetailInfo.personnel_id},
+            #{mtb50UserRetireApplyDetailInfo.personnel_nm},
+            #{mtb50UserRetireApplyDetailInfo.personnel_card_id},
+            #{mtb50UserRetireApplyDetailInfo.unit_no},
+            #{mtb50UserRetireApplyDetailInfo.unit_nm},
+            #{mtb50UserRetireApplyDetailInfo.apply_time},
+            #{mtb50UserRetireApplyDetailInfo.remarks},
+            #{mtb50UserRetireApplyDetailInfo.city_type},
+            #{mtb50UserRetireApplyDetailInfo.unit_checker},
+            #{mtb50UserRetireApplyDetailInfo.unit_check_date},
+            #{mtb50UserRetireApplyDetailInfo.unit_check_views},
+            #{mtb50UserRetireApplyDetailInfo.unit_check_result},
+            #{mtb50UserRetireApplyDetailInfo.county_checker},
+            #{mtb50UserRetireApplyDetailInfo.county_check_date},
+            #{mtb50UserRetireApplyDetailInfo.county_check_views},
+            #{mtb50UserRetireApplyDetailInfo.county_check_result},
+            #{mtb50UserRetireApplyDetailInfo.downtown_checker},
+            #{mtb50UserRetireApplyDetailInfo.downtown_check_date},
+            #{mtb50UserRetireApplyDetailInfo.downtown_check_views},
+            #{mtb50UserRetireApplyDetailInfo.downtown_check_result},
+            #{mtb50UserRetireApplyDetailInfo.ministry_checker},
+            #{mtb50UserRetireApplyDetailInfo.ministry_check_date},
+            #{mtb50UserRetireApplyDetailInfo.ministry_check_views},
+            #{mtb50UserRetireApplyDetailInfo.ministry_check_result},
+            #{mtb50UserRetireApplyDetailInfo.now_mark},
+            #{mtb50UserRetireApplyDetailInfo.ex_key},
+            #{mtb50UserRetireApplyDetailInfo.del_kbn},
+            #{mtb50UserRetireApplyDetailInfo.login_user_id},
+            #{mtb50UserRetireApplyDetailInfo.login_date},
+            #{mtb50UserRetireApplyDetailInfo.update_user_id},
+            #{mtb50UserRetireApplyDetailInfo.update_date}
+        )
+    </insert>
+    <insert id="insertTb29Info">
+      INSERT INTO m_tb29_personalapplication
+        (
+          APPLY_NO,
+          MAX_NUMBER,
+          APPLY_KBN,
+          PERSONAL_ID,
+          PERSONAL_NM,
+          PERSONAL_UNITNO,
+          APPLY_DATE,
+          CHECK_USER,
+          CHECK_UNITNO,
+          CHECK_RESULT,
+          END_MARK,
+          NOW_MARK,
+          WILL_CHECKUNITNO,
+          EX_KEY,
+          DEL_KBN,
+          LOGIN_USER_ID,
+          LOGIN_DATE,
+          UPDATE_USER_ID,
+          UPDATE_DATE
+        ) values (
+            #{mtb29PersonalApply.apply_no},
+            #{mtb29PersonalApply.max_number},
+            #{mtb29PersonalApply.apply_kbn},
+            #{mtb29PersonalApply.personal_id},
+            #{mtb29PersonalApply.personal_nm},
+            #{mtb29PersonalApply.personal_unitno},
+            #{mtb29PersonalApply.apply_date},
+            #{mtb29PersonalApply.check_user},
+            #{mtb29PersonalApply.check_unitno},
+            #{mtb29PersonalApply.check_result},
+            #{mtb29PersonalApply.end_mark},
+            #{mtb29PersonalApply.now_mark},
+            #{mtb29PersonalApply.will_checkunitno},
+            #{mtb29PersonalApply.ex_key},
+            #{mtb29PersonalApply.del_kbn},
+            #{mtb29PersonalApply.login_user_id},
+            #{mtb29PersonalApply.login_date},
+            #{mtb29PersonalApply.update_user_id},
+            #{mtb29PersonalApply.update_date}
+        )
+    </insert>
+    <!-- 通过人员ID查询人员基本信息 -->
+    <select id="getRetireApplyUserInfoByUserId" resultType="com.rlglsys.bean.Rlgl010315Bean">
+    SELECT
+      M.PERSONNEL_UNIT,
+      M.PERSONNEL_UNIT_NM,
+      M.PERSONNEL_NM,
+      M.PERSONNEL_CARD_ID,
+      M.PERSONNEL_POLITICAL_LANDSCAPE,
+      M.PERSONNEL_TEL,
+      M.PERSONNEL_OFFICETEL,
+      M.PERSONNEL_GENDER,
+      M.PERSONNEL_HOMETOWN,
+      M.PERSONNEL_IMGNAME,
+      M.PERSONNEL_BIRTHDAY,
+      M.PERSONNEL_CARD_ID,
+      M1.POSITION_NM,
+      M2.ADM_NAME AS personnel_political_nm
+    From
+      m_tb12_personnel M
+    LEFT JOIN
+      m_tb17_personnel_job_info M1
+    ON
+      M.PERSONNEL_ID = M1.PERSONNEL_ID
+    AND
+      M1.DEL_KBN = 0
+      
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = '032'
+    AND
+      M2.ADM_NUM = M.PERSONNEL_POLITICAL_LANDSCAPE
+    AND
+      M2.DEL_KBN = 0
+      
+    WHERE
+      M.PERSONNEL_ID = #{user_id}
+    AND
+      M.DEL_KBN = 0
+    ORDER BY
+      M1.APPOINT_TIME DESC
+    LIMIT
+      0,1
+    </select>
+    <!-- 根据人员ID获取工作经历 -->
+    <select id="getWorkInfoListByUserId" resultType="com.rlglsys.entity.Mtb14PersonnelWorkInfo">
+    SELECT
+      *
+    FROM
+      m_tb14_personnel_work_info
+    WHERE
+      PERSONNEL_ID = #{user_id}
+    AND
+      DEL_KBN = 0
+    </select>
+    <!-- 通过人员ID查询是否已申请退休 -->
+    <select id="getRetireUserInfoByUserId" resultType="Integer">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb50_user_apply_retire_detail
+    WHERE 
+      PERSONNEL_ID = #{user_id}
+    AND
+      DEL_KBN = 0
+    </select>
+    <select id="getMtb50InfoByApplyId" resultType="com.rlglsys.bean.Rlgl010315Bean">
+    SELECT
+      M.APPLY_NO,
+      M.APPLY_NUMBER,
+      M.PERSONNEL_ID,
+      M.PERSONNEL_NM,
+      M.PERSONNEL_CARD_ID,
+      M.UNIT_NO,
+      M.UNIT_NM,
+      M.APPLY_TIME,
+      M.REMARKS,
+      M1.PERSONNEL_BIRTHDAY,
+      M1.PERSONNEL_GENDER,
+      M1.PERSONNEL_HOMETOWN,
+      M1.PERSONNEL_POLITICAL_LANDSCAPE,
+      M1.PERSONNEL_TEL,
+      M1.PERSONNEL_OFFICETEL,
+      M1.PERSONNEL_IMGNAME,
+      M2.POSITION_NM,
+      M3.ADM_NAME AS personnel_political_nm
+    FROM
+      m_tb50_user_apply_retire_detail M
+    LEFT JOIN
+      m_tb12_personnel M1
+    ON
+      M.PERSONNEL_ID = M1.PERSONNEL_ID
+    LEFT JOIN
+      m_tb17_personnel_job_info M2
+    ON 
+      M.PERSONNEL_ID = M2.PERSONNEL_ID
+      
+    LEFT JOIN
+      m_tb02_adm M3
+    ON
+      M3.ADM_TYPE_CD = '032'
+    AND
+      M3.ADM_NUM = M1.PERSONNEL_POLITICAL_LANDSCAPE
+    AND
+      M3.DEL_KBN = 0
+      
+    WHERE
+      APPLY_NO = #{apply_no}
+    AND
+      APPLY_NUMBER = #{apply_number}
+    AND
+      M.DEL_KBN = 0
+    ORDER BY
+      M2.APPOINT_TIME DESC
+    LIMIT
+      0,1
+    </select>
+    <!-- 更新审核流程信息 -->
+  <update id="updateNoInfo">
+      UPDATE 
+          t_tb01_auto_getnum
+      SET
+          sequenceNo = sequenceNo + 1
+      WHERE
+          table_id = #{noInfo.table_id}
+      AND 
+          col_id = #{noInfo.col_id}
+  </update>
+  <!-- 更新个人人事信息 -->
+  <update id="updateTb29Info">
+      UPDATE m_tb29_personalapplication
+      SET
+          MAX_NUMBER = #{tb29Info.max_number},
+          APPLY_DATE = #{tb29Info.apply_date},
+          CHECK_RESULT = "001",
+          END_MARK = #{tb29Info.end_mark},
+          NOW_MARK = #{tb29Info.now_mark},
+          WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+          UPDATE_USER_ID = #{tb29Info.personal_id},
+          UPDATE_DATE = #{tb29Info.apply_date}
+      WHERE
+          APPLY_NO = #{tb29Info.apply_no}
+  </update>
+</mapper>

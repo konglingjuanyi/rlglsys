@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010109Mapper">
+    <!--单位详细列表查询 -->
+    <select id="getUnitList" resultType="Mtb04Unit">
+        SELECT * FROM m_tb04_unit WHERE ESCROW_UNIT_NO =#{unit_no} AND DEL_KBN=0 ;
+    </select>
+    <select id="getUnitLike" resultType="com.rlglsys.bean.Rlgl010109Bean">
+       SELECT A.UNIT_NO,A.UNIT_NM,B.UNIT_NO ESCROW_UNIT_NO,B.UNIT_NM ESCROW_UNIT_NM
+       FROM (
+          SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} AND ESCROW_UNIT_KBN=1 
+           <if test="unit_no != ''">
+             <!--  AND unit_no   LIKE CONCAT('%', #{unit_no}, '%')--> 
+            AND unit_no =#{unit_no}
+          </if>
+          <if test="escrow_unit_no != ''">
+              <!--   AND escrow_unit_no  LIKE CONCAT('%', #{escrow_unit_no}, '%')--> 
+               AND escrow_unit_no =#{escrow_unit_no}
+          </if>
+          <if test="unit.pageCount != 0 and unit.pageCount != null">
+              LIMIT #{unit.pageNo},#{unit.pageCount}
+          </if>
+          )A 
+          LEFT JOIN 
+          m_tb04_unit B 
+          ON A.ESCROW_UNIT_NO=B.UNIT_NO
+         
+        
+    </select>
+    <select id="getPersonnelList" resultType="com.rlglsys.entity.Mtb12Personnel">
+         SELECT * FROM m_tb12_personnel 
+         WHERE 
+        	 PERSONNEL_OFFICE=#{section_no}
+         	 AND 
+             PERSONNEL_UNIT =#{unit_no} 
+             AND PERSONNEL_ID 
+             NOT IN(
+                   SELECT USER_ID 
+                   FROM M_TB33_UNIT_ADMINISTRATOR_INFO  
+                   WHERE SECTION_ID=#{section_no} AND UNIT_NO =#{unit_no} );
+    </select>
+     <select id="getEscrowUnitList" resultType="Mtb04Unit">
+          <!--  SELECT * FROM  m_tb04_unit WHERE UNIT_NO IN (SELECT UNIT_NO_LOWER FROM  m_tb28_unit_lower  WHERE  UNIT_NO=(SELECT UNIT_NO  
+                                   FROM m_tb28_unit_lower 
+                                    WHERE UNIT_NO_LOWER=#{unitNo})  AND UNIT_NO_LOWER!=#{unitNo}) AND DEL_KBN=0 -->
+       SELECT * FROM  m_tb04_unit WHERE UNIT_NO IN(
+            SELECT UNIT_NO_LOWER FROM m_tb28_unit_lower WHERE UNIT_NO=(SELECT UNIT_NO FROM m_tb28_unit_lower WHERE UNIT_NO_LOWER=#{unitNo})
+            UNION SELECT UNIT_NO FROM m_tb28_unit_lower WHERE UNIT_NO_LOWER=#{unitNo})AND UNIT_NO !=#{unitNo}
+
+    </select>
+    <update id="setEscrowUnit" parameterType="int">
+         UPDATE m_tb04_unit 
+         SET   
+             ESCROW_UNIT_KBN='1' ,
+             ESCROW_UNIT_NO=#{lowerUnit}
+        WHERE UNIT_NO=#{unitNo}
+    </update>
+    <!--删除单位操作人-->
+     <update id="deletePersonnel" parameterType="int">
+          DELETE FROM M_TB33_UNIT_ADMINISTRATOR_INFO 
+          WHERE SECTION_ID=#{section_id}
+               AND UNIT_NO =#{unit_no}
+               AND USER_ID=#{user_id};
+      <!--     UPDATE M_TB33_UNIT_ADMINISTRATOR_INFO 
+         SET   
+              DEL_KBN=1
+        WHERE UNIT_NO=#{unit_no} 
+              AND USER_ID=#{user_id}
+              AND SECTION_ID=#{section_id}-->
+    </update>
+    <!-- 保存单位管理员信息 -->
+    <insert id="setPersonnel" parameterType="int" >
+      insert into
+        M_TB33_UNIT_ADMINISTRATOR_INFO(
+          UNIT_NO,
+          UNIT_NM,
+          MANAGE_CALIBER_ID,
+          USER_ID,
+          PUBLIC_KBN,
+          USER_NAME,
+          SECTION_ID,
+          POSITION_NUM,
+          CELLPHONE,
+          EMAIL,
+          QQNUMBER,
+          TELEPHONE,
+          FAX,
+          ex_key  ,                   
+		  del_kbn ,                   
+		  expend_01   ,               
+		  expend_02  ,                
+		  expend_03 ,                 
+		  expend_04 ,                 
+		  expend_05 ,                 
+		  login_user_id  ,            
+		  login_date ,                
+		  update_user_id ,            
+		  update_date ,     
+        )
+      values(
+        #{personnel.unit_no},
+        #{personnel.unit_nm},
+        #{personnel.manage_caliber_id},
+        #{personnel.user_id},
+        0,
+        #{personnel.user_name},
+        #{personnel.section_id},
+        #{personnel.position_num},
+        #{personnel.cellphone},
+        #{personnel.email},
+        #{personnel.qqnumber},
+        #{personnel.telephone},
+        #{personnel.fax},
+        #{personnel.ex_key},             
+		#{personnel.del_kbn},                       
+		#{personnel.expend_01},       
+		#{personnel.expend_02},       
+        #{personnel.expend_03},       
+        #{personnel.expend_04},       
+        #{personnel.expend_05},       
+        #{personnel.login_user_id},         
+        #{personnel.login_date},                  
+        #{personnel.update_user_id},          
+        #{personnel.update_date}
+      )
+    </insert>
+    <!-- 通过单位编号查询本单位管理员信息 -->
+    <select id="getUnitAdministratorInfoByUnitID" resultType="com.rlglsys.bean.Rlgl010110Bean">
+      SELECT   A.UNIT_NO,
+          A.UNIT_NM,
+          A.MANAGE_CALIBER_ID,
+          A.USER_ID,
+          A.PUBLIC_KBN,
+          A.USER_NAME,
+          A.SECTION_ID,
+          B.SECTION_NAME SECTION_NO,
+          A.POSITION_NUM,
+          A.CELLPHONE,
+          A.EMAIL,
+          A.QQNUMBER,
+          A.TELEPHONE,
+          A.FAX
+ FROM  (SELECT
+        *
+        FROM
+        m_tb33_unit_administrator_info
+        WHERE
+        UNIT_NO = #{unit_no}
+        AND
+        PUBLIC_KBN =0 AND DEL_KBN =0  )  A LEFT JOIN m_tb22_ection B ON (A.SECTION_ID=B.SECTION_ID) 
+    </select>
+    <!-- 查询代管单位 -->
+    <select id="getUnitEscrow" resultType="com.rlglsys.bean.Rlgl010109Bean">
+    
+    SELECT A.UNIT_NO,A.UNIT_NM,B.UNIT_NO ESCROW_UNIT_NO,B.UNIT_NM ESCROW_UNIT_NM
+    FROM (
+          SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unit_no} AND ESCROW_UNIT_KBN=1 
+          )A 
+          LEFT JOIN 
+          m_tb04_unit B 
+          ON A.ESCROW_UNIT_NO=B.UNIT_NO
+         <if test="unit.pageCount != 0 and unit.pageCount != null">
+              LIMIT #{unit.pageNo},#{unit.pageCount}
+          </if>
+    </select>
+      <!-- 查询代管单位总条数 -->
+    <select id="getCountbyUnit" resultType="int">
+    
+     SELECT COUNT(*)
+     FROM (
+          SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unit_no} AND ESCROW_UNIT_KBN=1 
+          )A 
+          LEFT JOIN 
+          m_tb04_unit B 
+          ON A.ESCROW_UNIT_NO=B.UNIT_NO
+    
+    </select>
+    
+      <!-- 查询代管单位总条数 -->
+    <select id="getCountbySearchUnit" resultType="int">
+     SELECT COUNT(*)
+     FROM (
+          SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} AND ESCROW_UNIT_KBN=1 
+            <if test="unit_no != ''">
+             <!--  AND unit_no   LIKE CONCAT('%', #{unit_no}, '%')--> 
+            AND unit_no =#{unit_no}
+          </if>
+          <if test="escrow_unit_no != ''">
+              <!--   AND escrow_unit_no  LIKE CONCAT('%', #{escrow_unit_no}, '%')--> 
+               AND escrow_unit_no =#{escrow_unit_no}
+          </if>
+          )A 
+          LEFT JOIN 
+          m_tb04_unit B 
+          ON A.ESCROW_UNIT_NO=B.UNIT_NO
+    </select>
+    
+    <update id="updateUnitEscrow" parameterType="int">
+       UPDATE m_tb04_unit SET ESCROW_UNIT_KBN=0,ESCROW_UNIT_NO='' WHERE UNIT_NO=#{unit_no}
+    </update>
+    <!-- 修改代管单位的用户类型 为1 (该类型用户只有查看权限)-->
+    <update id="updateUnitPersonnel" parameterType="int">
+       UPDATE m_tb01_user SET ROLE_ID='001' WHERE UNIT_NO=#{unit_no}
+    </update>
+     <!-- 修改代管单位的用户类型 为1 (该类型用户只有查看权限)-->
+    <update id="updateFreeUnitPersonnel" parameterType="int">
+       UPDATE m_tb01_user SET ROLE_ID='' WHERE UNIT_NO=#{unit_no}
+    </update>
+</mapper>

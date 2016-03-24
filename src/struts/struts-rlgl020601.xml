@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl020601" extends="rlgl" namespace="/">
+      <!--  初期化处理 -->
+       <action name="rlgl020601Init"
+        class="com.rlglsys.action.continumedicaleducation.creditreport.Rlgl020601InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020601.jsp</result>
+       </action>
+       <!--  删除处理 -->
+       <action name="rlgl020601Delete"
+        class="com.rlglsys.action.continumedicaleducation.creditreport.Rlgl020601DeleteAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020601Init</result>
+       </action>
+       <!-- 查询处理
+       <action name="rlgl020601Search"
+        class="com.rlglsys.action.hiringmanage.syntheticalinquiry.Rlgl020601SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020601.jsp</result>
+       </action>
+       Excel出力处理
+       <action name="rlgl020601Export" class="com.rlglsys.action.hiringmanage.syntheticalinquiry.Rlgl020601ExportAction"
+            method="execute">
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+            </result>
+        </action> -->
+    </package>
+</struts>

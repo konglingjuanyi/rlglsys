@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 项目申报 -->
+<struts>
+    <package name="rlgl020403" extends="rlgl" namespace="/">
+        <!-- 项目申报 -->
+        <action name="rlgl020403Init"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020403.jsp</result>
+        </action>
+		<action name="rlgl020403Search"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl020403.jsp</result>
+		</action>
+		<action name="rlgl020403RedirectView"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403RedirectAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020403View</result>
+		</action>
+		<action name="rlgl020403View"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403ViewAction" method="execute">
+			<result name="rlgl020404">/WEB-INF/jsp/rlgl020404.jsp</result>
+		</action>
+		<action name="rlgl020403RedirectEdit"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403RedirectEditAction" method="execute">
+			<result name="success" type="redirectAction">rlgl020403Edit</result>
+		</action>
+		<action name="rlgl020403Edit"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403EditAction" method="execute">
+			<result name="rlgl020405">/WEB-INF/jsp/rlgl020405.jsp</result>
+		</action>
+		<action name="rlgl020404Back"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020404BackAction" method="execute">
+			<result name="rlgl020403" type="redirectAction">rlgl020403Init</result>
+		</action>
+		<action name="rlgl020403Back"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403BackAction" method="execute">
+			<result name="rlgl020403" type="redirectAction">rlgl020403Init</result>
+		</action>
+    </package>
+</struts>
+

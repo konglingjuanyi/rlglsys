@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022002Mapper">
+    <select id="courseList" resultType="com.rlglsys.bean.Rlgl022002Bean" >
+          SELECT A.ADM_NAME,A.ADM_NUM,IFNULL(C.SUMNUM,'0') sumnum 
+          FROM (
+               SELECT * FROM m_tb02_adm  WHERE ADM_TYPE_CD=212) A 
+               LEFT JOIN 
+              (SELECT
+					E.COURSE_CATAGORY,
+					COUNT(*) SUMNUM
+				   FROM
+					(
+						SELECT
+							*
+						FROM
+							m_tb63_courseware
+						WHERE
+							 END_DATE>#{rlgl022002Bean.current_date} AND COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			           USER_ID=#{rlgl022002Bean.user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			           USER_ID=#{rlgl022002Bean.user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID in (#{rlgl022002Bean.personnel_id},#{rlgl022002Bean.user_id})
+							)
+					)E
+				    GROUP BY
+				E.COURSE_CATAGORY)  C 
+               ON(A.ADM_NUM=C.COURSE_CATAGORY)
+    </select>
+    
+    
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010307Mapper">
+    <!-- 个人人事个申请明细表的更新处理(m_tb29_personalapplication)SQL -->
+    <update id="updateTb29" parameterType="String">
+        UPDATE m_tb29_personalapplication
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+        AND MAX_NUMBER = #{max_number}
+    </update>
+    <!-- 个人人事个申请明细表的更新处理-进修申请明细表的更新处理(m_tb32_personal_education_detail)SQL -->
+    <update id="updateEducation" parameterType="String">
+        UPDATE m_tb32_personal_education_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+        AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 个人人事个申请明细表的更新处理-在编申请明细表的更新处理(m_tb34_personal_enrolled_detail)SQL -->
+    <update id="updateEnrolled" parameterType="String">
+        UPDATE m_tb34_personal_enrolled_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+        AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 个人人事个申请明细表的更新处理-出国申请明细表的更新处理(m_tb53_personal_outside_apply_detail)SQL -->
+    <update id="updateOutside" parameterType="String">
+        UPDATE m_tb53_personal_outside_apply_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+        AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 个人人事个申请明细表的更新处理-党员申请明细表的更新处理(m_tb55_partymenmber_apply_detail)SQL -->
+    <update id="updatePartymenmber" parameterType="String">
+        UPDATE m_tb55_partymenmber_apply_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+        AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 个人人事个申请明细表的更新处理-基本信息申请申请明细表的更新处理(m_tb39_personnel)SQL -->
+    <update id="updatePersonInfo" parameterType="String">
+        UPDATE m_tb39_personnel
+        SET PERSONNEL_ISAPPROVAL = '000'
+        WHERE APPLY_NO = #{apply_no}
+    </update>
+
+
+    <!-- 单位人事申请明细表的更新处理-人员调出申请细表的更新处理(m_tb37_unit_moveout_detail)SQL -->
+    <update id="moveoutDetail" parameterType="String">
+        UPDATE m_tb37_unit_moveout_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+              AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 单位人事申请明细表的更新处理-人员调入申请细表的更新处理(m_tb49_unit_movein_detail)SQL -->
+    <update id="moveinDetail" parameterType="String">
+        UPDATE m_tb49_unit_movein_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+              AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 单位人事申请明细表的更新处理-人员返聘申请细表的更新处理(m_tb57_personal_remploy_apply_detail)SQL -->
+    <update id="remployDetail" parameterType="String">
+        UPDATE m_tb57_personal_remploy_apply_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+              AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 单位人事申请明细表的更新处理-人员退休申请细表的更新处理(m_tb50_user_apply_retire_detail)SQL -->
+    <update id="retireDetail" parameterType="String">
+        UPDATE m_tb50_user_apply_retire_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+              AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 单位人事申请明细表的更新处理-人员不在岗申请细表的更新处理(m_tb52_user_offthejob_detail)SQL -->
+    <update id="offthejobDetail" parameterType="String">
+        UPDATE m_tb52_user_offthejob_detail
+        SET DEL_KBN = '1'
+        WHERE APPLY_NO = #{apply_no}
+              AND APPLY_NUMBER = #{max_number}
+    </update>
+    <!-- 个人申请一览查询SQL -->
+    <select id="getTodoInfo" resultType="PersonalApplication">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_KBN in ('001','002','003','004','010','011','012','013','017')
+            AND PERSONAL_UNITNO = #{todoInfo.unit_no}
+           <if test="todoInfo.personnel_id != '' and todoInfo.personnel_id != null">
+            AND PERSONAL_ID = #{todoInfo.personnel_id}
+           </if>
+           <if test="todoInfo.apply_no != '' and todoInfo.apply_no != null">
+            AND APPLY_NO = #{todoInfo.apply_no}
+           </if>
+           <if test="todoInfo.apply_kbn != '' and todoInfo.apply_kbn != null">
+            AND APPLY_KBN = #{todoInfo.apply_kbn}
+           </if>
+           <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+           LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+           </if>
+    </select>
+    <!-- 个人申请记录数查询SQL -->
+    <select id="getCount" resultType="int">
+        SELECT count(*)
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_KBN in ('001','002','003','004','010','011','012','013','017')
+            AND PERSONAL_UNITNO = #{todoInfo.unit_no}
+           <if test="todoInfo.personnel_id != '' and todoInfo.personnel_id != null">
+            AND PERSONAL_ID = #{todoInfo.personnel_id}
+           </if>
+           <if test="todoInfo.apply_no != '' and todoInfo.apply_no != null">
+            AND APPLY_NO = #{todoInfo.apply_no}
+           </if>
+           <if test="todoInfo.apply_kbn != '' and todoInfo.apply_kbn != null">
+            AND APPLY_KBN = #{todoInfo.apply_kbn}
+           </if>
+    </select>
+    <!-- 单位申请一览查询SQL -->
+    <select id="getTodoInfoUnit" resultType="PersonalApplication">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_KBN in ('005','006','007','008','009','015','016')
+            AND CHECK_UNITNO = #{todoInfo.unit_no}
+           <if test="todoInfo.personnel_id != '' and todoInfo.personnel_id != null">
+            AND PERSONAL_ID = #{todoInfo.personnel_id}
+           </if>
+           <if test="todoInfo.apply_no != '' and todoInfo.apply_no != null">
+            AND APPLY_NO = #{todoInfo.apply_no}
+           </if>
+           <if test="todoInfo.apply_kbn != '' and todoInfo.apply_kbn != null">
+            AND APPLY_KBN = #{todoInfo.apply_kbn}
+           </if>
+           <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+           LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+           </if>
+    </select>
+    <!-- 单位申请记录数查询SQL -->
+    <select id="getCountUnit" resultType="int">
+        SELECT count(*)
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_KBN in ('005','006','007','008','009','015','016')
+            AND CHECK_UNITNO = #{todoInfo.unit_no}
+           <if test="todoInfo.personnel_id != '' and todoInfo.personnel_id != null">
+            AND PERSONAL_ID = #{todoInfo.personnel_id}
+           </if>
+           <if test="todoInfo.apply_no != '' and todoInfo.apply_no != null">
+            AND APPLY_NO = #{todoInfo.apply_no}
+           </if>
+           <if test="todoInfo.apply_kbn != '' and todoInfo.apply_kbn != null">
+            AND APPLY_KBN = #{todoInfo.apply_kbn}
+           </if>
+    </select>
+</mapper>

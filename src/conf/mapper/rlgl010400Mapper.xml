@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010400Mapper">
+
+  <!-- 三名申请一览查询SQL -->
+  <select id="getTodoInfoUnit" resultType="PersonalApplication">
+      SELECT *
+      FROM m_tb29_personalapplication
+      WHERE 
+          DEL_KBN = '0'
+          AND APPLY_KBN in (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_01 = 2 AND EXPEND_02 = 2)
+          AND CHECK_UNITNO = #{todoInfo.unit_no}
+         <if test="todoInfo.personnel_id != '' and todoInfo.personnel_id != null">
+          AND PERSONAL_ID = #{todoInfo.personnel_id}
+         </if>
+         <if test="todoInfo.apply_no != '' and todoInfo.apply_no != null">
+          AND APPLY_NO = #{todoInfo.apply_no}
+         </if>
+         <if test="todoInfo.apply_kbn != '' and todoInfo.apply_kbn != null">
+          AND APPLY_KBN = #{todoInfo.apply_kbn}
+         </if>
+         <if test="pageCount != 0 and pageNo != null">
+         LIMIT #{pageNo},#{pageCount}
+         </if>
+  </select>
+  
+  <!-- 获取三名申请数量 -->
+  <select id="getToInfoCount" resultType="int">
+  SELECT 
+    count(*)
+  FROM 
+    m_tb29_personalapplication
+  WHERE 
+    DEL_KBN = '0'
+  AND 
+    APPLY_KBN in (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_01 = 2 AND EXPEND_02 = 2)
+  AND 
+    CHECK_UNITNO = #{todoInfo.unit_no}
+  </select>
+  
+  <!-- 申请明细查看 -->
+  <select id="getMtb82InfoByApplyId" resultType="com.rlglsys.bean.Rlgl010401Bean">
+    SELECT
+      M4.PERSONAL_ID,
+      M4.PERSONAL_NM,
+      M4.PERSONAL_INFO,
+      M4.UNIT_NM,
+      M.personnel_birthday,
+      M.personnel_gender,
+      M.personnel_hometown,
+      M.personnel_worktime,
+      M.personnel_email,
+      M.personnel_officetel,
+      M.personnel_imgname,
+      M1.school,
+      M1.EDUCATIONAL_BG,
+      M2.POSITION_NM,
+      M3.SECTION_NAME,
+      M4.APPLY_TIME,
+      M5.ADM_NAME AS apply_doctor_level,
+      M6.ADM_NAME AS educational_bg_nm
+    FROM
+      m_tb82_famous_doctor_apply_detail M4
+    LEFT JOIN
+      m_tb12_personnel M
+    ON 
+      M4.PERSONAL_ID = M.PERSONNEL_ID
+    LEFT JOIN
+      m_tb15_personnel_edu_info M1
+    ON
+      M4.PERSONAL_ID = M1.PERSONNEL_ID
+    LEFT JOIN 
+      (SELECT * FROM m_tb17_personnel_job_info JOB1 WHERE APPOINT_TIME = (SELECT MAX(APPOINT_TIME) FROM m_tb17_personnel_job_info WHERE PERSONNEL_ID=JOB1.PERSONNEL_ID GROUP BY PERSONNEL_ID)) M2
+    ON 
+       M4.PERSONAL_ID = M2.PERSONNEL_ID
+    LEFT JOIN
+      (SELECT t1.UNIT_NO,t1.SECTION_NAME,t2.PERSONNEL_ID FROM m_tb22_hospital_section t1 LEFT JOIN m_tb01_user t2 ON t2.UNIT_NO = t1.UNIT_NO AND t1.SECTION_ID = t2.SECTION_ID) M3
+    ON
+      M4.UNIT_NO = M3.UNIT_NO 
+    AND 
+      M4.PERSONAL_ID = M3.PERSONNEL_ID
+    LEFT JOIN
+      m_tb02_adm M5
+    ON
+      M5.ADM_TYPE_CD = '191'
+    AND
+      M5.ADM_NUM = M4.DOCTOR_LEVEL
+    LEFT JOIN
+      m_tb02_adm M6
+    ON
+      M6.ADM_TYPE_CD = '040'
+    AND
+      M6.ADM_NUM = M1.EDUCATIONAL_BG
+    WHERE
+      M4.APPLY_NO = #{applyNo}
+    AND 
+      M4.APPLY_NUMBER = #{apply_num}
+    AND
+      M4.DEL_KBN = 0
+  </select>
+  
+  <!-- 个人人事申请明细表的更新处理(m_tb29_personalapplication)SQL -->
+  <update id="updateTb29" parameterType="String">
+    UPDATE 
+      m_tb29_personalapplication
+    SET 
+      DEL_KBN = 1
+    WHERE 
+      APPLY_NO = #{applyNo}
+    AND 
+      MAX_NUMBER = #{apply_num}
+  </update>
+
+  <!-- 更新名医申请明细表 -->
+  <update id="updateTb82" parameterType="String">
+    UPDATE
+      m_tb82_famous_doctor_apply_detail
+    SET
+      DEL_KBN = 1
+    WHERE
+      APPLY_NO = #{applyNo}
+    AND
+      APPLY_NUMBER = #{apply_num}
+  </update>
+  
+  <!-- 获取名科申请明细 -->
+  <select id="getSectionInfoFromMtb86" resultType="com.rlglsys.bean.Rlgl010402Bean">
+      SELECT
+        M.APPLY_NO,
+        M.APPLY_NUMBER,
+        M.SECTION_LEVEL,
+        M.APPLY_TIME,
+        M1.*,
+        M2.ADM_NAME AS section_pro_nm,
+        M3.ADM_NAME AS section_level_nm,
+        M4.USER_NAME AS section_manger_nm
+      FROM
+        m_tb86_famous_section_apply_detail M
+      LEFT JOIN
+        m_tb22_hospital_section M1
+      ON
+        M.UNIT_NO = M1.UNIT_NO
+      AND
+        M.SECTION_ID = M1.SECTION_ID
+      AND
+        M1.DEL_KBN = 0
+      LEFT JOIN
+        m_tb02_adm M2
+      ON
+        M2.ADM_TYPE_CD = '097'
+      AND
+        M2.ADM_NUM = M1.SECTION_PROPERTY
+      AND
+        M2.DEL_KBN = 0
+      LEFT JOIN
+        m_tb02_adm M3
+      ON
+        M3.ADM_TYPE_CD = '191'
+      AND
+        M3.ADM_NUM = M.SECTION_LEVEL
+      AND  
+        M3.DEL_KBN = 0
+      LEFT JOIN
+        m_tb01_user M4
+      ON
+        M4.USER_ID = M1.SECTION_MANAGER
+      AND
+        M4.DEL_KBN = 0
+      WHERE
+        M.APPLY_NO = #{applyNo}
+      AND
+        M.APPLY_NUMBER = #{apply_num}
+      AND
+        M.DEL_KBN = 0
+  </select>
+  
+  <!-- 更新名科申请明细表 -->
+  <update id="updateTb86" parameterType="String">
+    UPDATE
+      m_tb86_famous_section_apply_detail
+    SET
+      DEL_KBN = 1
+    WHERE
+      APPLY_NO = #{applyNo}
+    AND
+      APPLY_NUMBER = #{apply_num}
+  </update>
+  
+  <!-- 获取名医申请明细 -->
+  <select id="getDoctorApplyInfoFromMtb82" resultType="com.rlglsys.bean.Rlgl010401Bean">
+    SELECT
+      M.APPLY_NO,
+      M.APPLY_NUMBER,
+      M1.personnel_id,
+      M1.personnel_nm,
+      M1.personnel_unit,
+      M1.personnel_unit_nm,
+      M.APPLY_TIME,
+      M.PERSONAL_INFO,
+      M.DOCTOR_LEVEL,
+      M.NOW_MARK,
+      M1.personnel_gender,
+      M1.personnel_worktime,
+      M1.personnel_email,
+      M1.personnel_officetel,
+      M1.personnel_imgname,
+      M2.school,
+      M2.EDUCATIONAL_BG,
+      M3.POSITION_NM,
+      M4.SECTION_NAME
+    FROM
+      m_tb82_famous_doctor_apply_detail M
+    LEFT JOIN
+      m_tb12_personnel M1
+    ON
+      M.PERSONAL_ID = M1.PERSONNEL_ID
+    LEFT JOIN
+      m_tb15_personnel_edu_info M2
+    ON
+      M.PERSONAL_ID = M2.PERSONNEL_ID
+    LEFT JOIN 
+        (SELECT * FROM m_tb17_personnel_job_info JOB1 WHERE APPOINT_TIME = (SELECT MAX(APPOINT_TIME) FROM m_tb17_personnel_job_info WHERE PERSONNEL_ID=JOB1.PERSONNEL_ID GROUP BY PERSONNEL_ID)) M3
+    ON 
+         M.PERSONAL_ID = M3.PERSONNEL_ID
+    LEFT JOIN
+        (SELECT t1.UNIT_NO,t1.SECTION_NAME,t2.PERSONNEL_ID FROM m_tb22_hospital_section t1 LEFT JOIN m_tb01_user t2 ON t2.UNIT_NO = t1.UNIT_NO AND t1.SECTION_ID = t2.SECTION_ID) M4
+    ON
+        M.UNIT_NO = M4.UNIT_NO 
+    AND 
+        M.PERSONAL_ID = M4.PERSONNEL_ID
+    WHERE
+      M.APPLY_NO = #{applyNo}
+    AND
+      M.APPLY_NUMBER = #{apply_num}
+    AND
+      M.DEL_KBN = 0
+  </select>
+  
+  <select id="getHospitalInfoFromMtb104" resultType="com.rlglsys.bean.Rlgl010403Bean">
+	SELECT
+	  M.*,
+	  M1.ADM_NAME AS hospital_level_nm
+	FROM
+	  m_tb104_famous_hospital_apply_detail M
+	LEFT JOIN
+	  m_tb02_adm M1
+	ON
+	  M1.ADM_TYPE_CD = '191'
+	AND
+	  M1.ADM_NUM = M.HOSPITAL_LEVEL
+	AND
+	  M1.DEL_KBN = 0
+	WHERE
+	  M.APPLY_NO = #{applyNo}
+	AND
+	  M.APPLY_NUMBER = #{apply_num}
+	AND
+	  M.DEL_KBN = 0
+  </select>
+  
+  <!-- 更新名院申请明细表 -->
+  <update id="updateTb104" parameterType="String">
+    UPDATE
+      m_tb104_famous_hospital_apply_detail
+    SET
+      DEL_KBN = 1
+    WHERE
+      APPLY_NO = #{applyNo}
+    AND
+      APPLY_NUMBER = #{apply_num}
+  </update>
+  
+</mapper>

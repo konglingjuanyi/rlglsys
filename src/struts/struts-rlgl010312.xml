@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl010312" extends="rlgl" namespace="/">
+       <action name="rlgl010312Init"
+        class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010312InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010312.jsp</result>
+        </action>
+        <action name="rlgl010312Search"
+        class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010312SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010312.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010312.jsp</result>
+        </action>
+        <action name="rlgl010312Commit"
+        class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010312CommitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010312.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010312.jsp</result>
+        </action>
+        <action name="rlgl010312Delete"
+        class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010312DeleteAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010312.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010312.jsp</result>
+        </action>
+        <action name="rlgl010312Veto"
+        class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010312VetoAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010312.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010312.jsp</result>
+        </action>
+        <action name="rlgl010312Back"
+        class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010312BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010316Search</result>
+        </action>
+    </package>
+</struts>
+

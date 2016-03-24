@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020408Mapper">
+
+  <!-- 取得项目举办申请数量 -->
+  <select id="getHoldProjectListCount" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      (SELECT * FROM m_tb29_personalapplication WHERE APPLY_KBN = '058' AND DEL_KBN = 0 AND CHECK_RESULT = '002' AND PERSONAL_UNITNO IN
+       <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+       #{item}
+       </foreach>) M
+    LEFT JOIN
+      m_tb90_project_hold_apply_detail M1
+    ON
+      M.APPLY_NO = M1.APPLY_NO
+    AND
+      M.MAX_NUMBER = M1.APPLY_NUMBER
+    AND
+      M1.DEL_KBN = 0
+  </select>
+  
+  <!-- 取得项目举办申请列表-->
+  <select id="getHoldProjectList" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      M1.*
+    FROM
+      (SELECT * FROM m_tb29_personalapplication WHERE APPLY_KBN = '058' AND DEL_KBN = 0 AND CHECK_RESULT = '002' AND PERSONAL_UNITNO IN
+       <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+       #{item}
+       </foreach>) M
+    LEFT JOIN
+      m_tb90_project_hold_apply_detail M1
+    ON
+      M.APPLY_NO = M1.APPLY_NO
+    AND
+      M.MAX_NUMBER = M1.APPLY_NUMBER
+    WHERE
+      M1.DEL_KBN = 0
+    AND 
+      M1.CONDUCT_FLG = '01'
+    <if test="pageCount != 0 and pageCount != null">
+    LIMIT #{pageNo},#{pageCount}
+    </if>
+  </select>
+  
+  <insert id="insertIntoMtb96">
+  insert into
+      m_tb96_project_credit_apply (
+        PERSONAL_ID,
+        PERSONAL_NM,
+        PERSONAL_UNIT_NO,
+        PERSONAL_UNIT_NM,
+        PROJECT_ID,
+        PROJECT_NM,
+        UNIT_NO,
+        UNIT_NM,
+        APPLY_TIME,
+        APPLY_NO,
+        APPLY_NUMBER,
+        CHECK_RESULT,
+        EX_KEY,
+        DEL_KBN,
+        LOGIN_USER_ID,
+        LOGIN_DATE,
+        UPDATE_USER_ID,
+        UPDATE_DATE
+      ) values (
+        #{rlgl020408Bean.personal_id},
+        #{rlgl020408Bean.personal_nm},
+        #{rlgl020408Bean.personal_unit_no},
+        #{rlgl020408Bean.personal_unit_nm},
+        #{rlgl020408Bean.project_id},
+        #{rlgl020408Bean.project_nm},
+        #{rlgl020408Bean.unit_no},
+        #{rlgl020408Bean.unit_nm},
+        #{rlgl020408Bean.apply_time},
+        #{rlgl020408Bean.apply_no},
+        #{rlgl020408Bean.apply_number},
+        #{rlgl020408Bean.check_result},
+        #{rlgl020408Bean.ex_key},
+        #{rlgl020408Bean.del_kbn},
+        #{rlgl020408Bean.login_user_id},
+        #{rlgl020408Bean.login_date},
+        #{rlgl020408Bean.update_user_id},
+        #{rlgl020408Bean.update_date}
+      )
+        
+  </insert>
+  
+  <select id="checkIfApply" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb96_project_credit_apply
+    WHERE
+      PERSONAL_ID = #{personal_id}
+    AND
+      PROJECT_ID = #{project_id}
+    AND
+      DEL_KBN = 0
+  </select>
+  
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IAutoGetNumMapper">
+    <select id="getNoInfo" resultType="com.rlglsys.entity.TTb01AutoGetNum">
+        SELECT
+            *
+        FROM t_tb01_auto_getnum
+        WHERE
+            table_id = #{noInfo.table_id}
+        AND col_id = #{noInfo.col_id}
+    </select>
+    <!-- 更新信息 -->
+    <update id="updateNoInfo">
+        UPDATE t_tb01_auto_getnum
+        SET
+            sequenceNo = sequenceNo +1
+        WHERE
+            table_id = #{noInfo.table_id}
+        AND col_id = #{noInfo.col_id}
+    </update>
+    <!-- 更新信息 -->
+    <update id="updateNoInfoByUnit">
+        UPDATE t_tb01_auto_getnum
+        SET
+            sequenceNo = sequenceNo +1
+        WHERE
+            table_id = #{noInfo.table_id}
+        AND col_id = #{noInfo.col_id}
+        AND num_type = #{noInfo.num_type}
+    </update>
+    <!-- 採番信息登录-->
+    <insert id="insertNoInfo">
+       INSERT INTO t_tb01_auto_getnum
+            (table_id
+            ,col_id
+            ,num_type
+            ,sequenceno
+            ,length
+            ,pre_fix)
+        VALUES (#{noInfo.table_id}
+            ,#{noInfo.col_id}
+            ,#{noInfo.num_type}
+            ,#{noInfo.sequenceNo}
+            ,#{noInfo.length}
+            ,#{noInfo.pre_fix})
+    </insert>
+    
+    <select id="searchNoInfoByUnit" resultType="com.rlglsys.entity.TTb01AutoGetNum">
+        SELECT
+            *
+        FROM t_tb01_auto_getnum
+        WHERE
+            table_id = #{noInfo.table_id}
+        AND col_id = #{noInfo.col_id}
+        AND num_type = #{noInfo.num_type}
+    </select>
+    
+    <delete id="delNoInfoByUnit">
+        DELETE
+        FROM t_tb01_auto_getnum
+        WHERE
+            table_id = #{noInfo.table_id}
+        AND col_id = #{noInfo.col_id}
+        AND num_type = #{noInfo.num_type}
+    </delete>
+</mapper>

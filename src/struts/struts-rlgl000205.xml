@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl000205" extends="rlgl" namespace="/">
+		<action name="rlgl000205Init" class="com.rlglsys.action.rlgl.role.Rlgl000205InitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl000205.jsp</result>
+		</action>
+		<action name="rlgl000205Search" class="com.rlglsys.action.rlgl.role.Rlgl000205SearchAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl000205.jsp</result>
+		</action>
+		<action name="rlgl000205Confirm" class="com.rlglsys.action.rlgl.role.Rlgl000205ConfirmAction"
+			method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl000205.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl000204Init</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022009Mapper">
+    <!-- 查询可退费的用户-->
+    <select id="getUserList" resultType="com.rlglsys.bean.Rlgl022009Bean" >
+        SELECT A.user_id,A.user_name,A.PERSONNEL_ID,
+        (select UNIT_NM from m_tb04_unit WHERE UNIT_NO=A.UNIT_NO) UNIT_NO,
+        (SELECT SECTION_NAME FROM m_tb22_hospital_section WHERE UNIT_NO=A.UNIT_NO AND SECTION_ID=A.SECTION_ID) 
+        SECTION_ID FROM m_tb01_user A WHERE A.USER_ID IN 
+        (SELECT USER_ID FROM m_tb80_course_selected <!--是否优惠  WHERE  IS_DISCOUNTS=1 -->   GROUP BY USER_ID )
+         <if test="rlgl022009Bean.user_name !=null and rlgl022009Bean.user_name != ''">
+           and  A.user_name = #{rlgl022009Bean.user_name}
+        </if>
+        <if test="rlgl022009Bean.personnel_id !=null and rlgl022009Bean.personnel_id != ''">
+           and  A.personnel_id = #{rlgl022009Bean.personnel_id}
+        </if>
+        
+         <if test="rlgl022009Bean.pageCount != 0 and rlgl022009Bean.pageCount != null">
+           LIMIT #{rlgl022009Bean.pageNo},#{rlgl022009Bean.pageCount}
+     </if>
+	</select>
+	 <!-- 查询可退费的用户条数-->
+    <select id="getCountUser" resultType="int" >
+        SELECT count(*) FROM m_tb01_user WHERE  UNIT_NO=#{rlgl022009Bean.unit_no} AND USER_ID IN 
+        (SELECT USER_ID FROM m_tb80_course_selected <!--是否优惠  WHERE  IS_DISCOUNTS=1 -->   GROUP BY USER_ID )
+         <if test="rlgl022009Bean.user_name !=null and rlgl022009Bean.user_name != ''">
+           and  user_name = #{rlgl022009Bean.user_name}
+        </if>
+        <if test="rlgl022009Bean.personnel_id !=null and rlgl022009Bean.personnel_id != ''">
+           and  personnel_id = #{rlgl022009Bean.personnel_id}
+        </if>
+         <if test="rlgl022009Bean.pageCount != 0 and rlgl022009Bean.pageCount != null">
+           LIMIT #{rlgl022009Bean.pageNo},#{rlgl022009Bean.pageCount}
+     </if>
+	</select>
+	<!-- 查询订单详细（同一订单课件） -->
+	 <select id="getCourseList" resultType="Mtb63CourseWare" >
+         SELECT * FROM m_tb63_courseware WHERE COURSE_ID 
+         IN(SELECT COURSE_ID FROM m_tb80_course_selected 
+         WHERE USER_ID=#{rlgl022009Bean.user_id} 
+         AND bank_order_no =#{rlgl022009Bean.bank_order_no} 
+         AND IS_PREP !=1) AND DEL_KBN='0'
+	</select>
+	 <!-- 用户的可退订单列表 -->
+	 <select id="getBankOrderList" resultType="com.rlglsys.bean.Rlgl022010Bean" >
+	    SELECT BANK_ORDER_NO,BANK_CODE,BANK_NAME,USER_ACCOUNT ,SUM(PAYMENT_MONEY) PAYMENT_MONEY,PAYMENT_TIME FROM m_tb80_course_selected 
+         WHERE USER_ID=#{rlgl022009Bean.user_id} AND DEL_KBN='0'
+         AND IS_PREP !=1  group by  BANK_ORDER_NO,BANK_CODE,BANK_NAME,USER_ACCOUNT,PAYMENT_TIME
+	 </select>
+	
+	 
+</mapper>

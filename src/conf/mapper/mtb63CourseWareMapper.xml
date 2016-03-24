@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IMtb63CourseWareMapper">
+  <!-- 插入课件信息 -->
+  <insert id="insertCourseWare"  parameterType="com.rlglsys.entity.Mtb63CourseWare" >
+	insert into m_tb63_courseware
+	(
+		COURSE_ID,
+		COURSE_NAME,
+		COURSE_EXPERT,
+		COURSE_EXPERT_UNIT,
+		XUEFEN_LEIBIE,
+		XUEFEN,
+		COURSE_LEVEL,
+		COURSE_CATAGORY,
+		COURSE_CATAGORY2,
+		COURSE_CATAGORY3,
+		ISALLCOURSE,
+		COURSE_PRICE,
+		COURSE_SUPPORT,
+		BEGIN_DATE,
+		END_DATE,
+		COURSE_EXPLAIN,
+		BIXIU_FLAG,
+		YOUHUI_FLAG,
+		YOUHUI_PRICE,
+		VIDEO_FLAG,
+		COURSE_URL,
+		COURSE_IMAGE_URL,
+		LOCAL_FLAG,
+		EX_KEY,
+		DEL_KBN,
+		EXPEND_01,
+		EXPEND_02,
+		EXPEND_03,
+		EXPEND_04,
+		EXPEND_05,
+		LOGIN_USER_ID,
+		LOGIN_DATE,
+		UPDATE_USER_ID,
+		UPDATE_DATE
+	)
+	VALUES
+	(
+	  #{coursewareInfo.course_id},
+	  #{coursewareInfo.course_name},
+	  #{coursewareInfo.course_expert},
+	  #{coursewareInfo.course_expert_unit},
+	  #{coursewareInfo.xuefen_leibie},
+	  #{coursewareInfo.xuefen},
+	  #{coursewareInfo.course_level},
+	  #{coursewareInfo.course_catagory},
+	  #{coursewareInfo.course_catagory2},
+	  #{coursewareInfo.course_catagory3},
+	  #{coursewareInfo.isallcourse},
+	  #{coursewareInfo.course_price},
+	  #{coursewareInfo.course_support},
+	  #{coursewareInfo.begin_date},
+	  #{coursewareInfo.end_date},
+	  #{coursewareInfo.course_explain},
+	  #{coursewareInfo.bixiu_flag},
+	  #{coursewareInfo.youhui_flag},
+	  #{coursewareInfo.youhui_price},
+	  #{coursewareInfo.video_flag},
+	  #{coursewareInfo.course_url},
+	  #{coursewareInfo.course_image_url},
+	  #{coursewareInfo.local_flag},
+	  '0',
+	  '0',
+	  #{coursewareInfo.expend_01},
+	  #{coursewareInfo.expend_02},
+	  #{coursewareInfo.expend_03},
+	  #{coursewareInfo.expend_04},
+	  #{coursewareInfo.expend_05},
+	  #{coursewareInfo.login_user_id},
+	  #{coursewareInfo.login_date},
+	  #{coursewareInfo.update_user_id},
+	  #{coursewareInfo.update_date}
+
+	) 
+    </insert>
+    <!-- 根据类别，名称，编号来查询课件信息 -->
+    <select id="getCourseWareInfoByBean" parameterType="com.rlglsys.entity.Mtb63CourseWare" resultType="com.rlglsys.entity.Mtb63CourseWare">
+      select 
+		A.*,
+		B.ADM_NAME as bixiu,
+		C.ADM_NAME as course_catagory_nm,
+		D.ADM_NAME as course_level_nm,
+		E.ADM_NAME as course_support_nm
+		FROM  m_tb63_courseware A
+		
+		LEFT JOIN m_tb02_adm B ON 
+		A.BIXIU_FLAG  = B.ADM_NUM  
+		AND B.ADM_TYPE_CD ='231'
+		AND B.DEL_KBN='0'
+		
+		LEFT JOIN m_tb02_adm C ON 
+		A.course_catagory  = C.ADM_NUM  
+		AND C.ADM_TYPE_CD ='212'
+		AND C.DEL_KBN='0'
+		
+		LEFT JOIN m_tb02_adm D ON 
+		A.course_level  = D.ADM_NUM  
+		AND D.ADM_TYPE_CD ='190'
+		AND D.DEL_KBN='0'
+		
+		LEFT JOIN m_tb02_adm E ON 
+		A.course_support  = E.ADM_NUM  
+		AND E.ADM_TYPE_CD ='193'
+		AND E.DEL_KBN='0'
+		where  A.DEL_KBN ='0'
+       <if test="coursewareInfo.course_catagory !=null and coursewareInfo.course_catagory !=''">
+         AND COURSE_CATAGORY like CONCAT('${coursewareInfo.course_catagory}' ,'%')
+       </if>
+       <if test="coursewareInfo.course_name != null and coursewareInfo.course_name !=''">
+         AND COURSE_NAME like '%${coursewareInfo.course_name}%'
+       </if>
+       <if test="coursewareInfo.course_id != null and coursewareInfo.course_id !=''">
+         AND COURSE_ID = #{coursewareInfo.course_id}
+       </if>
+       <if test="coursewareInfo.pageFlg != null and coursewareInfo.pageFlg !=''">
+         AND course_support in 
+			<foreach collection="coursewareInfo.unitCourseInfoList" index="index" item="unitCourseInfo" open="(" separator="," close=")">
+	         #{unitCourseInfo.course_support}
+	        </foreach>
+       </if>
+       <if test="coursewareInfo.pageCount != null and  coursewareInfo.pageCount != 0 and coursewareInfo!=null">
+         LIMIT #{coursewareInfo.pageNo},#{coursewareInfo.pageCount}
+       </if>
+     <!--根据类别，名称，编号来查询课件总数  -->
+    </select>
+        <select id="getCourseWareCountByBean" parameterType="com.rlglsys.entity.Mtb63CourseWare" resultType="int">
+       select count(*) from  m_tb63_courseware
+       where  DEL_KBN ='0'
+       <if test="coursewareInfo.course_catagory !=null and coursewareInfo.course_catagory !=''">
+         AND COURSE_CATAGORY like CONCAT('${coursewareInfo.course_catagory}','%')
+       </if>
+       <if test="coursewareInfo.course_name != null and coursewareInfo.course_name !=''">
+         AND COURSE_NAME like '%${coursewareInfo.course_name}%'
+       </if>
+       <if test="coursewareInfo.course_id != null and coursewareInfo.course_id !=''">
+         AND COURSE_ID = #{coursewareInfo.course_id}
+       </if>
+    	<if test="coursewareInfo.pageFlg != null and coursewareInfo.pageFlg !=''">
+         AND course_support in 
+		 <foreach collection="coursewareInfo.unitCourseInfoList" index="index" item="unitCourseInfo" open="(" separator="," close=")">
+	         #{unitCourseInfo.course_support}
+	     </foreach>
+       </if>
+    </select>
+    <!-- 得到所有的课件信息 -->
+    <select id="getAllCourseInfo" resultType="com.rlglsys.entity.Mtb63CourseWare">
+       select * from  m_tb63_courseware
+       where  DEL_KBN ='0'
+    </select>
+    <!-- 根据课件Id修改课件信息 -->
+    <update id="updateCourseWareInfo" parameterType="com.rlglsys.entity.Mtb63CourseWare">
+       update m_tb63_courseware 
+       set 
+        COURSE_NAME = #{coursewareInfo.course_name},
+		COURSE_EXPERT =  #{coursewareInfo.course_expert},
+		COURSE_EXPERT_UNIT = #{coursewareInfo.course_expert_unit},
+		XUEFEN_LEIBIE = #{coursewareInfo.xuefen_leibie},
+		XUEFEN = #{coursewareInfo.xuefen},
+		COURSE_LEVEL = #{coursewareInfo.course_level},
+		COURSE_CATAGORY = #{coursewareInfo.course_catagory},
+		COURSE_PRICE = #{coursewareInfo.course_price},
+		COURSE_SUPPORT =#{coursewareInfo.course_support},
+		BEGIN_DATE = #{coursewareInfo.begin_date},
+		END_DATE = #{coursewareInfo.end_date},
+		COURSE_EXPLAIN = #{coursewareInfo.course_explain},
+		YOUHUI_FLAG = #{coursewareInfo.youhui_flag},
+		YOUHUI_PRICE = #{coursewareInfo.youhui_price},
+		VIDEO_FLAG = #{coursewareInfo.video_flag},
+		COURSE_URL= #{coursewareInfo.course_url},
+		COURSE_IMAGE_URL= #{coursewareInfo.course_image_url},
+		LOCAL_FLAG = #{coursewareInfo.local_flag},
+		EXPEND_01 = #{coursewareInfo.expend_01},
+		EXPEND_02 = #{coursewareInfo.expend_02},
+		EXPEND_03 = #{coursewareInfo.expend_03},
+		EXPEND_04 = #{coursewareInfo.expend_04},
+		EXPEND_05 = #{coursewareInfo.expend_05},
+		LOGIN_USER_ID = #{coursewareInfo.login_user_id},
+		LOGIN_DATE = #{coursewareInfo.login_date},
+		UPDATE_USER_ID= #{coursewareInfo.update_user_id},
+		UPDATE_DATE = #{coursewareInfo.update_date}
+       where
+        DEL_KBN ='0'
+        and  COURSE_ID =#{coursewareInfo.course_id}
+    </update>
+    <!--设置必修课  -->
+    <update id="updateCourseBixiu" parameterType="com.rlglsys.entity.Mtb63CourseWare">
+      update m_tb63_courseware
+       set BIXIU_FLAG =#{coursewareInfo.bixiu_flag},
+           SUIT_PERSON =#{coursewareInfo.suit_person},
+           SUIT_PERSON_1 = #{coursewareInfo.suit_person_1},
+           SUIT_AREA = #{coursewareInfo.suit_area}
+       where
+         DEL_KBN ='0'
+        and  COURSE_ID =#{coursewareInfo.course_id}
+    </update>
+   <!-- 根据课件id删除课件信息 --> 
+    <update id="deleteCourseWare" parameterType="String">
+      update m_tb63_courseware 
+      set DEL_KBN ='1'
+      where  COURSE_ID = #{course_id}
+    </update>
+    <!-- 新增课件附件表信息，自有课程新增时调用 -->
+    <insert id="insertCourseFuJian" parameterType="com.rlglsys.entity.Mtb108CourseFuJian">
+    insert into m_tb108_course_fujian
+    (
+		course_id,
+		course_name,
+		fujian_name1,
+		fujian_name2,
+		fujian_name3,
+		file_url,
+		EXPEND_02,
+		EXPEND_01,
+		EXPEND_04,
+		EXPEND_03,
+		EXPEND_05,
+		LOGIN_USER_ID,
+		LOGIN_DATE,
+		UPDATE_USER_ID,
+		UPDATE_DATE
+    )
+    values(
+    #{fuJianInfo.course_id},
+    #{fuJianInfo.course_name},
+    #{fuJianInfo.fujian_name1},
+    #{fuJianInfo.fujian_name2},
+    #{fuJianInfo.fujian_name3},
+    #{fuJianInfo.file_url},
+    #{fuJianInfo.expend_02},
+    #{fuJianInfo.expend_01},
+    #{fuJianInfo.expend_04},
+    #{fuJianInfo.expend_03},
+    #{fuJianInfo.expend_05},
+    #{fuJianInfo.login_user_id},
+    #{fuJianInfo.login_date},
+    #{fuJianInfo.update_user_id},
+    #{fuJianInfo.update_date}
+    )
+    </insert>
+    <!-- 查询自有课程的附件信息 -->
+    <select id="getOneFuJianInfo" resultType="com.rlglsys.entity.Mtb108CourseFuJian" parameterType="com.rlglsys.entity.Mtb108CourseFuJian">
+      select * from m_tb108_course_fujian
+      where
+        DEL_KBN ='0'
+        and  COURSE_ID =#{fuJianInfo.course_id}
+    </select>
+    <!-- 删除自有课件的附件信息 -->
+    <delete id="deleteCourseFuJian" parameterType="com.rlglsys.entity.Mtb108CourseFuJian"> 
+      delete from m_tb108_course_fujian
+      where COURSE_ID =#{fuJianInfo.course_id};
+    </delete>
+    <!-- 更新自有课件的附件信息 -->
+    <update id="updateCourseFuJian" parameterType="com.rlglsys.entity.Mtb108CourseFuJian">
+      update m_tb108_course_fujian 
+      set
+        course_name = #{fuJianInfo.course_name},
+		fujian_name1 = #{fuJianInfo.fujian_name1},
+		fujian_name2 = #{fuJianInfo.fujian_name2},
+		fujian_name3 = #{fuJianInfo.fujian_name3}
+	where
+	    DEL_KBN ='0'
+        and  COURSE_ID =#{fuJianInfo.course_id}	
+    </update>
+    
+    <select id="getTunitCourseInfoList" resultType="com.rlglsys.entity.TunitCourse">
+      select * from t_unit_course
+      where
+        DEL_KBN ='0'
+        and UNIT_NO =#{unit_no}
+    </select>
+</mapper>

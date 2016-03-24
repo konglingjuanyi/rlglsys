@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl000204Mapper">
+    <!-- 登录申请信息 -->
+    <insert id="insertMtb24RoleManagementInfo">
+        INSERT INTO m_tb24_role_management
+        (
+            ROLE_ID,
+            ROLE_NAME,
+            ROLE_INFO,
+            UNIT_NO,
+          <!--    USER_ENTER,-->
+            UNIT_ROLE,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+             #{roleInfo.role_id}
+			,#{roleInfo.role_name}
+			,#{roleInfo.role_info}
+			,#{roleInfo.unit_no}
+		<!--  	,#{roleInfo.user_enter}-->
+			,#{roleInfo.unit_role}
+			,#{roleInfo.ex_key}
+			,#{roleInfo.del_kbn}
+			,#{roleInfo.login_user_id}
+            ,#{roleInfo.login_date}
+            ,#{roleInfo.update_user_id}
+            ,#{roleInfo.update_date}
+        )
+    </insert>
+    
+    <select id="searchMtb24RoleManagementInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb24_role_management
+        WHERE UNIT_NO = #{roleInfo.unit_no}
+          <!--    AND USER_ENTER = #{roleInfo.user_enter}-->
+         <if test="roleInfo.role_id != '' and roleInfo.role_id != null">
+             AND ROLE_ID = #{roleInfo.role_id}
+        </if>
+    </select>
+    
+    <select id="searchMtb24RoleManagementInfo" resultType="com.rlglsys.bean.Rlgl000204Bean">
+        SELECT
+            M1.*
+            ,M2.UNIT_NM
+        FROM m_tb24_role_management M1
+        LEFT JOIN m_tb04_unit M2
+        ON M1.UNIT_NO = M2.UNIT_NO
+        AND M2.DEL_KBN = 0
+        WHERE M1.UNIT_NO = #{roleInfo.unit_no}
+         <!--     AND USER_ENTER = #{roleInfo.user_enter}-->
+        <if test="roleInfo.role_id != '' and roleInfo.role_id != null">
+             AND M1.ROLE_ID  =  #{roleInfo.role_id}
+        </if>
+        ORDER BY M1.ROLE_ID
+        <if test="roleInfo.pageCount != 0 and roleInfo.pageCount != null">
+          LIMIT #{roleInfo.pageNo},#{roleInfo.pageCount}
+        </if>
+        ;
+    </select>
+    
+     <select id="searchMtb24RoleManagementBysysInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb24_role_management
+        WHERE UNIT_NO = #{roleInfo.unit_no}
+         <if test="roleInfo.role_id != '' and roleInfo.role_id != null">
+             AND ROLE_ID = #{roleInfo.role_id}
+        </if>
+    </select>
+    
+    <select id="searchMtb24RoleManagementBysysInfo" resultType="com.rlglsys.bean.Rlgl000204Bean">
+        SELECT
+            M1.*
+            ,M2.UNIT_NM
+        FROM m_tb24_role_management M1
+        LEFT JOIN m_tb04_unit M2
+        ON M1.UNIT_NO = M2.UNIT_NO
+        AND M2.DEL_KBN = 0
+        WHERE M1.UNIT_NO = #{roleInfo.unit_no}
+        <if test="roleInfo.role_id != '' and roleInfo.role_id != null">
+             AND M1.ROLE_ID  =  #{roleInfo.role_id}
+        </if>
+        ORDER BY M1.ROLE_ID
+        <if test="roleInfo.pageCount != 0 and roleInfo.pageCount != null">
+          LIMIT #{roleInfo.pageNo},#{roleInfo.pageCount}
+        </if>
+        ;
+    </select>
+    
+    <!-- 删除角色信息(逻辑删除) -->
+    <update id="updateMtb24RoleManagementInfoWithLogic">
+        UPDATE m_tb24_role_management
+        SET DEL_KBN = #{roleInfo.del_kbn}
+            ,UPDATE_USER_ID = #{roleInfo.update_user_id}
+            ,UPDATE_DATE = #{roleInfo.update_date}
+        WHERE 
+            ROLE_ID = #{roleInfo.role_id}
+            AND UNIT_NO = #{roleInfo.unit_no}
+          <!--    AND USER_ENTER = #{roleInfo.user_enter}-->
+    </update>
+    
+    <!-- 变更申请信息 -->
+    <update id="updateMtb24RoleManagementInfo">
+       UPDATE m_tb24_role_management
+        SET 
+            ROLE_NAME = #{roleInfo.role_name}
+            ,ROLE_INFO = #{roleInfo.role_info}
+            ,UPDATE_USER_ID = #{roleInfo.update_user_id}
+            ,UPDATE_DATE = #{roleInfo.update_date}
+        WHERE 
+            ROLE_ID = #{roleInfo.role_id}
+            AND UNIT_NO = #{roleInfo.unit_no}
+          <!--    AND USER_ENTER = #{roleInfo.user_enter}-->
+    </update>
+    
+    <!-- 登录角色机能关联表信息 -->
+    <insert id="insertMtb73RoleactionInfo">
+        INSERT INTO m_tb73_roleaction
+        (
+            ROLE_ID,
+            ROLE_SORT,
+            UNIT_NO,
+          <!--    USER_ENTER,-->
+            UNIT_ROLE,
+            MENU_ID,
+            ONLY_SEARCH,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+             #{roleInfo.role_id}
+            ,#{roleInfo.role_sort}
+			,#{roleInfo.unit_no}
+		 <!-- ,#{roleInfo.user_enter}-->
+			,#{roleInfo.unit_role}
+			,#{roleInfo.menu_id}
+			,#{roleInfo.only_search}
+			,#{roleInfo.ex_key}
+			,#{roleInfo.del_kbn}
+			,#{roleInfo.login_user_id}
+            ,#{roleInfo.login_date}
+            ,#{roleInfo.update_user_id}
+            ,#{roleInfo.update_date}
+        )
+    </insert>
+    
+    <!-- 删除角色机能关联表信息  -->
+    <delete id="deleteMtb73RoleactionInfo">
+       DELETE FROM  m_tb73_roleaction
+        WHERE 
+            ROLE_ID = #{roleInfo.role_id}
+            AND UNIT_NO = #{roleInfo.unit_no}
+           <!--  AND USER_ENTER = #{roleInfo.user_enter}-->
+    </delete>
+     <!-- 检索角色技能关联信息件数-->
+    <select id="searchMtb73RoleactionInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb73_roleaction
+        WHERE ROLE_ID = #{roleInfo.role_id}
+            AND UNIT_NO = #{roleInfo.unit_no}
+          <!--    AND USER_ENTER = #{roleInfo.user_enter}-->
+    </select>
+    
+    <!-- 更新字段是否已经付权限 -->
+    <update id="updateMtb24RoleManagementInfoDataHas">
+        UPDATE m_tb24_role_management
+        SET DATA_HAS = #{roleInfo.data_has}
+            ,UPDATE_USER_ID = #{roleInfo.update_user_id}
+            ,UPDATE_DATE = #{roleInfo.update_date}
+        WHERE 
+            ROLE_ID = #{roleInfo.role_id}
+            AND UNIT_NO = #{roleInfo.unit_no}
+           <!--   AND USER_ENTER = #{roleInfo.user_enter}-->
+    </update>
+    
+    <select id="searchMtb73RoleactionInfo" resultType="com.rlglsys.bean.Rlgl000208Bean">
+        SELECT
+            M1.*
+            ,M2.MENU_NAME
+            ,M2.MENU_LEVEL
+            ,M2.MENU_LEVEL_CRL1
+        FROM m_tb73_roleaction M1
+        LEFT JOIN m_tb03_menu M2
+        ON M1.MENU_ID = M2.MENU_ID
+        AND M2.DEL_KBN = 0
+        WHERE M1.UNIT_NO = #{roleactionInfo.unit_no}
+             AND M1.ROLE_ID  =  #{roleactionInfo.role_id}
+           <!-- AND M1.USER_ENTER = #{roleactionInfo.user_enter}-->
+        ORDER BY M1.ROLE_SORT;
+    </select>
+</mapper>

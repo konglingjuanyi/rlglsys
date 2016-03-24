@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010202Mapper">
+    <!-- 获得岗位信息 -->
+    <select id="getPostInfo" resultType="com.rlglsys.entity.Mtb08Post">
+        SELECT
+            *
+        FROM m_tb08_post
+        WHERE
+            unit_no = #{unit_no}
+    </select>
+    <!-- 插入岗位信息 -->
+    <insert id="insertPostInfo" parameterType="com.rlglsys.entity.Mtb08Post">
+        INSERT INTO m_tb08_post
+            (UNIT_NO
+            ,POSTSTAF_NUM1
+            ,POSTSTAF_NUM2
+            ,POSTSTAF_NUM3
+            ,POSTSTAF_NUM4
+            ,POSTSTAF_NUM5
+            ,POSTSTAF_NUM6
+            ,POSTSTAF_NUM7
+            ,POSTSTAF_NUM8
+            ,POSTSTAF_NUM9
+            ,POSTSTAF_NUM10
+            ,POSTSTAF_NUM11
+            ,POSTSTAF_NUM12
+            ,POSTSTAF_NUM13
+            ,POSTSTAF_NUM14
+            ,POSTSTAF_NUM15
+            ,POSTSTAF_NUM16
+            ,POSTSTAF_NUM17
+            ,POSTSTAF_NUM18
+            ,POSTSTAF_NUM19
+            ,POSTSTAF_NUM20
+            ,POSTSTAF_NUM21
+            ,POSTSTAF_NUM22
+            ,POSTSTAF_NUM23
+            ,POSTSTAF_NUM24
+            ,POSTSTAF_NUM25
+            ,POSTSTAF_NUM26
+            ,POSTSTAF_NUM27
+            ,POSTSTAF_NUM28
+            ,POSTSTAF_NUM29
+            ,POSTSTAF_NUM30
+            ,POSTSTAF_NUM31
+            ,POSTSTAF_NUM32
+            ,POSTSTAF_NUM33
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE) VALUES
+            (#{post.unit_no}
+            ,#{post.poststaf_num1}
+            ,#{post.poststaf_num2}
+            ,#{post.poststaf_num3}
+            ,#{post.poststaf_num4}
+            ,#{post.poststaf_num5}
+            ,#{post.poststaf_num6}
+            ,#{post.poststaf_num7}
+            ,#{post.poststaf_num8}
+            ,#{post.poststaf_num9}
+            ,#{post.poststaf_num10}
+            ,#{post.poststaf_num11}
+            ,#{post.poststaf_num12}
+            ,#{post.poststaf_num13}
+            ,#{post.poststaf_num14}
+            ,#{post.poststaf_num15}
+            ,#{post.poststaf_num16}
+            ,#{post.poststaf_num17}
+            ,#{post.poststaf_num18}
+            ,#{post.poststaf_num19}
+            ,#{post.poststaf_num20}
+            ,#{post.poststaf_num21}
+            ,#{post.poststaf_num22}
+            ,#{post.poststaf_num23}
+            ,#{post.poststaf_num24}
+            ,#{post.poststaf_num25}
+            ,#{post.poststaf_num26}
+            ,#{post.poststaf_num27}
+            ,#{post.poststaf_num28}
+            ,#{post.poststaf_num29}
+            ,#{post.poststaf_num30}
+            ,#{post.poststaf_num31}
+            ,#{post.poststaf_num32}
+            ,#{post.poststaf_num33}
+            ,#{post.ex_key}
+            ,#{post.del_kbn}
+            ,''
+            ,''
+            ,''
+            ,''
+            ,''
+            ,#{post.login_user_id}
+            ,#{post.login_date}
+            ,#{post.update_user_id}
+            ,#{post.update_date})
+    </insert>
+    
+    <!-- 获得岗位正聘人员数量 -->
+    <select id="getEmplyKBN1" resultType="int">
+        SELECT
+            COUNT(*) as num2
+        FROM
+            m_tb09_irin
+        WHERE
+            EMPLOY_KBN1 = '1'
+        AND POST_KBN = #{postkbn}
+        AND POST_LEVEL = #{postlevel}
+        AND UNIT_NO = #{unit_no}
+    </select>
+    <!-- 获得岗位内聘人员数量 -->
+    <select id="getEmplyKBN2" resultType="int">
+        SELECT
+            COUNT(*) as num3
+        FROM
+            m_tb09_irin
+        WHERE
+            EMPLOY_KBN2 = '1'
+        AND POST_KBN = #{postkbn}
+        AND POST_LEVEL = #{postlevel}
+        AND UNIT_NO = #{unit_no}
+    </select>
+    <!-- 获得岗位申请信息 -->
+    <select id="getPostApplayInfo" resultType="com.rlglsys.entity.MTb54PostApply">
+        SELECT
+            *
+        FROM m_tb54_post_applay
+        WHERE
+            UNIT_NO = #{unit_no}
+        AND APPLY_KBN = '014'
+        AND CHECK_RESULT = '001'
+    </select>
+    <!-- 获得岗位申请信息 -->
+    <select id="getPostApplay" resultType="com.rlglsys.entity.UnitApply">
+        SELECT
+            *
+        FROM m_tb07_unitapply
+        WHERE
+            UNIT_NO = #{unit_no}
+        AND APPLY_KBN = '014'
+        AND CHECK_RESULT = '001'
+    </select>
+    <!-- 插入岗位申请信息 -->
+    <insert id="insertPostApplay" parameterType="com.rlglsys.entity.MTb54PostApply">
+        INSERT INTO m_tb54_post_applay (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            UNIT_NO,
+            POSTSTAF_NUM1,
+            POSTSTAF_NUM2,
+            POSTSTAF_NUM3,
+            POSTSTAF_NUM4,
+            POSTSTAF_NUM5,
+            POSTSTAF_NUM6,
+            POSTSTAF_NUM7,
+            POSTSTAF_NUM8,
+            POSTSTAF_NUM9,
+            POSTSTAF_NUM10,
+            POSTSTAF_NUM11,
+            POSTSTAF_NUM12,
+            POSTSTAF_NUM13,
+            POSTSTAF_NUM14,
+            POSTSTAF_NUM15,
+            POSTSTAF_NUM16,
+            POSTSTAF_NUM17,
+            POSTSTAF_NUM18,
+            POSTSTAF_NUM19,
+            POSTSTAF_NUM20,
+            POSTSTAF_NUM21,
+            POSTSTAF_NUM22,
+            POSTSTAF_NUM23,
+            POSTSTAF_NUM24,
+            POSTSTAF_NUM25,
+            POSTSTAF_NUM26,
+            POSTSTAF_NUM27,
+            POSTSTAF_NUM28,
+            POSTSTAF_NUM29,
+            POSTSTAF_NUM30,
+            POSTSTAF_NUM31,
+            POSTSTAF_NUM32,
+            POSTSTAF_NUM33,
+            APPLY_USER,
+            APPLY_DATE,
+            NOW_MARK,
+            END_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        )
+        VALUES
+            (
+                #{postapply.apply_no},
+                #{postapply.apply_number},
+                #{postapply.apply_kbn},
+                #{postapply.unit_no},
+                #{postapply.poststaf_num1},
+                #{postapply.poststaf_num2},
+                #{postapply.poststaf_num3},
+                #{postapply.poststaf_num4},
+                #{postapply.poststaf_num5},
+                #{postapply.poststaf_num6},
+                #{postapply.poststaf_num7},
+                #{postapply.poststaf_num8},
+                #{postapply.poststaf_num9},
+                #{postapply.poststaf_num10},
+                #{postapply.poststaf_num11},
+                #{postapply.poststaf_num12},
+                #{postapply.poststaf_num13},
+                #{postapply.poststaf_num14},
+                #{postapply.poststaf_num15},
+                #{postapply.poststaf_num16},
+                #{postapply.poststaf_num17},
+                #{postapply.poststaf_num18},
+                #{postapply.poststaf_num19},
+                #{postapply.poststaf_num20},
+                #{postapply.poststaf_num21},
+                #{postapply.poststaf_num22},
+                #{postapply.poststaf_num23},
+                #{postapply.poststaf_num24},
+                #{postapply.poststaf_num25},
+                #{postapply.poststaf_num26},
+                #{postapply.poststaf_num27},
+                #{postapply.poststaf_num28},
+                #{postapply.poststaf_num29},
+                #{postapply.poststaf_num30},
+                #{postapply.poststaf_num31},
+                #{postapply.poststaf_num32},
+                #{postapply.poststaf_num33},
+                #{postapply.apply_user},
+                #{postapply.apply_date},
+                #{postapply.now_mark},
+                #{postapply.end_mark},
+                #{postapply.will_checkunitno},
+                '1',
+                '0',
+                #{postapply.apply_user},
+                #{postapply.apply_date},
+                #{postapply.apply_user},
+                #{postapply.apply_date}
+            )
+    </insert>
+     <!-- 登录申请信息(申请主表)-->
+    <insert id="insertApplyInfo" >
+        INSERT INTO m_tb07_unitapply
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            UNIT_NO,
+            APPLY_STATUS,
+            APPLY_USER,
+            APPLY_DATE,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{applyInfo.apply_no},
+            #{applyInfo.apply_number},
+            #{applyInfo.apply_kbn},
+            #{applyInfo.unit_no},
+            '1',
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date},
+            '001',
+            #{applyInfo.end_Mark},
+            #{applyInfo.now_mark},
+            #{applyInfo.will_checkunitno},
+            '1',
+            '0',
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date},
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date}
+        )
+    </insert>
+    <!-- 更新岗位申请信息 -->
+    <update id="updatePostInfo" >
+    UPDATE m_tb08_post
+        SET UNIT_NO = #{post.unit_no}
+        ,POSTSTAF_NUM1 = #{post.poststaf_num1}
+        ,POSTSTAF_NUM2 = #{post.poststaf_num2}
+        ,POSTSTAF_NUM3 = #{post.poststaf_num3}
+        ,POSTSTAF_NUM4 = #{post.poststaf_num4}
+        ,POSTSTAF_NUM5 = #{post.poststaf_num5}
+        ,POSTSTAF_NUM6 = #{post.poststaf_num6}
+        ,POSTSTAF_NUM7 = #{post.poststaf_num7}
+        ,POSTSTAF_NUM8 = #{post.poststaf_num8}
+        ,POSTSTAF_NUM9 = #{post.poststaf_num9}
+        ,POSTSTAF_NUM10 = #{post.poststaf_num10}
+        ,POSTSTAF_NUM11 = #{post.poststaf_num11}
+        ,POSTSTAF_NUM12 = #{post.poststaf_num12}
+        ,POSTSTAF_NUM13 = #{post.poststaf_num13}
+        ,POSTSTAF_NUM14 = #{post.poststaf_num14}
+        ,POSTSTAF_NUM15 = #{post.poststaf_num15}
+        ,POSTSTAF_NUM16 = #{post.poststaf_num16}
+        ,POSTSTAF_NUM17 = #{post.poststaf_num17}
+        ,POSTSTAF_NUM18 = #{post.poststaf_num18}
+        ,POSTSTAF_NUM19 = #{post.poststaf_num19}
+        ,POSTSTAF_NUM20 = #{post.poststaf_num20}
+        ,POSTSTAF_NUM21 = #{post.poststaf_num21}
+        ,POSTSTAF_NUM22 = #{post.poststaf_num22}
+        ,POSTSTAF_NUM23 = #{post.poststaf_num23}
+        ,POSTSTAF_NUM24 = #{post.poststaf_num24}
+        ,POSTSTAF_NUM25 = #{post.poststaf_num25}
+        ,POSTSTAF_NUM26 = #{post.poststaf_num26}
+        ,POSTSTAF_NUM27 = #{post.poststaf_num27}
+        ,POSTSTAF_NUM28 = #{post.poststaf_num28}
+        ,POSTSTAF_NUM29 = #{post.poststaf_num29}
+        ,POSTSTAF_NUM30 = #{post.poststaf_num30}
+        ,POSTSTAF_NUM31 = #{post.poststaf_num31}
+        ,POSTSTAF_NUM32 = #{post.poststaf_num32}
+        ,POSTSTAF_NUM33 = #{post.poststaf_num33}
+        ,UPDATE_USER_ID = #{post.update_user_id}
+        ,UPDATE_DATE = #{post.update_date}
+    WHERE 
+        UNIT_NO = #{post.unit_no}
+    </update>
+    <!-- 更新岗位申请信息 -->
+    <update id="updatePostApplay" >
+    UPDATE m_tb54_post_applay
+        SET 
+        NOW_MARK = #{postapply.now_mark}
+        ,CHECK_RESULT = #{postapply.check_result}
+        ,UPDATE_USER_ID = #{postapply.update_user_id}
+        ,UPDATE_DATE = #{postapply.update_date}
+    WHERE 
+        UNIT_NO = #{postapply.unit_no}
+        AND Apply_no = #{postapply.apply_no}
+        AND Apply_number = #{postapply.apply_number}
+    </update>
+</mapper>

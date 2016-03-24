@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl100103" extends="rlgl" namespace="/">
+		<!-- 初期化处理 -->
+		<action name="rlgl100103Init"
+			class="com.rlglsys.action.learnonline.Rlgl100103InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl100103_1.jsp</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">rlgl100101Init</param>
+			</result>
+		</action>
+		<action name="coursware_jn"
+			class="com.rlglsys.action.learnonline.Rlgl100103CourseWareInitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100103_2.jsp</result>
+		</action>
+		<action name="coursInit_jn"
+			class="com.rlglsys.action.learnonline.Rlgl100103CourseInitAction"
+			method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl100103_3.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl100103_3.jsp</result>
+		</action>
+		<action name="naviInit_jn"
+			class="com.rlglsys.action.learnonline.Rlgl100103NaviInitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl100103_4.jsp</result>
+		</action>
+		<action name="rlgl100103SaveCourse"
+			class="com.rlglsys.action.learnonline.Rlgl100103SaveCourseAction"
+			method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">coursInit_jn</param>
+				<param name="course_catagory">${course_catagory}</param>
+				<param name="message">add Course success</param>
+			</result>
+		</action>
+		<action name="rlgl100103_2Init"
+			class="com.rlglsys.action.learnonline.Rlgl100103_2InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl100103_8.jsp</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">rlgl100101Init</param>
+			</result>
+		</action>
+		<action name="coursware_jn_2"
+			class="com.rlglsys.action.learnonline.Rlgl100103_2CourseWareInitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100103_6.jsp</result>
+		</action>
+		<action name="coursInit_jn_2"
+			class="com.rlglsys.action.learnonline.Rlgl100103_2CourseInitAction"
+			method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl100103_5.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl100103_5.jsp</result>
+		</action>
+			<action name="rlgl100103_2SaveCourse"
+			class="com.rlglsys.action.learnonline.Rlgl100103_2SaveCourseAction"
+			method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">coursInit_jn</param>
+				<param name="course_catagory">${course_catagory}</param>
+				<param name="message">add Course success</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

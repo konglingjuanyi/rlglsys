@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060303Mapper">
+
+    <!--查询在线报名当前页的信息  -->
+    <select id="getOnlineApplyList" resultType="com.rlglsys.bean.Rlgl060303Bean">
+        SELECT 
+            APPLY.EXAMINATION_NAME, 
+            APPLY.PERSONAL_NM, 
+            APPLY.PERSONAL_CARD_ID,  
+            CASE WHEN UNIT.UNIT_NM IS NULL THEN '' ELSE UNIT.UNIT_NM END AS PERSONAL_UNIT_NM, 
+            CASE WHEN SECTION.SECTION_NAME IS NULL THEN '' ELSE SECTION.SECTION_NAME END AS PERSONAL_SECTION_NM, 
+            CASE WHEN ADM.ADM_NAME IS NULL THEN '' ELSE ADM.ADM_NAME END AS CHECK_RESULT_NAME 
+            FROM m_tb106_online_apply APPLY 
+            LEFT JOIN m_tb04_unit UNIT 
+            ON UNIT.UNIT_NO = APPLY.PERSONAL_UNIT_NO 
+            LEFT JOIN m_tb22_hospital_section SECTION 
+            ON SECTION.SECTION_ID = APPLY.PERSONAL_SECTION_NO 
+            AND SECTION.UNIT_NO = APPLY.PERSONAL_UNIT_NO 
+            LEFT JOIN m_tb02_adm ADM 
+            ON ADM.ADM_NUM = APPLY.CHECK_RESULT 
+            AND ADM.ADM_TYPE_CD = '042' 
+            WHERE APPLY.DEL_KBN = '0' 
+            AND EXAM_NO IN (
+            SELECT EXAM_NO 
+            FROM m_tb103_exam_setting 
+            WHERE #{rlgl060303Bean.now_date} BETWEEN APPLY_START_DATE AND EXAM_END_DATE 
+            AND 
+            (start_unit = #{rlgl060303Bean.sponsor} or start_unit = mid(#{rlgl060303Bean.sponsor},1,4)))
+	    <if test="rlgl060303Bean.exam_no != '' and rlgl060303Bean.exam_no != null">
+	        AND exam_no = #{rlgl060303Bean.exam_no} 
+	    </if>
+	    <if test="rlgl060303Bean.selectAuditFlag or rlgl060303Bean.selectAuditThroughFlag or rlgl060303Bean.selectAuditRebutFlag">
+	        AND check_result IN
+            <foreach collection="rlgl060303Bean.selectedList" index="index" item="item" open="(" separator="," close=")">
+            #{item} 
+        </foreach> 
+	    </if>
+	        ORDER BY EXAM_NO ASC,CHECK_RESULT ASC 
+	    <if test="rlgl060303Bean.pageCount != 0 and rlgl060303Bean.pageCount != null">
+            LIMIT #{rlgl060303Bean.pageNo},#{rlgl060303Bean.pageCount} 
+        </if>
+    </select>
+    <!--查询在线报名的总条数 -->
+    <select id="getCountbyOnlineApply" resultType="int">
+        SELECT count(*) FROM m_tb106_online_apply WHERE DEL_KBN = '0' 
+            AND EXAM_NO IN (
+            SELECT EXAM_NO 
+            FROM m_tb103_exam_setting 
+            WHERE #{rlgl060303Bean.now_date} BETWEEN APPLY_START_DATE AND EXAM_END_DATE 
+            AND (start_unit = #{rlgl060303Bean.sponsor} or start_unit = mid(#{rlgl060303Bean.sponsor},1,4)))
+        <if test="rlgl060303Bean.exam_no != '' and rlgl060303Bean.exam_no != null">
+	        AND exam_no = #{rlgl060303Bean.exam_no} 
+	    </if>
+	    <if test="rlgl060303Bean.selectAuditFlag or rlgl060303Bean.selectAuditThroughFlag or rlgl060303Bean.selectAuditRebutFlag">
+	        AND check_result IN
+            <foreach collection="rlgl060303Bean.selectedList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	    </if>
+    </select>
+    <!--查询在线报名的总条数 -->
+    <select id="getPersonalInfo" resultType="com.rlglsys.bean.Rlgl060303Bean"  parameterType="com.rlglsys.bean.Rlgl060303Bean" >
+        SELECT * FROM m_tb106_online_apply WHERE DEL_KBN = '0' 
+        and CHECK_RESULT = '002' 
+        <if test="rlgl060303Bean.personal_card_id != '' and rlgl060303Bean.personal_card_id != null">
+	        AND PERSONAL_CARD_ID = #{rlgl060303Bean.personal_card_id} 
+	    </if>
+	    <if test="rlgl060303Bean.subject_kb != '' and rlgl060303Bean.subject_kb != null">
+	        AND SUBJECT_KB = #{rlgl060303Bean.subject_kb} 
+	    </if>
+	    <if test="rlgl060303Bean.examination_name != null and rlgl060303Bean.examination_name != ''">
+	        AND EXAMINATION_NAME  like CONCAT('%','${rlgl060303Bean.examination_name}','%' )  
+	    </if>
+    </select>
+    <!-- 得到一个人的在线考试报名信息 -->
+    <select id="getSingleInfo" resultType="com.rlglsys.bean.Rlgl060303Bean" parameterType="String">
+            SELECT * FROM m_tb106_online_apply WHERE DEL_KBN = '0' 
+               and CHECK_RESULT = '002' 
+               and APPLY_NO = #{apply_no}
+    </select>
+        <!-- 得到个人的身份证头像的路径 -->
+    <select id="getPersonalImgSrc" parameterType="String" resultType="String">
+      Select  PERSONNEL_IMGNAME as imgsrc from m_tb12_personnel
+      where DEL_KBN = '0'
+      and PERSONNEL_ID = #{personalId}
+    </select>
+
+    
+</mapper>

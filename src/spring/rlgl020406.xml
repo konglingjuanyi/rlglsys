@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 继续医学教育项目培训班>项目举办>申请一览 -->
+<beans>
+    <bean id="rlgl020406Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.rlglsys.mapper.IRlgl020406Mapper" />
+    </bean>
+    <bean id="rlgl020406Service" parent="baseTxProxy">
+        <property name="target">
+            <bean class="com.rlglsys.service.impl.Rlgl020406ServiceImpl" autowire="byName" />
+        </property>
+    </bean>
+</beans>

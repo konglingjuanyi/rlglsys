@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 人员返聘申请审核 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010514Mapper">
+    <!-- 审核后，更新返聘审核结果 -->
+    <update id="updateMtb57Info">
+      update
+         m_tb57_personal_remploy_apply_detail
+      set
+        UNIT_CHECKER = #{mtb57UpdateInfo.unit_checker},
+        UNIT_CHECK_DATE = #{mtb57UpdateInfo.unit_check_date},
+        UNIT_CHECK_VIEWS = #{mtb57UpdateInfo.unit_check_views},
+        UNIT_CHECK_RESULT = #{mtb57UpdateInfo.unit_check_result},
+        COUNTY_CHECKER = #{mtb57UpdateInfo.county_checker},
+        COUNTY_CHECK_DATE = #{mtb57UpdateInfo.county_check_date},
+        COUNTY_CHECK_VIEWS = #{mtb57UpdateInfo.county_check_views},
+        COUNTY_CHECK_RESULT = #{mtb57UpdateInfo.county_check_result},
+        DOWNTOWN_CHECKER = #{mtb57UpdateInfo.downtown_checker},
+        DOWNTOWN_CHECK_DATE = #{mtb57UpdateInfo.downtown_check_date},
+        DOWNTOWN_CHECK_VIEWS = #{mtb57UpdateInfo.downtown_check_views},
+        DOWNTOWN_CHECK_RESULT = #{mtb57UpdateInfo.downtown_check_result},
+        MINISTRY_CHECKER = #{mtb57UpdateInfo.ministry_checker},
+        MINISTRY_CHECK_DATE = #{mtb57UpdateInfo.ministry_check_date},
+        MINISTRY_CHECK_VIEWS = #{mtb57UpdateInfo.ministry_check_views},
+        MINISTRY_CHECK_RESULT = #{mtb57UpdateInfo.ministry_check_result},
+        NOW_MARK = #{mtb57UpdateInfo.now_mark},
+        UPDATE_USER_ID = #{mtb57UpdateInfo.update_user_id},
+        UPDATE_DATE = #{mtb57UpdateInfo.update_date}
+      where
+        APPLY_NO = #{mtb57UpdateInfo.apply_no}
+      and
+        APPLY_NUMBER = #{mtb57UpdateInfo.apply_number}
+    </update>
+    <!-- 更新人员基本信息表 -->
+    <update id="updateMtb12ByUserId">
+		UPDATE
+		  m_tb12_personnel
+		SET
+		  RETIRE_FLAG = 0,
+		  RE_EMPLOY_FLAG = 1,
+		  RE_EMPLOY_TIME = #{date},
+		  RE_EMPLOY_UNIT_NO = #{unit_no},
+		  PERSONNEL_UNIT = #{unit_no},
+		  PERSONNEL_UNIT_NM = #{unit_nm},
+		  DEL_KBN = 0
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </update>
+    <!-- 更新用户表 -->
+    <update id="updateMtb01ByUserId">
+		UPDATE
+		  m_tb01_user
+		SET
+		  DEL_KBN = 0,
+		  UNIT_NO = #{unit_no}
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </update>
+    <!-- 更新用户表 -->
+    <update id="updateMtb39ByUserId">
+		UPDATE
+		  m_tb39_personnel
+		SET
+		  RETIRE_FLAG = 0,
+		  RE_EMPLOY_FLAG = 1,
+		  RE_EMPLOY_TIME = #{date},
+		  RE_EMPLOY_UNIT_NO = #{unit_no},
+		  PERSONNEL_UNIT = #{unit_no},
+		  PERSONNEL_UNIT_NM = #{unit_nm},
+		  DEL_KBN = 0
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </update>
+    <!-- 更新个人人事申请信息 -->
+    <update id="updateTb29Info">
+        UPDATE 
+            m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{updatetb29Info.check_result},
+            NOW_MARK = #{updatetb29Info.now_mark},
+            WILL_CHECKUNITNO = #{updatetb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{updatetb29Info.update_user_id},
+            UPDATE_DATE = #{updatetb29Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb29Info.apply_no}
+    </update>
+</mapper>

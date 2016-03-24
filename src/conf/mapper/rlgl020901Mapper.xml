@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020901Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020901Bean" id="resultInfoList">
+      <!-- 职称编号 -->
+      <result property="deparmentValue" column="deparmentValue"/>
+      <!-- 合格人数 -->
+      <result property="qualifiedCount" column="qualifiedCount"/>
+      <!-- 应参加人数 -->
+      <result property="mustCount" column="mustCount"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-年度继续医学教育统计表查询SQL -->
+  <select id="doResultList" resultMap="resultInfoList">
+     SELECT
+          <!-- 合格人数 -->
+          (select count(*)
+           from m_tb29_personalapplication tb29
+           where 
+             tb29.DEL_KBN = '0'
+             <!-- 审核结果：002 合格 -->
+             and tb29.CHECK_RESULT = '002'
+             and tb29.PERSONAL_ID = tb01.PERSONNEL_ID
+             and tb29.APPLY_NO = tb56.APPLY_NO
+           ) as qualifiedCount,
+           <!-- 应参加人数 -->
+          (select count(*)
+           from
+              m_tb12_personnel tb12,
+              m_tb18_personnel_professional_info t18
+           where
+             tb12.DEL_KBN = '0'
+             <!-- 是否继续医学教育：1 是 -->
+             and tb12.CONTINUE_EDUCATION_FLAG = '1'
+             and tb12.PERSONNEL_ID = t18.PERSONNEL_ID
+             <!-- 以职称Value为检索条件 -->
+             <if test="rlgl020901.deparmentValue != ''">
+             and mid(t18.LEVEL,3,2) = #{rlgl020901.deparmentValue}
+             </if>
+           ) as mustCount
+     FROM 
+      <!-- 用户表 -->
+       m_tb01_user tb01,
+       <!-- 人员基本信息-专业技术职务信息 -->
+       m_tb18_personnel_professional_info tb18,
+       <!-- 学分申报明细表 -->
+       m_tb56_credit_reporting_detail tb56
+     WHERE
+       tb01.DEL_KBN = '0'
+       and tb18.DEL_KBN = '0'
+       and tb56.DEL_KBN = '0'
+       and tb01.PERSONNEL_ID = tb18.PERSONNEL_ID
+       and tb01.PERSONNEL_ID = tb56.PERSONAL_ID
+       <!-- 以职称Value为检索条件 -->
+       <if test="rlgl020901.deparmentValue != ''">
+       and mid(tb18.LEVEL,3,2) = #{rlgl020901.deparmentValue}
+       </if>
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020901.unitNo != ''">
+           or tb01.UNIT_NO = #{rlgl020901.unitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <if test="rlgl020901.lowerUnitFlag">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 <if test="rlgl020901.unitNo != ''">
+                                 and UNIT_SUPER = #{rlgl020901.unitNo}
+                                 </if>
+                               )
+           </if>
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020901.unit_assort == '001' and rlgl020901.areaKey != '' and rlgl020901.unitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020901.areaKey}','%')
+                               )
+           </if>
+           )
+       <!-- 以年度为检索条件 -->
+       <if test="rlgl020901.selectYear != ''">
+       and tb56.SCORE_YEAR = #{rlgl020901.selectYear}
+       </if>
+       GROUP BY tb01.UNIT_NO
+       ;
+  </select>
+</mapper>

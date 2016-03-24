@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060302Mapper">
+
+  <!-- 取得考试报名申请数量 -->
+  <select id="getCount" resultType="int">
+    SELECT 
+      COUNT(*)
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      WILL_CHECKUNITNO = #{unit_no}
+    AND 
+      APPLY_KBN 
+    IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND ADM_NUM = '061' AND DEL_KBN = 0)
+    <if test="rlgl060302.check_result != ''">
+    AND CHECK_RESULT = #{rlgl060302.check_result}
+    </if>
+    <if test="rlgl060302.personal_id != ''">
+    AND PERSONAL_ID = #{rlgl060302.personal_id}
+    </if>
+    <if test="rlgl060302.personal_nm != ''">
+    AND PERSONAL_NM = #{rlgl060302.personal_nm}
+    </if>
+    <if test="rlgl060302.personal_unitno != ''">
+    AND PERSONAL_UNITNO = #{rlgl060302.personal_unitno}
+    </if>
+  </select>
+  
+  <!-- 取得考试报名申请结果 -->
+  <select id="getApplyInfo" resultType="com.rlglsys.bean.Rlgl060302Bean">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      WILL_CHECKUNITNO = #{unit_no}
+    AND 
+      APPLY_KBN 
+    IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND ADM_NUM = '061' AND DEL_KBN = 0)
+    <if test="rlgl060302.check_result != ''">
+    AND CHECK_RESULT = #{rlgl060302.check_result}
+    </if>
+    <if test="rlgl060302.personal_id != ''">
+    AND PERSONAL_ID = #{rlgl060302.personal_id}
+    </if>
+    <if test="rlgl060302.personal_nm != ''">
+    AND PERSONAL_NM = #{rlgl060302.personal_nm}
+    </if>
+    <if test="rlgl060302.personal_unitno != ''">
+    AND PERSONAL_UNITNO = #{rlgl060302.personal_unitno}
+    </if>
+    <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+    LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+    </if>
+  </select>
+  
+  <!-- 通过申请编号和申请区分获取待审核在线考试报名信息 -->
+  <select id="getOnlineApplyInfo" resultType="com.rlglsys.bean.Rlgl060303Bean">
+    SELECT
+      M.APPLY_NO AS APPLY_NO,
+      M.PERSONAL_ID AS PERSONAL_ID,
+      M.PERSONAL_NM AS PERSONAL_NM,
+      M.PERSONAL_CARD_ID AS PERSONAL_CARD_ID,
+      M.PERSONAL_UNIT_NO AS PERSONAL_UNIT_NO,
+      M.PERSONAL_SECTION_NO AS PERSONAL_SECTION_NO,
+      M.EXAM_NO AS EXAM_NO,
+      M.SUBJECT_KB AS SUBJECT_KB,
+      M.EXAMINATION_NAME AS EXAMINATION_NAME,
+      M.SPONSOR AS SPONSOR,
+      M.EXAM_PLACE AS EXAM_PLACE,
+      M.NOW_MARK AS NOW_MARK,
+      M1.UNIT_NM AS PERSONAL_UNIT_NM,
+      M2.SECTION_NAME AS PERSONAL_SECTION_NM,
+      M3.ADM_NAME AS SUBJECT_NM,
+      M4.UNIT_NM AS SPONSOR_NM
+    FROM
+      m_tb106_online_apply M
+    LEFT JOIN
+      m_tb04_unit M1
+    ON
+      M.PERSONAL_UNIT_NO = M1.UNIT_NO
+    LEFT JOIN
+      m_tb22_hospital_section M2
+    ON
+      M.PERSONAL_UNIT_NO = M2.UNIT_NO
+      AND M.PERSONAL_SECTION_NO = M2.SECTION_ID 
+    LEFT JOIN 
+      m_tb02_adm M3
+    ON 
+      M.SUBJECT_KB = M3.ADM_NUM
+      AND M3.ADM_TYPE_CD = '008'
+    LEFT JOIN
+      m_tb04_unit M4
+    ON
+      M.SPONSOR = M4.UNIT_NO 
+    WHERE
+      M.APPLY_NO = #{apply_no}
+    AND
+      M.DEL_KBN = 0
+  </select>
+  
+  <!-- 个人人事申请信息查询SQL -->
+  <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      APPLY_NO = #{apply_no}
+    AND 
+      DEL_KBN = '0'
+  </select>
+  <!-- 更新个人人事申请信息SQL -->
+  <update id="updateTb29Info">
+      UPDATE 
+        m_tb29_personalapplication
+      SET
+        CHECK_RESULT = #{mtb29Info.check_result},
+        NOW_MARK = #{mtb29Info.now_mark},
+        WILL_CHECKUNITNO = #{mtb29Info.will_checkunitno},
+        UPDATE_USER_ID = #{mtb29Info.update_user_id},
+        UPDATE_DATE = #{mtb29Info.update_date}
+      WHERE
+        APPLY_NO = #{mtb29Info.apply_no}
+  </update>
+  
+  <!-- 更新在线考试申请明细表 -->
+  <update id="updateMtb106Info">
+    update 
+      m_tb106_online_apply
+    set
+      UNIT_CHECKER = #{mtb106UpdateInfo.unit_checker},
+      UNIT_CHECK_DATE = #{mtb106UpdateInfo.unit_check_date},
+      UNIT_CHECK_VIEWS = #{mtb106UpdateInfo.unit_check_views},
+      UNIT_CHECK_RESULT = #{mtb106UpdateInfo.unit_check_result},
+      COUNTY_CHECKER = #{mtb106UpdateInfo.county_checker},
+      COUNTY_CHECK_DATE = #{mtb106UpdateInfo.county_check_date},
+      COUNTY_CHECK_VIEWS = #{mtb106UpdateInfo.county_check_views},
+      COUNTY_CHECK_RESULT = #{mtb106UpdateInfo.county_check_result},
+      DOWNTOWN_CHECKER = #{mtb106UpdateInfo.downtown_checker},
+      DOWNTOWN_CHECK_DATE = #{mtb106UpdateInfo.downtown_check_date},
+      DOWNTOWN_CHECK_VIEWS = #{mtb106UpdateInfo.downtown_check_views},
+      DOWNTOWN_CHECK_RESULT = #{mtb106UpdateInfo.downtown_check_result},
+      MINISTRY_CHECKER = #{mtb106UpdateInfo.ministry_checker},
+      MINISTRY_CHECK_DATE = #{mtb106UpdateInfo.ministry_check_date},
+      MINISTRY_CHECK_VIEWS = #{mtb106UpdateInfo.ministry_check_views},
+      MINISTRY_CHECK_RESULT = #{mtb106UpdateInfo.ministry_check_result},
+      NOW_MARK = #{mtb106UpdateInfo.now_mark},
+      UPDATE_USER_ID = #{mtb106UpdateInfo.update_user_id},
+      UPDATE_DATE = #{mtb106UpdateInfo.update_date},
+      CHECK_RESULT = #{mtb106UpdateInfo.check_result}
+    where
+      APPLY_NO = #{mtb106UpdateInfo.apply_no}
+  </update>
+</mapper>

@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020430Mapper">
+    <!-- 项目办结信息登录 -->
+    <insert id="insertMtb94ProjectCompletionInfo">
+       INSERT INTO m_tb94_project_completion
+            (PROJECT_ID
+            ,UNIT_NO
+            ,PROJECT_COMPLET_DATE
+            ,PROJECT_BIKO
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{projectInfo.project_id}
+            ,#{projectInfo.unit_no}
+            ,#{projectInfo.project_complet_date}
+            ,#{projectInfo.project_biko}
+            ,0
+            ,'0'
+            ,#{projectInfo.expend_01}
+            ,#{projectInfo.expend_02}
+            ,#{projectInfo.expend_03}
+            ,#{projectInfo.expend_04}
+            ,#{projectInfo.expend_05}
+            ,#{projectInfo.login_user_id}
+            ,#{projectInfo.login_date}
+            ,#{projectInfo.update_user_id}
+            ,#{projectInfo.update_date})
+    </insert>
+    
+    <!-- 项目授予学分系信息登录 -->
+    <insert id="insertMtb95ProjectGrantcreditInfo">
+       INSERT INTO m_tb95_project_grantcredit
+            (PROJECT_ID
+            ,PERSONNEL_ID
+            ,CREDIT
+            ,PERSONNEL_UNIT_NO
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{projectInfo.project_id}
+            ,#{projectInfo.personnel_id}
+            ,#{projectInfo.credit}
+            ,#{projectInfo.personnel_unit_no}
+            ,0
+            ,'0'
+            ,#{projectInfo.expend_01}
+            ,#{projectInfo.expend_02}
+            ,#{projectInfo.expend_03}
+            ,#{projectInfo.expend_04}
+            ,#{projectInfo.expend_05}
+            ,#{projectInfo.login_user_id}
+            ,#{projectInfo.login_date}
+            ,#{projectInfo.update_user_id}
+            ,#{projectInfo.update_date})
+    </insert>
+
+    <!-- 项目信息更新 -->
+    <update id="updateMtb95ProjectGrantcreditInfoInfo">
+        UPDATE m_tb95_project_grantcredit
+        SET  CREDIT = #{projectCreditInfo.credit}
+            ,UPDATE_USER_ID = #{projectCreditInfo.update_user_id}
+            ,UPDATE_DATE = #{projectCreditInfo.update_date}
+        WHERE 
+            DEL_KBN = '0'
+            AND PROJECT_ID = #{projectCreditInfo.project_id}
+            AND PERSONNEL_ID = #{projectCreditInfo.personnel_id}
+    </update>
+    
+    <!-- 举办中和办结项目件数查询SQL -->
+    <select id="getMtb29ProjectapplicationInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb29_personalapplication M1
+        INNER JOIN m_tb90_project_hold_apply_detail M2 ON
+           M1.APPLY_NO = M2.APPLY_NO
+           AND M2.DEL_KBN = '0'
+           AND M2.CONDUCT_FLG IN ('01','02')
+           <if test="applyInfo.conduct_flg !='' and applyInfo.conduct_flg != null">
+            AND M2.CONDUCT_FLG = #{applyInfo.conduct_flg}
+           </if>
+           <if test="applyInfo.project_id !='' and applyInfo.project_id != null">
+            AND M2.PROJECT_ID = #{applyInfo.project_id}
+           </if>
+           <if test="applyInfo.project_nm !='' and applyInfo.project_nm != null">
+            AND M2.project_nm LIKE CONCAT('%', #{applyInfo.project_nm}, '%')
+           </if>
+           <if test="applyInfo.unit_no !='' and applyInfo.unit_no != null">
+            AND M2.unit_no = #{applyInfo.unit_no}
+           </if>
+           <if test="applyInfo.unit_nm !='' and applyInfo.unit_nm != null">
+            AND M2.unit_nm LIKE CONCAT('%', #{applyInfo.unit_nm}, '%')
+           </if>
+        WHERE 
+            M1.DEL_KBN = '0'
+            AND M1.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+            AND M1.END_MARK IS NOT NULL
+            AND M1.NOW_MARK = M1.END_MARK
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+    <!-- 举办中和办结项目一览查询SQL -->
+    <select id="getMtb29ProjectapplicationInfoList" resultType="com.rlglsys.bean.Rlgl020430Bean">
+        SELECT M2.*,
+              M3.ADM_NAME AS conduct_flg_nm
+        FROM m_tb29_personalapplication M1
+        INNER JOIN m_tb90_project_hold_apply_detail M2 ON
+           M1.APPLY_NO = M2.APPLY_NO
+           AND M2.DEL_KBN = '0'
+           AND M2.CONDUCT_FLG IN ('01','02')
+           <if test="applyInfo.conduct_flg !='' and applyInfo.conduct_flg != null">
+            AND M2.CONDUCT_FLG = #{applyInfo.conduct_flg}
+           </if>
+           <if test="applyInfo.project_id !='' and applyInfo.project_id != null">
+            AND M2.PROJECT_ID = #{applyInfo.project_id}
+           </if>
+           <if test="applyInfo.project_nm !='' and applyInfo.project_nm != null">
+            AND M2.project_nm LIKE CONCAT('%', #{applyInfo.project_nm}, '%')
+           </if>
+           <if test="applyInfo.unit_no !='' and applyInfo.unit_no != null">
+            AND M2.unit_no = #{applyInfo.unit_no}
+           </if>
+           <if test="applyInfo.unit_nm !='' and applyInfo.unit_nm != null">
+            AND M2.unit_nm LIKE CONCAT('%', #{applyInfo.unit_nm}, '%')
+           </if>
+        LEFT JOIN m_tb02_adm M3 ON
+            M2.CONDUCT_FLG = M3.ADM_NUM
+            AND M3.ADM_TYPE_CD = '218'
+            AND M3.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            AND M1.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+            AND M1.END_MARK IS NOT NULL
+            AND M1.NOW_MARK = M1.END_MARK
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+            <if test="applyInfo.pageCount != 0 and applyInfo.pageCount != null">
+             LIMIT #{applyInfo.pageNo},#{applyInfo.pageCount}
+           </if>
+    </select>
+    
+    <!-- 项目信息查询 -->
+    <select id="getMtb90ProjectHoldApplyDetailInfo" resultType="com.rlglsys.bean.Rlgl020430Bean">
+        SELECT *
+        FROM m_tb90_project_hold_apply_detail M1
+        LEFT JOIN m_tb94_project_completion M2 ON
+        M1.PROJECT_ID = M2.PROJECT_ID
+        AND M2.DEL_KBN = '0'
+        WHERE
+           M1.APPLY_NO = #{projectInfo.apply_no}
+           AND M1.APPLY_NUMBER = #{projectInfo.apply_number}
+           AND M1.DEL_KBN = '0'
+    </select>
+    
+    <!-- 项目信息更新 -->
+    <update id="updateMtb90ProjectHoldApplyDetailInfo">
+        UPDATE m_tb90_project_hold_apply_detail
+        SET 
+            <if test="projectInfo.conduct_flg !='' and projectInfo.conduct_flg != null">
+            CONDUCT_FLG = #{projectInfo.conduct_flg}
+            </if>
+            <if test="projectInfo.grant_flg !='' and projectInfo.grant_flg != null">
+            GRANT_FLG = #{projectInfo.grant_flg}
+            </if>
+            ,UPDATE_USER_ID = #{projectInfo.update_user_id}
+            ,UPDATE_DATE = #{projectInfo.update_date}
+        WHERE 
+            APPLY_NO = #{projectInfo.apply_no}
+            AND APPLY_NUMBER = #{projectInfo.apply_number}
+    </update>
+    
+    <!-- 项目举办报名表信息一览检索 -->
+    <select id="getMtb96ProjectCreditApplyInfoList" resultType="com.rlglsys.bean.Rlgl020442Bean">
+        SELECT *
+        FROM m_tb96_project_credit_apply
+        WHERE 
+            DEL_KBN = '0'
+            <if test="projectCreditInfo.project_id !='' and projectCreditInfo.project_id != null">
+            AND PROJECT_ID = #{projectCreditInfo.project_id}
+            </if>
+            <if test="projectCreditInfo.check_result !='' and projectCreditInfo.check_result != null">
+            AND CHECK_RESULT = #{projectCreditInfo.check_result}
+            </if>
+            <if test="projectCreditInfo.personal_id !='' and projectCreditInfo.personal_id != null">
+            AND PERSONAL_ID = #{projectCreditInfo.personal_id}
+            </if>
+            <if test="projectCreditInfo.personal_nm !='' and projectCreditInfo.personal_nm != null">
+            AND PERSONAL_NM LIKE CONCAT('%', #{projectCreditInfo.personal_nm}, '%')
+            </if>
+            <if test="projectCreditInfo.personal_unit_no !='' and projectCreditInfo.personal_unit_no != null">
+            AND PERSONAL_UNIT_NO = #{projectCreditInfo.personal_unit_no}
+            </if>
+            <if test="projectCreditInfo.personal_unit_nm !='' and projectCreditInfo.personal_unit_nm != null">
+            AND PERSONAL_UNIT_NM LIKE CONCAT('%', #{projectCreditInfo.personal_unit_nm}, '%')
+            </if>
+            <if test="projectCreditInfo.pageCount != 0 and projectCreditInfo.pageCount != null">
+             LIMIT #{projectCreditInfo.pageNo},#{projectCreditInfo.pageCount}
+           </if>
+    </select>
+    
+        <!-- 项目举办报名表信息件数检索 -->
+    <select id="getMtb96ProjectCreditApplyInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb96_project_credit_apply
+        WHERE 
+            DEL_KBN = '0'
+            <if test="projectCreditInfo.project_id !='' and projectCreditInfo.project_id != null">
+            AND PROJECT_ID = #{projectCreditInfo.project_id}
+            </if>
+            <if test="projectCreditInfo.check_result !='' and projectCreditInfo.check_result != null">
+            AND CHECK_RESULT = #{projectCreditInfo.check_result}
+            </if>
+            <if test="projectCreditInfo.personal_id !='' and projectCreditInfo.personal_id != null">
+            AND PERSONAL_ID = #{projectCreditInfo.personal_id}
+            </if>
+            <if test="projectCreditInfo.personal_nm !='' and projectCreditInfo.personal_nm != null">
+            AND PERSONAL_NM LIKE CONCAT('%', #{projectCreditInfo.personal_nm}, '%')
+            </if>
+            <if test="projectCreditInfo.personal_unit_no !='' and projectCreditInfo.personal_unit_no != null">
+            AND PERSONAL_UNIT_NO = #{projectCreditInfo.personal_unit_no}
+            </if>
+            <if test="projectCreditInfo.personal_unit_nm !='' and projectCreditInfo.personal_unit_nm != null">
+            AND PERSONAL_UNIT_NM LIKE CONCAT('%', #{projectCreditInfo.personal_unit_nm}, '%')
+            </if>
+    </select>
+    
+    <!-- 授予学分件数检索 -->
+    <select id="getMtb95ProjectGrantcreditInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb95_project_grantcredit
+        WHERE 
+            DEL_KBN = '0'
+            AND PROJECT_ID = #{projectCreditInfo.project_id}
+            AND PERSONNEL_ID = #{projectCreditInfo.personnel_id}
+    </select>
+    
+        <!-- 授予学分件数检索 -->
+    <select id="getMtb95ProjectGrantcreditInfo" resultType="com.rlglsys.entity.Mtb95ProjectGrantcredit">
+        SELECT *
+        FROM m_tb95_project_grantcredit
+        WHERE 
+            DEL_KBN = '0'
+            AND PROJECT_ID = #{projectCreditInfo.project_id}
+            AND PERSONNEL_ID = #{projectCreditInfo.personnel_id}
+    </select>
+    
+    <!-- 获得总学分信息 -->
+    <select id="getCreditInfo" resultType="com.rlglsys.entity.Mtb66TotalCredit">
+        SELECT
+            *
+        FROM
+            m_tb66_total_credit
+        WHERE
+            PERSONAL_ID = #{mtb66TotalCreditInfo.personal_id}
+        AND YEAR = #{mtb66TotalCreditInfo.year}
+    </select>
+    <!-- 插入学分信息 -->
+    <insert id="insertCreditInfo" >
+        INSERT INTO m_tb66_total_credit (
+            PERSONAL_ID,
+            PERSONAL_NM,
+            PERSONNEL_UNIT_NO,
+            CREDIT_TYPE,
+            CREDIT_I,
+            CREDIT_II,
+            YEAR,
+            EX_KEY,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        )VALUES(
+        #{mtb66TotalCreditInfo.personal_id}
+        ,#{mtb66TotalCreditInfo.personal_nm}
+        ,#{mtb66TotalCreditInfo.personnel_unit_no}
+        ,#{mtb66TotalCreditInfo.credit_type}
+        ,#{mtb66TotalCreditInfo.credit_I}
+        ,#{mtb66TotalCreditInfo.credit_II}
+        ,#{mtb66TotalCreditInfo.year}
+        ,#{mtb66TotalCreditInfo.ex_key}
+        ,#{mtb66TotalCreditInfo.login_user_id}
+        ,#{mtb66TotalCreditInfo.login_date}
+        ,#{mtb66TotalCreditInfo.update_user_id}
+        ,#{mtb66TotalCreditInfo.update_date})
+    </insert>
+    <!-- 更新学分信息 -->
+    <update id="updateCreditInfo">
+        UPDATE 
+            m_tb66_total_credit
+        SET 
+        <if test="mtb66TotalCreditInfo.credit_I != ''">
+            CREDIT_I = #{mtb66TotalCreditInfo.credit_I},
+        </if>
+        <if test="mtb66TotalCreditInfo.credit_II != ''">
+            CREDIT_II = #{mtb66TotalCreditInfo.credit_II},
+        </if>
+            UPDATE_USER_ID = #{mtb66TotalCreditInfo.update_user_id},
+            UPDATE_DATE = #{mtb66TotalCreditInfo.update_date}
+        WHERE
+            PERSONAL_ID = #{mtb66TotalCreditInfo.personal_id}
+            AND YEAR = #{mtb66TotalCreditInfo.year}
+    </update>
+    
+       <!-- 项目举办报名表信息一览检索 -->
+    <select id="getMtb96ProjectCreditInfoList" resultType="com.rlglsys.bean.Rlgl020442Bean">
+        SELECT M1.*
+               ,M2.CREDIT
+        FROM m_tb96_project_credit_apply M1
+        LEFT JOIN m_tb95_project_grantcredit M2 ON
+        M1.PROJECT_ID = M2.PROJECT_ID
+        AND M1.PERSONAL_ID = M2.PERSONNEL_ID
+        AND M2.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            <if test="projectCreditInfo.project_id !='' and projectCreditInfo.project_id != null">
+            AND M1.PROJECT_ID = #{projectCreditInfo.project_id}
+            </if>
+            <if test="projectCreditInfo.check_result !='' and projectCreditInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{projectCreditInfo.check_result}
+            </if>
+            <if test="projectCreditInfo.personal_id !='' and projectCreditInfo.personal_id != null">
+            AND M1.PERSONAL_ID = #{projectCreditInfo.personal_id}
+            </if>
+            <if test="projectCreditInfo.personal_nm !='' and projectCreditInfo.personal_nm != null">
+            AND M1.PERSONAL_NM LIKE CONCAT('%', #{projectCreditInfo.personal_nm}, '%')
+            </if>
+            <if test="projectCreditInfo.personal_unit_no !='' and projectCreditInfo.personal_unit_no != null">
+            AND M1.PERSONAL_UNIT_NO = #{projectCreditInfo.personal_unit_no}
+            </if>
+            <if test="projectCreditInfo.personal_unit_nm !='' and projectCreditInfo.personal_unit_nm != null">
+            AND M1.PERSONAL_UNIT_NM LIKE CONCAT('%', #{projectCreditInfo.personal_unit_nm}, '%')
+            </if>
+            <if test="projectCreditInfo.pageCount != 0 and projectCreditInfo.pageCount != null">
+             LIMIT #{projectCreditInfo.pageNo},#{projectCreditInfo.pageCount}
+           </if>
+    </select>
+    
+        <!-- 项目举办报名表信息件数检索 -->
+    <select id="getMtb96ProjectCreditInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb96_project_credit_apply M1
+        LEFT JOIN m_tb95_project_grantcredit M2 ON
+        M1.PROJECT_ID = M2.PROJECT_ID
+        AND M1.PERSONAL_ID = M2.PERSONNEL_ID
+        AND M2.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            <if test="projectCreditInfo.project_id !='' and projectCreditInfo.project_id != null">
+            AND M1.PROJECT_ID = #{projectCreditInfo.project_id}
+            </if>
+            <if test="projectCreditInfo.check_result !='' and projectCreditInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{projectCreditInfo.check_result}
+            </if>
+            <if test="projectCreditInfo.personal_id !='' and projectCreditInfo.personal_id != null">
+            AND M1.PERSONAL_ID = #{projectCreditInfo.personal_id}
+            </if>
+            <if test="projectCreditInfo.personal_nm !='' and projectCreditInfo.personal_nm != null">
+            AND M1.PERSONAL_NM LIKE CONCAT('%', #{projectCreditInfo.personal_nm}, '%')
+            </if>
+            <if test="projectCreditInfo.personal_unit_no !='' and projectCreditInfo.personal_unit_no != null">
+            AND M1.PERSONAL_UNIT_NO = #{projectCreditInfo.personal_unit_no}
+            </if>
+            <if test="projectCreditInfo.personal_unit_nm !='' and projectCreditInfo.personal_unit_nm != null">
+            AND M1.PERSONAL_UNIT_NM LIKE CONCAT('%', #{projectCreditInfo.personal_unit_nm}, '%')
+            </if>
+    </select>
+</mapper>

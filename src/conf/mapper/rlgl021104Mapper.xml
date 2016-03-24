@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl021104Mapper">
+
+    <!--查询院内学分举办项目列表 -->
+    <select id="getProjectList" resultType="com.rlglsys.bean.Rlgl021104Bean">
+            SELECT A.*,B.SUMNUM  FROM (SELECT * FROM m_tb91_hospital_credit_project where unit_no=#{rlgl021104Bean.unit_no} AND AUDIT_STATUS='1'
+			   <if test="rlgl021104Bean.project_no != '' and rlgl021104Bean.project_no != null">
+			       AND project_no LIKE CONCAT('%', #{rlgl021104Bean.project_no}, '%') 
+			   </if>
+			   <if test="rlgl021104Bean.project_nm != '' and rlgl021104Bean.project_nm != null">
+			       AND project_nm LIKE CONCAT('%',  #{rlgl021104Bean.project_nm}, '%') 
+			   </if>	
+			            )A LEFT JOIN (SELECT
+				ARRLY_NO,COUNT(*) SUMNUM
+			FROM
+				m_tb92_hospital_credit_apply
+			WHERE
+				PERSONAL_UNIT_NO = #{rlgl021104Bean.unit_no} AND AUDIT_STATUS =0 group by ARRLY_NO )B ON B.ARRLY_NO=A.ARRLY_NO
+			    <if test="rlgl021104Bean.pageCount != 0 and rlgl021104Bean.pageCount != null">
+                   LIMIT #{rlgl021104Bean.pageNo},#{rlgl021104Bean.pageCount}
+                </if>   
+    </select>
+     <!--查询院内学分举办项目条数 -->
+    <select id="getCountbyProject" resultType="int">
+        SELECT count(*) FROM (SELECT * FROM m_tb91_hospital_credit_project where unit_no=#{rlgl021104Bean.unit_no} AND AUDIT_STATUS='1'
+			   <if test="rlgl021104Bean.project_no != '' and rlgl021104Bean.project_no != null">
+			       AND project_no LIKE CONCAT('%', #{rlgl021104Bean.project_no}, '%') 
+			   </if>
+			   <if test="rlgl021104Bean.project_nm != '' and rlgl021104Bean.project_nm != null">
+			       AND project_nm LIKE CONCAT('%',  #{rlgl021104Bean.project_nm}, '%') 
+			   </if>	
+			            )A LEFT JOIN (SELECT
+				ARRLY_NO,COUNT(*) SUMNUM
+			FROM
+				m_tb92_hospital_credit_apply
+			WHERE
+				PERSONAL_UNIT_NO = #{rlgl021104Bean.unit_no} AND AUDIT_STATUS =0 group by ARRLY_NO )B ON B.ARRLY_NO=A.ARRLY_NO
+			    <if test="rlgl021104Bean.pageCount != 0 and rlgl021104Bean.pageCount != null">
+                   LIMIT #{rlgl021104Bean.pageNo},#{rlgl021104Bean.pageCount}
+                </if>   
+    </select>
+     <!--获得项目报名人员信息 -->
+    <select id="getProjectApplyUser" resultType="com.rlglsys.bean.Rlgl021105Bean">
+       SELECT A.*, B.SECTION_NAME personal_section_name ,C.UNIT_NM PERSONAL_UNIT_NM FROM (SELECT * FROM m_tb92_hospital_credit_apply WHERE project_no=#{rlgl021105Bean.project_no} 
+       <if test="rlgl021105Bean.audit_status!= '' and rlgl021105Bean.audit_status != null">
+			AND AUDIT_STATUS=#{rlgl021105Bean.audit_status} 
+	   </if>
+        <if test="rlgl021105Bean.personal_unit_no!= '' and rlgl021105Bean.personal_unit_no != null">
+			   AND  PERSONAL_UNIT_NO=#{rlgl021105Bean.personal_unit_no}
+	   </if>
+	   <if test="rlgl021105Bean.personal_section_no!= '' and rlgl021105Bean.personal_section_no!= null">
+			   AND  PERSONAL_SECTION_NO=#{rlgl021105Bean.personal_section_no}
+	   </if>
+	   <if test="rlgl021105Bean.personal_nm!= '' and rlgl021105Bean.personal_nm!= null">
+			   AND  PERSONAL_NM=#LIKE CONCAT('%', {rlgl021105Bean.personal_nm}, '%')
+	   </if>
+	   ) A
+		LEFT JOIN m_tb22_hospital_section B ON (
+			A.PERSONAL_SECTION_NO = B.SECTION_ID
+			AND A.PERSONAL_UNIT_NO = B.UNIT_NO
+		) LEFT JOIN m_tb04_unit c on(A.PERSONAL_UNIT_NO = C.UNIT_NO)
+    </select>
+     <!--获得项目报名人员条数-->
+    <select id="getProjectApplyUserCount" resultType="int">
+       SELECT count(*) FROM m_tb92_hospital_credit_apply WHERE  
+        project_no=#{rlgl021105Bean.project_no} 
+       <if test="rlgl021105Bean.audit_status!= '' and rlgl021105Bean.audit_status != null">
+			AND AUDIT_STATUS=#{rlgl021105Bean.audit_status} 
+	   </if>
+        <if test="rlgl021105Bean.personal_unit_no!= '' and rlgl021105Bean.personal_unit_no != null">
+			   AND  PERSONAL_UNIT_NO=#{rlgl021105Bean.personal_unit_no}
+	   </if>
+	   <if test="rlgl021105Bean.personal_section_no!= '' and rlgl021105Bean.personal_section_no!= null">
+			   AND  PERSONAL_SECTION_NO=#{rlgl021105Bean.personal_section_no}
+	   </if>
+	    <if test="rlgl021105Bean.personal_nm!= '' and rlgl021105Bean.personal_nm!= null">
+			   AND  PERSONAL_NM=#LIKE CONCAT('%', {rlgl021105Bean.personal_nm}, '%')
+	   </if>
+	   
+    </select>
+    <!--获得项目单位信息 -->
+    <select id="getProjectUnitList" resultType="com.rlglsys.bean.Rlgl021105Bean">
+	    SELECT A.*,B.UNIT_NM PERSONAL_UNIT_NM FROM (
+		SELECT
+			PERSONAL_UNIT_NO
+		FROM
+			m_tb92_hospital_credit_apply
+		WHERE
+			project_no=#{rlgl021105Bean.project_no}
+		GROUP BY
+			PERSONAL_UNIT_NO
+	    ) A
+	    LEFT JOIN m_tb04_unit B ON(A.PERSONAL_UNIT_NO=B.UNIT_NO)
+    </select>
+    <!--获得项目科室信息 -->
+    <select id="getProjectSectionList" resultType="com.rlglsys.bean.Rlgl021105Bean">
+       SELECT A.*,B.SECTION_NAME PERSONAL_SECTION_NAME FROM (
+		SELECT
+			PERSONAL_SECTION_NO,PERSONAL_UNIT_NO
+		FROM
+			m_tb92_hospital_credit_apply
+		WHERE
+			project_no =#{rlgl021105Bean.project_no}
+	    AND  PERSONAL_UNIT_NO=#{rlgl021105Bean.personal_unit_no}
+		GROUP BY
+			PERSONAL_SECTION_NO,PERSONAL_UNIT_NO
+	    ) A
+	   LEFT JOIN m_tb22_hospital_section B ON(A.PERSONAL_SECTION_NO=B.SECTION_ID AND A.PERSONAL_UNIT_NO=B.UNIT_NO)
+    </select>
+    <!--获得单位人员信息 -->
+    <select id="getUnitUser" resultType="Mtb01User">
+        SELECT * FROM m_tb01_user WHERE  DEL_KBN='0'  AND USER_TYPE='0'
+        <if test="personnel.unit_no != '' and personnel.unit_no != null">
+	        AND unit_no = #{personnel.unit_no}
+	    </if>
+	    <if test="personnel.section_id != '' and personnel.section_id != null">
+	        AND section_id = #{personnel.section_id}
+	    </if>
+    </select>
+    <!-- 插入报名用户信息 -->
+    <insert id="insertApplyUser" parameterType="int">  
+     insert into m_tb92_hospital_credit_apply (   
+		PERSONAL_ID ,       
+		PERSONAL_NM ,       
+		PERSONAL_CARD_ID  , 
+		PERSONAL_UNIT_NO  , 
+		PERSONAL_SECTION_NO,
+		ARRLY_NO   ,        
+		PROJECT_NO  ,       
+		PROJECT_UNIT_NO    ,
+		APPLY_ITEM ,        
+		EX_KEY  ,           
+		DEL_KBN,            
+		EXPEND_01 ,         
+		EXPEND_02 ,         
+		EXPEND_03  ,        
+		EXPEND_04 ,         
+		EXPEND_05 ,         
+		LOGIN_USER_ID     , 
+		LOGIN_DATE ,        
+		UPDATE_USER_ID  ,   
+		UPDATE_DATE         
+	)VALUES  
+    <foreach collection="userList" item="item" index="index" separator=",">  
+         (  #{item.personal_id},        
+			#{item.personal_nm} ,       
+			#{item.personal_card_id}  , 
+			#{item.personal_unit_no}  , 
+			#{item.personal_section_no},
+			#{item.arrly_no}   ,        
+			#{item.project_no}  ,       
+			#{item.project_unit_no}    ,
+			#{item.apply_item} ,        
+			#{item.ex_key}  ,           
+			#{item.del_kbn},            
+			#{item.expend_01} ,         
+			#{item.expend_02 },         
+			#{item.expend_03}  ,        
+			#{item.expend_04} ,         
+			#{item.expend_05} ,         
+			#{item.login_user_id}     , 
+			#{item.login_date} ,        
+			#{item.update_user_id}  ,   
+			#{item.update_date}         
+		)  
+    </foreach>  
+ </insert> 
+ <update id="updateAudit" parameterType="int">
+   UPDATE m_tb92_hospital_credit_apply SET AUDIT_STATUS=#{rlgl021105Bean.audit_status}  WHERE personal_unit_no=#{rlgl021105Bean.personal_unit_no} AND PERSONAL_ID=#{rlgl021105Bean.personal_id} AND PROJECT_NO=#{rlgl021105Bean.project_no}
+ </update>
+</mapper>

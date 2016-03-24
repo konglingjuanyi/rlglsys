@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl090801Mapper">
+    <!-- 公告信息登录 -->
+    <insert id="insertNoticeInfo">
+       INSERT INTO m_tb84_notice
+            (NOTICE_ID
+            ,USER_ID
+            ,NOTICE_KBN
+            ,NOTICE_NM
+            ,NOTICE_DATETIME
+            ,NOTICE
+            ,NOTICE_FROM
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{noticeInfo.notice_id}
+            ,#{noticeInfo.user_id}
+            ,#{noticeInfo.notice_kbn}
+            ,#{noticeInfo.notice_nm}
+            ,#{noticeInfo.notice_datetime}
+            ,#{noticeInfo.notice}
+            ,#{noticeInfo.notice_from}
+            ,0
+            ,'0'
+            ,#{noticeInfo.expend_01}
+            ,#{noticeInfo.expend_02}
+            ,#{noticeInfo.expend_03}
+            ,#{noticeInfo.expend_04}
+            ,#{noticeInfo.expend_05}
+            ,#{noticeInfo.login_user_id}
+            ,#{noticeInfo.login_date}
+            ,#{noticeInfo.update_user_id}
+            ,#{noticeInfo.update_date})
+    </insert>
+    
+    <!-- 公告用户关联信息登录 -->
+    <insert id="insertNoticeToInfo">
+       INSERT INTO m_tb83_notice_to
+            (NOTICE_ID
+            ,USER_ID
+            ,NOTICE_TO
+           <!--  ,USER_ENTER -->
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{noticeInfo.notice_id}
+            ,#{noticeInfo.user_id}
+            ,#{noticeInfo.notice_to}
+           <!--    ,#{noticeInfo.user_enter}-->
+            ,0
+            ,'0'
+            ,#{noticeInfo.expend_01}
+            ,#{noticeInfo.expend_02}
+            ,#{noticeInfo.expend_03}
+            ,#{noticeInfo.expend_04}
+            ,#{noticeInfo.expend_05}
+            ,#{noticeInfo.login_user_id}
+            ,#{noticeInfo.login_date}
+            ,#{noticeInfo.update_user_id}
+            ,#{noticeInfo.update_date})
+    </insert>
+    
+    <!-- 删除公告信息(逻辑删除) -->
+    <update id="updateMtb84NoticeInfoWithLogic">
+        UPDATE m_tb84_notice
+        SET DEL_KBN = #{noticeInfo.del_kbn}
+            ,UPDATE_USER_ID = #{noticeInfo.update_user_id}
+            ,UPDATE_DATE = #{noticeInfo.update_date}
+        WHERE 
+            NOTICE_ID = #{noticeInfo.notice_id}
+            AND USER_ID = #{noticeInfo.user_id}
+    </update>
+    
+    <!-- 删除公告信息(物理删除) -->
+    <delete id="deleteMtb84NoticeInfoWithPhysical">
+        DELETE FROM m_tb84_notice
+        WHERE
+            NOTICE_ID = #{noticeInfo.notice_id}
+            AND USER_ID = #{noticeInfo.user_id}
+    </delete>
+    
+    <!-- 删除公告发布信息(物理删除) -->
+    <delete id="deleteMtb83NoticeToInfoWithPhysical">
+        DELETE FROM m_tb83_notice_to
+        WHERE
+            NOTICE_ID = #{noticeInfo.notice_id}
+            AND USER_ID = #{noticeInfo.user_id}
+    </delete>
+    
+    <!--公告信息详细列表查询 -->
+    <select id="getMtb84NoticeInfoList" resultType="com.rlglsys.bean.Rlgl090801Bean">
+        SELECT
+           M1.*,
+           M2.ADM_NAME AS notice_kbn_nm
+        FROM m_tb84_notice M1
+        LEFT JOIN m_tb02_adm M2 ON
+            M1.notice_kbn = M2.ADM_NUM
+            AND M2.ADM_TYPE_CD = '192'
+            AND M2.DEL_KBN = '0'
+        WHERE M1.USER_ID = #{noticeInfo.user_id}
+	        <if test="noticeInfo.notice_id != '' and noticeInfo.notice_id != null">
+	        AND M1.NOTICE_ID = #{noticeInfo.notice_id}
+	        </if>
+	        <if test="noticeInfo.notice_kbn != '' and noticeInfo.notice_kbn != null">
+	        AND M1.NOTICE_KBN = #{noticeInfo.notice_kbn}
+	        </if>
+	        <if test="noticeInfo.notice_from != '' and noticeInfo.notice_from != null">
+	         AND M1.NOTICE_FROM LIKE CONCAT('%', #{noticeInfo.notice_from}, '%')
+	        </if>
+	        <if test="noticeInfo.notice_nm != '' and noticeInfo.notice_nm != null">
+	         AND M1.NOTICE_NM LIKE CONCAT('%', #{noticeInfo.notice_nm}, '%')
+	        </if>
+	        <if test="noticeInfo.notice != '' and noticeInfo.notice != null">
+	         AND M1.NOTICE LIKE CONCAT('%', #{noticeInfo.notice}, '%')
+	        </if>
+	        <if test="noticeInfo.del_kbn != '' and noticeInfo.del_kbn != null">
+	        AND M1.DEL_KBN = #{noticeInfo.del_kbn}
+	        </if>
+	        <if test="noticeInfo.pageCount != 0 and noticeInfo.pageCount != null">
+             LIMIT #{noticeInfo.pageNo},#{noticeInfo.pageCount}
+           </if>
+    </select>
+    
+    <!--公告发布信息详细列表查询 -->
+    <select id="getMtb83NoticeToInfoList" resultType="com.rlglsys.entity.Mtb83NoticeTo">
+        SELECT
+           *
+        FROM m_tb83_notice_to 
+        WHERE 
+            NOTICE_ID = #{noticeInfo.notice_id}
+            AND USER_ID = #{noticeInfo.user_id}
+    </select>
+    
+    <!--公告信息详细列表件数 -->
+    <select id="getMtb84NoticeInfoCount" resultType="int">
+        SELECT
+           Count(*)
+        FROM m_tb84_notice M1
+        LEFT JOIN m_tb02_adm M2 ON
+            M1.notice_kbn = M2.ADM_NUM
+            AND M2.ADM_TYPE_CD = '192'
+            AND M2.DEL_KBN = '0'
+        WHERE M1.USER_ID = #{noticeInfo.user_id}
+	        <if test="noticeInfo.notice_id != '' and noticeInfo.notice_id != null">
+	        AND M1.NOTICE_ID = #{noticeInfo.notice_id}
+	        </if>
+	        <if test="noticeInfo.notice_kbn != '' and noticeInfo.notice_kbn != null">
+	        AND M1.NOTICE_KBN = #{noticeInfo.notice_kbn}
+	        </if>
+	        <if test="noticeInfo.notice_from != '' and noticeInfo.notice_from != null">
+	         AND M1.NOTICE_FROM LIKE CONCAT('%', #{noticeInfo.notice_from}, '%')
+	        </if>
+	        <if test="noticeInfo.notice_nm != '' and noticeInfo.notice_nm != null">
+	         AND M1.NOTICE_NM LIKE CONCAT('%', #{noticeInfo.notice_nm}, '%')
+	        </if>
+	        <if test="noticeInfo.notice != '' and noticeInfo.notice != null">
+	         AND M1.NOTICE LIKE CONCAT('%', #{noticeInfo.notice}, '%')
+	        </if>
+	        <if test="noticeInfo.del_kbn != '' and noticeInfo.del_kbn != null">
+	        AND M1.DEL_KBN = #{noticeInfo.del_kbn}
+	        </if>
+    </select>
+    
+    <!--公告信息详细信息 -->
+    <select id="getMtb84NoticeInfo" resultType="com.rlglsys.bean.Rlgl090801Bean">
+        SELECT  M1.*,
+           M2.ADM_NAME AS notice_kbn_nm
+        FROM m_tb84_notice M1
+        LEFT JOIN m_tb02_adm M2 ON
+            M1.notice_kbn = M2.ADM_NUM
+            AND M2.ADM_TYPE_CD = '192'
+            AND M2.DEL_KBN = '0'
+        WHERE M1.USER_ID = #{noticeInfo.user_id}
+        AND M1.NOTICE_ID = #{noticeInfo.notice_id}
+    </select>
+    
+    <!-- 公告信息更新 -->
+    <update id="updateMtb84NoticeInfo">
+        UPDATE m_tb84_notice
+        SET NOTICE_NM = #{noticeInfo.notice_nm}
+            ,NOTICE = #{noticeInfo.notice}
+            ,NOTICE_FROM = #{noticeInfo.notice_from}
+            ,NOTICE_KBN = #{noticeInfo.notice_kbn}
+            ,UPDATE_USER_ID = #{noticeInfo.update_user_id}
+            ,UPDATE_DATE = #{noticeInfo.update_date}
+        WHERE
+            NOTICE_ID = #{noticeInfo.notice_id}
+            AND USER_ID = #{noticeInfo.user_id}
+    </update>
+    
+    <!-- 公告信息更新 -->
+    <update id="updateMtb84NoticePublishInfo">
+        UPDATE m_tb84_notice
+        SET  NOTICE_DATETIME =  #{noticeInfo.notice_datetime}
+            ,NOTICE_PUBLISH_KBN = #{noticeInfo.notice_publish_kbn}
+            ,NOTICE_PUBLISH_MODEL = #{noticeInfo.notice_publish_model}
+            ,UPDATE_USER_ID = #{noticeInfo.update_user_id}
+            ,UPDATE_DATE = #{noticeInfo.update_date}
+        WHERE
+            NOTICE_ID = #{noticeInfo.notice_id}
+            AND USER_ID = #{noticeInfo.user_id}
+    </update>
+    
+    <select id="getUnitLowerCount" resultType="int">
+         SELECT Count(*) 
+         FROM m_tb04_unit 
+         WHERE 
+            (UNIT_SUPER=#{unitInfo.unit_no} or UNIT_NO = #{unitInfo.unit_no})
+            AND DEL_KBN=0 
+            AND UNIT_STATUS='1'
+            <if test="unitInfo.unit_no_sel != '' and unitInfo.unit_no_sel != null">
+              AND UNIT_NO = #{unitInfo.unit_no_sel}
+            </if>
+            <if test="unitInfo.unit_nm != '' and unitInfo.unit_nm != null">
+               AND UNIT_NM  LIKE CONCAT('%', #{unitInfo.unit_nm}, '%')
+            </if>
+    </select>
+    <select id="getUnitLowerList" resultType="com.rlglsys.bean.Rlgl090805Bean">
+         SELECT * 
+         FROM m_tb04_unit
+         WHERE
+			(UNIT_SUPER=#{unitInfo.unit_no} or UNIT_NO = #{unitInfo.unit_no})
+            AND DEL_KBN=0 
+            AND UNIT_STATUS='1'
+            <if test="unitInfo.unit_no_sel != '' and unitInfo.unit_no_sel != null">
+              AND UNIT_NO = #{unitInfo.unit_no_sel}
+            </if>
+            <if test="unitInfo.unit_nm != '' and unitInfo.unit_nm != null">
+               AND UNIT_NM  LIKE CONCAT('%', #{unitInfo.unit_nm}, '%')
+            </if>
+            <if test="unitInfo.pageCount != 0 and unitInfo.pageCount != null">
+             LIMIT #{unitInfo.pageNo},#{unitInfo.pageCount}
+           </if>
+    </select>
+    
+    <select id="getUnitUserCount" resultType="int">
+         SELECT Count(*) 
+         FROM m_tb01_user 
+         WHERE 
+            UNIT_NO=#{userInfo.unit_no}
+            AND USER_TYPE = '0'
+            AND DEL_KBN='0'
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+              AND USER_ID = #{userInfo.user_id}
+            </if>
+            <if test="userInfo.user_name != '' and userInfo.user_name != null">
+               AND USER_NAME  LIKE CONCAT('%', #{userInfo.user_name}, '%')
+            </if>
+            <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+               AND PERSONNEL_ID = #{userInfo.personnel_id}
+            </if>
+    </select>
+    <select id="getUnitUserList" resultType="com.rlglsys.bean.Rlgl090804Bean">
+         SELECT * 
+         FROM m_tb01_user  
+         WHERE
+			UNIT_NO=#{userInfo.unit_no}
+			AND USER_TYPE = '0'
+            AND DEL_KBN='0' 
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+              AND USER_ID = #{userInfo.user_id}
+            </if>
+            <if test="userInfo.user_name != '' and userInfo.user_name != null">
+               AND USER_NAME  LIKE CONCAT('%', #{userInfo.user_name}, '%')
+            </if>
+            <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+               AND PERSONNEL_ID = #{userInfo.personnel_id}
+            </if>
+            <if test="userInfo.pageCount != 0 and userInfo.pageCount != null">
+             LIMIT #{userInfo.pageNo},#{userInfo.pageCount}
+           </if>
+    </select>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010201Mapper">
+    <!-- 取得单位信息 -->
+    <select id="getUnitInfo" resultType="com.rlglsys.entity.Rlgl010101Info">
+        SELECT
+            *
+        FROM m_tb04_unit
+        WHERE
+            DEL_KBN = '0'
+        AND unit_no = #{unit_no}
+    </select>
+    <!-- 取得单位机构编制信息 -->
+    <select id="getOrganizationList" resultType="com.rlglsys.entity.Mtb05Organization">
+        SELECT
+            *
+        FROM m_tb05_organization
+        WHERE
+            unit_no = #{unit_no}
+    </select>
+    <!-- 取得单位职位编制信息 -->
+    <select id="getUnitPositionInfo" resultType="com.rlglsys.entity.Mtb06UnitPosition">
+        SELECT
+            *
+        FROM m_tb06_unit_position
+        WHERE
+            unit_no = #{unit_no}
+    </select>
+    <!-- 插入新的单位机构编制信息 -->
+    <insert id="insertOrganization"  parameterType="com.rlglsys.entity.MTb54PostApply">
+        INSERT INTO m_tb05_organization
+            (UNIT_NO
+            ,ISD_NAME
+            ,ISD_LEADING_REGULAR_COUNT
+            ,ISD_LEADING_DEPUTY_COUNT
+            ,EX_KEY
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE) VALUES
+            (#{org.unit_no}
+            ,#{org.isd_name}
+            ,#{org.isd_leading_regular_count}
+            ,#{org.isd_leading_deputy_count}
+            ,0
+            ,''
+            ,''
+            ,''
+            ,''
+            ,''
+            ,#{org.login_user_id}
+            ,#{org.login_date}
+            ,#{org.update_user_id}
+            ,#{org.update_date})
+    </insert>
+    <!-- 更新单位机构编制信息 -->
+    <update id="updateOrganization" parameterType="com.rlglsys.entity.Mtb05Organization">
+        UPDATE m_tb05_organization
+        SET
+            ISD_NAME = #{org.isd_name},
+            ISD_LEADING_REGULAR_COUNT = #{org.isd_leading_regular_count},
+            ISD_LEADING_DEPUTY_COUNT = #{org.isd_leading_deputy_count},
+            UPDATE_USER_ID = #{org.update_user_id},
+            UPDATE_DATE = #{org.update_date}
+        WHERE
+            ADD_ID = #{org.add_id}
+            AND UNIT_NO = #{org.unit_no}
+    </update>
+    <!-- 插入新的单位职位编制信息 -->
+    <insert id="insertUnitPositionInfo" parameterType="com.rlglsys.entity.Mtb06UnitPosition">
+        INSERT INTO m_tb06_unit_position
+            (UNIT_NO
+            ,UNIT_LEADING_REGULAR_COUNT
+            ,UNIT_LEADING_DEPUTY_COUNT
+            ,EX_KEY
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE) VALUES
+            (#{unitPosition.unit_no}
+            ,#{unitPosition.unit_leading_regular_count}
+            ,#{unitPosition.unit_leading_deputy_count}
+            ,0
+            ,''
+            ,''
+            ,''
+            ,''
+            ,''
+            ,#{unitPosition.login_user_id}
+            ,#{unitPosition.login_date}
+            ,#{unitPosition.update_user_id}
+            ,#{unitPosition.update_date})
+    </insert>
+    <!-- 更新单位职位编制信息 -->
+    <update id="updateUnitPositionInfo" parameterType="com.rlglsys.entity.Mtb06UnitPosition">
+        UPDATE m_tb06_unit_position
+        SET
+            UNIT_LEADING_REGULAR_COUNT = #{unitPosition.unit_leading_regular_count},
+            UNIT_LEADING_DEPUTY_COUNT = #{unitPosition.unit_leading_deputy_count},
+            UPDATE_USER_ID = #{unitPosition.update_user_id},
+            UPDATE_DATE = #{unitPosition.update_date}
+        WHERE
+            UNIT_NO = #{unitPosition.unit_no}
+    </update>
+    
+    <!-- 删除单位机构编制信息 -->
+    <delete id="deleteOrganization" parameterType="com.rlglsys.entity.Mtb05Organization">
+        DELETE FROM
+            m_tb05_organization
+        WHERE 
+            ADD_ID = #{org.add_id}
+            AND UNIT_NO = #{org.unit_no}
+    </delete>
+    <!-- 获得单位规格 -->
+    <select id="getUnitScale" resultType="String">
+        SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE
+            adm_type_cd = '014'
+            AND adm_num = #{scale}
+    </select>
+    <!-- 获得类别 -->
+    <select id="getIdsPlan" resultType="String">
+         SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE
+            adm_type_cd = '010'
+            AND adm_num = #{idsplan}
+    </select>
+    <!-- 获得经费形式 -->
+    <select id="getEconomicType" resultType="String">
+         SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE
+            adm_type_cd = '019'
+            AND adm_num = #{entype}
+    </select>
+    <!-- 获得单位员工在编人数 -->
+    <select id="getPersonCount" resultType="int">
+        SELECT 
+            COUNT(*)
+        FROM m_tb12_personnel
+        WHERE
+            DEL_KBN = '0'
+        AND PERSONNEL_UNIT = #{unit_no}
+        AND PERSONNEL_REGULAR = '001'
+     </select>
+     <!-- 获得下级单位 信息-->
+    <select id="getNextUnitInfo" resultType="String">
+        SELECT 
+            *
+        FROM m_tb04_unit
+        WHERE
+            DEL_KBN = '0'
+        AND UNIT_SUPER = #{unit_no}
+     </select>
+</mapper>

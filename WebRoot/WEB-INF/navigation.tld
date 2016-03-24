@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+  
+<taglib>
+  <tlib-version>2.2.3</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>my</short-name>
+  <uri>/jtime</uri>
+  <tag>
+      <name>navigation</name>
+      <tag-class>com.rlglsys.taglib.NavigationTag</tag-class>
+      <body-content>JSP</body-content>
+  </tag>
+  <tag>
+      <name>message</name>
+      <tag-class>com.rlglsys.taglib.MessageTag</tag-class>
+      <body-content>JSP</body-content>
+  </tag>
+  <tag>
+      <name>trStripe</name>
+      <tagclass>com.rlglsys.taglib.TrStripeTag</tagclass>
+      <attribute>
+        <name>index</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+        <name>oddClass</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+        <name>evenClass</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+        <name>delflg</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+      </attribute>
+  </tag>
+  <tag>
+      <name>dividepage</name>
+      <tagclass>com.rlglsys.taglib.DividePageTag</tagclass>
+      <attribute>
+        <name>actionId</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+      </attribute>
+  </tag>
+  <tag>
+      <name>menu</name>
+      <tagclass>com.rlglsys.taglib.MenuTag</tagclass>
+      <body-content>JSP</body-content>
+  </tag>
+  <tag>
+      <name>roleMenu</name>
+      <tagclass>com.rlglsys.taglib.RoleMenuTag</tagclass>
+      <body-content>JSP</body-content>
+  </tag>
+</taglib>

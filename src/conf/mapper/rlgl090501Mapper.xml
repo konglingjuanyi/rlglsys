@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl090501Mapper">
+    <!-- 管理表信息 -->
+    <insert id="insertMtb02AdmInfo">
+       INSERT INTO m_tb02_adm
+            (ADM_TYPE_CD
+            ,ADM_NUM
+            ,ADM_NAME
+            ,ADM_CD_SUMMARY
+            ,ADM_VALUE_01
+            ,ADM_VALUE_02
+            ,ADM_VALUE_03
+            ,ADM_VALUE_04
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{admInfo.adm_type_cd}
+            ,#{admInfo.adm_num}
+            ,#{admInfo.adm_name}
+            ,#{admInfo.adm_cd_summary}
+            ,#{admInfo.adm_value_01}
+            ,#{admInfo.adm_value_02}
+            ,#{admInfo.adm_value_03}
+            ,#{admInfo.adm_value_04}
+            ,#{admInfo.ex_key}
+            ,#{admInfo.del_kbn}
+            ,#{admInfo.expend_01}
+            ,#{admInfo.expend_02}
+            ,#{admInfo.expend_03}
+            ,#{admInfo.expend_04}
+            ,#{admInfo.expend_05}
+            ,#{admInfo.login_user_id}
+            ,#{admInfo.login_date}
+            ,#{admInfo.update_user_id}
+            ,#{admInfo.update_date})
+    </insert>
+    
+    <!-- 管理表信息更新 -->
+    <update id="updatetMtb02AdmInfo">
+       UPDATE m_tb02_adm
+       SET
+             ADM_NAME           = #{admInfo.adm_name}
+            ,ADM_CD_SUMMARY     = #{admInfo.adm_cd_summary}
+            ,ADM_VALUE_01       = #{admInfo.adm_value_01}
+            ,ADM_VALUE_02       = #{admInfo.adm_value_02}
+            ,ADM_VALUE_03       = #{admInfo.adm_value_03}
+            ,ADM_VALUE_04       = #{admInfo.adm_value_04}
+            ,UPDATE_USER_ID     = #{admInfo.update_user_id}
+            ,UPDATE_DATE        = #{admInfo.update_date}
+       WHERE
+            ADM_TYPE_CD = #{admInfo.adm_type_cd}
+            AND ADM_NUM = #{admInfo.adm_num}
+    </update>
+    
+    <!-- 删除管理表信息 -->
+    <delete id="deletetMtb02AdmInfo">
+        DELETE FROM  m_tb02_adm
+        WHERE
+            ADM_TYPE_CD = #{admInfo.adm_type_cd}
+            AND ADM_NUM = #{admInfo.adm_num}
+    </delete>
+    
+    <!--管理表列表查询 -->
+    <select id="getMtb02AdmInfoInfoList" resultType="com.rlglsys.bean.Rlgl090501Bean">
+        SELECT
+          *
+        FROM m_tb02_adm
+        WHERE
+         DEL_KBN = '0'
+         <if test="admInfo.adm_type_cd != '' and admInfo.adm_type_cd != null">
+          AND ADM_TYPE_CD = #{admInfo.adm_type_cd}
+         </if>
+         <if test="admInfo.adm_num != '' and admInfo.adm_num != null">
+          AND ADM_NUM = #{admInfo.adm_num}
+         </if>
+         <if test="admInfo.adm_name != '' and admInfo.adm_name != null">
+          AND ADM_NAME LIKE CONCAT('%', #{admInfo.adm_name}, '%')
+         </if>
+         <if test="admInfo.adm_cd_summary != '' and admInfo.adm_cd_summary != null">
+          AND ADM_CD_SUMMARY LIKE CONCAT('%', #{admInfo.adm_cd_summary}, '%')
+         </if>
+          ORDER BY ADM_TYPE_CD, ADM_NUM
+          <if test="admInfo.pageCount != 0 and admInfo.pageCount != null">
+           LIMIT #{admInfo.pageNo},#{admInfo.pageCount}
+          </if>
+    </select>
+    
+    <!--管理表列表件数查询 -->
+    <select id="getMtb02AdmInfoInfoCount" resultType="int">
+        SELECT
+          Count(*)
+        FROM m_tb02_adm
+        WHERE
+         DEL_KBN = '0'
+         <if test="admInfo.adm_type_cd != '' and admInfo.adm_type_cd != null">
+          AND ADM_TYPE_CD = #{admInfo.adm_type_cd}
+         </if>
+         <if test="admInfo.adm_num != '' and admInfo.adm_num != null">
+          AND ADM_NUM = #{admInfo.adm_num}
+         </if>
+         <if test="admInfo.adm_name != '' and admInfo.adm_name != null">
+          AND ADM_NAME LIKE CONCAT('%', #{admInfo.adm_name}, '%')
+         </if>
+         <if test="admInfo.adm_cd_summary != '' and admInfo.adm_cd_summary != null">
+          AND ADM_CD_SUMMARY LIKE CONCAT('%', #{admInfo.adm_cd_summary}, '%')
+         </if>
+    </select>
+    
+     <!--管理表列表查询 -->
+    <select id="getMtb02AdmInfoInfo" resultType="com.rlglsys.bean.Rlgl090501Bean">
+        SELECT
+          *
+        FROM m_tb02_adm
+        WHERE
+            DEL_KBN = '0'
+            AND ADM_TYPE_CD = #{admInfo.adm_type_cd}
+            AND ADM_NUM = #{admInfo.adm_num}
+    </select>
+    <!-- 管理表信息 -->
+    <insert id="insertMtb02AdmInfoByList">
+       INSERT INTO m_tb02_adm
+            (ADM_TYPE_CD
+            ,ADM_NUM
+            ,ADM_NAME
+            ,ADM_CD_SUMMARY
+            ,ADM_VALUE_01
+            ,ADM_VALUE_02
+            ,ADM_VALUE_03
+            ,ADM_VALUE_04
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES 
+        <foreach collection="admInfoList" item="admInfo" index="index" separator=",">  
+            (#{admInfo.adm_type_cd}
+            ,#{admInfo.adm_num}
+            ,#{admInfo.adm_name}
+            ,#{admInfo.adm_cd_summary}
+            ,#{admInfo.adm_value_01}
+            ,#{admInfo.adm_value_02}
+            ,#{admInfo.adm_value_03}
+            ,#{admInfo.adm_value_04}
+            ,#{admInfo.ex_key}
+            ,#{admInfo.del_kbn}
+            ,#{admInfo.expend_01}
+            ,#{admInfo.expend_02}
+            ,#{admInfo.expend_03}
+            ,#{admInfo.expend_04}
+            ,#{admInfo.expend_05}
+            ,#{admInfo.login_user_id}
+            ,#{admInfo.login_date}
+            ,#{admInfo.update_user_id}
+            ,#{admInfo.update_date})
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl070203Mapper">
+   
+	<select id="getCourse" resultType="com.rlglsys.bean.Rlgl070203Bean">
+		SELECT
+		tb01.user_name,
+		tb01.personnel_id,
+		tb04.unit_nm,
+		tb81.course_name as course,
+		tb81.CREDIT_YEAR,
+		tb81.CREDIT credit,
+		tb81.exams_time excems_time,
+		tb63.course_support course_level
+		FROM
+		(SELECT
+		*
+		FROM
+		m_tb01_user
+		WHERE 
+		DEL_KBN = 0
+		AND
+		m_tb01_user.personnel_id = #{rlgl070203Bean.card_id})tb01
+		
+		INNER JOIN
+		m_tb04_unit as tb04
+		ON tb01.unit_no = tb04.unit_no
+		LEFT JOIN
+		m_tb81_course_exams tb81
+		ON tb01.personnel_id = tb81.USER_ID
+		LEFT JOIN
+		m_tb63_courseware tb63
+		ON tb81.COURSE_ID = tb63.COURSE_ID
+		WHERE
+		tb04.del_kbn = '0'
+		and
+		tb81.del_kbn='0'
+		and
+		tb63.del_kbn = '0'
+		<if test="rlgl070203Bean.start_year !='' and rlgl070203Bean.end_year != ''">
+		    AND
+            tb81.credit_year BETWEEN 
+            #{rlgl070203Bean.start_year}
+            AND
+            #{rlgl070203Bean.end_year}
+        </if>
+	</select>
+	<select id="getPublic_course" resultType="com.rlglsys.bean.Rlgl070203Bean">
+		SELECT
+		tb122.course_name as course,
+		tb122.credit credit,
+		tb122.credit_year,
+		tb122.exams_time excems_time
+		FROM
+		m_tb122_public_course_exams tb122
+		WHERE 
+		tb122.USER_ID = #{rlgl070203Bean.card_id}
+		and tb122.del_kbn = '0'
+		<if test="rlgl070203Bean.start_year !='' and rlgl070203Bean.end_year != ''">
+		    AND
+            tb122.credit_year BETWEEN 
+            #{rlgl070203Bean.start_year}
+            AND
+            #{rlgl070203Bean.end_year}
+        </if>
+	</select>
+	<select id="getInfo" resultType="com.rlglsys.bean.Rlgl070203Bean">
+		SELECT
+		a.PERSONNEL_ID as card_id,
+		a.USER_NAME as personnal_nm,
+		c.unit_nm as unit_nm,
+		mid(b.level,3,2) as work_name
+		FROM
+		(SELECT
+		*
+		FROM
+		m_tb01_user
+		WHERE 
+		DEL_KBN = 0
+		AND
+		m_tb01_user.PERSONNEL_ID = #{rlgl070203Bean.card_id}) a
+		LEFT JOIN
+		m_tb04_unit c
+		ON a.UNIT_NO =c.UNIT_NO
+		LEFT JOIN
+		m_tb18_personnel_professional_info b
+		ON
+		a.PERSONNEL_ID = b.PERSONNEL_ID
+	</select>
+</mapper>

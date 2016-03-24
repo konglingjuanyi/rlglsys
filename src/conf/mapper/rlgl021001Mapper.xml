@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl021001Mapper">
+    <!-- 登录一条新的记录SQL -->
+    <insert id="insertToMtb70">
+       INSERT INTO m_tb70_publication
+           (APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            PUBLICATION_CD,
+            PUBLICATION_NAME,
+            PUBLICATION_CN,
+            PUBLICATION_ISSN,
+            PUBLICATION_LEVEL,
+            CREDIT,
+            APPLY_UNIT_NO,
+            APPLY_UNIT_NM,
+            APPLY_DATE,
+            NOW_MARK,
+            END_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+            ) VALUES (
+            #{rlgl021001Bean.apply_no},
+            #{rlgl021001Bean.apply_number},
+            #{rlgl021001Bean.apply_kbn},
+            #{rlgl021001Bean.publication_cd},
+            #{rlgl021001Bean.publication_name},
+            #{rlgl021001Bean.publication_cn},
+            #{rlgl021001Bean.publication_issn},
+            #{rlgl021001Bean.publication_level},
+            #{rlgl021001Bean.credit},
+            #{rlgl021001Bean.apply_unit_no},
+            #{rlgl021001Bean.apply_unit_nm},
+            #{rlgl021001Bean.apply_date},
+            #{rlgl021001Bean.now_mark},
+            #{rlgl021001Bean.end_mark},
+            #{rlgl021001Bean.will_checkunitno},
+            #{rlgl021001Bean.ex_key},
+            #{rlgl021001Bean.del_kbn},
+            #{rlgl021001Bean.login_user_id},
+            #{rlgl021001Bean.login_date},
+            #{rlgl021001Bean.update_user_id},
+            #{rlgl021001Bean.update_date}
+            )
+    </insert>
+    <!-- 通过单位编号查询单位注册刊物数量 -->
+    <select id="getPublicationCount" resultType="int">
+      SELECT 
+        COUNT(*) 
+      FROM 
+        m_tb70_publication 
+      WHERE 
+        APPLY_UNIT_NO = #{unit_no}
+      AND 
+        DEL_KBN = '0';
+    </select>
+    <!-- 通过单位编号查询单位注册刊物数量 -->
+    <select id="getPublicationList" resultType="com.rlglsys.bean.Rlgl021001Bean">
+      SELECT 
+        M1.*,
+        M2.ADM_NAME AS publication_level_nm
+      FROM 
+        m_tb70_publication M1
+      LEFT JOIN
+        m_tb02_adm M2
+      ON
+        M2.ADM_TYPE_CD = '127'
+      AND
+        M1.publication_level = M2.ADM_NUM
+      AND
+        M2.DEL_KBN = '0'
+      WHERE 
+        M1.APPLY_UNIT_NO = #{unit_no}
+      AND 
+        M1.DEL_KBN = '0'
+      <if test="pageCount != 0 and pageCount != null">
+      LIMIT #{pageNo},#{pageCount}
+      </if>
+    </select>
+    <!-- 更新审核流程信息 -->
+    <update id="updateNoInfo">
+        UPDATE 
+            t_tb01_auto_getnum
+        SET
+            sequenceNo = sequenceNo + 1
+        WHERE
+            table_id = #{noInfo.table_id}
+        AND 
+            col_id = #{noInfo.col_id}
+    </update>
+    <!-- 登录申请信息(申请主表)-->
+    <insert id="insertToMtb07" >
+      INSERT INTO m_tb07_unitapply
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            UNIT_NO,
+            APPLY_STATUS,
+            APPLY_USER,
+            APPLY_DATE,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{applyInfo.apply_no},
+            #{applyInfo.apply_number},
+            #{applyInfo.apply_kbn},
+            #{applyInfo.unit_no},
+            #{applyInfo.apply_status},
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date},
+            #{applyInfo.check_result},
+            #{applyInfo.end_Mark},
+            #{applyInfo.now_mark},
+            #{applyInfo.will_checkunitno},
+            #{applyInfo.ex_key},
+            #{applyInfo.del_kbn},
+            #{applyInfo.login_user_id},
+            #{applyInfo.login_date},
+            #{applyInfo.update_user_id},
+            #{applyInfo.update_date}
+        )
+    </insert>
+    <!-- 删除刊物注册申请信息 -->
+    <delete id="deletePublicationApply">
+        DELETE FROM 
+          m_tb70_publication 
+        WHERE 
+          APPLY_NO = #{apply_no}
+        AND 
+          APPLY_NUMBER = #{apply_number};
+    </delete>
+    <!-- 删除单位申请信息 -->
+    <delete id="deleteUnitApply">
+        DELETE FROM 
+          m_tb07_unitapply 
+        WHERE 
+          APPLY_NO = #{apply_no}
+        AND 
+          APPLY_NUMBER = #{apply_number}
+        AND
+          APPLY_KBN = #{apply_kbn}
+    </delete>
+</mapper>

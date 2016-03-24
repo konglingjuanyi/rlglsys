@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl300101Mapper">
+
+    <select id="getUnitLike" resultType="Mtb04Unit">
+      <!-- SELECT * FROM m_tb04_unit WHERE unit_super in
+       <foreach collection="lowerUnitList" index="index" item="item" open="(" separator="," close=")">
+            #{lowerUnitList}
+       </foreach>  -->
+      <if test="sort==1 or sort =='' ">
+	       SELECT * 
+	       FROM m_tb04_unit 
+	       WHERE DEL_KBN=0 
+	       <if test="sort==1 and sort !='' ">
+	        AND UNIT_SUPER=#{unitNo}
+	        AND UNIT_ASSORT='002'
+	      </if>
+	       <if test="unit_no != ''">
+	              AND unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+	       </if>
+	       <if test="unit_nm != ''">
+	              AND unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+	       </if>
+	       LIMIT #{limit},#{offset}
+       </if>
+        <if test="sort==2 and sort !='' ">
+             SELECT * FROM (SELECT * 
+		       FROM m_tb04_unit 
+		       WHERE DEL_KBN=0 
+		        AND UNIT_SUPER in
+		       <foreach collection="unitSuperInfo" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+				UNION 
+                SELECT * FROM m_tb04_unit WHERE UNIT_NO=#{unitNo}  ) A
+                WHERE 1=1
+		       <if test="unit_no != ''">
+		              AND A.unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+		       </if>
+		       <if test="unit_nm != ''">
+		              AND A.unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+		       </if>
+		       LIMIT #{limit},#{offset}
+        </if>
+         <if test="sort==3 and sort !='' ">
+             SELECT * FROM (SELECT * 
+		       FROM m_tb04_unit 
+		       WHERE DEL_KBN=0 AND UNIT_ASSORT='002'
+		        AND UNIT_SUPER in
+		       <foreach collection="unitSuperInfo" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+				) A
+                WHERE 1=1
+		       <if test="unit_no != ''">
+		              AND A.unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+		       </if>
+		       <if test="unit_nm != ''">
+		              AND A.unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+		       </if>
+		       LIMIT #{limit},#{offset}
+        </if>
+        <if test="sort==4 and sort !='' ">
+	       SELECT * 
+	       FROM m_tb04_unit 
+	       WHERE DEL_KBN=0 
+	       AND unit_no LIKE CONCAT(#{unitNo}, '%') 
+	       <if test="unit_no != ''">
+	              AND unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+	       </if>
+	       <if test="unit_nm != ''">
+	              AND unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+	       </if>
+	       LIMIT #{limit},#{offset}
+       </if>
+    </select>
+
+    <select id="getUnitLikeCount" resultType="int">
+      <!-- SELECT * FROM m_tb04_unit WHERE unit_super in
+       <foreach collection="lowerUnitList" index="index" item="item" open="(" separator="," close=")">
+            #{lowerUnitList}
+       </foreach>  -->
+       <if test="sort==1 or sort =='' ">
+	       SELECT COUNT(*)
+	       FROM m_tb04_unit 
+	       WHERE DEL_KBN=0 
+	       <if test="sort==1 and sort !='' ">
+	        AND UNIT_SUPER=#{unitNo}
+	        AND UNIT_ASSORT='002'
+	      </if>
+	       <if test="unit_no != ''">
+	              AND unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+	       </if>
+	       <if test="unit_nm != ''">
+	              AND unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+	       </if>
+       </if>
+        <if test="sort==2 and sort !='' ">
+             SELECT COUNT(*) FROM (SELECT * 
+		       FROM m_tb04_unit 
+		       WHERE DEL_KBN=0 
+		        AND UNIT_SUPER in
+		       <foreach collection="unitSuperInfo" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+				UNION 
+                SELECT * FROM m_tb04_unit WHERE UNIT_NO=#{unitNo}  ) A
+                WHERE 1=1
+		       <if test="unit_no != ''">
+		              AND A.unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+		       </if>
+		       <if test="unit_nm != ''">
+		              AND A.unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+		       </if>
+        </if>
+         <if test="sort==3 and sort !='' ">
+             SELECT COUNT(*) FROM (SELECT * 
+		       FROM m_tb04_unit 
+		       WHERE DEL_KBN=0 AND UNIT_ASSORT='002'
+		        AND UNIT_SUPER in
+		       <foreach collection="unitSuperInfo" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+				) A
+                WHERE 1=1
+		       <if test="unit_no != ''">
+		              AND A.unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+		       </if>
+		       <if test="unit_nm != ''">
+		              AND A.unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+		       </if>
+        </if>
+        <if test="sort==4 and sort !='' ">
+	       SELECT COUNT(*)
+	       FROM m_tb04_unit 
+	       WHERE DEL_KBN=0 
+	       AND unit_no LIKE CONCAT(#{unitNo}, '%') 
+	       <if test="unit_no != ''">
+	              AND unit_no  LIKE CONCAT('%', #{unit_no}, '%')
+	       </if>
+	       <if test="unit_nm != ''">
+	              AND unit_nm  LIKE CONCAT('%', #{unit_nm}, '%')
+	       </if>
+       </if>
+    </select>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010701Mapper">
+    <!-- 获得单位名称 -->
+    <select id="getUnitNM" resultType="String">
+        SELECT
+		    UNIT_NM
+		FROM
+		    m_tb04_unit
+		WHERE
+		    DEL_KBN = '0'
+		AND UNIT_NO = #{unit_no}
+    </select>
+    <!-- 获得人员信息 -->
+    <select id="getPersonInfo" resultType="com.rlglsys.entity.Mtb12Personnel">
+        SELECT
+		    *
+		FROM
+		    m_tb12_personnel
+		WHERE
+		    DEL_KBN = '0'
+		AND PERSONNEL_ID = #{person_no}
+		AND PERSONNEL_UNIT = #{unit_no}
+    </select>
+    <!-- 检索数据是否存在 -->
+    <select id="getExistPersonInfo" resultType="int">
+        SELECT
+		    COUNT(*)
+		FROM
+		    m_tb85_experts_bank_apply_detail
+		WHERE
+		    DEL_KBN = '0'
+		AND PERSONAL_ID = #{person_id}
+		AND EXPERTSBANK_LEVEL = #{level}
+		AND CHECK_RESULT = '001'
+    </select>
+    <!-- 保存不在岗信息 -->
+    <insert id="insertTb85Info"  parameterType="com.rlglsys.entity.Mtb85ExpertsBankApplyDetail">
+        INSERT INTO m_tb85_experts_bank_apply_detail (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            UNIT_NO,
+            UNIT_NM,
+            EXPERTSBANK_KIND,
+            EXPERTSBANK_LEVEL,
+            RESEARCH_DIRECTION1,
+            RESEARCH_DIRECTION2,
+            SUBJECT1,
+            SUBJECT2,
+            START_TIME,
+            END_TIME,
+            JOBPERFORMANCE,
+            APPLY_TIME,
+            NOW_MARK,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES (
+            #{mtb85.apply_no},
+			#{mtb85.apply_number},
+			#{mtb85.apply_kbn},
+			#{mtb85.personal_id},
+			#{mtb85.personal_nm},
+			#{mtb85.unit_no},
+			#{mtb85.unit_nm},
+			#{mtb85.expertsbank_kind},
+			#{mtb85.expertsbank_level},
+			#{mtb85.research_direction1},
+			#{mtb85.research_direction2},
+			#{mtb85.subject1},
+			#{mtb85.subject2},
+			#{mtb85.start_time},
+			#{mtb85.end_time},
+			#{mtb85.jobperformance},
+			#{mtb85.apply_time},
+			#{mtb85.now_mark},
+			0,
+			#{mtb85.login_user_id},
+			#{mtb85.login_date}, 
+			#{mtb85.login_user_id},
+			#{mtb85.login_date}
+        )
+    </insert>
+    
+</mapper>

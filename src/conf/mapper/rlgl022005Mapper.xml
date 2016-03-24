@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022005Mapper">
+    <!-- 查询该分类用户没有选择的课件 -->
+    <select id="courseTemporaryList" resultType="com.rlglsys.bean.Rlgl022005Bean" >
+        SELECT  *  FROM m_tb63_courseware WHERE  
+           COURSE_ID 
+           IN
+           (SELECT COURSE_ID FROM m_tb79_course_temporary WHERE USER_ID=#{rlgl022005Bean.user_id})
+	</select>
+    <insert id="insertTemporary" parameterType="int">
+          INSERT INTO m_tb79_course_temporary(
+					COURSE_ID,	      
+					COURSE_NAME,     
+					COURSE_OPT_TIME,
+					USER_ID,        
+					EX_KEY,        
+					DEL_KBN,       
+					EXPEND_01,     
+					EXPEND_02,     
+					EXPEND_03,     
+					EXPEND_04,     
+					EXPEND_05,     
+					LOGIN_USER_ID,
+					LOGIN_DATE,   
+					UPDATE_USER_ID,
+					UPDATE_DATE	  
+		   )
+		   VALUES 
+		  (
+					#{mtb79CourseTemporary.course_id},	       
+					#{mtb79CourseTemporary.course_name},       
+					#{mtb79CourseTemporary.course_opt_time },  
+					#{mtb79CourseTemporary.user_id	},         
+					#{mtb79CourseTemporary.ex_key	},           
+					#{mtb79CourseTemporary.del_kbn	 },        
+					#{mtb79CourseTemporary.expend_01	 },      
+					#{mtb79CourseTemporary.expend_02	 },      
+					#{mtb79CourseTemporary.expend_03	 },      
+					#{mtb79CourseTemporary.expend_04	 },      
+					#{mtb79CourseTemporary.expend_05	 },      
+					#{mtb79CourseTemporary.login_user_id	  }, 
+					#{mtb79CourseTemporary.login_date	 },      
+					#{mtb79CourseTemporary.update_user_id	},   
+					#{mtb79CourseTemporary.update_date}	       
+           )
+    </insert>
+    <delete id="deleteCourseTemporary" parameterType="int">
+        DELETE FROM m_tb79_course_temporary WHERE USER_ID=#{rlgl022005Bean.user_id} AND course_id=#{rlgl022005Bean.course_id}
+    </delete>
+</mapper>

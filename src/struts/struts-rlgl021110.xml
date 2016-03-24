@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl021110" extends="rlgl" namespace="/">
+        <action name="rlgl021110Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021110InitAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021110.jsp</result>
+        </action>
+        
+          <action name="rlgl400102Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl400102InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl400102.jsp</result>
+        </action>
+        
+        <action name="rlgl021110Audit"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021110AuditAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021130.jsp</result>
+        </action>
+         <action name="rlgl021110Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021110SearchAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021110.jsp</result>
+        </action>
+        <action name="rlgl021111Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021111InitAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021111.jsp</result>
+        </action>
+         <action name="rlgl021111Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021111SearchAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021111.jsp</result>
+        </action>
+        <action name="rlgl021111Audit"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021111AuditAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021115.jsp</result>
+        </action>
+        <action name="rlgl021117Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021117InitAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021117.jsp</result>
+        </action>
+        <action name="rlgl021117Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021117SearchAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021117.jsp</result>
+        </action>
+        <action name="rlgl021117Register"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021117RegisterAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021118.jsp</result>
+        </action>
+        <action name="rlgl021117SaveRegister"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021117SaveRegisterAction" method="execute">
+             <result name="init" type="redirectAction">
+			  <param name="actionName">rlgl021117Search</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+        </action>
+         <action name="rlgl021115Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021115SearchAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021115.jsp</result>
+        </action>
+         <action name="rlgl021116Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021116InitAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021116.jsp</result>
+        </action>
+        <action name="rlgl021116AuditRegister"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021116AuditRegisterAction" method="execute">
+            <result name="Pinit" type="redirectAction">
+			  <param name="actionName">rlgl021111Audit</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+            <result name="Einit" type="redirectAction">
+			  <param name="actionName">rlgl021110Audit</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+        </action>
+        <action name="rlgl021116AuditBack"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021116AuditBackAction" method="execute">
+           <result name="Pinit" type="redirectAction">
+			  <param name="actionName">rlgl021111Audit</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+            <result name="Einit" type="redirectAction">
+			  <param name="actionName">rlgl021110Audit</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+        </action>
+        <action name="rlgl021130Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021130SearchAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021130.jsp</result>
+        </action>
+        
+        
+    </package>
+</struts>
+

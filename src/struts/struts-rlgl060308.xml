@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl060308" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl060308Init"
+        class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl060308InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl060308.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+       <action name="rlgl060308Search"
+        class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl060308SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl060308.jsp</result>
+       </action>
+       <!-- 登录处理 -->
+       <action name="rlgl060308Make"
+        class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl060308MakeAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl060308.jsp</result>
+       </action>
+       <!-- Excel出力处理 -->
+       <action name="rlgl060308Export" class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl060308ExportAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl060308.jsp</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel;charset=utf-8</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+            </result>
+        </action>
+    </package>
+</struts>
+

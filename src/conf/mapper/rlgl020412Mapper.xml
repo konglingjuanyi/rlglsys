@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020412Mapper">
+    <!-- 件数取得SQL -->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb07_unitapply
+        WHERE 
+            DEL_KBN = '0'
+        AND APPLY_KBN = '059'
+        AND UNIT_NO = #{unit_no}
+    </select>
+    <!-- 申请信息取得SQL -->
+    <select id="search" resultType="com.rlglsys.entity.UnitApply">
+       SELECT m1.PROJECT_NM,m1.PROJECT_LIABLE_NM,m.*
+        FROM 
+        (select * from m_tb07_unitapply 
+        where 
+        DEL_KBN=0 
+        AND APPLY_KBN = '059' 
+        AND UNIT_NO = #{unit_no}
+        ) as m
+        left join m_tb97_interim_project_apply m1
+        on m.apply_no = m1.apply_id
+        <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!-- 插入临时项目申请明细信息 -->
+    <insert id="insertTb97Info">
+        INSERT INTO m_tb97_interim_project_apply(
+             APPLY_ID
+            ,USER_ID
+            ,UNIT_NO
+            ,PROJECT_ID
+            ,PROJECT_LEVEL
+            ,PROJECT_NM
+            ,SUBJECT_TWO
+            ,SUBJECT_THREE
+            ,POSTALCODE
+            ,DECLARE_DATE
+            ,PROJECT_LIABLE_NM
+            ,PROJECT_LIABLE_POST
+            ,PROJECT_LIABLE_UNIT
+            ,PROJECT_LIABLE_ADDRESS
+            ,PROJECT_LIABLE_PHONE
+            ,PROJECT_LIABLE_POSTALCODE
+            ,CONDUCT_PATTERN
+            ,CONDUCT_START_DATE
+            ,CONDUCT_END_DATE
+            ,CONDUCT_TERM
+            ,EXAMINE_PATTERN
+            ,EDUCATION_OBJECT
+            ,PROTOCOL_RECRUIT_OBJECT
+            ,EDUCATION_ALL_PERIOD
+            ,PEOFESS_THEORY_PERIOD
+            ,EXPERIMENT_PERIOD
+            ,CONDUCT_PLACE
+            ,PROTOCOL_CONFER_CREDIT
+            ,DIRECT_UNIT
+            ,DIRECT_UNIT_PHONE
+            ,DIRECT_UNIT_CONTACTS
+            ,DECLARE_UNIT
+            ,DECLARE_UNIT_PHONE
+            ,DECLARE_UNIT_CONTACTS
+            ,REMARK
+            ,EX_KEY
+            ,APPLY_KBN
+            ,NOW_MARK
+            ,END_MARK
+            ,WILL_CHECKUNITNO
+            ,OPEN_KBN
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{mtb97.apply_id}
+            ,#{mtb97.user_id}
+            ,#{mtb97.unit_no}
+            ,#{mtb97.project_id}
+            ,#{mtb97.project_level}
+            ,#{mtb97.project_nm}
+            ,#{mtb97.subject_two}
+            ,#{mtb97.subject_three}
+            ,#{mtb97.postalcode}
+            ,#{mtb97.declare_date}
+            ,#{mtb97.project_liable_nm}
+            ,#{mtb97.project_liable_post}
+            ,#{mtb97.project_liable_unit}
+            ,#{mtb97.project_liable_address}
+            ,#{mtb97.project_liable_phone}
+            ,#{mtb97.project_liable_postalcode}
+            ,#{mtb97.conduct_pattern}
+            ,#{mtb97.conduct_start_date}
+            ,#{mtb97.conduct_end_date}
+            ,#{mtb97.conduct_term}
+            ,#{mtb97.examine_pattern}
+            ,#{mtb97.education_object}
+            ,#{mtb97.protocol_recruit_object}
+            ,#{mtb97.education_all_period}
+            ,#{mtb97.profess_theory_period}
+            ,#{mtb97.experiment_period}
+            ,#{mtb97.conduct_place}
+            ,#{mtb97.protocol_confer_credit}
+            ,#{mtb97.direct_unit}
+            ,#{mtb97.direct_unit_phone}
+            ,#{mtb97.direct_unit_contacts}
+            ,#{mtb97.declare_unit}
+            ,#{mtb97.declare_unit_phone}
+            ,#{mtb97.declare_unit_contacts}
+            ,#{mtb97.remark}
+            ,'0'
+            ,#{mtb97.apply_kbn}
+            ,#{mtb97.now_mark}
+            ,#{mtb97.end_mark}
+            ,#{mtb97.will_checkunitno}
+            ,#{mtb97.open_kbn}
+            ,#{mtb97.login_user_id}
+            ,#{mtb97.login_date}
+            ,#{mtb97.update_user_id}
+            ,#{mtb97.update_date})
+    </insert>
+    <!-- 获得申请信息 -->
+    <select id="getMtb97Info" resultType="com.rlglsys.entity.Mtb97InterimProjectApply">
+        SELECT
+            *
+        FROM
+            m_tb97_interim_project_apply
+        WHERE
+            DEL_KBN = '0'
+        AND APPLY_KBN = #{apply_kbn}
+        AND APPLY_ID = #{apply_id}
+    </select>
+    <!-- 更新申请信息 -->
+    <update id="updateMtb97Info">
+        UPDATE m_tb97_interim_project_apply
+        SET
+            PROJECT_ID = #{mtb97.project_id}
+            ,NOW_MARK = #{mtb97.now_mark}
+            ,WILL_CHECKUNITNO = #{mtb97.will_checkunitno}
+            ,CHECK_RESULT = #{mtb97.check_result}
+            ,UPDATE_USER_ID = #{mtb97.update_user_id}
+            ,UPDATE_DATE = #{mtb97.update_date}
+       WHERE
+            APPLY_ID = #{mtb97.apply_id}
+    </update>
+</mapper>

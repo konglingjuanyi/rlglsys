@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020803Mapper">
+    <!-- 证书类别信息取得 -->
+  <select id="getCertInfo" resultType="com.rlglsys.entity.Mtb64CertificateDetails">
+        SELECT
+            *
+        FROM m_tb64_certificate_details
+        WHERE 
+            DEL_KBN = '0'
+    </select>
+    <!-- 证书类别信息取得 -->
+  <select id="getCert" resultType="com.rlglsys.entity.Mtb64CertificateDetails">
+        SELECT
+            *
+        FROM m_tb64_certificate_details
+        WHERE 
+            DEL_KBN = '0'
+        AND CERT_NO = #{cert_no}
+    </select>
+    <!-- 职称信息取得SQL -->
+    <select id="getTb18Info" resultType="com.rlglsys.entity.Mtb18PersonnelProfessionalInfo">
+        SELECT *
+        FROM m_tb18_personnel_professional_info
+        WHERE 
+            DEL_KBN = '0'
+            AND PERSONNEL_ID = #{personnelId}
+        order by GET_TIME
+        limit 0,1
+    </select>
+    <!--人员基本信息-->
+    <select id="getPersonnel" resultType="Mtb12Personnel">
+        SELECT *
+        FROM m_tb12_personnel
+        WHERE personnel_id = #{personnelId}
+          AND DEL_KBN = '0'
+    </select>
+    <!--人员基本信息-执业资格信息-->
+    <select id="getPracti" resultType="Mtb19PersonnelPractitionersInfo">
+        SELECT *
+        FROM m_tb19_personnel_practitioners_info
+        WHERE PERSONNEL_ID = #{personnelId}
+          AND DEL_KBN = '0'
+        ORDER BY ISSUE_TIME DESC
+        limit 0,1
+    </select>
+    <!--人员基本信息-执业范围信息-->
+    <select id="getPractice" resultType="Mtb77PersonnelPracticeInfo">
+        SELECT *
+        FROM m_tb77_personnel_practice_info
+        WHERE PERSONNEL_ID = #{personnelId}
+          AND DEL_KBN = '0'
+        ORDER BY ISSUE_TIME DESC
+        limit 0,1
+    </select>
+    <!--分类学分取得-->
+    <select id="getTb66Info" resultType="Mtb66TotalCredit">
+        SELECT *
+        FROM m_tb66_total_credit
+        WHERE PERSONAL_ID = #{personnelId}
+          AND YEAR = #{year}
+          AND DEL_KBN = '0'
+        limit 0,1
+    </select>
+    
+    <!--必修课信息取得-->
+    <select id="getTb63Info" resultType="com.rlglsys.entity.Mtb63CourseWare">
+        SELECT *
+        FROM m_tb63_courseware
+        WHERE DEL_KBN = '0'
+          <if test="endDate != ''">
+          AND <![CDATA[BEGIN_DATE < #{endDate}]]>
+          </if>
+          <if test="startDate != ''">
+          AND END_DATE > #{startDate}
+          </if>
+          AND (SUIT_PERSON is null OR SUIT_PERSON = '' OR SUIT_PERSON LIKE '%${area}%' OR
+          SUIT_PERSON_1 is null OR SUIT_PERSON_1 = '' OR SUIT_PERSON_1 LIKE '%${prac}%')
+          AND REPLACE(SUIT_AREA,",","") = #{suitArea}
+          AND BIXIU_FLAG = '01'
+    </select>
+    
+    <!--学分信息取得-->
+    <select id="getTb56Info" resultType="Mtb56creditreportingdetail">
+        SELECT *
+        FROM m_tb56_credit_reporting_detail
+        WHERE PERSONAL_ID = #{personnelId}
+          AND NAVI = 'navi055'
+          AND EXPAND1 = #{courseId}
+          AND CHECK_RESULT = '002'
+          AND DEL_KBN = '0'
+        ORDER BY APPLY_NO DESC
+        limit 0,1
+    </select>
+    
+    <!--申请信息取得-->
+    <select id="getApplyInfo" resultType="com.rlglsys.entity.Mtb65CertificateApply">
+        SELECT *
+        FROM m_tb65_certificate_apply
+        WHERE PERSONNELID = #{personnelId}
+          AND CERT_NO = #{certNo}
+          AND DEL_KBN = '0'
+        order by APPLY_NUMBER DESC
+        limit 0,1
+    </select>
+    
+    <insert id="insert65Info" parameterType="com.rlglsys.entity.Mtb65CertificateApply">
+        INSERT INTO m_tb65_certificate_apply
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            CERT_NO,
+            PERSONNELID,
+            PERSONNELNM,
+            UNITNO,
+            UNITNM,
+            POSTTITLE,
+            BASEINFOCHECK,
+            PRACTICHECK,
+            PRACTIDATE,
+            POSTTITLEDATE,
+            CHECKSTARTDATE,
+            CHECKENDDATE,
+            CREDIT1,
+            PERIOD1,
+            CREI1,
+            CREII1,
+            SUMCRE1,
+            CREDIT2,
+            PERIOD2,
+            CREI2,
+            CREII2,
+            SUMCRE2,
+            CREDIT3,
+            PERIOD3,
+            CREI3,
+            CREII3,
+            SUMCRE3,
+            CREDIT4,
+            PERIOD4,
+            CREI4,
+            CREII4,
+            SUMCRE4,
+            CREDIT5,
+            PERIOD5,
+            CREI5,
+            CREII5,
+            SUMCRE5,
+            CREDITCHECK,
+            COURSECHECK,
+            APPLY_DATE,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb65Info.apply_no},
+            #{tb65Info.apply_number},
+            #{tb65Info.cert_no},
+            #{tb65Info.personnelId},
+            #{tb65Info.personnelNm},
+            #{tb65Info.unitNo},
+            #{tb65Info.unitNm},
+            #{tb65Info.postTitle},
+            #{tb65Info.baseinfoCheck},
+            #{tb65Info.practiCheck},
+            #{tb65Info.practiDate},
+            #{tb65Info.postTitleDate},
+            #{tb65Info.checkStartDate},
+            #{tb65Info.checkEndDate},
+            #{tb65Info.credit1},
+            #{tb65Info.period1},
+            #{tb65Info.creI1},
+            #{tb65Info.creII1},
+            #{tb65Info.sumcre1},
+            #{tb65Info.credit2},
+            #{tb65Info.period2},
+            #{tb65Info.creI2},
+            #{tb65Info.creII2},
+            #{tb65Info.sumcre2},
+            #{tb65Info.credit3},
+            #{tb65Info.period3},
+            #{tb65Info.creI3},
+            #{tb65Info.creII3},
+            #{tb65Info.sumcre3},
+            #{tb65Info.credit4},
+            #{tb65Info.period4},
+            #{tb65Info.creI4},
+            #{tb65Info.creII4},
+            #{tb65Info.sumcre4},
+            #{tb65Info.credit5},
+            #{tb65Info.period5},
+            #{tb65Info.creI5},
+            #{tb65Info.creII5},
+            #{tb65Info.sumcre5},
+            #{tb65Info.creditCheck},
+            #{tb65Info.courseCheck},
+            #{tb65Info.apply_date},
+            '001',
+            #{tb65Info.end_mark},
+            #{tb65Info.now_mark},
+            #{tb65Info.will_checkunitno},
+            '1',
+            '0',
+            #{tb65Info.personnelId},
+            #{tb65Info.apply_date},
+            #{tb65Info.personnelId},
+            #{tb65Info.apply_date}
+        )
+    </insert>
+    
+    <insert id="insert75Info" parameterType="com.rlglsys.entity.Mtb75CourseInfo">
+        INSERT INTO m_tb75_courseinfo
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            COURSE_NO,
+            COURSE_NAME,
+            COURSE_RESULT,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb75Info.apply_no},
+            #{tb75Info.apply_number},
+            #{tb75Info.course_no},
+            #{tb75Info.course_name},
+            #{tb75Info.course_result},
+            '1',
+            '0',
+            #{tb75Info.login_user_id},
+            #{tb75Info.login_date},
+            #{tb75Info.update_user_id},
+            #{tb75Info.update_date}
+        )
+    </insert>
+</mapper>

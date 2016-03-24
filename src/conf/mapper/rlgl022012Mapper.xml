@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022012Mapper">
+    <!-- 查询余额-->
+    <select id="getOverMoney" resultType="com.rlglsys.bean.Rlgl022012Bean" >
+        SELECT * FROM m_tb105_prepay_charge WHERE CLUM001=#{rlgl022012Bean.clum001}
+	</select>
+	 <!-- 查询预付费记录-->
+    <select id="getprepayRecord" resultType="com.rlglsys.bean.Rlgl022013Bean" >
+        SELECT * FROM m_tb107_prepay_record WHERE 1=1
+        <if test="rlgl022013Bean.adminFlag != '1' and rlgl022013Bean.adminFlag != 1">
+           AND CLUM001=#{rlgl022013Bean.clum001}
+           <if test="rlgl022013Bean.clum003 != '' and rlgl022013Bean.clum003 != null">
+           AND (
+           clum003 in (SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{rlgl022013Bean.clum003}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+           or clum003 LIKE CONCAT('', #{rlgl022013Bean.clum003}, '%')
+           )
+        </if>
+        </if>
+        <if test="rlgl022013Bean.startDate != 0 and rlgl022013Bean.startDate != null">
+           <![CDATA[  AND CLUM009 >=#{rlgl022013Bean.startDate} ]]>
+        </if>
+        <if test="rlgl022013Bean.endDate != 0 and rlgl022013Bean.endDate != null">
+           <![CDATA[   AND CLUM009 <=#{rlgl022013Bean.endDate}]]>
+        </if>
+        <if test="rlgl022013Bean.paymentWay != '' and rlgl022013Bean.paymentWay != null">
+           AND CLUM013 =#{rlgl022013Bean.paymentWay}
+           <if test="rlgl022013Bean.paymentWay == '001'">
+           AND CLUM016=#{rlgl022013Bean.clum016}
+           </if>
+        </if>
+        order by  clum009 desc
+        <if test="rlgl022013Bean.pageCount != 0 and rlgl022013Bean.pageCount != null">
+           LIMIT #{rlgl022013Bean.pageNo},#{rlgl022013Bean.pageCount}
+        </if>
+	</select>
+	 <!-- 查询预付费记录条数-->
+    <select id="getCountPrepayRecord" resultType="int" >
+        SELECT count(*) FROM m_tb107_prepay_record WHERE 1=1
+        <if test="rlgl022013Bean.adminFlag != '1' and rlgl022013Bean.adminFlag != 1">
+           AND CLUM001=#{rlgl022013Bean.clum001}
+           <if test="rlgl022013Bean.clum003 != '' and rlgl022013Bean.clum003 != null">
+           AND (
+           clum003 in (SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{rlgl022013Bean.clum003}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+           or clum003 LIKE CONCAT('', #{rlgl022013Bean.clum003}, '%')
+           )
+        </if>
+        </if>
+        <if test="rlgl022013Bean.startDate != 0 and rlgl022013Bean.startDate != null">
+           <![CDATA[  AND CLUM009 >=#{rlgl022013Bean.startDate} ]]>
+        </if>
+        <if test="rlgl022013Bean.endDate != 0 and rlgl022013Bean.endDate != null">
+           <![CDATA[   AND CLUM009 <=#{rlgl022013Bean.endDate}]]>
+        </if>
+        <if test="rlgl022013Bean.paymentWay != '' and rlgl022013Bean.paymentWay != null">
+           AND CLUM013 =#{rlgl022013Bean.paymentWay}
+           <if test="rlgl022013Bean.paymentWay == '001'">
+           AND CLUM016=#{rlgl022013Bean.clum016}
+           </if>
+        </if>
+	</select>
+	<!--修改充值余额  -->
+	<update id="updateOverMoney" parameterType="int">
+		UPDATE M_TB105_PREPAY_CHARGE SET CLUM006=#{rlgl022012Bean.clum006} WHERE CLUM001=#{rlgl022012Bean.clum001};
+	</update>
+	<!--核实后修改充值余额  -->
+	<update id="updateConfimOverMoney" parameterType="int">
+		UPDATE M_TB105_PREPAY_CHARGE SET CLUM006=#{rlgl022012Bean.clum006} WHERE CLUM001=#{rlgl022012Bean.clum001};
+	</update>
+	<!--核实  -->
+	<update id="updateConfimMoney" parameterType="int">
+		UPDATE m_tb107_prepay_record SET CLUM008=#{rlgl022013Bean.clum008},CLUM014=#{rlgl022013Bean.clum014} WHERE CLUM015=#{rlgl022013Bean.clum015};
+	</update>
+	<!--修改缴费记录 -->
+	<update id="updateOnlineMoney" parameterType="int">
+		UPDATE m_tb107_prepay_record SET CLUM016=#{rlgl022013Bean.clum016},CLUM014=#{rlgl022013Bean.clum014} WHERE CLUM015=#{rlgl022013Bean.clum015};
+	</update>
+    <!--插入充值信息 -->
+	<insert id="insertOverMoney" parameterType="int">
+	INSERT INTO M_TB105_PREPAY_CHARGE (
+			CLUM001,
+			CLUM002,
+			CLUM003,
+			CLUM004,
+			CLUM005,
+			CLUM006,
+			EX_KEY  ,           
+			DEL_KBN,            
+			EXPEND_01 ,         
+			EXPEND_02 ,         
+			EXPEND_03  ,        
+			EXPEND_04 ,         
+			EXPEND_05 ,
+			PAY_DATE ,    
+			LOGIN_USER_ID     , 
+			LOGIN_DATE ,        
+			UPDATE_USER_ID  ,   
+			UPDATE_DATE      
+	) VALUES
+	(
+			#{rlgl022012Bean.clum001},
+			#{rlgl022012Bean.clum002},
+			#{rlgl022012Bean.clum003},
+			#{rlgl022012Bean.clum004},
+			#{rlgl022012Bean.clum005},
+			#{rlgl022012Bean.clum006},
+			#{rlgl022012Bean.ex_key}  ,           
+			#{rlgl022012Bean.del_kbn},            
+			#{rlgl022012Bean.expend_01} ,         
+			#{rlgl022012Bean.expend_02 },         
+			#{rlgl022012Bean.expend_03}  ,        
+			#{rlgl022012Bean.expend_04} ,         
+			#{rlgl022012Bean.expend_05} ,
+            #{rlgl022012Bean.PayDate} ,        
+			#{rlgl022012Bean.login_user_id}     , 
+			#{rlgl022012Bean.login_date} ,        
+			#{rlgl022012Bean.update_user_id}  ,   
+			#{rlgl022012Bean.update_date}  
+	)
+	
+	</insert>
+	<!--插入记录信息 -->
+	<insert id="insertPrepayRecord" parameterType="int">
+	INSERT INTO M_TB107_PREPAY_RECORD (
+			CLUM001,
+			CLUM002,
+			CLUM003,
+			CLUM004,
+			CLUM005,
+			CLUM006,
+			CLUM007,
+			CLUM008,
+			CLUM009,
+			CLUM010,
+			CLUM011,
+			CLUM012,
+			CLUM013,
+			CLUM014,
+			CLUM015,
+			CLUM016,
+			EX_KEY  ,           
+			DEL_KBN,            
+			EXPEND_01 ,         
+			EXPEND_02 ,         
+			EXPEND_03  ,        
+			EXPEND_04 ,         
+			EXPEND_05 ,         
+			LOGIN_USER_ID     , 
+			LOGIN_DATE ,        
+			UPDATE_USER_ID  ,   
+			UPDATE_DATE      
+	) VALUES
+	(
+			#{rlgl022013Bean.clum001},
+			#{rlgl022013Bean.clum002},
+			#{rlgl022013Bean.clum003},
+			#{rlgl022013Bean.clum004},
+			#{rlgl022013Bean.clum005},
+			#{rlgl022013Bean.clum006},
+			#{rlgl022013Bean.clum007},
+			#{rlgl022013Bean.clum008},
+			#{rlgl022013Bean.clum009},
+			#{rlgl022013Bean.clum010},
+			#{rlgl022013Bean.clum011},
+			#{rlgl022013Bean.clum012},
+			#{rlgl022013Bean.clum013},
+			#{rlgl022013Bean.clum014},
+			#{rlgl022013Bean.clum015},
+			#{rlgl022013Bean.clum016},
+			#{rlgl022013Bean.ex_key}  ,           
+			#{rlgl022013Bean.del_kbn},            
+			#{rlgl022013Bean.expend_01} ,         
+			#{rlgl022013Bean.expend_02 },         
+			#{rlgl022013Bean.expend_03}  ,        
+			#{rlgl022013Bean.expend_04} ,         
+			#{rlgl022013Bean.expend_05} ,         
+			#{rlgl022013Bean.login_user_id}     , 
+			#{rlgl022013Bean.login_date} ,        
+			#{rlgl022013Bean.update_user_id}  ,   
+			#{rlgl022013Bean.update_date}  
+	)
+	
+	</insert>
+	
+	<!--插入打印发票信息 -->
+	<insert id="insertApplyInvoice" parameterType="int">
+	INSERT INTO m_tb109_apply_invoice (
+			CLUM001,
+			CLUM002,
+			CLUM003,
+			CLUM004,
+			CLUM005,
+			CLUM006,
+			CLUM007,
+			CLUM008,
+			CLUM009,
+			CLUM010,
+			EX_KEY  ,           
+			DEL_KBN,            
+			EXPEND_01 ,         
+			EXPEND_02 ,         
+			EXPEND_03  ,        
+			EXPEND_04 ,         
+			EXPEND_05 ,         
+			LOGIN_USER_ID     , 
+			LOGIN_DATE ,        
+			UPDATE_USER_ID  ,   
+			UPDATE_DATE      
+	) VALUES
+	(
+			#{mtb109ApplyInvoice.clum001},
+			#{mtb109ApplyInvoice.clum002},
+			#{mtb109ApplyInvoice.clum003},
+			#{mtb109ApplyInvoice.clum004},
+			#{mtb109ApplyInvoice.clum005},
+			#{mtb109ApplyInvoice.clum006},
+			#{mtb109ApplyInvoice.clum007},
+			#{mtb109ApplyInvoice.clum008},
+			#{mtb109ApplyInvoice.clum009},
+			#{mtb109ApplyInvoice.clum010},
+			#{mtb109ApplyInvoice.ex_key}  ,           
+			#{mtb109ApplyInvoice.del_kbn},            
+			#{mtb109ApplyInvoice.expend_01} ,         
+			#{mtb109ApplyInvoice.expend_02 },         
+			#{mtb109ApplyInvoice.expend_03}  ,        
+			#{mtb109ApplyInvoice.expend_04} ,         
+			#{mtb109ApplyInvoice.expend_05} ,         
+			#{mtb109ApplyInvoice.login_user_id}     , 
+			#{mtb109ApplyInvoice.login_date} ,        
+			#{mtb109ApplyInvoice.update_user_id}  ,   
+			#{mtb109ApplyInvoice.update_date}  
+	)
+	
+	</insert>
+	
+</mapper>

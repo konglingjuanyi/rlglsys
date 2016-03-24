@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl010109" extends="rlgl" namespace="/">
+		<action name="rlgl010109Init"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109InitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl010109.jsp</result>
+		</action>
+		<action name="rlgl010109Search"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109SearchAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010109.jsp</result>
+		</action>
+		<action name="rlgl010109EscrowUnit"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109EscrowUnitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010109.jsp</result>
+		</action>
+		<action name="rlgl010109AddOperator"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109AddOperatorAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010107.jsp</result>
+		</action>
+		<action name="rlgl010109Change"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109ChangeAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010107.jsp</result>
+		</action>
+		<action name="rlgl010109Save"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109SaveAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010107.jsp</result>
+		</action>
+		<action name="rlgl010109Delete"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109DeleteUserAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010107.jsp</result>
+		</action>
+		<action name="rlgl010109DelEscrowUnit"
+			class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010109DelEscrowUnitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010109.jsp</result>
+		</action>
+		
+	</package>
+</struts>

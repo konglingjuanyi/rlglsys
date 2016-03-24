@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl021120Mapper">
+
+<!--依据单位编号得到通过审核的院内学分项目信息 -->
+<select id="getPassProjectByUnitNo" resultType="com.rlglsys.entity.Mtb91HospitalCreditProject" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+  select * from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+  and UNIT_NO =  #{mtb91Info.unit_no}
+  and AUDIT_STATUS = '1' 
+  <if test="mtb91Info.project_nm !=null and mtb91Info.project_nm !=''">
+   and PROJECT_NM = #{mtb91Info.project_nm}
+  </if>
+ <if test="mtb91Info.project_no !=null and mtb91Info.project_no !=''">
+   and PROJECT_NO = #{mtb91Info.project_no}
+  </if>
+  <if test="mtb91Info.pageCount != null and  mtb91Info.pageCount != 0">
+       LIMIT #{mtb91Info.pageNo},#{mtb91Info.pageCount}
+   </if>
+</select>
+<!-- 根据单位编号得到单位下通过审核的院内学分项目数 -->
+<select id="getPassCountByUintNo" resultType="int" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject"> 
+  select count(*) from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+  and UNIT_NO =  #{mtb91Info.unit_no}
+  and AUDIT_STATUS = '1'
+  <if test="mtb91Info.project_nm !=null and mtb91Info.project_nm !=''">
+   and PROJECT_NM = #{mtb91Info.project_nm}
+  </if>
+</select>
+
+<!--依据申请番号和单位编号来得到通过审核的院内学分项目信息  ,授予学分之前进行调用-->
+<select id="getNameAndCreditInfo" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject"  resultType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+select * from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+  and UNIT_NO =  #{mtb91Info.unit_no}
+  and AUDIT_STATUS = '1'
+  and ARRLY_NO =#{mtb91Info.arrly_no}
+</select>
+
+<!-- 得到该项目下所有的人员信息 -->
+<select id="getPeopleInfo" resultType="com.rlglsys.bean.Rlgl021105Bean">
+  select A.*, B.ADM_NAME as juese_nm 
+  from m_tb92_hospital_credit_apply as A left join m_tb02_adm as B 
+  on A.apply_item = b.ADM_NUM and B.ADM_TYPE_CD ='217'
+  where A.DEL_KBN = '0'
+  and A.PERSONAL_UNIT_NO = #{rlgl021105Bean.personal_unit_no}
+  <if test=" rlgl021105Bean.arrly_no!=null and rlgl021105Bean.arrly_no !=''">
+   and A.ARRLY_NO = #{rlgl021105Bean.arrly_no}
+  </if>
+   <if test="rlgl021105Bean.personal_nm !=null and rlgl021105Bean.personal_nm !=''">
+  and A.PERSONAL_NM = #{rlgl021105Bean.personal_nm}
+  </if>
+  <if test="rlgl021105Bean.personal_card_id !=null and rlgl021105Bean.personal_card_id !=''">
+   and A.PERSONAL_CARD_ID = #{rlgl021105Bean.personal_card_id}
+  </if>
+ <if test="rlgl021105Bean.pageCount != 0 and rlgl021105Bean.pageCount != null">
+      LIMIT #{rlgl021105Bean.pageNo},#{rlgl021105Bean.pageCount}
+ </if>  
+</select>
+<!-- 得到项目下签到的人数 -->
+<select id="getPeopleCount" resultType="int" parameterType="com.rlglsys.bean.Rlgl021105Bean">
+select count(*) from m_tb92_hospital_credit_apply
+  where DEL_KBN = '0'
+  and PERSONAL_UNIT_NO = #{rlgl021105Bean.personal_unit_no}
+  <if test=" rlgl021105Bean.arrly_no!=null and rlgl021105Bean.arrly_no !=''">
+   and ARRLY_NO = #{rlgl021105Bean.arrly_no}
+  </if>
+  <if test="rlgl021105Bean.personal_nm !=null and rlgl021105Bean.personal_nm !=''">
+  and PERSONAL_NM = #{rlgl021105Bean.personal_nm}
+  </if>
+  <if test="rlgl021105Bean.personal_card_id !=null and rlgl021105Bean.personal_card_id !=''">
+   and PERSONAL_CARD_ID = #{rlgl021105Bean.personal_card_id}
+  </if>
+</select>
+<!-- 查询数据是否存在 -->
+<select id="getCunZai" resultType="int" parameterType="com.rlglsys.entity.Mtb101HospitalCredit">
+  SELECT COUNT(*) from m_tb101_hospital_credit
+  where DEL_KBN = '0'
+  and PERSONAL_ID = #{hospitalCredit.personal_id}
+  and XUEFEN_NIANDU = #{hospitalCredit.xuefen_niandu}
+</select>
+
+<!-- 查询个人的学分信息 -->
+<select id="getPersonalXueFen" resultType="String" parameterType="com.rlglsys.entity.Mtb101HospitalCredit">
+  SELECT XUEFEN from m_tb101_hospital_credit
+  where DEL_KBN = '0'
+  and PERSONAL_ID = #{hospitalCredit.personal_id}
+  and XUEFEN_NIANDU = #{hospitalCredit.xuefen_niandu}
+</select>
+<!-- 更新个人院内学分信息 -->
+<update id="updatePersonalXueFen" parameterType="com.rlglsys.entity.Mtb101HospitalCredit">
+ update m_tb101_hospital_credit
+ set
+	PROJECT_NO = #{hospitalCredit.project_no},
+	PERSONAL_NM = #{hospitalCredit.personal_nm},
+	XUEFEN = #{hospitalCredit.xuefen},
+	EXPEND_01 = #{hospitalCredit.expend_01},
+	EXPEND_02 = #{hospitalCredit.expend_02},
+	EXPEND_03 = #{hospitalCredit.expend_03},
+	EXPEND_04 = #{hospitalCredit.expend_04},
+	EXPEND_05 = #{hospitalCredit.expend_05},
+	LOGIN_USER_ID = #{hospitalCredit.login_user_id},
+	LOGIN_DATE = #{hospitalCredit.login_date},
+	UPDATE_USER_ID = #{hospitalCredit.update_user_id},
+	UPDATE_DATE = #{hospitalCredit.update_date}
+ where
+   DEL_KBN = '0' 
+   and PERSONAL_ID = #{hospitalCredit.personal_id}
+   and XUEFEN_NIANDU = #{hospitalCredit.xuefen_niandu}	
+</update>
+<!-- 新增一条个人院内学分信息 -->
+<insert id="insertPersonalXueFen" parameterType="com.rlglsys.entity.Mtb101HospitalCredit">
+Insert m_tb101_hospital_credit
+(
+	personal_id,
+	xuefen_niandu,
+	project_no,
+	personal_nm,
+	xuefen,
+	ex_key,
+	del_kbn,
+	expend_01,
+	expend_02,
+	expend_03,
+	expend_04,
+	expend_05,
+	login_user_id,
+	login_date,
+	update_user_id,
+	update_date
+)
+values
+(
+  #{hospitalCredit.personal_id},
+  #{hospitalCredit.xuefen_niandu},
+  #{hospitalCredit.project_no},
+  #{hospitalCredit.personal_nm},
+  #{hospitalCredit.xuefen},
+  1,
+  '0',
+  #{hospitalCredit.expend_01},
+  #{hospitalCredit.expend_02},
+  #{hospitalCredit.expend_03},
+  #{hospitalCredit.expend_04},
+  #{hospitalCredit.expend_05},
+  #{hospitalCredit.login_user_id},
+  #{hospitalCredit.login_date},
+  #{hospitalCredit.update_user_id},
+  #{hospitalCredit.update_date}
+)
+</insert>
+
+
+</mapper>

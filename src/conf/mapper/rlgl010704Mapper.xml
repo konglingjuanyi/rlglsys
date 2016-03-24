@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010704Mapper">
+    <!-- 获得申请明细信息 -->
+    <select id="getApplyInfo" resultType="com.rlglsys.entity.Mtb85ExpertsBankApplyDetail">
+        SELECT
+		    *
+		FROM
+		    m_tb85_experts_bank_apply_detail A
+		LEFT JOIN m_tb29_personalapplication B ON A.APPLY_NO = B.APPLY_NO
+		WHERE
+		    A.DEL_KBN = '0'
+		AND A.CHECK_RESULT = '002'
+		<if test=" expertsbank_kind != '-1'">
+              AND A.EXPERTSBANK_KIND=#{expertsbank_kind}
+       </if>
+		ORDER BY
+		    A.EXPERTSBANK_KIND,
+		    A.END_TIME
+		<if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!-- 获得申请明细信息条数 -->
+    <select id="getCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            m_tb85_experts_bank_apply_detail A
+        LEFT JOIN m_tb29_personalapplication B ON A.APPLY_NO = B.APPLY_NO
+        WHERE
+            A.DEL_KBN = '0'
+        AND A.CHECK_RESULT = '002'
+        <if test=" expertsbank_kind != '-1'">
+              AND A.EXPERTSBANK_KIND=#{expertsbank_kind}
+       </if>
+        ORDER BY
+            A.EXPERTSBANK_KIND,
+            A.END_TIME
+    </select>
+    <!-- 获得申请明细信息 -->
+    <select id="getApplyInfo1" resultType="com.rlglsys.entity.Mtb85ExpertsBankApplyDetail">
+        SELECT
+            *
+        FROM
+            m_tb85_experts_bank_apply_detail
+        WHERE
+            DEL_KBN = '0'
+        AND APPLY_NO = #{apply_no}
+    </select>
+    <!-- 获得用户所属单位 -->
+    <select id="getUnitNo" resultType="String">
+        SELECT
+		    PERSONNEL_UNIT
+		FROM
+		    m_tb12_personnel
+		WHERE
+		    PERSONNEL_ID = #{person_no}
+    </select>
+</mapper>

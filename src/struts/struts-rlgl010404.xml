@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 三名审核 -->
+<struts>
+    <package name="rlgl010404" extends="rlgl" namespace="/">
+       <!-- 三名审核初始化 -->
+       <action name="rlgl010404Init" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl010404.jsp</result>
+       </action>
+       <!-- 审核信息查询 -->
+       <action name="rlgl010404Search"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010404.jsp</result>
+       </action>
+       <!-- 名医审核初始化 -->
+       <action name="rlgl010404DoctorReviewInit"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404DoctorReviewInitAction" method="execute">
+            <result name="rlgl010410">/WEB-INF/jsp/rlgl010410.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010410.jsp</result>
+       </action>
+       <!-- 提交名医审核 -->
+       <action name="rlgl010404Review"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404DoctorReviewAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010404Search</result>
+       </action>
+       <!-- 名科审核初始化 -->
+       <action name="rlgl010404SectionReviewInit"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404SectionReviewInitAction" method="execute">
+            <result name="rlgl010411">/WEB-INF/jsp/rlgl010411.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010411.jsp</result>
+       </action>
+       <!-- 提交名科审核 -->
+       <action name="rlgl010404SectionReview"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404SectionReviewAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010404Search</result>
+       </action>
+       <!-- 名院审核初始化 -->
+       <action name="rlgl010404HospitalReviewInit"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404HospitalReviewInitAction" method="execute">
+            <result name="rlgl010415">/WEB-INF/jsp/rlgl010415.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010415.jsp</result>
+       </action>
+       <!-- 提交名院审核信息 -->
+       <action name="rlgl010404HospitalReview"
+            class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010404HospitalReviewAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010404Search</result>
+       </action>
+    </package>
+</struts>
+

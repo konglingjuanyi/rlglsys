@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl010902" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl010902Init"
+        class="com.rlglsys.action.hiringmanage.syntheticalinquiry.Rlgl010902InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010902.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+       <action name="rlgl010902Search"
+        class="com.rlglsys.action.hiringmanage.syntheticalinquiry.Rlgl010902SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010902.jsp</result>
+       </action>
+       <!-- Excel出力处理 -->
+       <action name="rlgl010902Export" class="com.rlglsys.action.hiringmanage.syntheticalinquiry.Rlgl010902ExportAction"
+            method="execute">
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+            </result>
+        </action>
+    </package>
+</struts>
+

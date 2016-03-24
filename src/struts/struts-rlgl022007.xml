@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl022007" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl022007Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022007InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022007.jsp</result>
+            <result name="back" type="redirectAction">
+                <param name="actionName">rlgl022005Init</param>
+			    <param name="flg">0</param>
+            </result>
+       </action>
+       <action name="rlgl022007Save"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022007SaveAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022007.jsp</result>
+            <result name="success" type="redirectAction">
+                <param name="actionName">rlgl022008Init</param>
+            </result>
+       </action>
+       <!-- 网上支付 -->
+       <action name="rlgl022007Select"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022007SelectAction"
+            method="execute">
+            <result name="success" type="redirectAction">
+                <param name="actionName">rlgl022005Init</param>
+			    <param name="flg">${successFlg}</param>
+			    <param name="TransactionID">${TransactionID}</param>
+            </result>
+       </action>
+    </package>
+</struts>
+

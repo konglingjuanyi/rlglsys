@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060308Mapper">
+
+    <!--查询在线报名当前页的信息  -->
+    <select id="getOnlineApplyList" resultType="com.rlglsys.bean.Rlgl060303Bean">
+        SELECT 
+            APPLY.APPLY_NO,
+            APPLY.EXAMINATION_NAME, 
+            APPLY.PERSONAL_NM, 
+            APPLY.PERSONAL_CARD_ID,  
+            CASE WHEN UNIT.UNIT_NM IS NULL THEN '' ELSE UNIT.UNIT_NM END AS PERSONAL_UNIT_NM, 
+            CASE WHEN SECTION.SECTION_NAME IS NULL THEN '' ELSE SECTION.SECTION_NAME END AS PERSONAL_SECTION_NM, 
+            APPLY.TICKET_NO,
+            EXAM.EXAM_START_DATE,
+            EXAM.EVENT_NO,
+            APPLY.EXAM_PLACE,
+            CASE WHEN ADM.ADM_NAME IS NULL THEN '' ELSE ADM.ADM_NAME END AS EXAM_PLACE_NM,
+            CASE WHEN ADM1.ADM_NAME IS NULL THEN '' ELSE ADM1.ADM_NAME END AS EXAM_ROOM_NM 
+            FROM m_tb106_online_apply APPLY 
+            INNER JOIN (
+            SELECT EXAM_NO,EXAM_START_DATE,EVENT_NO 
+            FROM m_tb103_exam_setting 
+            WHERE DEL_KBN = '0' 
+            AND #{rlgl060303Bean.now_date} BETWEEN APPLY_END_DATE AND EXAM_START_DATE
+            AND 
+            (
+            start_unit = #{rlgl060303Bean.sponsor} or start_unit = mid(#{rlgl060303Bean.sponsor},1,4)
+            )
+            ) EXAM 
+            ON APPLY.EXAM_NO = EXAM.EXAM_NO 
+            LEFT JOIN m_tb04_unit UNIT 
+            ON UNIT.UNIT_NO = APPLY.PERSONAL_UNIT_NO 
+            LEFT JOIN m_tb22_hospital_section SECTION 
+            ON SECTION.SECTION_ID = APPLY.PERSONAL_SECTION_NO 
+            AND SECTION.UNIT_NO = APPLY.PERSONAL_UNIT_NO 
+            LEFT JOIN m_tb02_adm ADM 
+            ON APPLY.EXAM_PLACE = ADM.ADM_NUM 
+            AND ADM.ADM_TYPE_CD = '234' 
+            LEFT JOIN m_tb02_adm ADM1 
+            ON APPLY.EXAM_ROOM = ADM1.ADM_NUM 
+            AND APPLY.EXAM_PLACE = ADM1.ADM_VALUE_01 
+            AND ADM1.ADM_TYPE_CD = '235' 
+            WHERE APPLY.DEL_KBN = '0' 
+            <if test="rlgl060303Bean.search_flg == 1">
+		        AND (APPLY.TICKET_NO != '' 
+                AND APPLY.TICKET_NO IS NOT NULL) 
+		    </if>
+		    <if test="rlgl060303Bean.search_flg == 2">
+		        AND (APPLY.TICKET_NO = '' 
+                OR APPLY.TICKET_NO IS NULL) 
+		    </if>
+            AND APPLY.CHECK_RESULT = '002' 
+	    <if test="rlgl060303Bean.exam_no != '' and rlgl060303Bean.exam_no != null">
+	        AND APPLY.exam_no = #{rlgl060303Bean.exam_no} 
+	    </if>
+	    <if test="rlgl060303Bean.exam_place != '' and rlgl060303Bean.exam_place != null and rlgl060303Bean.search_flg == 1">
+	        AND exam_place = #{rlgl060303Bean.exam_place} 
+	    </if>
+	    <if test="rlgl060303Bean.exam_room != '' and rlgl060303Bean.exam_room != null and rlgl060303Bean.search_flg == 1">
+	        AND exam_room = #{rlgl060303Bean.exam_room} 
+	    </if>
+	    <if test="rlgl060303Bean.personal_nm != '' and rlgl060303Bean.personal_nm != null and rlgl060303Bean.search_flg == 1">
+	        AND personal_nm LIKE CONCAT('%',  #{rlgl060303Bean.personal_nm}, '%') 
+	    </if>
+	    <if test="rlgl060303Bean.personal_card_id != '' and rlgl060303Bean.personal_card_id != null and rlgl060303Bean.search_flg == 1">
+	        AND personal_card_id LIKE CONCAT('%',  #{rlgl060303Bean.personal_card_id}, '%') 
+	    </if>
+	        ORDER BY APPLY.EXAM_NO ASC,APPLY.EXAM_PLACE ASC 
+	    <if test="rlgl060303Bean.pageCount != 0 and rlgl060303Bean.pageCount != null">
+            LIMIT #{rlgl060303Bean.pageNo},#{rlgl060303Bean.pageCount} 
+        </if>
+    </select>
+    <!--查询准考证号的总条数 -->
+    <select id="getCountbyOnlineApply" resultType="int">
+        SELECT count(*) FROM m_tb106_online_apply WHERE DEL_KBN = '0' 
+            <if test="rlgl060303Bean.search_flg == 1">
+		        AND (TICKET_NO != '' 
+                AND TICKET_NO IS NOT NULL) 
+		    </if>
+		    <if test="rlgl060303Bean.search_flg == 2">
+		        AND (TICKET_NO = '' 
+                OR TICKET_NO IS NULL) 
+		    </if>
+            AND EXAM_NO IN (
+            SELECT EXAM_NO 
+            FROM m_tb103_exam_setting 
+            WHERE DEL_KBN = '0'             
+            AND #{rlgl060303Bean.now_date} BETWEEN APPLY_END_DATE AND  EXAM_START_DATE
+            AND (start_unit = #{rlgl060303Bean.sponsor} or start_unit = mid(#{rlgl060303Bean.sponsor},1,4))) 
+            AND CHECK_RESULT = '002' 
+        <if test="rlgl060303Bean.exam_no != '' and rlgl060303Bean.exam_no != null">
+	        AND exam_no = #{rlgl060303Bean.exam_no} 
+	    </if>
+	    <if test="rlgl060303Bean.exam_place != '' and rlgl060303Bean.exam_place != null and rlgl060303Bean.search_flg == 1">
+	        AND exam_place = #{rlgl060303Bean.exam_place} 
+	    </if>
+	    <if test="rlgl060303Bean.exam_room != '' and rlgl060303Bean.exam_room != null and rlgl060303Bean.search_flg == 1">
+	        AND exam_room = #{rlgl060303Bean.exam_room} 
+	    </if>
+	    <if test="rlgl060303Bean.personal_nm != '' and rlgl060303Bean.personal_nm != null and rlgl060303Bean.search_flg == 1">
+	        AND personal_nm LIKE CONCAT('%',  #{rlgl060303Bean.personal_nm}, '%') 
+	    </if>
+	    <if test="rlgl060303Bean.personal_card_id != '' and rlgl060303Bean.personal_card_id != null and rlgl060303Bean.search_flg == 1">
+	        AND personal_card_id LIKE CONCAT('%',  #{rlgl060303Bean.personal_card_id}, '%') 
+	    </if>
+    </select>
+    <!--更新准考证信息 -->
+    <update id="updateOnlineApply" parameterType="int">
+      UPDATE m_tb106_online_apply SET 
+			ticket_no = #{rlgl060303Bean.ticket_no},			               
+			update_user_id = #{rlgl060303Bean.update_user_id},                                    
+			update_date = #{rlgl060303Bean.update_date} 
+			    
+	  WHERE 
+            apply_no = #{rlgl060303Bean.apply_no};  
+   </update> 
+</mapper>

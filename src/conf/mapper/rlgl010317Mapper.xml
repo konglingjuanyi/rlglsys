@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010317Mapper">
+    <!-- 其他申请入口一览查询SQL -->
+    <select id="getPersonInfoList" resultType="Mtb12Personnel">
+        SELECT tb12.*
+        FROM 
+            m_tb01_user tb01,
+            m_tb12_personnel tb12
+        WHERE 
+            tb01.DEL_KBN = '0'
+            and tb12.DEL_KBN = '0'
+            and tb01.PERSONNEL_ID = tb12.PERSONNEL_ID
+            <if test="rlgl010317.unit_no != '' ">
+            and tb01.UNIT_NO = #{rlgl010317.unit_no}
+            </if>
+            and tb12.PERSONNEL_STATUS != '006'
+            <!-- 不包括退休人员 -->
+            and tb12.RETIRE_FLAG != '1'
+            <if test="rlgl010317.personnel_card_id != '' ">
+            AND tb01.PERSONNEL_ID = #{rlgl010317.personnel_card_id}
+            </if>
+            <if test="rlgl010317.personnel_name != '' ">
+            AND tb01.USER_NAME like '%${rlgl010317.personnel_name}%'
+            </if>
+            <if test="rlgl010317.pageCount != 0 and rlgl010317.pageCount != null">
+            LIMIT #{rlgl010317.pageNo},#{rlgl010317.pageCount}
+            </if>
+    </select>
+    <!-- 单位人员记录数查询SQL -->
+    <select id="getCountPerson" resultType="int">
+        SELECT count(*)
+        FROM 
+            m_tb01_user tb01,
+            m_tb12_personnel tb12
+        WHERE 
+            tb01.DEL_KBN = '0'
+            and tb12.DEL_KBN = '0'
+            and tb01.PERSONNEL_ID = tb12.PERSONNEL_ID
+            <if test="rlgl010317.unit_no != '' ">
+            and tb01.UNIT_NO = #{rlgl010317.unit_no}
+            </if>
+            and tb12.PERSONNEL_STATUS != '006'
+            <!-- 不包括退休人员 -->
+            and tb12.RETIRE_FLAG != '1'
+            <if test="rlgl010317.personnel_card_id != '' ">
+            AND tb01.PERSONNEL_ID = #{rlgl010317.personnel_card_id}
+            </if>
+            <if test="rlgl010317.personnel_name != '' ">
+            AND tb01.USER_NAME like '%${rlgl010317.personnel_name}%'
+            </if>
+    </select>
+</mapper>

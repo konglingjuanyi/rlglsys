@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 三名申请 -->
+<struts>
+    <package name="rlgl010400" extends="rlgl" namespace="/">
+       <!-- 查看三名申请列表 -->
+       <action name="rlgl010400Init" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010400InitAction" method="execute">
+           <result name="rlgl010400">/WEB-INF/jsp/rlgl010400.jsp</result>
+       </action>
+       <!-- 名医申请明细查看-->
+       <action name="rlgl010400View" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010400ViewAction" method="execute">
+           <result name="rlgl010406">/WEB-INF/jsp/rlgl010406.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010406.jsp</result>
+       </action>
+       <!--名科申请明细查看-->
+       <action name="rlgl010400ViewSection" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010400ViewSectionAction" method="execute">
+           <result name="rlgl010409">/WEB-INF/jsp/rlgl010409.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010409.jsp</result>
+       </action>
+       <!-- 撤销申请 -->
+       <action name="rlgl010400Delete" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010400DeleteAction" method="execute">
+           <result name="init" type="redirectAction">rlgl010400Init</result>
+       </action>
+       <!-- 名医申请重新申请-->
+       <action name="rlgl010401ReApply" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010401ReApplyAction" method="execute">
+           <result name="rlgl010413">/WEB-INF/jsp/rlgl010413.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010413.jsp</result>
+       </action>
+       <!-- 名科申请重新申请-->
+       <action name="rlgl010402ReApply" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402ReApplyAction" method="execute">
+           <result name="rlgl010412">/WEB-INF/jsp/rlgl010412.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010412.jsp</result>
+       </action>
+       <!--名院申请明细查看-->
+       <action name="rlgl010400ViewHospital" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010400ViewHospitalAction" method="execute">
+           <result name="rlgl010415">/WEB-INF/jsp/rlgl010416.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010416.jsp</result>
+       </action>
+       <!--名院申请重新申请-->
+       <action name="rlgl010403ReApply" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010403ReApplyAction" method="execute">
+           <result name="rlgl010417">/WEB-INF/jsp/rlgl010417.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010417.jsp</result>
+       </action>
+       
+    </package>
+</struts>
+

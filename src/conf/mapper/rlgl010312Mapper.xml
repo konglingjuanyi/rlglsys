@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010312Mapper">
+    <resultMap type="com.rlglsys.entity.Mtb49UnitMoveinDetailInfo" id="tb49Info">
+    <!-- 申请编号-->
+    <result property="apply_no" column="apply_no"/>
+    <!-- 申请最大项番-->
+    <result property="apply_number" column="apply_number"/>
+    <!-- 调入人员ID-->
+    <result property="personal_id" column="personal_id"/>
+    <!-- 调入人员姓名-->
+    <result property="personal_nm" column="personal_nm"/>
+    <!-- 调入人员性别-->
+    <result property="personal_sex" column="personal_sex"/>
+    <!-- 调出工作单位编号-->
+    <result property="card_id" column="card_id"/>
+    <!-- 调出工作单位编号-->
+    <result property="moveout_unit_no" column="moveout_unit_no"/>
+    <!-- 调出工作单位名称-->
+    <result property="moveout_unit_nm" column="moveout_unit_nm"/>
+    <!-- 调入工作单位名称-->
+    <result property="movein_unit_nm" column="movein_unit_nm"/>
+    <!-- 调入时间-->
+    <result property="movein_unit_no" column="movein_unit_no"/>
+    <!-- 调出单位的审核状态-->
+    <result property="check_result" column="check_result"/>
+    <!-- 调往外省标识-->
+    <result property="provinceFlag" column="provinceFlag"/>
+    <!-- 用工形式-->
+    <result property="personnel_employment_forms" column="personnel_employment_forms"/>
+    <!-- 备注，进入原因-->
+    <result property="remarks" column="remarks"/>
+    <!-- 人员进入方式一级-->
+    <result property="callin_modei" column="callin_modei"/>
+    </resultMap>
+    <!-- 查询申请的详细信息 -->
+    <select id="getTb49Info" resultMap="tb49Info">
+        SELECT 
+           m_tb49_unit_movein_detail.APPLY_NO as apply_no,
+           m_tb49_unit_movein_detail.PERSONAL_ID as personal_id,
+           m_tb49_unit_movein_detail.PERSONAL_NM as personal_nm,
+           m_tb49_unit_movein_detail.PERSONAL_SEX as personal_sex,
+           m_tb49_unit_movein_detail.CARD_ID as card_id,
+           m_tb49_unit_movein_detail.MOVEOUT_UNIT_NO as moveout_unit_no,
+           m_tb49_unit_movein_detail.MOVEOUT_UNIT_NM as moveout_unit_nm,
+           m_tb49_unit_movein_detail.MOVEIN_UNIT_NM as movein_unit_nm,
+           m_tb49_unit_movein_detail.MOVEIN_UNIT_NO as movein_unit_no,
+           m_tb49_unit_movein_detail.CALLIN_MODEI as callin_modei,
+           m_tb49_unit_movein_detail.EMPLOYMENT as personnel_employment_forms,
+           m_tb49_unit_movein_detail.REMARKS as remarks,
+           m_tb29_personalapplication.CHECK_RESULT as check_result
+        FROM
+          m_tb49_unit_movein_detail,
+          m_tb29_personalapplication
+        WHERE
+          m_tb49_unit_movein_detail.DEL_KBN = '0'
+          and m_tb29_personalapplication.DEL_KBN = '0'
+          <if test="apply_no != ''">
+          and m_tb49_unit_movein_detail.APPLY_NO = #{apply_no}
+          and m_tb29_personalapplication.APPLY_NO = #{apply_no}
+          </if>
+          <if test="apply_no != ''">
+          and m_tb49_unit_movein_detail.APPLY_NUMBER = #{apply_number}
+          </if>
+          ;
+    </select>
+    <!-- 查询该用户的最新的调入申请信息SQL -->
+    <select id="getTb29InfoList" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+           <if test="unit_no != ''">
+            and PERSONAL_UNITNO = #{unit_no}
+           </if>
+           <if test="applyKbn != ''">
+            and APPLY_KBN = #{applyKbn}
+           </if>
+               ;
+    </select>
+    <!-- 查询该用户是否已经提交调入申请处理SQL -->
+    <select id="getMoveinPersonCount" resultType="Integer">
+        SELECT count(*)
+        FROM m_tb49_unit_movein_detail 
+        WHERE 
+            and DEL_KBN = '0'
+          <if test="cardid != ''">
+            CARD_ID = #{cardid}
+          </if>
+          ;
+    </select>
+    <!-- 申请调入用户的信息查询处理(省内调入)SQL -->
+    <select id="inInfoList" resultMap="tb49Info">
+        SELECT
+           m_tb37_unit_moveout_detail.APPLY_NO as apply_no,
+           m_tb37_unit_moveout_detail.APPLY_NUMBER as apply_number,
+           m_tb37_unit_moveout_detail.PERSONAL_ID as personal_id,
+           m_tb37_unit_moveout_detail.PERSONAL_NM as personal_nm,
+           m_tb37_unit_moveout_detail.PERSONAL_SEX as personal_sex,
+           m_tb37_unit_moveout_detail.CARD_ID as card_id,
+           m_tb37_unit_moveout_detail.CURRENT_UNIT_NO as moveout_unit_no,
+           m_tb37_unit_moveout_detail.CURRENT_UNIT_NM as moveout_unit_nm,
+           m_tb37_unit_moveout_detail.CALLOUT_UNIT_NM as movein_unit_nm,
+           m_tb37_unit_moveout_detail.CALLOUT_UNIT_NO as movein_unit_no,
+           m_tb29_personalapplication.CHECK_RESULT as check_result,
+           m_tb37_unit_moveout_detail.PROVINCEFLAG as provinceFlag
+        FROM
+           m_tb12_personnel,
+           m_tb29_personalapplication,
+           m_tb37_unit_moveout_detail
+        WHERE
+           m_tb12_personnel.DEL_KBN = "0"
+           and m_tb29_personalapplication.DEL_KBN = "0"
+           and m_tb37_unit_moveout_detail.DEL_KBN = "0"
+           and m_tb12_personnel.PERSONNEL_STATUS = "006"
+           and m_tb29_personalapplication.CHECK_RESULT = "002"
+           and m_tb12_personnel.PERSONNEL_ID = m_tb37_unit_moveout_detail.PERSONAL_ID
+           and m_tb37_unit_moveout_detail.APPLY_NO = m_tb29_personalapplication.APPLY_NO
+           and (1=2
+               <if test="tb49Info.movein_unit_no != ''">
+               or m_tb37_unit_moveout_detail.CALLOUT_UNIT_NO = #{tb49Info.movein_unit_no}
+               </if>
+               <if test="tb49Info.provinceFlag">
+               or m_tb37_unit_moveout_detail.PROVINCEFLAG = '1'
+               </if>
+               )
+           <if test="tb49Info.personal_nm != ''">
+           and m_tb37_unit_moveout_detail.PERSONAL_NM like '%${tb49Info.personal_nm}%'
+           </if>
+           <if test="tb49Info.card_id != ''">
+           and m_tb37_unit_moveout_detail.CARD_ID = #{tb49Info.card_id}
+           </if>
+           and concat(m_tb37_unit_moveout_detail.APPLY_NUMBER,m_tb37_unit_moveout_detail.APPLY_NO) in (select concat(max(m_tb37_unit_moveout_detail.APPLY_NUMBER),m_tb37_unit_moveout_detail.APPLY_NO)
+                                                          from m_tb12_personnel,
+                                                               m_tb29_personalapplication,
+                                                               m_tb37_unit_moveout_detail
+                                                          where 
+                                                              m_tb12_personnel.DEL_KBN = "0"
+                                                              and m_tb29_personalapplication.DEL_KBN = "0"
+                                                              and m_tb37_unit_moveout_detail.DEL_KBN = "0"
+                                                              and m_tb12_personnel.PERSONNEL_STATUS = "006"
+                                                              and m_tb29_personalapplication.CHECK_RESULT = "002"
+                                                              and m_tb12_personnel.PERSONNEL_ID = m_tb37_unit_moveout_detail.PERSONAL_ID
+                                                              and m_tb37_unit_moveout_detail.APPLY_NO = m_tb29_personalapplication.APPLY_NO
+                                                              and (1=2
+                                                                  <if test="tb49Info.movein_unit_no != ''">
+                                                                  or m_tb37_unit_moveout_detail.CALLOUT_UNIT_NO = #{tb49Info.movein_unit_no}
+                                                                  </if>
+                                                                  <if test="tb49Info.provinceFlag">
+                                                                  or m_tb37_unit_moveout_detail.PROVINCEFLAG = '1'
+                                                                  </if>
+                                                                  )
+                                                              <if test="tb49Info.personal_nm != ''">
+                                                              and m_tb37_unit_moveout_detail.PERSONAL_NM like '%${tb49Info.personal_nm}%'
+                                                              </if>
+                                                              <if test="tb49Info.card_id != ''">
+                                                              and m_tb37_unit_moveout_detail.CARD_ID = #{tb49Info.card_id}
+                                                              </if>
+                                                              GROUP BY m_tb37_unit_moveout_detail.APPLY_NO
+                                                          )
+     <if test="tb49Info.pageCount != 0 and tb49Info.pageCount != null">
+     LIMIT #{tb49Info.pageNo},#{tb49Info.pageCount}
+     </if>
+     ;
+    </select>
+    <!-- 省内调入记录数查询SQL -->
+    <select id="getCountIn" resultType="int">
+        SELECT count(*)
+        FROM
+           m_tb12_personnel,
+           m_tb29_personalapplication,
+           m_tb37_unit_moveout_detail
+        WHERE
+           m_tb12_personnel.DEL_KBN = "0"
+           and m_tb29_personalapplication.DEL_KBN = "0"
+           and m_tb37_unit_moveout_detail.DEL_KBN = "0"
+           and m_tb12_personnel.PERSONNEL_STATUS = "006"
+           and m_tb29_personalapplication.CHECK_RESULT = "002"
+           and m_tb12_personnel.PERSONNEL_ID = m_tb37_unit_moveout_detail.PERSONAL_ID
+           and m_tb37_unit_moveout_detail.APPLY_NO = m_tb29_personalapplication.APPLY_NO
+           and (1=2
+               <if test="tb49Info.movein_unit_no != ''">
+               or m_tb37_unit_moveout_detail.CALLOUT_UNIT_NO = #{tb49Info.movein_unit_no}
+               </if>
+               <if test="tb49Info.provinceFlag">
+               or m_tb37_unit_moveout_detail.PROVINCEFLAG = '1'
+               </if>
+               )
+           <if test="tb49Info.personal_nm != ''">
+           and m_tb37_unit_moveout_detail.PERSONAL_NM like '%${tb49Info.personal_nm}%'
+           </if>
+           <if test="tb49Info.card_id != ''">
+           and m_tb37_unit_moveout_detail.CARD_ID = #{tb49Info.card_id}
+           </if>
+           and concat(m_tb37_unit_moveout_detail.APPLY_NUMBER,m_tb37_unit_moveout_detail.APPLY_NO) in (select concat(max(m_tb37_unit_moveout_detail.APPLY_NUMBER),m_tb37_unit_moveout_detail.APPLY_NO)
+                                                          from m_tb12_personnel,
+                                                               m_tb29_personalapplication,
+                                                               m_tb37_unit_moveout_detail
+                                                          where 
+                                                              m_tb12_personnel.DEL_KBN = "0"
+                                                              and m_tb29_personalapplication.DEL_KBN = "0"
+                                                              and m_tb37_unit_moveout_detail.DEL_KBN = "0"
+                                                              and m_tb12_personnel.PERSONNEL_STATUS = "006"
+                                                              and m_tb29_personalapplication.CHECK_RESULT = "002"
+                                                              and m_tb12_personnel.PERSONNEL_ID = m_tb37_unit_moveout_detail.PERSONAL_ID
+                                                              and m_tb37_unit_moveout_detail.APPLY_NO = m_tb29_personalapplication.APPLY_NO
+                                                              and (1=2
+                                                                  <if test="tb49Info.movein_unit_no != ''">
+                                                                  or m_tb37_unit_moveout_detail.CALLOUT_UNIT_NO = #{tb49Info.movein_unit_no}
+                                                                  </if>
+                                                                  <if test="tb49Info.provinceFlag">
+                                                                  or m_tb37_unit_moveout_detail.PROVINCEFLAG = '1'
+                                                                  </if>
+                                                                  )
+                                                              <if test="tb49Info.personal_nm != ''">
+                                                              and m_tb37_unit_moveout_detail.PERSONAL_NM like '%${tb49Info.personal_nm}%'
+                                                              </if>
+                                                              <if test="tb49Info.card_id != ''">
+                                                              and m_tb37_unit_moveout_detail.CARD_ID = #{tb49Info.card_id}
+                                                              </if>
+                                                              GROUP BY m_tb37_unit_moveout_detail.APPLY_NO
+                                                          );
+    </select>
+    
+    <!-- 插入人员调入申请信息明细表 -->
+    <insert id="insertTb49Info" parameterType="com.rlglsys.entity.Mtb49UnitMoveinDetailInfo">
+        INSERT INTO m_tb49_unit_movein_detail
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            CARD_ID,
+            PERSONAL_SEX,
+            MOVEIN_UNIT_NO,
+            MOVEIN_UNIT_NM,
+            MOVEOUT_UNIT_NO,
+            MOVEOUT_UNIT_NM,
+            CALLIN_MODEI,
+            APPLY_TIME,
+            EMPLOYMENT,
+            REMARKS,
+            NOW_MARK,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb49Info.apply_no},
+            #{tb49Info.apply_number},
+            #{tb49Info.apply_kbn},
+            #{tb49Info.personal_id},
+            #{tb49Info.personal_nm},
+            #{tb49Info.card_id},
+            #{tb49Info.personal_sex},
+            #{tb49Info.movein_unit_no},
+            #{tb49Info.movein_unit_nm},
+            #{tb49Info.moveout_unit_no},
+            #{tb49Info.moveout_unit_nm},
+            #{tb49Info.callin_type},
+            #{tb49Info.apply_time},
+            #{tb49Info.personnel_employment_forms},
+            #{tb49Info.remarks},
+            #{tb49Info.now_mark},
+            '1',
+            '0',
+            #{tb49Info.login_user_id},
+            #{tb49Info.login_date},
+            #{tb49Info.login_user_id},
+            #{tb49Info.login_date}
+        )
+    </insert>
+    <!-- 插入个人人事申请表 -->
+    <insert id="insert29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+        INSERT INTO m_tb29_personalapplication
+        (
+            APPLY_NO,
+            MAX_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            PERSONAL_UNITNO,
+            APPLY_DATE,
+            CHECK_USER,
+            CHECK_UNITNO,
+            CHECK_RESULT,
+            end_mark,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb29Info.apply_no},
+            #{tb29Info.max_number},
+            #{tb29Info.apply_kbn},
+            #{tb29Info.personal_id},
+            #{tb29Info.personal_nm},
+            #{tb29Info.personal_unitno},
+            #{tb29Info.apply_date},
+            #{tb29Info.check_user},
+            #{tb29Info.check_unitno},
+            #{tb29Info.check_result},
+            #{tb29Info.end_mark},
+            #{tb29Info.now_mark},
+            #{tb29Info.will_checkunitno},
+            '1',
+            '0',
+            #{tb29Info.login_user_id},
+            #{tb29Info.login_date},
+            #{tb29Info.login_user_id},
+            #{tb29Info.login_date}
+        )
+    </insert>
+    <!-- 调入单位的否决处理SQL -->
+    <update id="updateTb37Info" parameterType="com.rlglsys.entity.Mtb49UnitMoveinDetailInfo">
+      UPDATE m_tb37_unit_moveout_detail
+      SET 
+          CALLOUT_UNIT_NO = '',
+          CALLOUT_UNIT_NM = '',
+          PROVINCEFLAG = '1',
+          UPDATE_USER_ID = #{tb49Info.update_user_id},
+          UPDATE_DATE = #{tb49Info.update_date}
+      WHERE APPLY_NO = #{tb49Info.apply_no}
+            and DEL_KBN = '0';
+    </update>
+</mapper>

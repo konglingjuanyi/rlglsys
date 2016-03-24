@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010509Mapper">
+    <!-- 更新个人进修申请明细信息 -->
+    <update id="updateTb55Info">
+        UPDATE m_tb55_partymenmber_apply_detail
+        SET
+            UNIT_CHECKER = #{updatetb55Info.unit_checker},
+            UNIT_CHECK_DATE = #{updatetb55Info.unit_check_date},
+            UNIT_CHECK_VIEWS = #{updatetb55Info.unit_check_views},
+            UNIT_CHECK_RESULT = #{updatetb55Info.unit_check_result},
+            COUNTY_CHECKER = #{updatetb55Info.county_checker},
+            COUNTY_CHECK_DATE = #{updatetb55Info.county_check_date},
+            COUNTY_CHECK_VIEWS = #{updatetb55Info.county_check_views},
+            COUNTY_CHECK_RESULT = #{updatetb55Info.county_check_result},
+            DOWNTOWN_CHECKER = #{updatetb55Info.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{updatetb55Info.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{updatetb55Info.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{updatetb55Info.downtown_check_result},
+            MINISTRY_CHECKER = #{updatetb55Info.ministry_checker},
+            MINISTRY_CHECK_DATE = #{updatetb55Info.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{updatetb55Info.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{updatetb55Info.ministry_check_result},
+            NOW_MARK = #{updatetb55Info.now_mark},
+            UPDATE_USER_ID = #{updatetb55Info.update_user_id},
+            UPDATE_DATE = #{updatetb55Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb55Info.apply_no}
+        AND APPLY_NUMBER = #{updatetb55Info.apply_number}
+    </update>
+    
+    <!--人员基本信息-党派信息-->
+    <insert id="doSavePartisanInfo">
+         INSERT
+        INTO m_tb13_personnel_partisan_info(
+            personnel_id,
+            jointime,
+            partisan_nm,
+            prep_or_officially,
+            ex_key,
+            del_kbn,
+            expend_01,
+            expend_02,
+            expend_03,
+            expend_04,
+            expend_05,
+            login_user_id,
+            login_date,
+            update_user_id,
+            update_date
+        )
+        values(
+            #{savetb13Info.personnel_id},
+            #{savetb13Info.jointime},
+            #{savetb13Info.partisan_nm},
+            #{savetb13Info.prep_or_officially},
+            #{savetb13Info.ex_key},
+            '0',
+            #{savetb13Info.expend_01},
+            #{savetb13Info.expend_02},
+            #{savetb13Info.expend_03},
+            #{savetb13Info.expend_04},
+            #{savetb13Info.expend_05},
+            #{savetb13Info.login_user_id},
+            #{savetb13Info.login_date},
+            #{savetb13Info.update_user_id},
+            #{savetb13Info.update_date}
+            )
+    </insert>
+</mapper>

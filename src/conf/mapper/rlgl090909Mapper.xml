@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl090909Mapper">
+
+    <!-- 用户查询SQL -->
+    <select id="getUserInfo" resultType="com.rlglsys.bean.Rlgl090909Bean">
+        SELECT
+            M1.*
+            ,M2.UNIT_NM
+            ,M3.SECTION_NAME
+        FROM m_tb01_user M1
+        LEFT JOIN m_tb04_unit M2
+        ON M1.UNIT_NO = M2.UNIT_NO
+        AND M2.DEL_KBN = '0'
+        
+        LEFT JOIN m_tb22_hospital_section M3
+        ON M1.UNIT_NO = M3.UNIT_NO
+        AND M1.SECTION_ID = M3.SECTION_ID
+        AND M3.DEL_KBN = '0'
+        WHERE
+           M1.UNIT_NO LIKE CONCAT('', #{userInfo.unit_no}, '%')
+           AND M1.user_id != #{userInfo.unit_no}
+           <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M1.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M1.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+           <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND M1.personnel_id = #{userInfo.personnel_id}
+           </if>
+           <if test="userInfo.user_id_biko != '' and userInfo.user_id_biko != null">
+                AND M1.user_id_biko = #{userInfo.user_id_biko}
+           </if>
+           <if test="userInfo.user_type != '' and userInfo.user_type != null">
+                AND M1.USER_TYPE != 1
+                <!--  #{userInfo.user_type}-->
+           </if>
+           <if test="userInfo.pageCount != 0 and userInfo.pageCount != null">
+             LIMIT #{userInfo.pageNo},#{userInfo.pageCount}
+           </if>
+    </select>
+    
+    <!-- 单位用户查询SQL -->
+    <select id="getUnitUserInfo" resultType="com.rlglsys.bean.Rlgl090909Bean">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+           unit_no IN (
+             SELECT 
+                UNIT_NO_LOWER 
+             FROM m_tb28_unit_lower 
+             WHERE UNIT_NO = #{userInfo.unit_no}
+           )
+           <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+           <if test="userInfo.user_id_biko != '' and userInfo.user_id_biko != null">
+                AND user_id_biko = #{userInfo.user_id_biko}
+           </if>
+           <if test="userInfo.user_type != '' and userInfo.user_type != null">
+                AND USER_TYPE = #{userInfo.user_type}
+           </if>
+           <if test="userInfo.pageCount != 0 and userInfo.pageCount != null">
+             LIMIT #{userInfo.pageNo},#{userInfo.pageCount}
+           </if>
+    </select>
+    
+    <!-- 单位用户查询SQL -->
+    <select id="getUnitUserInfoCount" resultType="int">
+        SELECT
+            count(*)
+        FROM m_tb01_user
+        WHERE
+           unit_no IN (
+             SELECT 
+                UNIT_NO_LOWER 
+             FROM m_tb28_unit_lower 
+             WHERE UNIT_NO = #{userInfo.unit_no}
+           )
+           <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+           <if test="userInfo.user_id_biko != '' and userInfo.user_id_biko != null">
+                AND user_id_biko = #{userInfo.user_id_biko}
+           </if>
+           <if test="userInfo.user_type != '' and userInfo.user_type != null">
+                AND USER_TYPE = #{userInfo.user_type}
+           </if>
+    </select>
+    
+    <!-- 用户件数查询SQL -->
+    <select id="getUserInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb01_user
+        WHERE
+           UNIT_NO LIKE  CONCAT('',#{userInfo.unit_no},'%')
+           AND user_id != #{userInfo.unit_no}
+           <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+           <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND personnel_id = #{userInfo.personnel_id}
+           </if>
+           <if test="userInfo.user_id_biko != '' and userInfo.user_id_biko != null">
+                AND user_id_biko = #{userInfo.user_id_biko}
+           </if>
+           <if test="userInfo.user_type != '' and userInfo.user_type != null">
+                AND USER_TYPE != 1 
+                <!--  #{userInfo.user_type}-->
+           </if>
+    </select>
+    
+    <!-- 修改密码 -->
+    <update id="updatePasswordInfo">
+        UPDATE m_tb01_user
+        SET PASSWORD = #{userInfo.password}
+            ,UPDATE_USER_ID = #{userInfo.update_user_id}
+            ,UPDATE_DATE = #{userInfo.update_date}
+        WHERE 
+            USER_ID = #{userInfo.user_id}
+    </update>
+</mapper>

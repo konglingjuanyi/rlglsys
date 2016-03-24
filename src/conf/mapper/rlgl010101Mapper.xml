@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010101Mapper">
+   <!--单位详细列表查询 -->
+    <select id="getUnitList" resultType="Mtb04Unit">
+        SELECT
+            *
+        FROM m_tb04_unit
+        WHERE unit_status='1'
+    </select>
+    <!--单位详细列表查询 -->
+    <select id="getUnitInfo" resultType="Mtb04Unit">
+        SELECT  *    
+        FROM m_tb04_unit 
+        WHERE unit_no=#{unit_no};
+    </select>
+    <!-- 登录申请信息 -->
+    <insert id="insertApplyInfo" parameterType="com.rlglsys.entity.UnitApply">
+        INSERT INTO m_tb07_unitapply
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            UNIT_NO,
+            APPLY_STATUS,
+            APPLY_USER,
+            APPLY_DATE,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{applyInfo.apply_no},
+            #{applyInfo.apply_number},
+            #{applyInfo.apply_kbn},
+            #{applyInfo.unit_no},
+            '1',
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date},
+            '001',
+            #{applyInfo.end_Mark},
+            #{applyInfo.now_mark},
+            #{applyInfo.will_checkunitno},
+            '1',
+            '0',
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date},
+            #{applyInfo.apply_user},
+            #{applyInfo.apply_date}
+        )
+    </insert>
+</mapper>

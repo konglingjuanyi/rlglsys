@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl021102" extends="rlgl" namespace="/">
+       <!-- 新建超链接时候触发 -->
+       <action name="rlgl021102Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021102InitAction" method="execute">
+            <result>/WEB-INF/jsp/rlgl021102.jsp</result>
+        </action>
+        <!-- 新建页面的提交按钮触发 -->
+       <action name="rlgl021102Submit"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021102SubmitAction" method="execute">
+            <result name="success" type="redirectAction">rlgl021102Search.action</result>
+        </action>
+        <!-- 页面加载时候触发 -->
+      <action name="rlgl021102Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021102SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl021107.jsp</result>
+        </action>
+        <!-- 点击修改，详细超链接时候触发 -->
+      <action name="rlgl021102Modify"
+         class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021102ModifyAction" method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl021108.jsp</result>
+         <result name="init">/WEB-INF/jsp/rlgl021109.jsp</result>
+       </action>
+      <!-- 修改页面的提交按钮触发 -->
+      <action name="rlgl021102Update"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021102UpdateAction" method="execute">
+            <result name="success" type="redirectAction">rlgl021102Search.action</result>
+        </action>
+      <!-- 各页面返回按钮触发 -->
+      <action name="rlgl021102Back"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021102BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl021102Search.action</result>
+        </action>
+      <!-- 审核主页面初始化全检索 -->
+      <action name="rlgl021112Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021112SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl021112.jsp</result>
+      </action>
+      <!-- 审核主页面，查看超链接触发 -->
+      <action name="rlgl021112Detail"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021112DetailhAction" method="execute">
+       <result name="success">/WEB-INF/jsp/rlgl021113.jsp</result>
+      </action>
+        <!-- 审核页面的查看超链接触发 -->
+        <action name="rlgl02112Detail"
+            class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021112DetailhAction" method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl021113.jsp</result>
+        </action>
+        <!--审核页面的进行审核超链接触发   -->
+        <action name="rlgl02112GoRe"
+            class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021112GoReAction" method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl021114.jsp</result>
+        </action>
+        <!--审核页面的按钮触发  -->
+        <action name="rlgl021112ReviewOk"
+            class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021112ReviewOkAction" method="execute">
+         <result name="success" type="redirectAction">rlgl021112Search.action</result>
+        </action>
+        <!-- 审核页面的返回按钮触发 -->
+         <action name="rlgl021112Back"
+            class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021112BackAction" method="execute">
+         <result name="success"  type="redirectAction">rlgl021112Search.action</result>
+        </action>
+    </package>
+</struts>
+

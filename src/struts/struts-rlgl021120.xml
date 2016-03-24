@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl021120" extends="rlgl" namespace="/">
+       <!-- 授予学分的初始化页面 -->
+       <action name="rlgl021120Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021120InitAction" method="execute">
+            <result>/WEB-INF/jsp/rlgl021120.jsp</result>
+        </action>
+        <!-- 授予学分主页面举办完成超链接触发 -->
+       <action name="rlgl021120SearchPeople"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021120SearchPepelAction" method="execute">
+            <result>/WEB-INF/jsp/rlgl021121.jsp</result>
+        </action>
+       <!-- 授予学分初始化 -->
+       <action name="rlgl021120SearchInit"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021120SearchInitAction" method="execute">
+            <result>/WEB-INF/jsp/rlgl021121.jsp</result>
+        </action>
+       <!-- <result>/WEB-INF/jsp/rlgl021122.jsp</result> --> 
+      <action name="rlgl021120XueFen"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.RLgl021120XueFenAction" method="execute">
+             <result name="success" type="redirectAction">
+                <param name="actionName">rlgl021120SearchPeople</param>
+                <param name="AppNo">${AppNo}</param>
+             </result>
+             <result name="fail">/WEB-INF/jsp/rlgl021122.jsp</result>
+      </action>
+    </package>
+</struts>
+

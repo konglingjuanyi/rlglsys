@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010103Mapper">
+   <insert id="saveChangeUnit" parameterType="int">
+      INSERT INTO m_tb27_unit_change (
+            apply_no,
+            apply_number,
+            unit_no,                    
+			unit_nm ,                   
+			unit_own ,                  
+			unit_property , 
+			unit_level  ,               
+			unit_economic_type  ,       
+			unit_nature ,               
+			unit_scale ,                
+			unit_status  ,              
+			license_no  ,               
+			organization_code ,         
+			establishment_num ,         
+			unit_super ,                
+			offical_scope,             
+			unit_address ,                                    
+			unit_pro  ,                 
+			industry_plan   ,           
+			escrow_unit_kbn,            
+			escrow_unit_no ,            
+			unit_lower     ,                         
+			unit_assort ,               
+			ex_key  ,                   
+			del_kbn ,                   
+			expend_01   ,               
+			expend_02  ,                
+			expend_03 ,                 
+			expend_04 ,                 
+			expend_05 ,                 
+			login_user_id  ,            
+			login_date ,                
+			update_user_id ,            
+			update_date ,               
+			apply_status ,
+			change_value,
+			hospital_grade,
+			hospital_grade_tow ,  
+			unit_nature_tow ,     
+			earnings_nature,     
+			agency_level  ,      
+			agency_level_tow  ,    
+			agency_level_three , 
+			organization_no  ,    
+			unit_manage_scale_tow ,
+			unit_manage_scale,
+			unit_manage_scale_nm,
+			unit_img,
+			area_id ,
+			system_sort ,         
+	        industry_divide  ,  
+            system_sort_two  , 
+	        industry_divide_two,
+	        agency_plan
+			            
+
+)VALUES (
+	    #{unitChange.apply_no},
+	    #{unitChange.apply_number},
+	    #{unitChange.unit_no},
+	    #{unitChange.unit_nm},
+		#{unitChange.unit_own},       
+		#{unitChange.unit_property},  
+		#{unitChange.unit_level  },
+		#{unitChange.unit_economic_type},  
+		#{unitChange.unit_nature  },      
+		#{unitChange.unit_scale},         
+		'001',        
+	    #{unitChange.license_no },         
+		#{unitChange.organization_code },  
+		#{unitChange.establishment_num},       
+		#{unitChange.unit_super},          
+	    #{unitChange.offical_scope},    
+		#{unitChange.unit_address},                
+		#{unitChange.unit_pro },           
+		#{unitChange.industry_plan  },     
+		#{unitChange.escrow_unit_kbn},     
+		#{unitChange.escrow_unit_no},      
+		#{unitChange.unit_lower    },                
+		#{unitChange.unit_assort  },                    
+		#{unitChange.ex_key},             
+		#{unitChange.del_kbn},                       
+		#{unitChange.expend_01},       
+		#{unitChange.expend_02},       
+        #{unitChange.expend_03},       
+        #{unitChange.expend_04},       
+        #{unitChange.expend_05},             
+        #{unitChange.login_user_id},         
+        #{unitChange.login_date},                  
+        #{unitChange.update_user_id},          
+        #{unitChange.update_date},
+        #{unitChange.apply_status},
+        #{unitChange.change_value},
+        #{unitChange.hospital_grade},
+	    #{unitChange.hospital_grade_tow},  
+	    #{unitChange.unit_nature_tow},     
+	    #{unitChange.earnings_nature},     
+		#{unitChange.agency_level},      
+		#{unitChange.agency_level_tow},    
+		#{unitChange.agency_level_three}, 
+		#{unitChange.organization_no},    
+		#{unitChange.unit_manage_scale_tow},
+		#{unitChange.unit_manage_scale},
+		#{unitChange.unit_manage_scale_nm},
+		#{unitChange.unit_img},
+		#{unitChange.area_id},
+		#{unitChange.system_sort} ,         
+	    #{unitChange.industry_divide} ,  
+        #{unitChange.system_sort_two} , 
+	    #{unitChange.industry_divide_two},
+	    #{unitChange.agency_plan}
+		
+);
+   
+   
+   </insert>
+    <insert id="subAuditChangeUnit" parameterType="int">
+   INSERT INTO m_tb27_unit_change (
+            unit_no,                    
+			unit_nm ,                   
+			unit_own ,                  
+			unit_property ,             
+			unit_level  ,               
+			unit_economic_type  ,       
+			unit_nature ,               
+			unit_scale ,                
+			unit_status  ,              
+			license_no  ,               
+			organization_code ,         
+			establishment_num ,         
+			unit_super ,                
+			offical_scope,             
+			unit_address ,              
+			time ,                      
+			unit_pro  ,                 
+			industry_plan   ,           
+			escrow_unit_kbn,            
+			escrow_unit_no ,            
+			unit_lower     ,            
+			audit_status  ,             
+			belong_city,                
+			 belong_counties   ,        
+			belong_town,                
+			unit_assort ,               
+			ex_key  ,                   
+			del_kbn ,                   
+			expend_01   ,               
+			expend_02  ,                
+			expend_03 ,                 
+			expend_04 ,                 
+			expend_05 ,                 
+			login_user_id  ,            
+			login_date ,                
+			update_user_id ,            
+			update_date ,               
+			apply_status,
+			change_value               
+
+)VALUES (
+        #{unitChange.unit_no},
+        #{unitChange.unit_nm},
+		#{unitChange.unit_own},       
+		#{unitChange.unit_property},  
+	  	#{unitChange.unit_level  },
+	  	#{unitChange.unit_economic_type},  
+		  #{unitChange.unit_nature  },      
+		  #{unitChange.unit_scale},         
+		  '001',        
+		  #{unitChange.license_no },         
+	    #{unitChange.organization_code },  
+	    #{unitChange.establishment_num},       
+	    #{unitChange.unit_super},          
+		  #{unitChange.offical_scope},    
+		  #{unitChange.unit_address},    
+		  #{unitChange.time },              
+		  #{unitChange.unit_pro },           
+		  #{unitChange.industry_plan  },     
+		  #{unitChange.escrow_unit_kbn},     
+	    #{unitChange.escrow_unit_no},      
+		  #{unitChange.unit_lower    },       
+		  '001',          
+		  #{unitChange.unit_assort  },                    
+		  #{unitChange.ex_key},             
+			'0',                       
+			#{unitChange.expend_01},       
+			#{unitChange.expend_02},       
+      #{unitChange.expend_03},       
+      #{unitChange.expend_04},       
+      #{unitChange.expend_05},       
+      '0000001',           
+      #{unitChange.login_date  },                  
+      '0000001',          
+      #{unitChange.update_date} ,
+      #{unitChange.apply_status},
+      #{unitChange.change_value}
+          
+);
+   </insert>
+   <select id="getChangeUnit" resultType="int">
+      SELECT COUNT(*)  
+      FROM  
+         m_tb27_unit_change
+      WHERE unit_no=#{unit_no}
+   </select>
+   <update id="updateChangeUnit" parameterType="int">
+      UPDATE m_tb27_unit_change SET
+			unit_nm =#{unitChange.unit_nm},                       
+			unit_own =	#{unitChange.unit_own},                           
+			unit_property =#{unitChange.unit_property},                      
+			unit_level=#{unitChange.unit_level  },                     
+			unit_economic_type =	#{unitChange.unit_economic_type},               
+			unit_nature= #{unitChange.unit_nature  },                    
+			unit_scale =  #{unitChange.unit_scale},                                                                
+			license_no = #{unitChange.license_no },                      
+			organization_code= #{unitChange.organization_code },               
+			establishment_num= #{unitChange.establishment_num},                
+			unit_super = #{unitChange.unit_super},                       
+			offical_scope= #{unitChange.offical_scope},                    
+			unit_address= #{unitChange.unit_address},                                                  
+			unit_pro = #{unitChange.unit_pro },                        
+			industry_plan = #{unitChange.industry_plan  },                  
+			escrow_unit_kbn=#{unitChange.escrow_unit_kbn},                  
+			escrow_unit_no=#{unitChange.escrow_unit_no},                   
+			unit_lower=#{unitChange.unit_lower    },                                                                           
+			unit_assort = #{unitChange.unit_assort  },                    
+			ex_key = #{unitChange.ex_key},                                                                     
+			expend_01=	#{unitChange.expend_01},                         
+			expend_02=#{unitChange.expend_02},                         
+			expend_03 = #{unitChange.expend_03},                        
+			expend_04= #{unitChange.expend_04},                        
+			expend_05 = #{unitChange.expend_05},                               
+			update_user_id = #{unitChange.update_user_id},                                    
+			update_date =#{unitChange.update_date} ,                    
+			apply_status = #{unitChange.apply_status} ,  
+			change_value  =  #{unitChange.change_value},
+			hospital_grade_tow   =  #{unitChange.hospital_grade_tow},  
+			unit_nature_tow   =  #{unitChange.unit_nature_tow},     
+			earnings_nature   =  #{unitChange.earnings_nature},     
+			agency_level     =  #{unitChange.agency_level},      
+			agency_level_tow   =  #{unitChange.agency_level_tow},    
+			agency_level_three    =  #{unitChange.agency_level_three}, 
+			organization_no    =  #{unitChange.organization_no},    
+			unit_manage_scale_tow  =  #{unitChange.unit_manage_scale_tow},
+			unit_manage_scale    =  #{unitChange.unit_manage_scale}  
+			    
+	WHERE 
+           unit_no= #{unitChange.unit_no};  
+   </update>
+   <select id="getUnitChangeInfo" resultType="Mtb27UnitChange">
+        SELECT  *
+        FROM m_tb27_unit_change 
+        WHERE APPLY_NO = #{apply_no}
+          AND APPLY_NUMBER =#{apply_number}
+          AND UNIT_NO = #{unit_no};
+    </select>
+    
+    <insert id="saveChangeUnitForMtb112Admunittbupdate" parameterType="int">
+      INSERT INTO m_tb112_admunittbupdate (
+             UNIT_NO
+			,admtb_updateTime
+			,UNIT_NM
+			,UNIT_OWN
+			,UNIT_PROPERTY
+			,UNIT_LEVEL
+			,UNIT_ECONOMIC_TYPE
+			,UNIT_NATURE
+			,UNIT_SCALE
+			,UNIT_STATUS
+			,LICENSE_NO
+			,ORGANIZATION_CODE
+			,ESTABLISHMENT_NUM
+			,UNIT_ADDRESS
+			,UNIT_SUPER
+			,OFFICAL_SCOPE
+			,TIME
+			,UNIT_PRO
+			,INDUSTRY_PLAN
+			,STATISTIC_KBN
+			,ESCROW_UNIT_KBN
+			,ESCROW_UNIT_NO
+			,UNIT_LOWER
+			,UNIT_ASSORT
+			,AREA_ID
+			,ORGANIZATION_NO
+			,HOSPITAL_GRADE
+			,UNIT_NATURE_TOW
+			,UNIT_MANAGE_SCALE_TOW
+			,UNIT_MANAGE_SCALE_NM
+			,AGENCY_LEVEL
+			,AGENCY_LEVEL_TOW
+			,AGENCY_LEVEL_THREE
+			,EARNINGS_NATURE
+			,UNIT_MANAGE_SCALE
+			,HOSPITAL_GRADE_TOW
+			,UNIT_IMG
+			,CONTACT
+			,PHONE
+			,EMAIL
+			,SYSTEM_SORT
+			,INDUSTRY_DIVIDE
+			,AGENCY_PLAN
+			,SYSTEM_SORT_TWO
+			,INDUSTRY_DIVIDE_TWO
+			,HOSPITAL_CREDIT_KBN
+			,HOSPITAL_LEVEL
+			,EX_KEY
+			,DEL_KBN
+			,EXPEND_01
+			,EXPEND_02
+			,EXPEND_03
+			,EXPEND_04
+			,EXPEND_05
+			,LOGIN_USER_ID
+			,LOGIN_DATE
+			,UPDATE_USER_ID
+			,UPDATE_DATE
+		)VALUES (
+			#{unit.unit_no},
+			#{unit.admtb_updatetime},
+			#{unit.unit_nm},
+			#{unit.unit_own},
+			#{unit.unit_property},
+			#{unit.unit_level},
+			#{unit.unit_economic_type},
+			#{unit.unit_nature},
+			#{unit.unit_scale},
+			#{unit.unit_status},
+			#{unit.license_no},
+			#{unit.organization_code},
+			#{unit.establishment_num},
+			#{unit.unit_address},
+			#{unit.unit_super},
+			#{unit.offical_scope},
+			#{unit.time},
+			#{unit.unit_pro},
+			#{unit.industry_plan},
+			#{unit.statistic_kbn},
+			#{unit.escrow_unit_kbn},
+			#{unit.escrow_unit_no},
+			#{unit.unit_lower},
+			#{unit.unit_assort},
+			#{unit.area_id},
+			#{unit.organization_no},
+			#{unit.hospital_grade},
+			#{unit.unit_nature_tow},
+			#{unit.unit_manage_scale_tow},
+			#{unit.unit_manage_scale_nm},
+			#{unit.agency_level},
+			#{unit.agency_level_tow},
+			#{unit.agency_level_three},
+			#{unit.earnings_nature},
+			#{unit.unit_manage_scale},
+			#{unit.hospital_grade_tow},
+			#{unit.unit_img},
+			#{unit.contact},
+			#{unit.phone},
+			#{unit.email},
+			#{unit.system_sort},
+			#{unit.industry_divide},
+			#{unit.agency_plan},
+			#{unit.system_sort_two},
+			#{unit.industry_divide_two},
+			#{unit.hospital_credit_kbn},
+			#{unit.hospital_level},
+			#{unit.ex_key},
+			#{unit.del_kbn},
+			#{unit.expend_01},
+			#{unit.expend_02},
+			#{unit.expend_03},
+			#{unit.expend_04},
+			#{unit.expend_05},
+			#{unit.login_user_id},
+			#{unit.login_date},
+			#{unit.update_user_id},
+			#{unit.update_date}
+		);
+   </insert>
+</mapper>

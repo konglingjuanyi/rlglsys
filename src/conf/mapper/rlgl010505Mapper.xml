@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010505Mapper">
+    <!-- 进修信息查询SQL -->
+    <select id="getTb32Info" resultType="com.rlglsys.entity.Mtb32PersonalEducationInfo">
+        SELECT *
+        FROM m_tb32_personal_education_detail
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+            AND APPLY_NUMBER = #{applyNumber}
+    </select>
+    <!-- 个人人事申请信息查询SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{apply_no}
+    </select>
+    <!-- 更新个人进修申请明细信息 -->
+    <update id="updateTb32Info">
+        UPDATE m_tb32_personal_education_detail
+        SET
+            UNIT_CHECKER = #{updatetb32Info.unit_checker},
+            UNIT_CHECK_DATE = #{updatetb32Info.unit_check_date},
+            UNIT_CHECK_VIEWS = #{updatetb32Info.unit_check_views},
+            UNIT_CHECK_RESULT = #{updatetb32Info.unit_check_result},
+            COUNTY_CHECKER = #{updatetb32Info.county_checker},
+            COUNTY_CHECK_DATE = #{updatetb32Info.county_check_date},
+            COUNTY_CHECK_VIEWS = #{updatetb32Info.county_check_views},
+            COUNTY_CHECK_RESULT = #{updatetb32Info.county_check_result},
+            DOWNTOWN_CHECKER = #{updatetb32Info.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{updatetb32Info.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{updatetb32Info.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{updatetb32Info.downtown_check_result},
+            MINISTRY_CHECKER = #{updatetb32Info.ministry_checker},
+            MINISTRY_CHECK_DATE = #{updatetb32Info.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{updatetb32Info.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{updatetb32Info.ministry_check_result},
+            NOW_MARK = #{updatetb32Info.now_mark},
+            UPDATE_USER_ID = #{updatetb32Info.update_user_id},
+            UPDATE_DATE = #{updatetb32Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb32Info.apply_no}
+        AND APPLY_NUMBER = #{updatetb32Info.apply_number}
+    </update>
+    <!-- 更新个人人事申请信息 -->
+    <update id="updateTb29Info">
+        UPDATE m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{updatetb29Info.check_result},
+            NOW_MARK = #{updatetb29Info.now_mark},
+            WILL_CHECKUNITNO = #{updatetb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{updatetb29Info.update_user_id},
+            UPDATE_DATE = #{updatetb29Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb29Info.apply_no}
+    </update>
+</mapper>

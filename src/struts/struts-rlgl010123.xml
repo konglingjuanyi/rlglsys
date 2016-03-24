@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 单位管理联系人信息 -->
+<struts>
+    <package name="rlgl010123" extends="rlgl" namespace="/">
+        <!-- 单位管理联系人列表查看 -->
+        <action name="rlgl010123Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010110Action"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl010120.jsp</result>
+        </action>
+    </package>
+</struts>
+

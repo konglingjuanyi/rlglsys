@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl060314" extends="rlgl" namespace="/">
+		<action name="rlgl060314Init" class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl060314InitAction"
+			method="execute">
+			 <result name="success">/WEB-INF/jsp/rlgl060314.jsp</result>
+		</action>		
+		<action name="rlgl060314Search" class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl060314Search"
+			method="execute">
+			 <result name="success">/WEB-INF/jsp/rlgl060314.jsp</result>
+		</action>
+	</package>
+</struts>

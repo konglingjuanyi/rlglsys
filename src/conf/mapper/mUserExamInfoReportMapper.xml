@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IMUserExamInfoReportMapper">
+ 
+	<select id="getReportList" resultType="com.rlglsys.bean.MUserExamInfoReport">
+		select M1.USER_NAME,M1.USER_ID,M1.LOGIN_DATE,M2.UNIT_NM,M3.PROVINCE,M3.CITY,M3.ZONE,
+		M4.COURSE_NAME,M4.XUEFEN ,M4.UPDATE_DATE,M5.CREDIT,M5.EXAMS_TIME 
+		from
+		m_tb01_user as M1 
+		Left JOIN
+		m_tb04_unit as M2
+		ON
+		M1.UNIT_NO=M2.UNIT_NO 
+		Left JOIN
+		m_tb20_area as M3
+		ON
+		M2.AREA_ID=M3.AREA_ID
+		left join
+		m_tb122_public_course_select as M4
+		ON 
+		M4.USER_ID=M1.USER_ID 
+		Left Join m_tb81_course_exams as M5
+		ON
+		M5.USER_ID=M1.USER_ID
+		and M5.COURSE_ID=M4.COURSE_ID  
+	 
+	</select>
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020410Mapper">
+    <!-- 获得申请主表信息 -->
+    <select id="getTb07ApplyInfo" resultType="com.rlglsys.entity.UnitApply">
+        SELECT
+            *
+        FROM
+            m_tb07_unitapply
+        WHERE
+            DEL_KBN = '0'
+        AND APPLY_KBN = #{apply_kbn}
+        AND APPLY_NO = #{apply_id}
+    </select>
+    <!--待审核项目申请信息查询 -->
+    <select id="getApplyInfo" resultType="com.rlglsys.entity.UnitApply">
+        SELECT
+		    *
+		FROM
+		    m_tb07_unitapply
+		WHERE
+		    DEL_KBN = '0'
+		AND WILL_CHECKUNITNO = #{unit_no}
+		AND (CHECK_RESULT = '001' OR CHECK_RESULT = '004')
+		<if test="kind != '' and kind != '-1'">
+        AND APPLY_KBN = #{todoInfo.applyKbn}
+        </if>
+        <if test="kind = '' or kind = '-1'">
+            AND APPLY_KBN IN ('056','057','059')
+        </if>
+		<if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!--待审核项目申请信息查询 -->
+    <select id="getCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            m_tb07_unitapply
+        WHERE
+            DEL_KBN = '0'
+        AND WILL_CHECKUNITNO = #{unit_no}
+        AND CHECK_RESULT = '001'
+        <if test="kind != '' and kind != '-1'">
+        AND APPLY_KBN = #{todoInfo.applyKbn}
+        </if>
+        <if test="kind = '' or kind = '-1'">
+            AND APPLY_KBN IN ('056','057','059')
+        </if>
+    </select>
+    <!-- 获得申请信息 -->
+    <select id="getMtb87Info" resultType="com.rlglsys.entity.Mtb87NewProjectDeclare">
+        SELECT
+		    *
+		FROM
+		    m_tb87_new_project_declare
+		WHERE
+		    DEL_KBN = '0'
+		AND APPLY_KBN = #{apply_kbn}
+		AND APPLY_ID = #{apply_id}
+    </select>
+    <!-- 更新项目申请明细表 -->
+    <update id="updateMtb87Info">
+      update 
+        m_tb87_new_project_declare
+      set
+        PROJECT_ID = #{mtb87.project_id},
+        WILL_CHECKUNITNO = #{mtb87.will_checkunitno},
+        NOW_MARK = #{mtb87.now_mark},
+        CHECK_RESULT = #{mtb87.check_result},
+        UPDATE_USER_ID = #{mtb87.update_user_id},
+        UPDATE_DATE = #{mtb87.update_date}
+      where
+        APPLY_ID = #{mtb87.apply_id}
+    </update>
+    <!-- 更新项目申请明细表 -->
+    <update id="updateMtb93Info">
+      update 
+        m_tb93_record_project_declare
+      set
+        PROJECT_ID = #{mtb93.project_id},
+        WILL_CHECKUNITNO = #{mtb93.will_checkunitno},
+        NOW_MARK = #{mtb93.now_mark},
+        CHECK_RESULT = #{mtb93.check_result},
+        UPDATE_USER_ID = #{mtb93.update_user_id},
+        UPDATE_DATE = #{mtb93.update_date}
+      where
+        APPLY_ID = #{mtb93.apply_id}
+    </update>
+    <!-- 更新单位申请信息 -->
+    <update id="updateUnitApplyOk" >
+        UPDATE m_tb07_unitapply
+        SET
+            CHECK_RESULT = #{applyInfo.check_result},
+            COUNTY_CHECKER = #{applyInfo.county_checker},
+            COUNTY_CHECK_DATE = #{applyInfo.county_check_date},
+            COUNTY_CHECK_VIEWS = #{applyInfo.county_check_views},
+            COUNTY_CHECK_RESULT = #{applyInfo.county_check_result},
+            DOWNTOWN_CHECKER = #{applyInfo.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{applyInfo.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{applyInfo.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{applyInfo.downtown_check_result},
+            MINISTRY_CHECKER = #{applyInfo.ministry_checker},
+            MINISTRY_CHECK_DATE = #{applyInfo.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{applyInfo.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{applyInfo.ministry_check_result},
+            NOW_MARK = #{applyInfo.now_mark},
+            WILL_CHECKUNITNO = #{applyInfo.will_checkunitno},
+            UPDATE_USER_ID = #{applyInfo.update_user_id},
+            UPDATE_DATE = #{applyInfo.update_date}
+        WHERE
+            APPLY_NO = #{applyInfo.apply_no}
+        AND APPLY_KBN = #{applyInfo.apply_kbn}
+    </update>
+    
+</mapper>

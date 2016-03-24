@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010404Mapper">
+
+  <!-- 取得三名申请数量 -->
+  <select id="getThreeApplyCount" resultType="int">
+    SELECT 
+      COUNT(*)
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      WILL_CHECKUNITNO = #{unitNo}
+    AND 
+      APPLY_KBN 
+    IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '2' AND EXPEND_01 = '2' AND DEL_KBN = 0)
+    <if test="todoInfo.applyKbn != ''">
+    AND APPLY_KBN = #{todoInfo.applyKbn}
+    </if>
+    <if test="todoInfo.status != ''">
+    AND CHECK_RESULT = #{todoInfo.status}
+    </if>
+    <if test="todoInfo.author != ''">
+    AND PERSONAL_NM = #{todoInfo.author}
+    </if>
+    <if test="todoInfo.date != ''">
+    AND APPLY_DATE = #{todoInfo.date}
+    </if>
+  </select>
+  
+  <!-- 取得三名申请数量 -->
+  <select id="getThreeApplyList" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      WILL_CHECKUNITNO = #{unitNo}
+    AND 
+      APPLY_KBN 
+    IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '2' AND EXPEND_01 = '2' AND DEL_KBN = 0)
+    <if test="todoInfo.applyKbn != ''">
+    AND APPLY_KBN = #{todoInfo.applyKbn}
+    </if>
+    <if test="todoInfo.status != ''">
+    AND CHECK_RESULT = #{todoInfo.status}
+    </if>
+    <if test="todoInfo.author != ''">
+    AND PERSONAL_NM = #{todoInfo.author}
+    </if>
+    <if test="todoInfo.date != ''">
+    AND APPLY_DATE = #{todoInfo.date}
+    </if>
+    <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+    LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+    </if>
+  </select>
+  
+  <!-- 通过申请编号，申请连番和申请区分获取待审核医师信息 -->
+  <select id="getDoctorApplyInfo" resultType="com.rlglsys.bean.Rlgl010401Bean">
+    SELECT
+      M.APPLY_NO,
+      M.APPLY_NUMBER,
+      M.PERSONAL_ID,
+      M.PERSONAL_NM,
+      M.UNIT_NO,
+      M.UNIT_NM,
+      M.APPLY_TIME,
+      M.PERSONAL_INFO,
+      M.DOCTOR_LEVEL,
+      M.NOW_MARK,
+      M1.personnel_gender,
+      M1.personnel_worktime,
+      M1.personnel_email,
+      M1.personnel_officetel,
+      M1.personnel_imgname,
+      M2.SCHOOL,
+      M2.EDUCATIONAL_BG,
+      M3.POSITION_NM,
+      M4.SECTION_NAME,
+      M5.ADM_NAME AS apply_doctor_level,
+      M6.ADM_NAME AS educational_bg_nm
+    FROM
+      m_tb82_famous_doctor_apply_detail M
+    LEFT JOIN
+      m_tb12_personnel M1
+    ON
+      M.PERSONAL_ID = M1.PERSONNEL_ID
+    LEFT JOIN
+      m_tb15_personnel_edu_info M2
+    ON
+      M.PERSONAL_ID = M2.PERSONNEL_ID
+    LEFT JOIN 
+      (SELECT * FROM m_tb17_personnel_job_info JOB1 WHERE APPOINT_TIME = (SELECT MAX(APPOINT_TIME) FROM m_tb17_personnel_job_info WHERE PERSONNEL_ID=JOB1.PERSONNEL_ID GROUP BY PERSONNEL_ID)) M3
+    ON 
+      M.PERSONAL_ID = M3.PERSONNEL_ID
+    LEFT JOIN
+      (SELECT t1.UNIT_NO,t1.SECTION_NAME,t2.PERSONNEL_ID FROM m_tb22_hospital_section t1 LEFT JOIN m_tb01_user t2 ON t2.UNIT_NO = t1.UNIT_NO AND t1.SECTION_ID = t2.SECTION_ID) M4
+    ON
+      M.UNIT_NO = M4.UNIT_NO 
+    AND 
+      M.PERSONAL_ID = M4.PERSONNEL_ID
+    LEFT JOIN
+      m_tb02_adm M5
+    ON
+      M5.ADM_TYPE_CD = '191'
+    AND
+      M5.ADM_NUM = M.DOCTOR_LEVEL
+    LEFT JOIN
+      m_tb02_adm M6
+    ON
+      M6.ADM_TYPE_CD = '040'
+    AND
+      M6.ADM_NUM = M2.EDUCATIONAL_BG
+    WHERE
+      M.APPLY_NO = #{apply_no}
+    AND
+      M.APPLY_NUMBER = #{max_number}
+    AND
+      m.DEL_KBN = 0
+  </select>
+  
+  <!-- 个人人事申请信息查询SQL -->
+  <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      APPLY_NO = #{apply_no}
+    AND
+      MAX_NUMBER = #{apply_number}
+    AND 
+      DEL_KBN = '0'
+  </select>
+  
+  <!-- 更新个人人事申请信息SQL -->
+  <update id="updateTb29Info">
+      UPDATE 
+        m_tb29_personalapplication
+      SET
+        CHECK_RESULT = #{mtb29Info.check_result},
+        NOW_MARK = #{mtb29Info.now_mark},
+        WILL_CHECKUNITNO = #{mtb29Info.will_checkunitno},
+        UPDATE_USER_ID = #{mtb29Info.update_user_id},
+        UPDATE_DATE = #{mtb29Info.update_date}
+      WHERE
+        APPLY_NO = #{mtb29Info.apply_no}
+  </update>
+  
+  <!-- 更新名医申请明细表 -->
+  <update id="updateMtb82Info">
+    update 
+      m_tb82_famous_doctor_apply_detail
+    set
+      UNIT_CHECKER = #{mtb82UpdateInfo.unit_checker},
+      UNIT_CHECK_DATE = #{mtb82UpdateInfo.unit_check_date},
+      UNIT_CHECK_VIEWS = #{mtb82UpdateInfo.unit_check_views},
+      UNIT_CHECK_RESULT = #{mtb82UpdateInfo.unit_check_result},
+      COUNTY_CHECKER = #{mtb82UpdateInfo.county_checker},
+      COUNTY_CHECK_DATE = #{mtb82UpdateInfo.county_check_date},
+      COUNTY_CHECK_VIEWS = #{mtb82UpdateInfo.county_check_views},
+      COUNTY_CHECK_RESULT = #{mtb82UpdateInfo.county_check_result},
+      DOWNTOWN_CHECKER = #{mtb82UpdateInfo.downtown_checker},
+      DOWNTOWN_CHECK_DATE = #{mtb82UpdateInfo.downtown_check_date},
+      DOWNTOWN_CHECK_VIEWS = #{mtb82UpdateInfo.downtown_check_views},
+      DOWNTOWN_CHECK_RESULT = #{mtb82UpdateInfo.downtown_check_result},
+      MINISTRY_CHECKER = #{mtb82UpdateInfo.ministry_checker},
+      MINISTRY_CHECK_DATE = #{mtb82UpdateInfo.ministry_check_date},
+      MINISTRY_CHECK_VIEWS = #{mtb82UpdateInfo.ministry_check_views},
+      MINISTRY_CHECK_RESULT = #{mtb82UpdateInfo.ministry_check_result},
+      NOW_MARK = #{mtb82UpdateInfo.now_mark},
+      UPDATE_USER_ID = #{mtb82UpdateInfo.update_user_id},
+      UPDATE_DATE = #{mtb82UpdateInfo.update_date},
+      AVAILABLE_PERIOD = #{mtb82UpdateInfo.available_period}
+    where
+      APPLY_NO = #{mtb82UpdateInfo.apply_no}
+    AND 
+      APPLY_NUMBER = #{mtb82UpdateInfo.apply_number}
+  </update>
+  
+  <!-- 更新名科申请明细表  -->
+  <update id="updateMtb86Info">
+    update 
+      m_tb86_famous_section_apply_detail
+    set
+      UNIT_CHECKER = #{mtb86UpdateInfo.unit_checker},
+      UNIT_CHECK_DATE = #{mtb86UpdateInfo.unit_check_date},
+      UNIT_CHECK_VIEWS = #{mtb86UpdateInfo.unit_check_views},
+      UNIT_CHECK_RESULT = #{mtb86UpdateInfo.unit_check_result},
+      COUNTY_CHECKER = #{mtb86UpdateInfo.county_checker},
+      COUNTY_CHECK_DATE = #{mtb86UpdateInfo.county_check_date},
+      COUNTY_CHECK_VIEWS = #{mtb86UpdateInfo.county_check_views},
+      COUNTY_CHECK_RESULT = #{mtb86UpdateInfo.county_check_result},
+      DOWNTOWN_CHECKER = #{mtb86UpdateInfo.downtown_checker},
+      DOWNTOWN_CHECK_DATE = #{mtb86UpdateInfo.downtown_check_date},
+      DOWNTOWN_CHECK_VIEWS = #{mtb86UpdateInfo.downtown_check_views},
+      DOWNTOWN_CHECK_RESULT = #{mtb86UpdateInfo.downtown_check_result},
+      MINISTRY_CHECKER = #{mtb86UpdateInfo.ministry_checker},
+      MINISTRY_CHECK_DATE = #{mtb86UpdateInfo.ministry_check_date},
+      MINISTRY_CHECK_VIEWS = #{mtb86UpdateInfo.ministry_check_views},
+      MINISTRY_CHECK_RESULT = #{mtb86UpdateInfo.ministry_check_result},
+      NOW_MARK = #{mtb86UpdateInfo.now_mark},
+      UPDATE_USER_ID = #{mtb86UpdateInfo.update_user_id},
+      UPDATE_DATE = #{mtb86UpdateInfo.update_date},
+      AVAILABLE_PERIOD = #{mtb86UpdateInfo.available_period}
+    where
+      APPLY_NO = #{mtb86UpdateInfo.apply_no}
+    AND 
+      APPLY_NUMBER = #{mtb86UpdateInfo.apply_number}
+  </update>
+  
+  <!-- 获取名科申请待审核信息 -->
+  <select id="getSectionApplyInfo" resultType="com.rlglsys.bean.Rlgl010402Bean">
+    SELECT
+      M.APPLY_NO,
+      M.APPLY_NUMBER,
+      M.UNIT_NO,
+      M.UNIT_NM,
+      M.NOW_MARK,
+      M.SECTION_LEVEL,
+      M.APPLY_TIME,
+      M1.*,
+      M2.ADM_NAME AS section_pro_nm,
+      M3.ADM_NAME AS section_level_nm,
+      M4.USER_NAME AS section_manger_nm
+    FROM
+      m_tb86_famous_section_apply_detail M
+    LEFT JOIN
+      m_tb22_hospital_section M1
+    ON
+      M.UNIT_NO = M1.UNIT_NO
+    AND
+      M.SECTION_ID = M1.SECTION_ID
+    AND
+      M1.DEL_KBN = 0
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = '097'
+    AND
+      M2.ADM_NUM = M1.SECTION_PROPERTY
+    AND
+      M2.DEL_KBN = 0
+    LEFT JOIN
+      m_tb02_adm M3
+    ON
+      M3.ADM_TYPE_CD = '191'
+    AND
+      M3.ADM_NUM = M.SECTION_LEVEL
+    AND  
+      M3.DEL_KBN = 0
+    LEFT JOIN
+      m_tb01_user M4
+    ON
+      M4.USER_ID = M1.SECTION_MANAGER
+    AND
+      M4.DEL_KBN = 0
+    WHERE
+      M.APPLY_NO = #{apply_no}
+    AND
+      M.APPLY_NUMBER = #{max_number}
+    AND
+      M.DEL_KBN = 0
+  </select>
+  
+  <!-- 更新名院申请明细表  -->
+  <update id="updateMtb104Info">
+    update 
+      m_tb104_famous_hospital_apply_detail
+    set
+      UNIT_CHECKER = #{mtb104UpdateInfo.unit_checker},
+      UNIT_CHECK_DATE = #{mtb104UpdateInfo.unit_check_date},
+      UNIT_CHECK_VIEWS = #{mtb104UpdateInfo.unit_check_views},
+      UNIT_CHECK_RESULT = #{mtb104UpdateInfo.unit_check_result},
+      COUNTY_CHECKER = #{mtb104UpdateInfo.county_checker},
+      COUNTY_CHECK_DATE = #{mtb104UpdateInfo.county_check_date},
+      COUNTY_CHECK_VIEWS = #{mtb104UpdateInfo.county_check_views},
+      COUNTY_CHECK_RESULT = #{mtb104UpdateInfo.county_check_result},
+      DOWNTOWN_CHECKER = #{mtb104UpdateInfo.downtown_checker},
+      DOWNTOWN_CHECK_DATE = #{mtb104UpdateInfo.downtown_check_date},
+      DOWNTOWN_CHECK_VIEWS = #{mtb104UpdateInfo.downtown_check_views},
+      DOWNTOWN_CHECK_RESULT = #{mtb104UpdateInfo.downtown_check_result},
+      MINISTRY_CHECKER = #{mtb104UpdateInfo.ministry_checker},
+      MINISTRY_CHECK_DATE = #{mtb104UpdateInfo.ministry_check_date},
+      MINISTRY_CHECK_VIEWS = #{mtb104UpdateInfo.ministry_check_views},
+      MINISTRY_CHECK_RESULT = #{mtb104UpdateInfo.ministry_check_result},
+      NOW_MARK = #{mtb104UpdateInfo.now_mark},
+      UPDATE_USER_ID = #{mtb104UpdateInfo.update_user_id},
+      UPDATE_DATE = #{mtb104UpdateInfo.update_date},
+      AVAILABLE_PERIOD = #{mtb104UpdateInfo.available_period}
+    where
+      APPLY_NO = #{mtb104UpdateInfo.apply_no}
+    AND 
+      APPLY_NUMBER = #{mtb104UpdateInfo.apply_number}
+  </update>
+  
+  <!-- 更新单位科室表 科室级别 -->
+  <update id="updateMtb22">
+    update 
+      m_tb22_hospital_section
+    set
+      SECTION_LEVEL = #{mtb86UpdateInfo.section_level}
+    where
+      SECTION_ID = #{mtb86UpdateInfo.section_id}
+    and
+      UNIT_NO = #{mtb86UpdateInfo.unit_no}
+    and
+      DEL_KBN = 0
+  </update>
+  
+  <!-- 更新人员基本信息表 名医级别 -->
+  <update id="updateMtb12Info">
+    update 
+      m_tb12_personnel
+    set
+      DOCTOR_LEVEL = #{mtb82UpdateInfo.doctor_level}
+    where
+      PERSONNEL_ID = #{mtb82UpdateInfo.personal_id}
+    and
+      DEL_KBN = 0
+  </update>
+  
+</mapper>

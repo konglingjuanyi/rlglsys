@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl021104" extends="rlgl" namespace="/">
+        <action name="rlgl021104Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021104InitAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021104.jsp</result>
+        </action>
+        <action name="rlgl021104Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021104SearchAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl021104.jsp</result>
+        </action>
+         <action name="rlgl021105Init"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021105InitAction" method="execute">
+             <result name="init">/WEB-INF/jsp/rlgl021105.jsp</result>
+        </action>
+        <action name="rlgl021105Search"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021105SearchAction" method="execute">
+             <result name="init">/WEB-INF/jsp/rlgl021105.jsp</result>
+        </action>
+        <action name="rlgl021105GoBack"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021105GoBackAction" method="execute">
+         <result name="userSuccess" type="redirectAction">
+			  <param name="actionName">rlgl021104Search</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+        </action>
+        <action name="rlgl021105Audit"
+        class="com.rlglsys.action.continumedicaleducation.hospitalcredit.Rlgl021105AuditAction" method="execute">
+         <result name="userSuccess" type="redirectAction">
+			  <param name="actionName">rlgl021105Search</param>
+			  <param name="searchkbn">${searchkbn}</param>
+            </result>
+        </action>
+        
+    </package>
+</struts>
+

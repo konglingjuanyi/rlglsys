@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl200102" extends="rlgl" namespace="/">
+		<action name="rlgl200102Init" class="com.rlglsys.action.excel.download.Rlgl200101InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl200101.jsp</result>
+		</action>
+		<action name="rlgl200101Upload" class="com.rlglsys.action.excel.download.Rlgl200101UploadAction" method="execute">
+			<result name="success" type="stream">
+                 <param name="contentType">application/vnd.ms-excel</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+            </result>
+		</action>
+	</package>
+</struts>

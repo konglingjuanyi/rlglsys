@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020401Mapper">
+
+	<insert id="insertDeclareInfo">
+        INSERT INTO m_tb87_new_project_declare(
+             APPLY_ID
+            ,USER_ID
+            ,UNIT_NO
+            ,PROJECT_ID
+            ,PROJECT_LEVEL
+            ,PROJECT_NM
+            ,SUBJECT_TWO
+            ,SUBJECT_THREE
+            ,POSTALCODE
+            ,DECLARE_DATE
+            ,PROJECT_LIABLE_NM
+            ,PROJECT_LIABLE_POST
+            ,PROJECT_LIABLE_UNIT
+            ,PROJECT_LIABLE_ADDRESS
+            ,PROJECT_LIABLE_PHONE
+            ,PROJECT_LIABLE_POSTALCODE
+            ,CONDUCT_PATTERN
+            ,CONDUCT_START_DATE
+            ,CONDUCT_END_DATE
+            ,CONDUCT_TERM
+            ,EXAMINE_PATTERN
+            ,EDUCATION_OBJECT
+            ,PROTOCOL_RECRUIT_OBJECT
+            ,EDUCATION_ALL_PERIOD
+            ,PROFESS_THEORY_PERIOD
+            ,EXPERIMENT_PERIOD
+            ,CONDUCT_PLACE
+            ,PROTOCOL_CONFER_CREDIT
+            ,DIRECT_UNIT
+            ,DIRECT_UNIT_PHONE
+            ,DIRECT_UNIT_CONTACTS
+            ,DECLARE_UNIT
+            ,DECLARE_UNIT_PHONE
+            ,DECLARE_UNIT_CONTACTS
+            ,REMARK
+            ,EX_KEY
+            ,DEL_KBN
+            ,APPLY_KBN
+            ,NOW_MARK
+            ,END_MARK
+            ,WILL_CHECKUNITNO
+            ,OPEN_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{declareInfo.apply_id}
+            ,#{declareInfo.user_id}
+            ,#{declareInfo.unit_no}
+            ,#{declareInfo.project_id}
+            ,#{declareInfo.project_level}
+            ,#{declareInfo.project_nm}
+            ,#{declareInfo.subject_two}
+            ,#{declareInfo.subject_three}
+            ,#{declareInfo.postalcode}
+            ,#{declareInfo.declare_date}
+            ,#{declareInfo.project_liable_nm}
+            ,#{declareInfo.project_liable_post}
+            ,#{declareInfo.project_liable_unit}
+            ,#{declareInfo.project_liable_address}
+            ,#{declareInfo.project_liable_phone}
+            ,#{declareInfo.project_liable_postalcode}
+            ,#{declareInfo.conduct_pattern}
+            ,#{declareInfo.conduct_start_date}
+            ,#{declareInfo.conduct_end_date}
+            ,#{declareInfo.conduct_term}
+            ,#{declareInfo.examine_pattern}
+            ,#{declareInfo.education_object}
+            ,#{declareInfo.protocol_recruit_object}
+            ,#{declareInfo.education_all_period}
+            ,#{declareInfo.profess_theory_period}
+            ,#{declareInfo.experiment_period}
+            ,#{declareInfo.conduct_place}
+            ,#{declareInfo.protocol_confer_credit}
+            ,#{declareInfo.direct_unit}
+            ,#{declareInfo.direct_unit_phone}
+            ,#{declareInfo.direct_unit_contacts}
+            ,#{declareInfo.declare_unit}
+            ,#{declareInfo.declare_unit_phone}
+            ,#{declareInfo.declare_unit_contacts}
+            ,#{declareInfo.remark}
+            ,#{declareInfo.ex_key}
+            ,#{declareInfo.del_kbn}
+            ,#{declareInfo.apply_kbn}
+            ,#{declareInfo.now_mark}
+            ,#{declareInfo.end_mark}
+            ,#{declareInfo.will_checkunitno}
+            ,#{declareInfo.open_kbn}
+            ,#{declareInfo.expend_01}
+            ,#{declareInfo.expend_02}
+            ,#{declareInfo.expend_03}
+            ,#{declareInfo.expend_04}
+            ,#{declareInfo.expend_05}
+            ,#{declareInfo.login_user_id}
+            ,#{declareInfo.login_date}
+            ,#{declareInfo.update_user_id}
+            ,#{declareInfo.update_date})
+    </insert>
+    <update id="updateDeclareInfo">
+        UPDATE m_tb87_new_project_declare
+        SET
+             USER_ID = #{declareInfo.user_id}
+            ,UNIT_NO = #{declareInfo.unit_no}
+            ,PROJECT_ID = #{declareInfo.project_id}
+            ,PROJECT_LEVEL = #{declareInfo.project_level}
+            ,PROJECT_NM = #{declareInfo.project_nm}
+            ,SUBJECT_TWO = #{declareInfo.subject_two}
+            ,SUBJECT_THREE = #{declareInfo.subject_three}
+            ,POSTALCODE = #{declareInfo.postalcode}
+            ,DECLARE_DATE = #{declareInfo.declare_date}
+            ,PROJECT_LIABLE_NM = #{declareInfo.project_liable_nm}
+            ,PROJECT_LIABLE_POST = #{declareInfo.project_liable_post}
+            ,PROJECT_LIABLE_UNIT = #{declareInfo.project_liable_unit}
+            ,PROJECT_LIABLE_ADDRESS = #{declareInfo.project_liable_address}
+            ,PROJECT_LIABLE_PHONE = #{declareInfo.project_liable_phone}
+            ,PROJECT_LIABLE_POSTALCODE = #{declareInfo.project_liable_postalcode}
+            ,CONDUCT_PATTERN = #{declareInfo.conduct_pattern}
+            ,CONDUCT_START_DATE = #{declareInfo.conduct_start_date}
+            ,CONDUCT_END_DATE = #{declareInfo.conduct_end_date}
+            ,CONDUCT_TERM = #{declareInfo.conduct_term}
+            ,EXAMINE_PATTERN = #{declareInfo.examine_pattern}
+            ,EDUCATION_OBJECT = #{declareInfo.education_object}
+            ,PROTOCOL_RECRUIT_OBJECT = #{declareInfo.protocol_recruit_object}
+            ,EDUCATION_ALL_PERIOD = #{declareInfo.education_all_period}
+            ,PROFESS_THEORY_PERIOD = #{declareInfo.profess_theory_period}
+            ,EXPERIMENT_PERIOD = #{declareInfo.experiment_period}
+            ,CONDUCT_PLACE = #{declareInfo.conduct_place}
+            ,PROTOCOL_CONFER_CREDIT = #{declareInfo.protocol_confer_credit}
+            ,DIRECT_UNIT = #{declareInfo.direct_unit}
+            ,DIRECT_UNIT_PHONE = #{declareInfo.direct_unit_phone}
+            ,DIRECT_UNIT_CONTACTS = #{declareInfo.direct_unit_contacts}
+            ,DECLARE_UNIT = #{declareInfo.declare_unit}
+            ,DECLARE_UNIT_PHONE = #{declareInfo.declare_unit_phone}
+            ,DECLARE_UNIT_CONTACTS = #{declareInfo.declare_unit_contacts}
+            ,REMARK = #{declareInfo.remark}
+            ,EX_KEY = #{declareInfo.ex_key}
+            ,DEL_KBN = #{declareInfo.del_kbn}
+            ,EXPEND_01 = #{declareInfo.expend_01}
+            ,EXPEND_02 = #{declareInfo.expend_02}
+            ,EXPEND_03 = #{declareInfo.expend_03}
+            ,EXPEND_04 = #{declareInfo.expend_04}
+            ,EXPEND_05 = #{declareInfo.expend_05}
+            ,LOGIN_USER_ID = #{declareInfo.login_user_id}
+            ,LOGIN_DATE = #{declareInfo.login_date}
+            ,UPDATE_USER_ID = #{declareInfo.update_user_id}
+            ,UPDATE_DATE = #{declareInfo.update_date}
+       WHERE
+            APPLY_ID = #{declareInfo.apply_id}
+    </update>
+</mapper>

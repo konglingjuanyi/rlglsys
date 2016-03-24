@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+  	<settings>
+		<!-- 使全局的映射器启用缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 启用延迟加载 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<!-- 允许多结果集返回 -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<!-- 使用列标签代替列名 -->
+		<setting name="useColumnLabel" value="true" />
+		<!-- 不使用生成键 -->
+		<setting name="useGeneratedKeys" value="false" />
+		<!-- 默认执行器为SIMPLE -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<!--超时时间为25000毫秒 -->
+		<setting name="defaultStatementTimeout" value="25000" />
+	</settings>
+
+</configuration>

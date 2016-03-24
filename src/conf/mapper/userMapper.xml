@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IUserMapper">
+
+    <!-- 登录用户查询SQL -->
+    <select id="getUserForLogin" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            user_id = #{user.user_id}
+            <if test="user.password != '' and user.password != null">
+            AND password = #{user.password}
+            </if>
+            AND DEL_KBN = '0'
+    </select>
+    <!-- 单位有效用户查询SQL -->
+    <select id="getUserList" resultType="com.rlglsys.bean.Rlgl000211Bean">
+        SELECT
+            A.USER_ID,
+            A.USER_NAME,
+            A.USER_ENTER,
+            A.USER_TYPE,
+            A.SECTION_ID,
+            B.PERSONNEL_TEL,
+            B.PERSONNEL_EMAIL
+        FROM (SELECT * FROM  m_tb01_user
+        WHERE
+            UNIT_NO=#{unit_no}
+            AND DEL_KBN = '0'
+            AND user_type='0' 
+            <if test="user_id !=''">
+               AND USER_NAME =#{user_id}
+           </if>
+           )A  LEFT JOIN m_tb12_personnel B ON(A.PERSONNEL_ID=B.PERSONNEL_ID) 
+           <if test="rlgl000206Bean.pageCount != 0 and rlgl000206Bean.pageCount != null">
+             LIMIT #{rlgl000206Bean.pageNo},#{rlgl000206Bean.pageCount}
+           </if>
+    </select>
+    <!-- 单位有效用户查询SQL -->
+    <select id="getUserCount" resultType="int">
+        SELECT
+            count(*)
+        FROM m_tb01_user
+        WHERE
+            UNIT_NO=#{unit_no}
+            AND USER_ID !=#{userId}
+            AND user_type='0'
+            AND DEL_KBN = '0'
+            <if test="user_id !=''">
+               AND USER_NAME =#{user_id}
+           </if>
+    </select>
+    <!-- 登录用户查询SQL -->
+    <select id="getUserInfoWithLogin" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+           password = #{userInfo.password}
+           <if test="userInfo.user_type ==0">
+               AND (USER_ID = #{userInfo.user_id}
+               OR PERSONNEL_ID = #{userInfo.personnel_id})
+           </if>
+           <if test="userInfo.user_type ==1">
+               AND (USER_ID = #{userInfo.user_id}
+               OR USER_ID_BIKO = #{userInfo.user_id_biko})
+           </if>
+            AND DEL_KBN = '0'
+    </select>
+    <!-- 用户查询SQL -->
+    <select id="getUserInfo" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            (user_id = #{user_id}
+             <if test="user_id_biko != '' and user_id_biko != null">
+             OR user_id_biko = #{user_id_biko}
+             </if>
+            )
+            AND DEL_KBN = '0'
+    </select>
+    
+    <!-- 用户查询(通过身份证)SQL -->
+    <select id="getUserInfoBypersonnelId" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            (user_id = #{user_id}
+             <if test="personnel_id != '' and personnel_id != null">
+             OR personnel_id = #{personnel_id}
+             </if>
+            )
+            AND DEL_KBN = '0'
+    </select>
+    
+     <!-- 用户查询SQL -->
+    <select id="getPersonnelInfo" resultType="com.rlglsys.entity.Mtb12Personnel">
+        SELECT
+            *
+        FROM m_tb12_personnel
+        WHERE
+            PERSONNEL_ID = #{personnel_id}
+            AND DEL_KBN = '0'
+    </select>
+    
+    <!-- 用户组一览查询SQL -->
+    <select id="getUserInfoBytypeList" resultType="com.rlglsys.bean.Rlgl090102Bean">
+        SELECT
+            m_tb01_user.*,
+            m_tb04_unit.UNIT_NM
+        FROM m_tb01_user
+        LEFT JOIN m_tb04_unit
+        ON  m_tb01_user.UNIT_NO = m_tb04_unit.UNIT_NO
+        AND m_tb04_unit.DEL_KBN  = '0'
+        WHERE
+            m_tb01_user.USER_TYPE = #{user_type}
+            <if test="unit_no != '' and unit_no != null">
+                AND m_tb01_user.unit_no = #{unit_no}
+           </if>
+            AND m_tb01_user.DEL_KBN = '0'
+    </select>
+
+     <select id="searchUserInfoList" resultType="com.rlglsys.bean.Rlgl090102Bean">
+        SELECT
+            M1.*,
+            M2.PERSONNEL_NM,
+            M3.UNIT_NM,
+            M2.PERSONNEL_BIKO AS personnel_biko_nm,
+            CONCAT(IFNULL(M4.ADM_NAME,'')) AS personnel_joinmode_nm
+        FROM m_tb01_user M1
+          LEFT JOIN m_tb04_unit M3
+          ON  M1.UNIT_NO = M3.UNIT_NO
+          AND M3.DEL_KBN  = '0'
+          
+	      , m_tb12_personnel M2
+	      LEFT JOIN m_tb02_adm M4 ON
+	      SUBSTRING(M2.PERSONNEL_JOINMODE,1,3) = M4.ADM_NUM
+	      AND M4.ADM_TYPE_CD = '094'
+		  AND LENGTH(M2.PERSONNEL_JOINMODE) >= 3
+		  
+		  LEFT JOIN m_tb02_adm M5 ON
+	      SUBSTRING(M2.PERSONNEL_JOINMODE,4,3) = M5.ADM_NUM
+	      AND M5.ADM_TYPE_CD = '177'
+		  AND LENGTH(M2.PERSONNEL_JOINMODE) >= 6
+		  
+		  LEFT JOIN m_tb02_adm M6 ON
+	      SUBSTRING(M2.PERSONNEL_JOINMODE,7,3) = M6.ADM_NUM
+	      AND M6.ADM_TYPE_CD = '178'
+		  AND LENGTH(M2.PERSONNEL_JOINMODE) >= 9
+		  
+		  LEFT JOIN m_tb02_adm M7 ON
+	      SUBSTRING(M2.PERSONNEL_JOINMODE,7,3) = M7.ADM_NUM
+	      AND M7.ADM_TYPE_CD = '179'
+		  AND LENGTH(M2.PERSONNEL_JOINMODE) >= 9
+        WHERE
+            M1.personnel_id = M2.personnel_id
+            AND M1.USER_TYPE = #{userInfo.user_type}
+            AND M1.USER_TYPE = '0'
+            AND M1.UNIT_NO = #{userInfo.unit_no}
+            <if test="userInfo.user_kbn != '' and userInfo.user_kbn != null">
+                AND M1.DEL_KBN = #{userInfo.user_kbn}
+                AND M2.DEL_KBN = #{userInfo.user_kbn}
+           </if>
+            
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M1.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M1.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+           <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND M1.personnel_id  =  #{userInfo.personnel_id}
+           </if>
+           <if test="userInfo.pageCount != 0 and userInfo.pageCount != null">
+             LIMIT #{userInfo.pageNo},#{userInfo.pageCount}
+           </if>
+    </select>
+    
+    <select id="searchUserInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb01_user M1
+        LEFT JOIN m_tb04_unit M3
+        ON  M1.UNIT_NO = M3.UNIT_NO
+        AND M3.DEL_KBN  = '0'
+        , m_tb12_personnel M2
+        WHERE
+            M1.personnel_id = M2.personnel_id
+            AND M1.USER_TYPE = #{userInfo.user_type}
+            AND M1.USER_TYPE = '0'
+            AND M1.UNIT_NO = #{userInfo.unit_no}
+            <if test="userInfo.user_kbn != '' and userInfo.user_kbn != null">
+                AND M1.DEL_KBN = #{userInfo.user_kbn}
+                AND M2.DEL_KBN = #{userInfo.user_kbn}
+           </if>
+           
+           <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M1.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M1.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+           <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND M1.personnel_id  =  #{userInfo.personnel_id}
+           </if>
+    </select>
+    
+    <!-- 用户信息登录 -->
+    <insert id="insertUserInfo">
+       INSERT INTO m_tb01_user
+            (USER_ID
+            ,USER_ID_BIKO
+            ,USER_NAME
+            ,PASSWORD
+            ,USER_TYPE
+            ,ACTING_KBN
+            ,UNIT_NO
+            ,SECTION_ID
+            ,PERSONNEL_ID
+         <!--     ,USER_ENTER-->
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{user.user_id}
+            ,#{user.user_id_biko}
+            ,#{user.user_name}
+            ,#{user.password}
+            ,#{user.user_type}
+            ,#{user.acting_kbn}
+            ,#{user.unit_no}
+            ,#{user.section_id}
+            ,#{user.personnel_id}
+           <!--   ,#{user.user_enter}-->
+            ,0
+            ,'0'
+            ,#{user.expend_01}
+            ,#{user.expend_02}
+            ,#{user.expend_03}
+            ,#{user.expend_04}
+            ,#{user.expend_05}
+            ,#{user.login_user_id}
+            ,#{user.login_date}
+            ,#{user.update_user_id}
+            ,#{user.update_date})
+    </insert>
+    
+    <!-- 删除用户信息(逻辑删除) -->
+    <update id="updateMtb01UserInfoWithLogic">
+        UPDATE m_tb01_user
+        SET DEL_KBN = #{userInfo.del_kbn}
+            ,UPDATE_USER_ID = #{userInfo.update_user_id}
+            ,UPDATE_DATE = #{userInfo.update_date}
+        WHERE 
+            USER_ID = #{userInfo.user_id}
+    </update>
+    <!-- 删除用户信息(物理删除) -->
+    <delete id="deleteMtb01UserInfoWithPhysical">
+        DELETE FROM m_tb01_user
+        WHERE USER_ID = #{user_id}
+    </delete>
+    
+    <!-- 删除人员基本信息(逻辑删除) -->
+    <update id="updateMtb12PersonnelInfoWithLogic">
+        UPDATE m_tb12_personnel
+        SET DEL_KBN = #{personnelInfo.del_kbn}
+            ,UPDATE_USER_ID = #{personnelInfo.update_user_id}
+            ,UPDATE_DATE = #{personnelInfo.update_date}
+        WHERE 
+            PERSONNEL_ID = #{personnelInfo.personnel_id}
+    </update>
+    
+    <!-- 删除人员基本信息(物理删除) -->
+    <delete id="deleteMtb12PersonnelInfoWithPhysical">
+        DELETE FROM m_tb12_personnel
+        WHERE PERSONNEL_ID = #{personnel_id}
+    </delete>
+    
+     <!-- 删除单位基本信息(逻辑删除) -->
+    <update id="updateMtb04UnitInfoWithLogic">
+        UPDATE m_tb04_unit
+        SET DEL_KBN = #{unitInfo.del_kbn}
+            ,UPDATE_USER_ID = #{unitInfo.update_user_id}
+            ,UPDATE_DATE = #{unitInfo.update_date}
+        WHERE 
+            UNIT_NO = #{unitInfo.unit_no}
+    </update>
+    
+    <!-- 删除单位基本信息(物理删除) -->
+    <delete id="deleteMtb04UnitInfoWithPhysical">
+        DELETE FROM m_tb04_unit
+        WHERE UNIT_NO = #{unit_no}
+    </delete>
+    
+     <!-- 删除下级单位基本信息(逻辑删除) -->
+    <update id="updateMtb28UnitLowerInfoWithLogic">
+        UPDATE m_tb28_unit_lower
+        SET DEL_KBN = #{unitLowerInfo.del_kbn}
+            ,UPDATE_USER_ID = #{unitLowerInfo.update_user_id}
+            ,UPDATE_DATE = #{unitLowerInfo.update_date}
+        WHERE 
+            UNIT_NO = #{unitLowerInfo.unit_no}
+            AND UNIT_NO_LOWER = #{unitLowerInfo.unit_no_lower}
+    </update>
+
+     <!-- 删除下级单位基本信息(物理删除) -->
+    <delete id="deleteMtb28UnitLowerInfoWithPhysical">
+        DELETE FROM m_tb28_unit_lower
+        WHERE UNIT_NO = #{unit_no}
+        AND UNIT_NO_LOWER = #{unit_no_lower}
+    </delete>
+    
+    <!-- 删除人员基本信息(逻辑删除)（审核前） -->
+    <update id="updateMtb39PersonnelInfoWithLogic">
+        UPDATE m_tb39_personnel
+        SET DEL_KBN = #{personnel39Info.del_kbn}
+            ,UPDATE_USER_ID = #{personnel39Info.update_user_id}
+            ,UPDATE_DATE = #{personnel39Info.update_date}
+        WHERE 
+            PERSONNEL_ID = #{personnel39Info.personnel_id}
+    </update>
+    
+     <!--单位详细列表查询 -->
+    <select id="getUnitInfo" resultType="com.rlglsys.entity.Mtb04Unit">
+        SELECT  *     
+        FROM m_tb04_unit
+        WHERE unit_no=#{unit_no};
+    </select>
+    
+    <!--人员基本信息-->
+    <insert id="insertMtb39PersonnelInfo">
+        INSERT
+        INTO m_tb39_personnel(
+            personnel_id,
+			personnel_nm,
+			personnel_card_id,
+			personnel_birthday,
+			personnel_gender,
+			personnel_ethnic,
+			personnel_hometown,
+			personnel_account_location,
+			personnel_worktime,
+			personnel_personal_identification,
+			personnel_political_landscape,
+			personnel_joinpartytime,
+			personnel_employment_forms,
+			personnel_marital_status,
+			personnel_health_status,
+			personnel_foreignlanguage_level,
+			personnel_hobbies,
+			personnel_archive_unit,
+			personnel_filelocation,
+			personnel_address,
+			personnel_email,
+			personnel_tel,
+			personnel_status,
+			personnel_check,
+			personnel_unit,
+			personnel_office,
+			personnel_joinmode,
+			personnel_biko,
+			personnel_inouttime,
+			ex_key,
+			del_kbn,
+			expend_01,
+			expend_02,
+			expend_03,
+			expend_04,
+			expend_05,
+			login_user_id,
+			login_date,
+			update_user_id,
+			update_date,
+			personnel_isapproval
+		)
+        values(
+            #{personnelInfo.personnel_id},
+			#{personnelInfo.personnel_nm},
+			#{personnelInfo.personnel_card_id},
+			replace(#{personnelInfo.personnel_birthday},"-",""),
+			#{personnelInfo.personnel_gender},
+			#{personnelInfo.personnel_ethnic},
+			#{personnelInfo.personnel_hometown},
+			#{personnelInfo.personnel_account_location},
+			#{personnelInfo.personnel_worktime},
+			#{personnelInfo.personnel_personal_identification},
+			#{personnelInfo.personnel_political_landscape},
+			#{personnelInfo.personnel_joinpartytime},
+			#{personnelInfo.personnel_employment_forms},
+			#{personnelInfo.personnel_marital_status},
+			#{personnelInfo.personnel_health_status},
+			#{personnelInfo.personnel_foreignlanguage_level},
+			#{personnelInfo.personnel_hobbies},
+			#{personnelInfo.personnel_archive_unit},
+			#{personnelInfo.personnel_filelocation},
+			#{personnelInfo.personnel_address},
+			#{personnelInfo.personnel_email},
+			#{personnelInfo.personnel_tel},
+			#{personnelInfo.personnel_status},
+			#{personnelInfo.personnel_check},
+			#{personnelInfo.personnel_unit},
+			#{personnelInfo.personnel_office},
+			#{personnelInfo.personnel_joinmode},
+			#{personnelInfo.personnel_biko},
+			#{personnelInfo.personnel_inouttime},
+			#{personnelInfo.ex_key},
+			#{personnelInfo.del_kbn},
+			#{personnelInfo.expend_01},
+			#{personnelInfo.expend_02},
+			#{personnelInfo.expend_03},
+			#{personnelInfo.expend_04},
+			#{personnelInfo.expend_05},
+			#{personnelInfo.login_user_id},
+			#{personnelInfo.login_date},
+			#{personnelInfo.update_user_id},
+			#{personnelInfo.update_date},
+			#{personnelInfo.personnel_isapproval}
+			)
+    </insert>
+    
+    <!-- 修改密码 -->
+    <update id="updatePasswordInfo">
+        UPDATE m_tb01_user
+        SET PASSWORD = #{userInfo.password}
+            ,UPDATE_USER_ID = #{userInfo.update_user_id}
+            ,UPDATE_DATE = #{userInfo.update_date}
+        WHERE 
+            USER_ID = #{userInfo.user_id}
+    </update>
+     <!-- 删除注销单位用户 -->
+    <update id="updateUnitPersonnelInfo" parameterType="int">
+        UPDATE m_tb01_user
+        SET DEL_KBN =1
+        WHERE 
+            UNIT_NO = #{unitNo}
+    </update>
+    <!-- 设定用户登录状态  -->
+    <update id="updateUserLoginStatus">
+        UPDATE m_tb01_user
+        SET LOGIN_STATUS =#{userInfo.login_status}
+        <if test="userInfo.last_logindate != '' and userInfo.last_logindate != null">
+         ,LAST_LOGINDATE = #{userInfo.last_logindate}
+         </if>
+         <if test="userInfo.last_outdate != '' and userInfo.last_outdate != null">
+         ,LAST_OUTDATE = #{userInfo.last_outdate}
+         </if>
+        WHERE
+            USER_ID = #{userInfo.user_id}
+    </update>
+    
+    <!--单位件数查询 -->
+    <select id="getUnitInfoCount" resultType="int">
+        SELECT  Count(*)     
+        FROM m_tb04_unit
+        WHERE unit_no=#{unit_no};
+    </select>
+    
+    <!--下级单位件数查询 -->
+    <select id="getUnitLowerInfoCount" resultType="int">
+        SELECT  Count(*)     
+        FROM m_tb28_unit_lower
+        WHERE UNIT_NO=#{unit_no}
+            AND UNIT_NO_LOWER = #{unit_no_lower};
+    </select>
+    
+    <!-- 修改用户入口 -->
+    <update id="updateUserEnterInfo">
+        UPDATE m_tb01_user
+        SET USER_ENTER = #{userInfo.user_enter}
+        WHERE 
+            USER_ID = #{userInfo.user_id}
+    </update>
+    
+    <!-- 用户查询(通过身份证)SQL -->
+    <select id="getUserInfoForPhoneBypersonnelId" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            personnel_id = #{personnel_id}
+            AND DEL_KBN = '0'
+    </select>
+    
+    <!-- 网址信息登录 -->
+    <insert id="insertMtb120Sysurl">
+       INSERT INTO m_tb120_sysurl
+            (url_id
+            ,url
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{urlInfo.url_id}
+            ,#{urlInfo.url}
+            ,1
+            ,'0'
+            ,#{urlInfo.expend_01}
+            ,#{urlInfo.expend_02}
+            ,#{urlInfo.expend_03}
+            ,#{urlInfo.expend_04}
+            ,#{urlInfo.expend_05}
+            ,#{urlInfo.login_user_id}
+            ,#{urlInfo.login_date}
+            ,#{urlInfo.update_user_id}
+            ,#{urlInfo.update_date})
+    </insert>
+    
+    <!-- 网址信息检索SQL -->
+    <select id="getMtb120SysurlInfo" resultType="com.rlglsys.entity.Mtb120SysUrl">
+        SELECT
+            *
+        FROM m_tb120_sysurl
+        WHERE url_id = #{urlInfo.url_id}
+    </select>
+    
+    <!-- 修改网址 -->
+    <update id="updateMtb120SysurlInfo">
+        UPDATE m_tb120_sysurl
+        SET url = #{urlInfo.url}
+        WHERE 
+            url_id = #{urlInfo.url_id}
+    </update>
+    
+        <!-- 删除网址信息 -->
+    <delete id="deleteMtb120SysurlInfo">
+        DELETE FROM m_tb120_sysurl
+        WHERE  url_id = #{urlInfo.url_id}
+    </delete>
+</mapper>

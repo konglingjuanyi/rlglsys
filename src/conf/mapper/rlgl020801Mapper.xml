@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 证书设置 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl020801Mapper">
+    <!-- 获取证书类别 -->
+    <select id="getCertificateType" resultType="com.rlglsys.entity.Mtb61CertificateSettings">
+        SELECT
+          *
+        FROM
+          m_tb61_certificate_settings
+        WHERE
+          ADM_TYPE_CD = #{adm_type_cd}
+        AND
+          DEL_KBN = 0
+    </select>
+    <!-- 获取公共课程 -->
+    <select id="getPublicCourse" resultType="com.rlglsys.entity.Mtb61CertificateSettings">
+        SELECT
+          *
+        FROM
+          m_tb61_certificate_settings
+        WHERE
+          ADM_TYPE_CD = #{adm_type_cd}
+        AND
+          DEL_KBN = 0
+    </select>
+    <!-- 获取单位级别 -->
+    <select id="getUnitLevelList" resultType="com.rlglsys.entity.Mtb61CertificateSettings">
+        SELECT
+          *
+        FROM
+          m_tb61_certificate_settings
+        WHERE
+          ADM_TYPE_CD = #{adm_type_cd}
+        AND
+          DEL_KBN = 0
+    </select>
+    <!-- 保存证书设置信息 -->
+    <insert id="insertIntoMtb64">
+    INSERT INTO
+      m_tb64_certificate_details (
+         CERT_NO,
+         CERT_TYPE,
+         CERT_NAME,
+         SENT_UNIT_NO,
+         SENT_DATE,
+         SENT_UNIT_NM,
+         START_PERIOD,
+         END_PERIOD,
+         EXAM_START_DATA,
+         EXAM_END_DATA,
+         COUNT_GRADE,
+         UNIT_LEVEL,
+         I_GRADE,
+         AVG_GRADE,
+         OTHER_ITEM,
+         APPLY_DATA,
+         PERIOD_FLAG,
+         EX_KEY,
+         DEL_KBN,
+         LOGIN_USER_ID,
+         LOGIN_DATE,
+         UPDATE_USER_ID,
+         UPDATE_DATE
+    ) VALUES(
+        #{rlgl020801Bean.cert_no},
+        #{rlgl020801Bean.cert_type},
+        #{rlgl020801Bean.cert_name},
+        #{rlgl020801Bean.sent_unit_no},
+        #{rlgl020801Bean.sent_date},
+        #{rlgl020801Bean.sent_unit_nm},
+        #{rlgl020801Bean.start_period},
+        #{rlgl020801Bean.end_period},
+        #{rlgl020801Bean.exam_start_data},
+        #{rlgl020801Bean.exam_end_data},
+        #{rlgl020801Bean.count_grade},
+        #{rlgl020801Bean.unit_level},
+        #{rlgl020801Bean.i_grade},
+        #{rlgl020801Bean.avg_grade},
+        #{rlgl020801Bean.other_item},
+        #{rlgl020801Bean.apply_data},
+        #{rlgl020801Bean.period_flag},
+        #{rlgl020801Bean.ex_key},
+        #{rlgl020801Bean.del_kbn},
+        #{rlgl020801Bean.login_user_id},
+        #{rlgl020801Bean.login_date},
+        #{rlgl020801Bean.update_user_id},
+        #{rlgl020801Bean.update_date}
+    )
+    </insert>
+    <insert id="insertinto68" parameterType="int">
+        insert into m_tb68_cert_course(cert_no,course_id)
+        values(#{cert_no},#{course_id});
+    </insert>
+
+    <select id="getCertificateInfoList" resultType="com.rlglsys.bean.Rlgl020801Bean">
+    SELECT
+      M.*,
+      M1.ADM_NAME AS cert_type_nm,
+      M2.ADM_NAME AS unit_level_nm
+    FROM
+      m_tb64_certificate_details M
+    LEFT JOIN
+      m_tb02_adm M1
+    ON
+      M1.ADM_TYPE_CD = 120
+    AND
+      M1.ADM_NUM = M.CERT_TYPE
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = 119
+    AND
+      M2.ADM_NUM = M.UNIT_LEVEL
+    WHERE
+      M.DEL_KBN = 0
+    <if test="pageCount != 0 and pageCount != null">
+    LIMIT #{pageNo},#{pageCount}
+    </if>
+    </select>
+    <!-- 通过证书编号查询证书详细信息 -->
+    <select id="getCertificateInfoById" resultType="com.rlglsys.bean.Rlgl020801Bean">
+    SELECT
+      M.*,
+      M1.ADM_NAME AS cert_type_nm,
+      M2.ADM_NAME AS unit_level_nm
+    FROM
+      m_tb64_certificate_details M
+    LEFT JOIN
+      m_tb02_adm M1
+    ON
+      M1.ADM_TYPE_CD = 120
+    AND
+      M1.ADM_NUM = M.CERT_TYPE
+    LEFT JOIN
+      m_tb02_adm M2
+    ON
+      M2.ADM_TYPE_CD = 119
+    AND
+      M2.ADM_NUM = M.UNIT_LEVEL
+    WHERE
+      M.DEL_KBN = 0
+    AND
+      M.CERT_NO = #{cert_no}
+    </select>
+
+    <!-- 通过证书编号删除证书信息 -->
+    <delete id="deleteCertInfoFromMtb64">
+    DELETE FROM
+      m_tb64_certificate_details 
+    WHERE
+      CERT_NO = #{cert_no}
+    AND
+      DEL_KBN = 0
+    </delete>
+    <!-- 通过证书编号删除证书-公共课信息 -->
+    <delete id="deleteCertCourseFromMtb68">
+    DELETE FROM
+      m_tb68_cert_course 
+    WHERE
+      CERT_NO = #{cert_no}
+    </delete>
+    <!-- 获取证书数量 -->
+    <select id="getCertificateInfoListCount" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb64_certificate_details
+    WHERE
+      DEL_KBN = 0
+    </select>
+    <update id="updateMtb64Info">
+    UPDATE
+      m_tb64_certificate_details
+    SET
+      CERT_NAME = #{rlgl020801Bean.cert_name},
+      START_PERIOD = #{rlgl020801Bean.start_period},
+      END_PERIOD = #{rlgl020801Bean.end_period},
+      SENT_DATE = #{rlgl020801Bean.sent_date},
+      UPDATE_USER_ID = #{rlgl020801Bean.update_user_id},
+      UPDATE_DATE = #{rlgl020801Bean.update_date}
+    WHERE
+      CERT_NO = #{rlgl020801Bean.cert_no}
+    AND
+      DEL_KBN = 0
+    </update>
+    <select id="getCertificateCountByType" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb64_certificate_details
+    WHERE
+      CERT_TYPE = #{cert_type}
+    AND
+      DEL_KBN = 0
+    </select>
+</mapper>

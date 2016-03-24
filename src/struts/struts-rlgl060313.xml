@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl060313" extends="rlgl" namespace="/">
+	   <action name="rlgl060313Init" class="com.rlglsys.action.learnonline.Rlgl060313SearchAction"
+            method="execute">
+            <result name="input">/WEB-INF/jsp/rlgl060313.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl060313.jsp</result>
+        </action>
+        <!-- 删除 -->
+	    <action name="rlgl060313Delete" class="com.rlglsys.action.learnonline.Rlgl060313DeleteAction"
+		    method="execute">
+		   <result name="success" type="redirectAction">
+		   		<param name="actionName">rlgl060313Init</param>
+		   		<param name="backFlg">1</param>
+				<param name="pageFlg">${pageFlg}</param>
+		   </result>
+	    </action>
+	</package>
+</struts>
+
+

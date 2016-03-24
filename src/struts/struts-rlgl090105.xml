@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl090105" extends="rlgl" namespace="/">
+		<action name="rlgl090105Init"
+			class="com.rlglsys.action.loginmanage.userregister.Rlgl090105InitAction" method="execute">
+			<result name="show">/WEB-INF/jsp/rlgl090105.jsp</result>
+		</action>
+		<action name="rlgl090105Add"
+			class="com.rlglsys.action.loginmanage.userregister.Rlgl090105AddtAction" method="execute">
+			<result name="show">/WEB-INF/jsp/rlgl090105.jsp</result>
+		</action>
+		<action name="rlgl090105Del"
+			class="com.rlglsys.action.loginmanage.userregister.Rlgl090105DelAction" method="execute">
+			<result name="show">/WEB-INF/jsp/rlgl090105.jsp</result>
+		</action>
+		<action name="rlgl090505Register"
+			class="com.rlglsys.action.loginmanage.userregister.Rlgl090105RegisterAction" method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl090105.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090102Init</param>
+				<param name="unitaddtype">${unitaddtype}</param>
+			</result>
+		</action>
+		<action name="rlgl090505PageRedirect"
+			class="com.rlglsys.action.loginmanage.userregister.Rlgl090105PageRedirectAction" method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl090105.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090102Init</param>
+				<param name="unitaddtype">${unitaddtype}</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

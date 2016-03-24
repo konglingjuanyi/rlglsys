@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl10321" extends="rlgl" namespace="/">
+		<action name="rlgl010321Init"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010321InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010321.jsp</result>
+		</action>
+		<action name="rlgl010321Upload"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010321UploadAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010321.jsp</result>
+			<result name="input">/WEB-INF/jsp/rlgl010321.jsp</result>
+		</action>
+		<action name="rlgl010321Confirm"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010321ConfirmAction" method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl010321.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl010321.jsp</result>
+		</action>
+	</package>
+</struts>
+

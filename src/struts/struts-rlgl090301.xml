@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl090301" extends="rlgl" namespace="/">
+		<action name="rlgl090301Init"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090301.jsp</result>
+		</action>
+		<action name="search"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301InitAction" method="search">
+			<result name="success">/WEB-INF/jsp/rlgl090301.jsp</result>
+		</action>
+		<action name="rlgl090301Confirm"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301ConfirmAction" method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl090301.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl090301.jsp</result>
+		</action>
+		<action name="rlgl090301Search"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090301.jsp</result>
+		</action>
+		<action name="rlgl090301Stop"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301StopAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090301.jsp</result>
+		</action>
+		<action name="rlgl090301Start"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301StartAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090301.jsp</result>
+		</action>
+		<action name="ComboxContextFromAdmFor090310"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromAdmFor090310">
+        </action>
+        
+        <action name="rlgl090301Redirect"
+			class="com.rlglsys.action.applynode.selection.Rlgl090301RedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090302Init</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

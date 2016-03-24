@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl020443" extends="rlgl" namespace="/">
+	    <action name="rlgl020443Init"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020443InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl020443.jsp</result>
+		</action>
+		
+		<action name="rlgl020443Search"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020443SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl020443.jsp</result>
+		</action>
+		
+		<action name="rlgl020443Redirect"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020443RedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl020430Init</param>
+			</result>
+		</action>
+		
+		<action name="rlgl020443PageRedirect"
+			class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020443PageRedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl020444Init</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

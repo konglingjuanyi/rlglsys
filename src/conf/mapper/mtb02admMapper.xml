@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IMTb02AdmMapper">
+    <select id="getAdmInfo" resultType="MTb02Adm">
+        SELECT
+            *
+        FROM m_tb02_adm
+        WHERE adm_type_cd=#{admtypecd}
+    </select>
+     <select id="getThreeList" resultType="MTb02Adm">
+        SELECT
+            *
+        FROM m_tb02_adm
+        WHERE adm_type_cd=#{course_catagory}
+    </select>
+    <select id="getAdmExamInfo" resultType="MTb02Adm">
+        SELECT
+            *
+        FROM m_tb02_adm
+        WHERE adm_value_01=#{admValue01}
+        AND adm_type_cd = '235'
+    </select>
+    <select id="getAdmName" resultType="String">
+        SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE adm_type_cd=#{admtypecd}
+          and adm_num =#{admnum}
+    </select>
+    <select id="getAdmNum" resultType="String">
+        SELECT
+            adm_num
+        FROM m_tb02_adm
+        WHERE adm_type_cd = #{admtypecd}
+          and adm_name = #{admname}
+    </select>
+    <!-- 根据管理类别区分和扩展域01取List -->
+  <select id="getAdmInfoExpend01" resultType="MTb02Adm">
+        SELECT
+            *
+        FROM m_tb02_adm
+        WHERE adm_type_cd=#{admtypecd}
+            <if test="expend_01 != '' and expend_01 != null">
+            and EXPEND_01 = #{expend_01}
+           </if>
+    </select>
+    
+    <!-- 根据管理类别区分和扩展域01，扩展域02取List -->
+    <select id="getAdmInfoExpend0102" resultType="MTb02Adm">
+        SELECT
+            *
+        FROM m_tb02_adm
+        WHERE adm_type_cd=#{admtypecd}
+            <if test="expend_01 != '' and expend_01 != null">
+            and EXPEND_01 = #{expend_01}
+           </if>
+           <if test="expend_02 != '' and expend_02 != null">
+            and EXPEND_02 = #{expend_02}
+           </if>
+    </select>
+    <!-- 根据条件得到学分所得学分条数 -->
+	<select id="getCourseCreditSum" resultType="String" parameterType="String">
+		SELECT
+		 sum(CREDIT)
+		FROM
+		(
+		SELECT
+		CREDIT,
+		USER_ID
+		FROM
+		m_tb81_course_exams M1
+		WHERE
+		M1.DEL_KBN = '0'
+		<if test="userId !=null and userId != ''">
+			AND M1.USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			AND M1.CREDIT_YEAR = #{credit_year}
+		</if>
+		<if test="credit_category !=null and credit_category != ''">
+			AND M1.CREDIT_CATEGORY = #{credit_category}
+		</if>
+		AND M1.IsApply = '1'
+		UNION
+		SELECT
+		CREDIT,
+		USER_ID
+		FROM
+		m_tb122_public_course_exams M2
+		WHERE
+		M2.DEL_KBN = '0'
+		<if test="userId !=null and userId != ''">
+			AND M2.USER_ID = #{userId}
+		</if>
+		<if test="credit_year !=null and credit_year != ''">
+			AND M2.CREDIT_YEAR = #{credit_year}
+		</if>
+		<if test="credit_category !=null and credit_category != ''">
+			AND M2.CREDIT_CATEGORY = #{credit_category}
+		</if>
+		) m3
+		GROUP BY
+		USER_ID
+	</select>
+</mapper>

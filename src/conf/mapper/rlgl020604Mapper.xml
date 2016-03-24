@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020604Mapper">
+    <!-- 件数取得SQL -->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb56_credit_reporting_detail
+        WHERE 
+            DEL_KBN = '0'
+            AND PERSONAL_ID = #{person_no}
+            AND NAVI = #{navi}
+            AND (WILL_CHECKUNITNO = #{unit_no} OR CHECK_RESULT = '002' OR CHECK_RESULT = '003')
+            <![CDATA[ AND SCORE_YEAR > ( #{year} - 6 ) ]]>
+            <![CDATA[ AND SCORE_YEAR <= #{year} ]]>
+    </select>
+    <!-- 待办事项一览查询SQL -->
+    <select id="searchUnitinfo" resultType="com.rlglsys.entity.Mtb56creditreportingdetail">
+        SELECT *
+        FROM m_tb56_credit_reporting_detail M
+        LEFT JOIN
+            m_tb01_user M1
+        ON M.personal_id = M1.personnel_id
+        WHERE 1=1 
+        <if test="rlgl020601.personal_id != ''">
+            AND M.personal_id=#{ rlgl020601.personal_id}
+        </if>
+        <if test="rlgl020601.navi != ''">
+            AND M.navi=#{ rlgl020601.navi}
+        </if>
+        AND (WILL_CHECKUNITNO = #{rlgl020601.will_checkunitno} OR CHECK_RESULT = '002' OR CHECK_RESULT = '003')
+        AND M.del_kbn = 0
+        <![CDATA[ AND M.SCORE_YEAR > (#{year} - 6 ) ]]>
+        <![CDATA[ AND M.SCORE_YEAR <= #{year} ]]>
+        ORDER BY M.CHECK_RESULT DESC,M.SCORE_YEAR DESC
+        <if test="pageCount != 0 and pageCount != null">
+            LIMIT #{pageNo},#{pageCount}
+        </if>
+    </select>
+    <!-- 学分申请信息更新SQL -->
+    <update id="updateMtb56" >
+      update 
+        m_tb56_credit_reporting_detail
+      set
+        CHECK_RESULT = #{mtb56Info.check_result},
+        UNIT_CHECKER = #{mtb56Info.unit_checker},
+        UNIT_CHECK_DATE = #{mtb56Info.unit_check_date},
+        UNIT_CHECK_VIEWS = #{mtb56Info.unit_check_views},
+        UNIT_CHECK_RESULT = #{mtb56Info.unit_check_result},
+        COUNTY_CHECKER = #{mtb56Info.county_checker},
+        COUNTY_CHECK_DATE = #{mtb56Info.county_check_date},
+        COUNTY_CHECK_VIEWS = #{mtb56Info.county_check_views},
+        COUNTY_CHECK_RESULT = #{mtb56Info.county_check_result},
+        DOWNTOWN_CHECKER = #{mtb56Info.downtown_checker},
+        DOWNTOWN_CHECK_DATE = #{mtb56Info.downtown_check_date},
+        DOWNTOWN_CHECK_VIEWS = #{mtb56Info.downtown_check_views},
+        DOWNTOWN_CHECK_RESULT = #{mtb56Info.downtown_check_result},
+        MINISTRY_CHECKER = #{mtb56Info.ministry_checker},
+        MINISTRY_CHECK_DATE = #{mtb56Info.ministry_check_date},
+        MINISTRY_CHECK_VIEWS = #{mtb56Info.ministry_check_views},
+        MINISTRY_CHECK_RESULT = #{mtb56Info.ministry_check_result},
+        NOW_MARK = #{mtb56Info.now_mark},
+        WILL_CHECKUNITNO = #{mtb56Info.will_checkunitno},
+        UPDATE_USER_ID = #{mtb56Info.update_user_id},
+        UPDATE_DATE = #{mtb56Info.update_date}
+      where
+        APPLY_NO = #{mtb56Info.apply_no}
+    </update>
+    <!-- 更新个人人事申请信息SQL -->
+    <update id="updateTb29Info">
+        UPDATE m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{mtb29Info.check_result},
+            NOW_MARK = #{mtb29Info.now_mark},
+            WILL_CHECKUNITNO = #{mtb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{mtb29Info.update_user_id},
+            UPDATE_DATE = #{mtb29Info.update_date}
+        WHERE
+            APPLY_NO = #{mtb29Info.apply_no}
+    </update>
+    <!-- 获得学分类别 -->
+    <select id="getCreditCategory" resultType="String">
+        SELECT
+            adm_name
+        FROM m_tb02_adm
+        WHERE
+            adm_type_cd = '104'
+            AND adm_num = #{credit_category}
+    </select>
+    <!-- 获得总学分信息 -->
+    <select id="getCreditInfo" resultType="com.rlglsys.entity.Mtb66TotalCredit">
+        SELECT
+            *
+        FROM
+            m_tb66_total_credit
+        WHERE
+            PERSONAL_ID = #{person_id}
+        AND YEAR = #{year}
+    </select>
+    <!-- 插入学分信息 -->
+    <insert id="insertCreditInfo" >
+        INSERT INTO m_tb66_total_credit (
+            PERSONAL_ID,
+            PERSONAL_NM,
+            PERSONNEL_UNIT_NO,
+            CREDIT_I,
+            CREDIT_II,
+            YEAR,
+            EX_KEY,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        )VALUES(
+        #{mtb66.personal_id}
+        ,#{mtb66.personal_nm}
+        ,#{mtb66.personnel_unit_no}
+        ,#{mtb66.credit_I}
+        ,#{mtb66.credit_II}
+        ,#{mtb66.year}
+        ,#{mtb66.ex_key}
+        ,#{mtb66.login_user_id}
+        ,#{mtb66.login_date}
+        ,#{mtb66.update_user_id}
+        ,#{mtb66.update_date})
+    </insert>
+    <!-- 更新学分信息 -->
+    <update id="updateCreditInfo">
+        UPDATE 
+            m_tb66_total_credit
+        SET 
+        <if test="mtb66.credit_I != ''">
+            CREDIT_I = #{mtb66.credit_I},
+        </if>
+        <if test="mtb66.credit_II != ''">
+            CREDIT_II = #{mtb66.credit_II},
+        </if>
+            UPDATE_USER_ID = #{mtb66.update_user_id},
+            UPDATE_DATE = #{mtb66.update_date}
+        WHERE
+            PERSONAL_ID = #{mtb66.personal_id}
+        AND YEAR = #{mtb66.year}
+    </update>
+    <!-- 获得已审批通过学分-->
+    <select id="getPassCredit" resultType="double">
+        SELECT IFNULL(SUM(credit),0.0)
+        from m_tb56_credit_reporting_detail
+        WHERE 
+        del_kbn = 0
+        AND PERSONAL_ID = #{person_id}
+        AND SCORE_YEAR = #{year}
+        AND NAVI = #{navi}
+        AND CHECK_RESULT = '002'
+    </select>
+    <!-- 更新学分申请信息 -->
+    <update id="submitCredit">
+        UPDATE m_tb56_credit_reporting_detail
+		SET CREDIT = #{rlgl020602.credit},
+		SCORE_YEAR = #{rlgl020602.score_year},
+		EXPAND1 = #{rlgl020602.expand1},
+		EXPAND2 = #{rlgl020602.expand2},
+		EXPAND3 = #{rlgl020602.expand3},
+		EXPAND4 = #{rlgl020602.expand4},
+		EXPAND5 = #{rlgl020602.expand5},
+		EXPAND6 = #{rlgl020602.expand6},
+		EXPAND7 = #{rlgl020602.expand7},
+		EXPAND8 = #{rlgl020602.expand8},
+		EXPAND9 = #{rlgl020602.expand9},
+		EXPAND10 = #{rlgl020602.expand10},
+		EXPAND11 = #{rlgl020602.expand11},
+		EXPAND12 = #{rlgl020602.expand12},
+		EXPAND13 = #{rlgl020602.expand13},
+		EXPAND14 = #{rlgl020602.expand14},
+		EXPAND15 = #{rlgl020602.expand15},
+		EXPAND16 = #{rlgl020602.expand16},
+		EXPAND17 = #{rlgl020602.expand17},
+		EXPAND18 = #{rlgl020602.expand18},
+		EXPAND19 = #{rlgl020602.expand19},
+		EXPAND20 = #{rlgl020602.expand20},
+		UPDATE_USER_ID = #{rlgl020602.update_user_id},
+		UPDATE_DATE = #{rlgl020602.update_date}
+		WHERE
+		    DEL_KBN = '0'
+		AND NAVI = #{rlgl020602.navi}
+		AND APPLY_NO = #{rlgl020602.apply_no}
+		AND PERSONAL_ID = #{rlgl020602.personal_id}
+        AND CREDIT_CATEGORY = #{rlgl020602.credit_category}
+    </update>
+</mapper>

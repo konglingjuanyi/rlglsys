@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 个人出国申请审核   houyc -->
+<struts>
+    <package name="rlgl010512" extends="rlgl" namespace="/">
+        <action name="rlgl010512Init"
+        class="com.rlglsys.action.hiringmanage.personreview.Rlgl010512InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010512.jsp</result>
+        </action>
+       <action name="rlgl010512Review"
+        class="com.rlglsys.action.hiringmanage.personreview.Rlgl010512ReviewAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010504Search</result>
+        </action>
+        <action name="rlgl010506Back"
+        class="com.rlglsys.action.hiringmanage.personreview.Rlgl010506BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010504Search</result>
+        </action>
+    </package>
+</struts>

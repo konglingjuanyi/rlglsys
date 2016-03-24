@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl000211" extends="rlgl" namespace="/">
+		<action name="rlgl000211Init" class="com.rlglsys.action.rlgl.main.Rlgl000211InitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl000211.jsp</result>
+		</action>
+		<action name="rlgl000211Search" class="com.rlglsys.action.rlgl.main.Rlgl000211SearchAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl000211.jsp</result>
+		</action>
+		<action name="rlgl000211AddUserRole" class="com.rlglsys.action.rlgl.main.Rlgl000211AddUserRoleAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl000212.jsp</result>
+		</action>
+	</package>
+</struts>
+

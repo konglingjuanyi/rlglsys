@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020607Mapper">
+    <!-- 需要审核的人员信息一览检索SQL -->
+    <select id="getPersonInfoForCheckByUnitList" resultType="com.rlglsys.bean.Rlgl020607Bean">
+        SELECT M.*
+            ,M1.PERSONNEL_NM AS personnel_nm
+            ,M2.UNIT_NM AS   unit_nm
+        FROM m_tb56_credit_reporting_detail M
+        
+        LEFT JOIN m_tb12_personnel M1 ON
+        M1.PERSONNEL_ID = M.PERSONAL_ID
+        AND M1.DEL_KBN=0
+        
+        LEFT JOIN m_tb04_unit M2 ON
+        M2.UNIT_NO = M.UNIT_NO
+        AND M2.DEL_KBN=0
+        
+        WHERE M.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+         <if test="applyInfo.personal_id != ''">
+            AND M.personal_id=#{applyInfo.personal_id}
+         </if>
+		 AND M.NAVI IN
+         <foreach collection="applyInfo.naviIdList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+        AND M.del_kbn = 0
+        <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M.CHECK_RESULT = #{applyInfo.check_result}
+        </if>
+        <![CDATA[ AND M.SCORE_YEAR > (#{applyInfo.year} - 6 ) ]]>
+        <![CDATA[ AND M.SCORE_YEAR <= #{applyInfo.year} ]]>
+        GROUP BY PERSONAL_ID
+        <if test="applyInfo.pageCount != 0 and applyInfo.pageCount != null">
+             LIMIT #{applyInfo.pageNo},#{applyInfo.pageCount}
+        </if>
+    </select>
+    
+    <!-- 需要审核的人员信息一览件数检索SQL -->
+    <select id="getPersonInfoForCheckByUnitCount" resultType="int">
+        SELECT Count(*)
+        FROM (
+        SELECT *
+        FROM m_tb56_credit_reporting_detail
+        WHERE WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+         <if test="applyInfo.personal_id != ''">
+            AND personal_id=#{applyInfo.personal_id}
+         </if>
+		 AND NAVI IN
+         <foreach collection="applyInfo.naviIdList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+        AND del_kbn = 0
+        <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND CHECK_RESULT = #{applyInfo.check_result}
+        </if>
+        <![CDATA[ AND SCORE_YEAR > (#{applyInfo.year} - 6 ) ]]>
+        <![CDATA[ AND SCORE_YEAR <= #{applyInfo.year} ]]>
+        GROUP BY PERSONAL_ID) A
+    </select>
+    
+    <!-- 需要批量审核的人员信息一览检索SQL -->
+    <select id="getBatchReportPersonInfoList" resultType="com.rlglsys.bean.Rlgl020607Bean">
+    SELECT * FROM 
+    (
+        SELECT M.*
+            ,M1.PERSONNEL_NM AS personnel_nm
+            ,M2.UNIT_NM AS   unit_nm
+        FROM m_tb56_credit_reporting_detail M
+        
+        LEFT JOIN m_tb12_personnel M1 ON
+        M1.PERSONNEL_ID = M.PERSONAL_ID
+        AND M1.DEL_KBN=0
+        
+        LEFT JOIN m_tb04_unit M2 ON
+        M2.UNIT_NO = M.UNIT_NO
+        AND M2.DEL_KBN=0
+        
+        WHERE M.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+         <if test="applyInfo.personal_id != ''">
+            AND M.personal_id=#{applyInfo.personal_id}
+         </if>
+		 AND M.NAVI IN
+         <foreach collection="applyInfo.naviIdList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+        AND M.del_kbn = 0
+        <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M.CHECK_RESULT = #{applyInfo.check_result}
+        </if>
+        <if test="applyInfo.now_mark !='' and applyInfo.now_mark != null">
+            AND M.now_mark != #{applyInfo.now_mark}
+        </if>
+        <![CDATA[ AND M.SCORE_YEAR > (#{applyInfo.year} - 6 ) ]]>
+        <![CDATA[ AND M.SCORE_YEAR <= #{applyInfo.year} ]]>
+        GROUP BY PERSONAL_ID
+        ORDER BY UNIT_NO
+        ) A
+        WHERE 1=1
+        <if test="applyInfo.personal_id_sel != '' and applyInfo.personal_id_sel != null">
+            AND A.personal_id=#{applyInfo.personal_id_sel}
+        </if>
+        <if test="applyInfo.unit_no_sel != '' and applyInfo.unit_no_sel != null">
+            AND A.unit_no=#{applyInfo.unit_no_sel}
+        </if>
+        <if test="applyInfo.unit_nm_sel != '' and applyInfo.unit_nm_sel != null">
+            AND A.unit_nm LIKE CONCAT('%', #{applyInfo.unit_nm_sel}, '%')
+        </if>
+        <if test="applyInfo.personnel_nm_sel != '' and applyInfo.personnel_nm_sel != null">
+            AND A.personnel_nm LIKE CONCAT('%', #{applyInfo.personnel_nm_sel}, '%')
+        </if>
+    </select>
+    
+    <!-- 需要批量审核的申请信息一览检索SQL -->
+    <select id="getBatchReportInfoList" resultType="com.rlglsys.bean.Rlgl020607Bean">
+        SELECT *
+        FROM m_tb56_credit_reporting_detail
+        WHERE WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+		 AND NAVI IN
+         <foreach collection="applyInfo.naviIdList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+        AND personal_id IN
+        <foreach collection="applyInfo.personnelList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+        AND del_kbn = 0
+        <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND CHECK_RESULT = #{applyInfo.check_result}
+        </if>
+        <if test="applyInfo.now_mark !='' and applyInfo.now_mark != null">
+            AND now_mark != #{applyInfo.now_mark}
+        </if>
+        <![CDATA[ AND SCORE_YEAR > (#{applyInfo.year} - 6 ) ]]>
+        <![CDATA[ AND SCORE_YEAR <= #{applyInfo.year} ]]>
+    </select>
+</mapper>

@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010910Mapper">
+  <resultMap type="com.rlglsys.bean.Rlgl010904Bean" id="resultInfoList">
+    <result property="ageErea" column="ageErea"/>
+    <result property="type" column="type"/>
+    <result property="no" column="no"/>
+  </resultMap>
+  <resultMap type="com.rlglsys.bean.Rlgl010904Bean" id="resultRegularList">
+    <!-- 姓名 -->
+    <result property="personnel_nm" column="personnel_nm"/>
+    <!-- 身份证号 -->
+    <result property="personnel_card_id" column="personnel_card_id"/>
+    <!-- 科室 -->
+    <result property="personnel_office_value" column="personnel_office_value"/>
+    <!-- 专业 -->
+    <result property="personnel_professional_value" column="personnel_professional_value"/>
+    <!-- 职称 -->
+    <result property="personnel_job_value" column="personnel_job_value"/>
+    <!-- 落编时间 -->
+    <result property="regular_time" column="regular_time"/>
+    <!-- 落编文号 -->
+    <result property="regular_num" column="regular_num"/>
+    <!-- 入党时间 -->
+    <result property="partymember_time" column="partymember_time"/>
+    <!-- 党员状态 -->
+    <result property="partymember_status" column="partymember_status"/>
+    <!-- 人员进入方式 -->
+    <result property="in_jode_type" column="in_jode_type"/>
+    <!-- 人员离开方式 -->
+    <result property="out_jode_type" column="out_jode_type"/>
+    <!-- 进出原因 -->
+    <result property="inout_jode_view" column="inout_jode_view"/>
+    <!-- 流动时间 -->
+    <result property="inout_jode_time" column="inout_jode_time"/>
+  </resultMap>
+   <!-- 1.各年龄段分专业统计表 -->
+    <select id="getPersonnelList1" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <include refid= "com.rlglsys.mapper.ICommonMapper.personalGetageCommon"/>,
+                (select TYPE from m_tb19_personnel_practitioners_info 
+                    where personnel_id=a.personnel_id
+                      and DEL_KBN = '0'
+                 order by ISSUE_TIME desc 
+                    limit 0,1
+                ) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.unitPersonalDetailWhereCommon"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    
+   <!--2.各年龄段管理人员、专技人员统计表 -->
+    <select id="getPersonnelList2" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <include refid= "com.rlglsys.mapper.ICommonMapper.personalGetageCommon"/>,
+                (select
+                   case
+                     when OTHER_POST_NM != null
+                     then '004'
+                     else IN_POST_KBN
+                   end as TYPE
+                 from m_tb09_irin 
+                 where PERSON_NO=a.personnel_id
+                   and DEL_KBN = '0'
+                ) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    
+   <!--3.各年龄段分职称统计表 -->
+    <select id="getPersonnelList3" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <include refid= "com.rlglsys.mapper.ICommonMapper.personalGetageCommon"/>,
+                (select
+                   SUBSTRING(LEVEL,2,2) as TYPE
+                 from m_tb18_personnel_professional_info 
+                 where m_tb18_personnel_professional_info.PERSONNEL_ID=a.personnel_id
+                   and DEL_KBN = '0'
+                ) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    
+   <!--4.各年龄段分学历统计表 -->
+    <select id="getPersonnelList4" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <include refid= "com.rlglsys.mapper.ICommonMapper.personalGetageCommon"/>,
+                (select
+                   EDUCATIONAL_BG as TYPE
+                 from m_tb15_personnel_edu_info 
+                 where m_tb15_personnel_edu_info.PERSONNEL_ID=a.personnel_id
+                   and DEL_KBN = '0'
+                 order by GRADUATION_TIME desc 
+                 limit 0,1
+                ) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    
+   <!--5.各年龄段聘任职称等级统计表 -->
+    <select id="getPersonnelList5" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <include refid= "com.rlglsys.mapper.ICommonMapper.personalGetageCommon"/>,
+             (select MID(LEVEL,5,3) from m_tb18_personnel_professional_info where personnel_id=a.personnel_id order by GET_TIME desc limit 0,1) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    
+    <!-- 6.按学历专业分布统计表 -->
+    <select id="getPersonnelList6" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+            <!-- 学历 -->
+            (select 
+               case EDUCATIONAL_BG
+               <!-- 高中及以下 -->
+               when EDUCATIONAL_BG = 001
+                 then '001'
+               <!-- 中专 -->
+               when EDUCATIONAL_BG = 002
+                 then '002'
+               <!-- 大学专科 -->
+               when EDUCATIONAL_BG = 003
+                 then '003'
+               <!-- 大学本科 -->
+               when EDUCATIONAL_BG = 004
+                 then '004'
+               <!-- 硕士研究生 -->
+               when EDUCATIONAL_BG = 005
+                 then '005'
+               <!-- 博士研究生 -->
+               when EDUCATIONAL_BG = 006
+                 then '006' 
+               else 0 
+               end as prof_level 
+             from 
+               m_tb15_personnel_edu_info 
+             where 
+               personnel_id=a.personnel_id 
+               order by GRADUATION_TIME desc
+               limit 0,1
+             ) as ageErea,
+             <!-- 执业类别 -->
+             (select 
+                type
+              from 
+                m_tb19_personnel_practitioners_info 
+              where 
+                personnel_id=a.personnel_id
+              order by ISSUE_TIME desc 
+              limit 0,1
+             ) as type
+       FROM m_tb12_personnel a
+       <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    <!-- 7.按学历职称分布统计表 -->
+    <select id="getPersonnelList7" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+            <!-- 学历 -->
+            (select 
+               case EDUCATIONAL_BG
+               <!-- 高中及以下 -->
+               when EDUCATIONAL_BG = 001
+                 then '001'
+               <!-- 中专 -->
+               when EDUCATIONAL_BG = 002
+                 then '002'
+               <!-- 大学专科 -->
+               when EDUCATIONAL_BG = 003
+                 then '003'
+               <!-- 大学本科 -->
+               when EDUCATIONAL_BG = 004
+                 then '004'
+               <!-- 硕士研究生 -->
+               when EDUCATIONAL_BG = 005
+                 then '005'
+               <!-- 博士研究生 -->
+               when EDUCATIONAL_BG = 006
+                 then '006' 
+               else 0 
+               end as prof_level 
+             from 
+               m_tb15_personnel_edu_info 
+             where 
+               personnel_id=a.personnel_id 
+               order by GRADUATION_TIME desc
+               limit 0,1
+             ) as ageErea,
+             <!-- 专业技术职务二级 -->
+             (select 
+                MID(LEVEL,3,2)
+              from 
+                m_tb18_personnel_professional_info 
+              where 
+                personnel_id=a.personnel_id
+              order by GET_TIME desc 
+              limit 0,1
+             ) as type
+       FROM m_tb12_personnel a
+       <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    <!--8.按学历聘任职称等级分布统计表 -->
+    <select id="getPersonnelList8" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <!-- 学历 -->
+            (select 
+               case EDUCATIONAL_BG
+               <!-- 高中及以下 -->
+               when EDUCATIONAL_BG = 001
+                 then '001'
+               <!-- 中专 -->
+               when EDUCATIONAL_BG = 002
+                 then '002'
+               <!-- 大学专科 -->
+               when EDUCATIONAL_BG = 003
+                 then '003'
+               <!-- 大学本科 -->
+               when EDUCATIONAL_BG = 004
+                 then '004'
+               <!-- 硕士研究生 -->
+               when EDUCATIONAL_BG = 005
+                 then '005'
+               <!-- 博士研究生 -->
+               when EDUCATIONAL_BG = 006
+                 then '006' 
+               else 0 
+               end as prof_level 
+             from 
+               m_tb15_personnel_edu_info 
+             where 
+               personnel_id=a.personnel_id 
+               order by GRADUATION_TIME desc
+               limit 0,1
+             ) as ageErea,
+             <!-- 聘任职称等级 -->
+             (select
+                MID(LEVEL,5,3)
+              from
+                m_tb18_personnel_professional_info
+              where personnel_id=a.personnel_id
+              order by GET_TIME desc
+              limit 0,1
+              ) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    <!--9.按学历岗位分布统计表 -->
+    <select id="getPersonnelList9" resultMap="resultInfoList">
+    SELECT
+         type,ageErea,COUNT(*) as no
+    FROM
+        (SELECT
+             <!-- 学历 -->
+            (select 
+               case EDUCATIONAL_BG
+               <!-- 高中及以下 -->
+               when EDUCATIONAL_BG = 001
+                 then '001'
+               <!-- 中专 -->
+               when EDUCATIONAL_BG = 002
+                 then '002'
+               <!-- 大学专科 -->
+               when EDUCATIONAL_BG = 003
+                 then '003'
+               <!-- 大学本科 -->
+               when EDUCATIONAL_BG = 004
+                 then '004'
+               <!-- 硕士研究生 -->
+               when EDUCATIONAL_BG = 005
+                 then '005'
+               <!-- 博士研究生 -->
+               when EDUCATIONAL_BG = 006
+                 then '006' 
+               else 0 
+               end as prof_level 
+             from 
+               m_tb15_personnel_edu_info 
+             where 
+               personnel_id=a.personnel_id 
+               order by GRADUATION_TIME desc
+               limit 0,1
+             ) as ageErea,
+             <!-- 岗位类别 -->
+             (select
+                case
+                  when OTHER_POST_NM != null
+                  then '004'
+                  else IN_POST_KBN
+                end as TYPE
+              from m_tb09_irin 
+              where PERSON_NO=a.personnel_id
+                and DEL_KBN = '0'
+             ) as TYPE
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+       GROUP BY type,ageErea
+       ORDER BY type,ageErea
+    </select>
+    <!-- 10.按职称专业统计表 -->
+    <select id="getPersonnelList10" resultMap="resultInfoList">
+    SELECT
+      type,ageErea,COUNT(*) as no
+    FROM
+      (SELECT
+		 (select TYPE from m_tb19_personnel_practitioners_info where personnel_id=a.personnel_id order by ISSUE_TIME desc limit 0,1) as TYPE,
+         (select case
+			 when MID(LEVEL,3,2) = 01
+				then '01' 
+			 when MID(LEVEL,3,2) = 02
+				then '02' 
+			 when MID(LEVEL,3,2) = 03
+				then '03' 
+			 when MID(LEVEL,3,2) = 04
+				then '04' 
+			 when MID(LEVEL,3,2) = 05
+				then '05' 
+			 when MID(LEVEL,3,2) = 06
+				then '06'
+			 else 0 
+			 end as prof_level from m_tb18_personnel_professional_info where personnel_id=a.personnel_id order by GET_TIME desc limit 0,1) as ageErea
+      FROM m_tb12_personnel a
+      <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+      GROUP BY type,ageErea
+      ORDER BY type,ageErea
+    </select>
+    <!-- 11.按专业聘任职称等级分布统计表 -->
+    <select id="getPersonnelList11" resultMap="resultInfoList">
+      SELECT
+        type,ageErea,COUNT(*) as no
+      FROM
+         (SELECT
+         (select TYPE from m_tb19_personnel_practitioners_info where personnel_id=a.personnel_id order by ISSUE_TIME desc limit 0,1) as ageErea,
+         (select MID(LEVEL,5,3) from m_tb18_personnel_professional_info where personnel_id=a.personnel_id order by GET_TIME desc limit 0,1) as TYPE
+         FROM m_tb12_personnel a
+      <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+      GROUP BY type,ageErea
+      ORDER BY type,ageErea
+    </select>
+    <!-- 12.按专业科室分布统计表(只统计具体单位) -->
+    <select id="getPersonnelList12" resultMap="resultInfoList">
+      SELECT
+        type,ageErea,COUNT(*) as no
+      FROM
+         (SELECT PERSONNEL_OFFICE as TYPE,
+           (select TYPE from m_tb19_personnel_practitioners_info where personnel_id=a.personnel_id order by ISSUE_TIME desc limit 0,1) as ageErea
+         FROM m_tb12_personnel a
+      <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>) as b
+      GROUP BY type,ageErea
+      ORDER BY type,ageErea
+    </select>
+    <!-- 13.在编人员明细表 -->
+    <select id="getPersonnelList13" resultMap="resultRegularList">
+        SELECT
+            <!-- 姓名 -->
+            a.PERSONNEL_NM as personnel_nm,
+            <!-- 身份证号 -->
+            a.PERSONNEL_CARD_ID as personnel_card_id,
+            <!-- 科室 -->
+            (select SECTION_ID from m_tb01_user 
+                    where PERSONNEL_ID = a.personnel_id
+            ) as personnel_office_value,
+            <!-- 专业 -->
+            (select TYPE from m_tb19_personnel_practitioners_info 
+                    where PERSONNEL_ID = a.personnel_id
+                 order by ISSUE_TIME desc 
+                    limit 0,1
+            ) as personnel_professional_value,
+            <!-- 职称 -->
+            (select mid(LEVEL,3,2) from m_tb18_personnel_professional_info 
+                    where PERSONNEL_ID = a.personnel_id
+                 order by GET_TIME desc 
+                    limit 0,1
+            ) as personnel_job_value,
+            <!-- 编制时间 -->
+            a.PERSONNEL_REGULARNUM_TIME as regular_time,
+            <!-- 编制文号 -->
+            a.PERSONNEL_REGULARNUM as regular_num
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>
+        <!-- 在编人员 -->
+        and a.personnel_regular = '001'
+        <!-- 单位 -->
+        and a.PERSONNEL_UNIT = #{personnelBean.unitNo}
+        <if test="personnelBean.pageCount != 0 and personnelBean.pageCount != null">
+        LIMIT #{personnelBean.pageNo},#{personnelBean.pageCount}
+        </if>
+       ;
+    </select>
+    <!-- 14.中共党员明细表 -->
+    <select id="getPersonnelList14" resultMap="resultRegularList">
+        SELECT
+            personnel_nm,personnel_card_id,
+            <!-- 科室 -->
+            (select SECTION_ID from m_tb01_user 
+                where PERSONNEL_ID=a.personnel_id
+            ) as personnel_office_value,
+            <!-- 专业 -->
+            (select TYPE from m_tb19_personnel_practitioners_info 
+                    where PERSONNEL_ID = a.personnel_id
+                 order by ISSUE_TIME desc 
+                    limit 0,1
+            ) as personnel_professional_value,
+            <!-- 职称 -->
+            (select mid(LEVEL,3,2) from m_tb18_personnel_professional_info 
+                    where PERSONNEL_ID = a.personnel_id
+                 order by GET_TIME desc 
+                    limit 0,1
+            ) as personnel_job_value,
+            <!-- 党员信息 -->
+            (select JOINTIME from m_tb13_personnel_partisan_info 
+                where personnel_id=a.personnel_id
+                  and PARTISAN_NM = '001'
+             order by JOINTIME desc 
+                limit 0,1
+            ) as partymember_time,
+            (select PREP_OR_OFFICIALLY from m_tb13_personnel_partisan_info 
+                where personnel_id=a.personnel_id
+                  and PARTISAN_NM = '001'
+             order by JOINTIME desc 
+                limit 0,1
+            ) as partymember_status
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>
+        <if test="personnelBean.pageCount != 0 and personnelBean.pageCount != null">
+        LIMIT #{personnelBean.pageNo},#{personnelBean.pageCount}
+        </if>
+    </select>
+    <!-- 15.人员进出情况明细表 -->
+    <select id="getPersonnelList15" resultMap="resultRegularList">
+        SELECT
+            <!-- 姓名 -->
+            a.PERSONNEL_NM as personnel_nm,
+            <!-- 身份证号 -->
+            a.PERSONNEL_CARD_ID as personnel_card_id,
+            <!-- 专业 -->
+            (select TYPE from m_tb19_personnel_practitioners_info 
+                    where PERSONNEL_ID = a.personnel_id
+                 order by ISSUE_TIME desc 
+                    limit 0,1
+            ) as personnel_professional_value,
+            <!-- 职称 -->
+            (select mid(LEVEL,3,2) from m_tb18_personnel_professional_info 
+                    where PERSONNEL_ID = a.personnel_id
+                 order by GET_TIME desc 
+                    limit 0,1
+            ) as personnel_job_value,
+            <!-- 人员进入方式 -->
+            a.PERSONNEL_JOINMODE as in_jode_type,
+            <!-- 人员离开方式 -->
+            a.PERSONNEL_OUTMODE as out_jode_type,
+            <!-- 进出原因 -->
+            a.PERSONNEL_BIKO as inout_jode_view,
+            <!-- 流动时间 -->
+            a.PERSONNEL_INOUTTIME as inout_jode_time
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>
+        <!-- 单位 -->
+        and a.PERSONNEL_UNIT = #{personnelBean.unitNo}
+        ORDER BY PERSONNEL_OUTMODE
+        <if test="personnelBean.pageCount != 0 and personnelBean.pageCount != null">
+        LIMIT #{personnelBean.pageNo},#{personnelBean.pageCount}
+        </if>
+       ;
+    </select>
+</mapper>

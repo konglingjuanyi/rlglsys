@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010403Mapper">
+  
+  <!--通过单位编号查询本单位名科信息列表-->
+  <select id="getFamousSectionListByUnitId" resultType="com.rlglsys.bean.Rlgl010402Bean">
+    SELECT
+	  M.*,
+	  M1.ADM_NAME AS section_pro_nm,
+	  M2.ADM_NAME AS section_level_nm,
+	  M3.USER_NAME AS section_manger_nm
+	FROM
+	  m_tb22_hospital_section M
+	LEFT JOIN
+	  m_tb02_adm M1
+	ON
+	  M1.ADM_TYPE_CD = '097'
+	AND
+	  M1.ADM_NUM = M.SECTION_PROPERTY
+    AND
+      M1.DEL_KBN = 0
+	LEFT JOIN
+	  m_tb02_adm M2
+	ON
+	  M2.ADM_TYPE_CD = '191'
+	AND
+	  M2.ADM_NUM = M.SECTION_LEVEL
+    AND
+      M2.DEL_KBN = 0
+	LEFT JOIN
+	  m_tb01_user M3
+	ON
+	  M3.USER_ID = M.SECTION_MANAGER
+	AND
+	  M3.DEL_KBN = 0
+	WHERE 
+	  M.SECTION_LEVEL IN(SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '191' AND DEL_KBN = 0)
+	AND
+	  M.UNIT_NO = #{unit_no}
+	AND
+	  M.DEL_KBN = 0
+  </select>
+  
+  <!--通过单位编号和科室编号查询科室信息-->
+  <select id="getFamousSectionInfo" resultType="com.rlglsys.bean.Rlgl010402Bean">
+    SELECT
+	  M.*,
+	  M1.ADM_NAME AS section_pro_nm,
+	  M2.ADM_NAME AS section_level_nm,
+	  M3.USER_NAME AS section_manger_nm
+	FROM
+	  m_tb22_hospital_section M
+	LEFT JOIN
+	  m_tb02_adm M1
+	ON
+	  M1.ADM_TYPE_CD = '097'
+	AND
+	  M1.ADM_NUM = M.SECTION_PROPERTY
+    AND
+      M1.DEL_KBN = 0
+	LEFT JOIN
+	  m_tb02_adm M2
+	ON
+	  M2.ADM_TYPE_CD = '191'
+	AND
+	  M2.ADM_NUM = M.SECTION_LEVEL
+    AND
+      M2.DEL_KBN = 0
+	LEFT JOIN
+	  m_tb01_user M3
+	ON
+	  M3.USER_ID = M.SECTION_MANAGER
+	AND
+	  M3.DEL_KBN = 0
+	WHERE 
+	  M.UNIT_NO = #{unit_no}
+    AND
+      M.SECTION_ID = #{section_id}
+	AND
+	  M.DEL_KBN = 0
+  </select>
+  
+  <!-- 更新个人人事信息 -->
+  <update id="updateTb29Info">
+      UPDATE m_tb29_personalapplication
+      SET
+          MAX_NUMBER = #{tb29Info.max_number},
+          APPLY_DATE = #{tb29Info.apply_date},
+          CHECK_RESULT = "001",
+          END_MARK = #{tb29Info.end_mark},
+          NOW_MARK = #{tb29Info.now_mark},
+          WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+          UPDATE_USER_ID = #{tb29Info.personal_id},
+          UPDATE_DATE = #{tb29Info.apply_date}
+      WHERE
+          APPLY_NO = #{tb29Info.apply_no}
+  </update>
+  
+  <!-- 插入申请信息到名院申请明细表 -->
+  <insert id="insertHospitalApplyInfoToMtb104">
+    insert into
+      m_tb104_famous_hospital_apply_detail (
+        APPLY_NO,
+		APPLY_NUMBER,
+		UNIT_NO,
+		UNIT_NM,
+		UNIT_ADDRESS,
+		PRESIDENT_ID,
+		PRESIDENT_NM,
+		OFFICE_TEL,
+		EMERGENCY_TEL,
+		COMPLAIN_TEL,
+		HOSPITAL_IMG,
+		HOSPITAL_INFO,
+		APPLY_TIME,
+		REMARKS,
+		HOSPITAL_LEVEL,
+        NOW_MARK,
+        EX_KEY,
+        DEL_KBN,
+        LOGIN_USER_ID,
+        LOGIN_DATE,
+        UPDATE_USER_ID,
+        UPDATE_DATE
+      ) values (
+        #{mtb104HospitalApplyInfo.apply_no},
+        #{mtb104HospitalApplyInfo.apply_number},
+        #{mtb104HospitalApplyInfo.unit_no},
+        #{mtb104HospitalApplyInfo.unit_nm},
+        #{mtb104HospitalApplyInfo.unit_address},
+        #{mtb104HospitalApplyInfo.president_id},
+        #{mtb104HospitalApplyInfo.president_nm},
+        #{mtb104HospitalApplyInfo.office_tel},
+        #{mtb104HospitalApplyInfo.emergency_tel},
+        #{mtb104HospitalApplyInfo.complain_tel},
+        #{mtb104HospitalApplyInfo.hospital_img},
+        #{mtb104HospitalApplyInfo.hospital_info},
+        #{mtb104HospitalApplyInfo.apply_time},
+        #{mtb104HospitalApplyInfo.remarks},
+        #{mtb104HospitalApplyInfo.hospital_level},
+        #{mtb104HospitalApplyInfo.now_mark},
+        #{mtb104HospitalApplyInfo.ex_key},
+        #{mtb104HospitalApplyInfo.del_kbn},
+        #{mtb104HospitalApplyInfo.login_user_id},
+        #{mtb104HospitalApplyInfo.login_date},
+        #{mtb104HospitalApplyInfo.update_user_id},
+        #{mtb104HospitalApplyInfo.update_date}
+      )
+  </insert>
+  
+  <!-- 更新审核流程信息 -->
+  <update id="updateNoInfo">
+      UPDATE 
+          t_tb01_auto_getnum
+      SET
+          sequenceNo = sequenceNo + 1
+      WHERE
+          table_id = #{noInfo.table_id}
+      AND 
+          col_id = #{noInfo.col_id}
+  </update>
+  
+  <!-- 插入进修信息 -->
+  <insert id="insertToTb29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+      INSERT INTO m_tb29_personalapplication
+      (
+          APPLY_NO,
+          MAX_NUMBER,
+          APPLY_KBN,
+          PERSONAL_ID,
+          PERSONAL_NM,
+          PERSONAL_UNITNO,
+          APPLY_DATE,
+          CHECK_USER,
+          CHECK_UNITNO,
+          CHECK_RESULT,
+          END_MARK,
+          NOW_MARK,
+          WILL_CHECKUNITNO,
+          EX_KEY,
+          DEL_KBN,
+          LOGIN_USER_ID,
+          LOGIN_DATE,
+          UPDATE_USER_ID,
+          UPDATE_DATE
+      ) VALUES(
+          #{tb29Info.apply_no},
+          #{tb29Info.max_number},
+          #{tb29Info.apply_kbn},
+          #{tb29Info.personal_id},
+          #{tb29Info.personal_nm},
+          #{tb29Info.personal_unitno},
+          #{tb29Info.apply_date},
+          #{tb29Info.check_user},
+          #{tb29Info.check_unitno},
+          #{tb29Info.check_result},
+          #{tb29Info.end_mark},
+          #{tb29Info.now_mark},
+          #{tb29Info.will_checkunitno},
+          #{tb29Info.ex_key},
+          #{tb29Info.del_kbn},
+          #{tb29Info.login_user_id},
+          #{tb29Info.login_date},
+          #{tb29Info.update_user_id},
+          #{tb29Info.update_date}
+      )
+  </insert>
+  
+</mapper>

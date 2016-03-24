@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl022006" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl022006Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022006InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022006.jsp</result>
+       </action>
+       <action name="courswareBuKaoInit" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022002InitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl02200602.jsp</result>
+		</action>
+	   <action name="coursInitBuKao" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022003InitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl02200603.jsp</result>
+	   </action>
+	   <action name="naviInit" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022004InitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl022004.jsp</result>
+	   </action>
+<!-- 	   <action name="rlgl022003Save" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022003SaveAction"
+			method="execute">
+			<result name="success" type="redirectAction">
+			  <param name="actionName">coursInit</param></result>
+	   </action> -->
+	   
+    </package>
+</struts>
+

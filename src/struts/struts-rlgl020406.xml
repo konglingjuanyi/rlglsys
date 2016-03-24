@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 继续医学教育项目培训班>项目举办>申请一览 -->
+<struts>
+    <package name="rlgl020406" extends="rlgl" namespace="/">
+       <!-- 项目举办申请列表一览 -->
+       <action name="rlgl020406Init" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020406InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl020406.jsp</result>
+       </action>
+       <!-- 申请明细查看 -->
+       <action name="rlgl020406View" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020406ViewAction" method="execute">
+           <result name="rlgl020407">/WEB-INF/jsp/rlgl020407.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl020407.jsp</result>
+       </action>
+       <!-- 重新申请 -->
+       <action name="rlgl020406ReApply" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020406ReApplyAction" method="execute">
+           <result name="rlgl020410">/WEB-INF/jsp/rlgl020410.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl020410.jsp</result>
+       </action>
+       <!-- 提交重新申请信息，跳转到申请一览-->
+       <action name="rlgl020406Commit" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020406CommitAction" method="execute">
+           <result name="success" type="redirectAction">rlgl020406Init</result>
+           <result name="error">/WEB-INF/jsp/rlgl020410.jsp</result>
+       </action>
+       <!-- 撤销申请 -->
+       <action name="rlgl020406Delete" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020406DeleteAction" method="execute">
+           <result name="init" type="redirectAction">rlgl020406Init</result>
+       </action>
+    </package>
+</struts>
+

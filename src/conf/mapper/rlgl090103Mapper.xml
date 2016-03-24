@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl090103Mapper">
+   <!--单位详细列表查询 -->
+    <select id="getUnitLowerList" resultType="com.rlglsys.bean.Rlgl090104Bean">
+        SELECT
+            M.*
+            ,M1.UNIT_NM AS UNIT_NM
+            ,M2.UNIT_NM AS UNIT_NM_LOWER
+        FROM m_tb28_unit_lower M
+            LEFT JOIN m_tb04_unit M1
+            ON M.UNIT_NO = M1.UNIT_NO
+            AND M1.DEL_KBN='0'
+            
+            LEFT JOIN m_tb04_unit M2
+            ON M.UNIT_NO_LOWER = M2.UNIT_NO
+            AND M2.DEL_KBN='0'
+        WHERE M.DEL_KBN='0'
+            AND M.UNIT_NO = #{unit_no}
+        ORDER BY M.UNIT_NO_LOWER;
+    </select>
+    <!-- 下级单位信息登录 -->
+    <insert id="insertMtb28UnitLowerInfo">
+       INSERT INTO m_tb28_unit_lower
+            (UNIT_NO
+            ,UNIT_NO_LOWER
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{unit_lower.unit_no}
+            ,#{unit_lower.unit_no_lower}
+            ,0
+            ,'0'
+            ,#{unit_lower.expend_01}
+            ,#{unit_lower.expend_02}
+            ,#{unit_lower.expend_03}
+            ,#{unit_lower.expend_04}
+            ,#{unit_lower.expend_05}
+            ,#{unit_lower.login_user_id}
+            ,#{unit_lower.login_date}
+            ,#{unit_lower.update_user_id}
+            ,#{unit_lower.update_date})
+    </insert>
+    
+    <!-- 删除下级单位信息 -->
+    <update id="deleteMtb28UnitLowerInfo">
+        UPDATE m_tb28_unit_lower
+        SET DEL_KBN = '1'
+            ,UPDATE_USER_ID = #{unit_lower.update_user_id}
+            ,UPDATE_DATE = #{unit_lower.update_date}
+        WHERE 
+            UNIT_NO = #{unit_lower.unit_no}
+            AND UNIT_NO_LOWER = #{unit_lower.unit_no_lower}
+    </update>
+    
+    <!--行政单位详细列表查询 -->
+    <select id="getAdminUnitList" resultType="com.rlglsys.entity.Mtb47AadministrativeUunit">
+        SELECT
+          *
+        FROM m_tb47_administrative_unit
+        WHERE DEL_KBN='0'
+        AND ADM_UNIT_CD = #{unit_no}
+        ORDER BY ADM_UNIT_VALUE;
+    </select>
+    
+     <!-- 单位信息登录 -->
+    <insert id="insertMtb04UnitInfo">
+       INSERT INTO m_tb04_unit
+            (UNIT_NO
+            ,UNIT_NM
+            ,UNIT_OWN
+            ,UNIT_PROPERTY
+            ,UNIT_LEVEL
+            ,UNIT_ECONOMIC_TYPE
+            ,UNIT_NATURE
+            ,UNIT_SCALE
+            ,LICENSE_NO
+            ,ORGANIZATION_CODE
+            ,ESTABLISHMENT_NUM
+            ,UNIT_ADDRESS
+            ,AREA_ID
+            ,UNIT_SUPER
+            ,OFFICAL_SCOPE
+            ,TIME
+            ,UNIT_PRO
+            ,INDUSTRY_PLAN
+            ,ESCROW_UNIT_NO
+            ,UNIT_LOWER
+            ,UNIT_ASSORT
+            ,Guid
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{unit.unit_no}
+            ,#{unit.unit_nm}
+            ,#{unit.unit_own}
+            ,#{unit.unit_property}
+            ,#{unit.unit_level}
+            ,#{unit.unit_economic_type}
+            ,#{unit.unit_nature}
+            ,#{unit.unit_scale}
+            ,#{unit.license_no}
+            ,#{unit.organization_code}
+            ,#{unit.establishment_num}
+            ,#{unit.unit_address}
+            ,#{unit.area_id}
+            ,#{unit.unit_super}
+            ,#{unit.offical_scope}
+            ,#{unit.time}
+            ,#{unit.unit_pro}
+            ,#{unit.industry_plan}
+            ,#{unit.escrow_unit_no}
+            ,#{unit.unit_lower}
+            ,#{unit.unit_assort}
+            ,#{unit.guid}
+            ,#{unit.ex_key}
+            ,#{unit.del_kbn}
+            ,#{unit.expend_01}
+            ,#{unit.expend_02}
+            ,#{unit.expend_03}
+            ,#{unit.expend_04}
+            ,#{unit.expend_05}
+            ,#{unit.login_user_id}
+            ,#{unit.login_date}
+            ,#{unit.update_user_id}
+            ,#{unit.update_date})
+    </insert>
+    
+    <select id="getMaxunitnoInfo" resultType="String">
+        SELECT  Max(unit_no)
+        FROM m_tb04_unit
+        WHERE unit_super=#{unit_super}
+        AND UNIT_ASSORT=#{unit_assort};
+    </select>
+    
+    <!--单位详细列表查询 -->
+    <select id="getUnitInfoByTypeList" resultType="com.rlglsys.entity.Mtb04Unit">
+        SELECT
+            *
+        FROM m_tb04_unit
+        WHERE unit_status='1'
+        AND DEL_KBN = '0'
+        AND unit_super=#{unit_super}
+        AND UNIT_ASSORT=#{unit_assort};
+    </select>
+    
+    <!-- 用户组一览查询SQL -->
+    <select id="getUnituserInfoList" resultType="com.rlglsys.bean.Rlgl090102Bean">
+        SELECT
+            M1.*
+            ,M2.UNIT_NM
+        FROM m_tb01_user M1,m_tb04_unit M2
+        WHERE
+            M1.UNIT_NO = M2.UNIT_NO
+           <!--   AND M1.USER_ENTER = #{userInfo.user_enter}-->
+            AND M1.USER_TYPE = '1'
+            <if test="userInfo.user_kbn != '' and userInfo.user_kbn != null">
+               AND M1.DEL_KBN  = #{userInfo.user_kbn}
+               AND M2.DEL_KBN  = '0'
+           </if>
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M1.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_id_biko != '' and userInfo.user_id_biko != null">
+                AND M1.user_id_biko = #{userInfo.user_id_biko}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M1.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+			AND M2.unit_super=#{unit_super}
+            AND M2.UNIT_ASSORT=#{unit_assort}
+            <if test="userInfo.pageCount != 0 and userInfo.pageCount != null">
+             LIMIT #{userInfo.pageNo},#{userInfo.pageCount}
+           </if>
+            ;
+            
+    </select>
+    
+    <!-- 用户组一览查询SQL -->
+    <select id="getUnituserCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM m_tb01_user M1,m_tb04_unit M2
+        WHERE
+            M1.UNIT_NO = M2.UNIT_NO
+           <!--   AND M1.USER_ENTER = #{userInfo.user_enter}-->
+            AND M1.USER_TYPE = '1'
+            <if test="userInfo.user_kbn != '' and userInfo.user_kbn != null">
+               AND M1.DEL_KBN  = #{userInfo.user_kbn}
+               AND M2.DEL_KBN  = '0'
+           </if>
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M1.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_id_biko != '' and userInfo.user_id_biko != null">
+                AND M1.user_id_biko = #{userInfo.user_id_biko}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M1.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+			AND M2.unit_super=#{unit_super}
+            AND M2.UNIT_ASSORT=#{unit_assort};
+    </select>
+    
+       
+     <!--人员基本信息-->
+    <insert id="insertMtb12Personnel">
+        INSERT
+        INTO m_tb12_personnel(
+            personnel_id,
+            personnel_nm,
+            personnel_card_id,
+            personnel_birthday,
+            personnel_gender,
+            personnel_ethnic,
+            personnel_hometown,
+            personnel_account_location,
+            personnel_worktime,
+            personnel_personal_identification,
+            personnel_political_landscape,
+            personnel_joinpartytime,
+            personnel_employment_forms,
+            personnel_marital_status,
+            personnel_health_status,
+            personnel_foreignlanguage_level,
+            personnel_hobbies,
+            personnel_archive_unit,
+            personnel_filelocation,
+            personnel_address,
+            personnel_email,
+            personnel_tel,
+            personnel_status,
+            personnel_check,
+            personnel_unit,
+            personnel_office,
+            personnel_joinmode,
+            personnel_biko,
+            personnel_inouttime,
+            ex_key,
+            del_kbn,
+            expend_01,
+            expend_02,
+            expend_03,
+            expend_04,
+            expend_05,
+            login_user_id,
+            login_date,
+            update_user_id,
+            update_date
+        )
+        values(
+            #{personnelInfo.personnel_id},
+            #{personnelInfo.personnel_nm},
+            #{personnelInfo.personnel_card_id},
+            replace(#{personnelInfo.personnel_birthday},"-",""),
+            #{personnelInfo.personnel_gender},
+            #{personnelInfo.personnel_ethnic},
+            #{personnelInfo.personnel_hometown},
+            #{personnelInfo.personnel_account_location},
+            #{personnelInfo.personnel_worktime},
+            #{personnelInfo.personnel_personal_identification},
+            #{personnelInfo.personnel_political_landscape},
+            #{personnelInfo.personnel_joinpartytime},
+            #{personnelInfo.personnel_employment_forms},
+            #{personnelInfo.personnel_marital_status},
+            #{personnelInfo.personnel_health_status},
+            #{personnelInfo.personnel_foreignlanguage_level},
+            #{personnelInfo.personnel_hobbies},
+            #{personnelInfo.personnel_archive_unit},
+            #{personnelInfo.personnel_filelocation},
+            #{personnelInfo.personnel_address},
+            #{personnelInfo.personnel_email},
+            #{personnelInfo.personnel_tel},
+            #{personnelInfo.personnel_status},
+            #{personnelInfo.personnel_check},
+            #{personnelInfo.personnel_unit},
+            #{personnelInfo.personnel_office},
+            #{personnelInfo.personnel_joinmode},
+            #{personnelInfo.personnel_biko},
+            #{personnelInfo.personnel_inouttime},
+            #{personnelInfo.ex_key},
+            #{personnelInfo.del_kbn},
+            #{personnelInfo.expend_01},
+            #{personnelInfo.expend_02},
+            #{personnelInfo.expend_03},
+            #{personnelInfo.expend_04},
+            #{personnelInfo.expend_05},
+            #{personnelInfo.login_user_id},
+            #{personnelInfo.login_date},
+            #{personnelInfo.update_user_id},
+            #{personnelInfo.update_date}
+            )
+    </insert>
+</mapper>

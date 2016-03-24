@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060102Mapper">
+     <!-- 个人信息查询SQL -->
+    <select id="getInfo" resultType="com.rlglsys.entity.Mtb99QuestionBankManage">
+        SELECT
+		    *
+		FROM
+		    m_tb99_question_bank_manage
+		WHERE 
+		  QUESTION_TYPE = #{question_type}
+		AND SUBJECT_KB = #{subject_kb}
+		ORDER BY RAND() LIMIT #{num}
+    </select>
+    <insert id="insertExamResult">
+        
+        INSERT INTO m_tb100_exam_result(
+             PERSONNEL_ID
+            ,SUBJECT_KB
+            ,EXAM_DATE
+            ,SCORE
+            ,EXAM_NO
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{examResult.personnel_id}
+            ,#{examResult.subject_kb}
+            ,#{examResult.exam_date}
+            ,#{examResult.score}
+            ,#{examResult.exam_no}
+            ,#{examResult.ex_key}
+            ,#{examResult.del_kbn}
+            ,#{examResult.expend_01}
+            ,#{examResult.expend_02}
+            ,#{examResult.expend_03}
+            ,#{examResult.expend_04}
+            ,#{examResult.expend_05}
+            ,#{examResult.login_user_id}
+            ,#{examResult.login_date}
+            ,#{examResult.update_user_id}
+            ,#{examResult.update_date})         
+    </insert>
+    <!-- 考分设置查询SQL -->
+    <select id="getScoreSetting" resultType="com.rlglsys.entity.Mtb102ScoreSetting">
+        SELECT
+            *
+        FROM
+            m_tb102_score_setting
+        WHERE 
+          EXAM_NO = #{subjectKb}
+    </select>
+    <!-- 在线考试信息查询SQL -->
+    <select id="getOnlineExamInfo" resultType="com.rlglsys.entity.Mtb103ExamSetting">
+       SELECT EXAM.EXAMINATION_NAME,
+            EXAM.EXAM_NO,
+            EXAM.SUBJECT_KB,
+            DATE_FORMAT(EXAM_START_DATE,'%Y年%m月%d日 %k:%i:%s') AS EXAM_START_DATE, 
+            DATE_FORMAT(EXAM_END_DATE,'%Y年%m月%d日 %k:%i:%s') AS EXAM_END_DATE, 
+            EXAM.EXAM_TIME,
+            APPLY.PERSONAL_NM AS USER_NAME,
+            CASE WHEN <![CDATA[ #{rlgl060303Bean.exam_start_date} < EXAM_START_DATE ]]> THEN '1' WHEN <![CDATA[ #{rlgl060303Bean.exam_start_date} > EXAM_END_DATE ]]> THEN '2' ELSE '3' END AS EXPEND_01,
+            CASE WHEN RESULT.SCORE IS NULL THEN '' ELSE RESULT.SCORE END AS SCORE 
+        FROM 
+            m_tb106_online_apply APPLY 
+        INNER JOIN m_tb103_exam_setting EXAM 
+        ON APPLY.EXAM_NO = EXAM.EXAM_NO 
+        LEFT JOIN m_tb100_exam_result RESULT 
+        ON RESULT.EXAM_NO = APPLY.EXAM_NO 
+        WHERE APPLY.CHECK_RESULT = '002' 
+        AND APPLY.TICKET_NO != '' 
+        AND APPLY.TICKET_NO IS NOT NULL 
+        AND APPLY.PERSONAL_CARD_ID = #{rlgl060303Bean.personal_card_id} 
+        <if test="rlgl060303Bean.pageCount != 0 and rlgl060303Bean.pageCount != null">
+            LIMIT #{rlgl060303Bean.pageNo},#{rlgl060303Bean.pageCount} 
+        </if>
+    </select>
+    <!-- 在线考试条数查询SQL -->
+    <select id="getOnlineExamCount" resultType="int">
+       SELECT count(*) 
+        FROM 
+            m_tb106_online_apply APPLY 
+        INNER JOIN m_tb103_exam_setting EXAM 
+        ON APPLY.EXAM_NO = EXAM.EXAM_NO 
+        WHERE APPLY.CHECK_RESULT = '002' 
+        AND APPLY.TICKET_NO != '' 
+        AND APPLY.TICKET_NO IS NOT NULL 
+        AND APPLY.PERSONAL_CARD_ID = #{rlgl060303Bean.personal_card_id}
+    </select>
+</mapper>

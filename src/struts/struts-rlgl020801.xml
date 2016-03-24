@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 证书设置 -->
+<struts>
+    <package name="rlgl020801" extends="rlgl" namespace="/">
+        <!-- 证书设置初始化 -->
+        <action name="rlgl020801Init"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl020801.jsp</result>
+        </action>
+        <!-- 新建证书 -->
+        <action name="rlgl020801Add"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801AddAction"
+            method="execute">
+            <result name="rlgl020806">/WEB-INF/jsp/rlgl020806.jsp</result>
+        </action>
+        <!-- 提交证书设置信息 -->
+        <action name="rlgl020801Commit"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801CommitAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl020806.jsp</result>
+            <result name="rlgl020801" type="redirectAction">rlgl020801Init</result>
+        </action>
+        <!-- 查看证书信息 -->
+        <action name="rlgl020801View"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801ViewAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl020811.jsp</result>
+            <result name="rlgl020811">/WEB-INF/jsp/rlgl020811.jsp</result>
+        </action>
+        <!-- 返回证书列表一览 -->
+        <action name="rlgl020801Back"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801BackAction"
+            method="execute">
+            <result name="rlgl020801" type="redirectAction">rlgl020801Init</result>
+        </action>
+        <!-- 删除证书信息 -->
+        <action name="rlgl020801Delete"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801DeleteAction"
+            method="execute">
+            <result name="rlgl020801" type="redirectAction">rlgl020801Init</result>
+        </action>
+        <!-- 编辑证书信息 -->
+        <action name="rlgl020801Edit"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801EditAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl020812.jsp</result>
+            <result name="rlgl020812">/WEB-INF/jsp/rlgl020812.jsp</result>
+        </action>
+        <!-- 修改证书信息后，提交证书设置信息 -->
+        <action name="rlgl020801EditCommit"
+            class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020801EditCommitAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl020812.jsp</result>
+            <result name="rlgl020801" type="redirectAction">rlgl020801Init</result>
+        </action>
+    </package>
+</struts>
+

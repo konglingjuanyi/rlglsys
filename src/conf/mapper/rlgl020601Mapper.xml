@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020601Mapper">
+
+	<select id="getFormList" resultType="com.rlglsys.entity.Mtb60formlist">
+        SELECT *
+        FROM m_tb60_form_list
+        WHERE 1=1 
+       <if test="Mtb60formlist.navi != ''">
+              AND navi=#{ Mtb60formlist.navi}
+       </if>
+       <if test="Mtb60formlist.item_category != ''">
+              AND item_category=#{ Mtb60formlist.item_category}
+       </if>
+       ORDER BY ITEM_SORT_FLAG
+    </select>
+    <!-- 待办事项一览查询SQL -->
+    <select id="getSearchUnitInfo" resultType="com.rlglsys.entity.Mtb56creditreportingdetail">
+        SELECT *
+        FROM m_tb56_credit_reporting_detail M
+        LEFT JOIN
+		    m_tb01_user M1
+		ON M.personal_id = M1.user_id
+        WHERE 1=1 
+       <if test="rlgl020601.personal_id != ''">
+              AND M.personal_id=#{ rlgl020601.personal_id}
+       </if>
+       <if test="rlgl020601.navi != ''">
+              AND M.navi=#{ rlgl020601.navi}
+       </if>
+       AND M.del_kbn = 0
+       ORDER BY CHECK_RESULT,SCORE_YEAR
+       <if test="pageCount != 0 and pageCount != null">
+           LIMIT #{pageNo},#{pageCount}
+       </if>
+    </select>
+    <select id="getRecordCount" resultType="int">
+        SELECT count(*)
+        FROM m_tb56_credit_reporting_detail M
+        LEFT JOIN
+		    m_tb01_user M1
+		ON M.personal_id = M1.user_id
+        WHERE 1=1 
+       <if test="rlgl020601.personal_id != ''">
+              AND M.personal_id=#{ rlgl020601.personal_id}
+       </if>
+       <if test="rlgl020601.navi != ''">
+              AND M.navi=#{ rlgl020601.navi}
+       </if>
+       AND M.del_kbn = 0
+       ORDER BY CHECK_RESULT,SCORE_YEAR
+    </select>
+    <delete id="getDeleteApplyNo" parameterType="String">
+    	update m_tb56_credit_reporting_detail set del_kbn = 1 where apply_No=#{apply_No};
+    </delete>
+    <delete id="getDeleteWithApplyNo" parameterType="String">
+    	update m_tb29_personalapplication set del_kbn = 1 where apply_No=#{apply_No};
+    </delete>
+</mapper>

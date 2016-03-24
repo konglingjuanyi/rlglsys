@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl070106" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl070106Init"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070106InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070106.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+        <action name="rlgl070106Search"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070106SearchAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070106.jsp</result>
+       </action>
+        <!-- Excel导出处理 -->
+       <action name="rlgl070106Export" class="com.rlglsys.action.reconciliationsystem.account.Rlgl070106ExportAction"
+            method="execute">
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel;charset=utf-8</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+            </result>
+        </action>
+        <!-- 缴费对比初始化 -->
+      <action name="rlgl070107Init"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070107InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070107.jsp</result>
+       </action>
+       <!-- 缴费对比操作 -->
+      <action name="rlgl070107Compare"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070107CompareAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070107.jsp</result>
+       </action>
+       <!-- 缴费对比删除数据 -->
+      <action name="rlgl070107Delete"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070107DeleteAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070107.jsp</result>
+       </action>
+       <!-- 核对缴费数据 -->
+      <action name="rlgl070107HeDui"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070107HeDuiAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070107.jsp</result>
+       </action>
+    </package>
+</struts>
+

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010305Mapper">
+	<!--查询-->
+	<!--人员基本信息-->
+    <select id="getPersonnel" resultType="Mtb12Personnel">
+    	SELECT
+            *
+        FROM m_tb39_personnel
+        WHERE personnel_id=#{personnel_id}
+    </select>
+    <!--人员基本信息-专业技术职务信息-->
+	<select id="getProfessionalInfo" resultType="Mtb18PersonnelProfessionalInfo">
+		SELECT
+            PERSONNEL_ID
+            ,LEVEL
+            ,NAME
+            ,DATE_FORMAT(GET_TIME,'%Y-%m-%d') as GET_TIME
+            ,WHETHER_APPOINT
+            ,DATE_FORMAT(APPOINT_TIME,'%Y-%m-%d') as APPOINT_TIME
+            ,WHETHER_HIGHEST
+            ,LEVEL
+            ,ORIGINAL
+        FROM m_tb45_personnel_professional_info
+        WHERE personnel_id=#{personnel_id}
+    </select>
+    <!--人员基本信息-行政职务信息-->
+    <select id="getJobInfo" resultType="Mtb17PersonnelJobInfo">
+    	SELECT
+            PERSONNEL_ID
+            ,(SELECT adm_name FROM m_tb02_adm WHERE adm_type_cd='181' AND adm_num=POSITION_NM) AS POSITION_NM
+            ,MODE
+            ,TYPE
+            ,LEVEL
+            ,DATE_FORMAT(APPOINT_TIME,'%Y-%m-%d') as APPOINT_TIME
+            ,APPOINT_NO
+        FROM m_tb44_personnel_job_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-社会关系-->
+   	<select id="getSocialInfo" resultType="Mtb16PersonnelSocialInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,RELATIONSHIP
+            ,NAME
+            ,DATE_FORMAT(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY
+            ,POLITICAL_LANDSCAPE
+            ,WORKUNIT
+            ,POSITION
+            ,TEL
+        FROM m_tb43_personnel_social_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-教育经历-->
+   	<select id="getEduInfo" resultType="Mtb15PersonnelEduInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,LEARNING_FORMAT
+            ,DATE_FORMAT(ADMISSION_TIME,'%Y-%m-%d') as ADMISSION_TIME
+            ,DATE_FORMAT(GRADUATION_TIME,'%Y-%m-%d') as GRADUATION_TIME
+            ,SCHOOL
+            ,COLLEGE_TYPE
+            ,PROFESSION
+            ,PROOF_PEOPLE
+            ,EDUCATIONAL_BG
+            ,DEGREE
+        FROM m_tb42_personnel_edu_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-工作经历-->
+   	<select id="getWorkInfo" resultType="Mtb14PersonnelWorkInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,DATE_FORMAT(STARTTIME,'%Y-%m-%d') as STARTTIME
+            ,DATE_FORMAT(ENDTIME,'%Y-%m-%d') as ENDTIME
+            ,WORKUNIT
+            ,PROOFPEOPLE
+            ,POSITION
+            ,TEL
+        FROM m_tb41_personnel_work_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-党派信息-->
+   	<select id="getPartisanInfo" resultType="Mtb13PersonnelPartisanInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,DATE_FORMAT(JOINTIME,'%Y-%m-%d') as JOINTIME
+            ,PARTISAN_NM
+            ,PREP_OR_OFFICIALLY
+        FROM m_tb40_personnel_partisan_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-资格信息-->
+   	<select id="getPractitionersInfo" resultType="Mtb19PersonnelPractitionersInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,CERTIFICATE_NO
+            ,ISSUING_AUTHORITY
+            ,DATE_FORMAT(ISSUE_TIME,'%Y-%m-%d') as ISSUE_TIME
+            ,LEVEL
+            ,TYPE
+            ,AREA
+            ,UPD_RECORD
+            ,ASSESS_RECORD
+        FROM m_tb46_personnel_practitioners_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	<!--人员基本信息-执业信息-->
+   	<select id="getPracticeInfo" resultType="Mtb77PersonnelPracticeInfo">
+   		SELECT
+            PERSONNEL_ID
+            ,CERTIFICATE_NO
+            ,ISSUING_AUTHORITY
+            ,DATE_FORMAT(ISSUE_TIME,'%Y-%m-%d') as ISSUE_TIME
+            ,LEVEL
+            ,TYPE
+            ,AREA
+            ,UPD_RECORD
+            ,ASSESS_RECORD
+            ,area1
+			,area2
+			,place1
+			,place2
+			,PRO_TYPE
+        FROM m_tb78_personnel_practice_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+   	
+   	<!--人员基本信息-导师信息-->
+   	<select id="getTutorInfo" resultType="Mtb58PersonnelTutorInfo">
+   		SELECT
+            *
+        FROM m_tb59_personnel_tutor_info
+        WHERE personnel_id=#{personnel_id}
+   	</select>
+</mapper>

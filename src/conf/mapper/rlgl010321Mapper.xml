@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010321Mapper">
+
+    <!-- 查询单位名称-->
+    <select id="getUnitNm" resultType="String">
+        SELECT
+            UNIT_NM AS unit_nm
+        FROM m_tb04_unit
+        WHERE
+           UNIT_NO = #{unit_no}
+    </select>
+    
+    <!-- 查询单位名称-->
+    <select id="getSectionNm" resultType="String">
+        SELECT
+            SECTION_NAME AS section_nm
+        FROM m_tb22_hospital_section
+        WHERE
+           SECTION_ID = #{section_id}
+           AND UNIT_NO = #{unit_no}
+    </select>
+    
+    <!-- 查询单位名称-->
+    <select id="getPersonnelJoinModeNm" resultType="String">
+        SELECT
+            ADM_NAME AS personnel_joinmode_nm
+        FROM m_tb02_adm
+        WHERE
+           ADM_TYPE_CD = #{adm_type_cd}
+           AND ADM_NUM = #{personnel_joinmode}
+    </select>
+</mapper>

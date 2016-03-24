@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 单位人员调出审核  -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010510Mapper">
+    <!-- 获取调出申请人员信息明细SQL -->
+    <select id="getTb37Info" resultType="com.rlglsys.entity.Mtb37UnitMoveoutDetailInfo">
+      select *
+      from m_tb37_unit_moveout_detail
+      where
+          DEL_KBN = '0'
+      and APPLY_NO = #{apply_no}
+      and APPLY_NUMBER = #{apply_number}
+    </select>
+    <!-- 个人人事申请信息查询SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{apply_no}
+    </select>
+    <!-- 更新调出申请人员信息SQL -->
+    <update id="updateMtb37Info">
+      update 
+        m_tb37_unit_moveout_detail
+      set
+        UNIT_CHECKER = #{mtb37Info.unit_checker},
+        UNIT_CHECK_DATE = #{mtb37Info.unit_check_date},
+        UNIT_CHECK_VIEWS = #{mtb37Info.unit_check_views},
+        UNIT_CHECK_RESULT = #{mtb37Info.unit_check_result},
+        COUNTY_CHECKER = #{mtb37Info.county_checker},
+        COUNTY_CHECK_DATE = #{mtb37Info.county_check_date},
+        COUNTY_CHECK_VIEWS = #{mtb37Info.county_check_views},
+        COUNTY_CHECK_RESULT = #{mtb37Info.county_check_result},
+        DOWNTOWN_CHECKER = #{mtb37Info.downtown_checker},
+        DOWNTOWN_CHECK_DATE = #{mtb37Info.downtown_check_date},
+        DOWNTOWN_CHECK_VIEWS = #{mtb37Info.downtown_check_views},
+        DOWNTOWN_CHECK_RESULT = #{mtb37Info.downtown_check_result},
+        MINISTRY_CHECKER = #{mtb37Info.ministry_checker},
+        MINISTRY_CHECK_DATE = #{mtb37Info.ministry_check_date},
+        MINISTRY_CHECK_VIEWS = #{mtb37Info.ministry_check_views},
+        MINISTRY_CHECK_RESULT = #{mtb37Info.ministry_check_result},
+        NOW_MARK = #{mtb37Info.now_mark},
+        UPDATE_USER_ID = #{mtb37Info.update_user_id},
+        UPDATE_DATE = #{mtb37Info.update_date}
+      where
+        APPLY_NO = #{mtb37Info.apply_no}
+        AND APPLY_NUMBER = #{mtb37Info.apply_number}
+    </update>
+    <!-- 更新个人人事申请信息SQL -->
+    <update id="updateTb29Info">
+        UPDATE m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{mtb29Info.check_result},
+            NOW_MARK = #{mtb29Info.now_mark},
+            WILL_CHECKUNITNO = #{mtb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{mtb29Info.update_user_id},
+            UPDATE_DATE = #{mtb29Info.update_date}
+        WHERE
+            APPLY_NO = #{mtb29Info.apply_no}
+    </update>
+    <!-- 终审通过的场合：个人基本信息的更新SQL -->
+    <update id="updateTb12Info">
+        UPDATE m_tb12_personnel
+        SET
+            <!-- 岗位状态：006离岗 -->
+            PERSONNEL_STATUS = #{mtb12Info.personnel_status},
+            PERSONNEL_UNIT = '',
+            PERSONNEL_UNIT_NM = '',
+            <!-- 人员进入方式 -->
+            PERSONNEL_JOINMODE = '',
+            <!-- 人员离开方式 -->
+            PERSONNEL_OUTMODE = #{mtb12Info.personnel_outmode},
+            <!-- 人员离开原因 -->
+            PERSONNEL_BIKO = #{mtb12Info.personnel_biko},
+            <!-- 人员离开时间 -->
+            PERSONNEL_INOUTTIME = #{mtb12Info.personnel_inouttime},
+            UPDATE_USER_ID = #{mtb12Info.update_user_id},
+            UPDATE_DATE = #{mtb12Info.update_date}
+        WHERE
+            PERSONNEL_ID = #{mtb12Info.personnel_id}
+            AND PERSONNEL_CARD_ID = #{mtb12Info.personnel_card_id}
+            AND PERSONNEL_UNIT = #{mtb12Info.personnel_unit}
+    </update>
+    <!-- 更新调出申请人员信息SQL -->
+    <update id="updateMtb37InfoCalloutTime">
+      update 
+        m_tb37_unit_moveout_detail
+      set
+        CALLOUT_TIME = #{mtb37Info.callout_time},
+        UPDATE_USER_ID = #{mtb37Info.update_user_id},
+        UPDATE_DATE = #{mtb37Info.update_date}
+      where
+        APPLY_NO = #{mtb37Info.apply_no}
+        AND APPLY_NUMBER = #{mtb37Info.apply_number}
+    </update>
+</mapper>

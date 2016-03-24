@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010705Mapper">
+    <!-- 获得专家信息 -->
+    <select id="getInfo" resultType="com.rlglsys.entity.Mtb89ExpertsBank">
+        SELECT
+		    *
+		FROM
+		    m_tb89_experts_bank
+		WHERE
+            DEL_KBN = '0'
+		<if test=" expertsbank_kind != '' and expertsbank_kind != '-1'">
+		AND EXPERTSBANK_KIND = #{expertsbank_kind}
+		</if>
+		<if test=" expertsbank_level != '' and expertsbank_level != '-1'">
+		AND EXPERTSBANK_LEVEL = #{expertsbank_level}
+		</if>
+		<if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!-- 获得专家信息条数 -->
+    <select id="getCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM
+            m_tb89_experts_bank
+        WHERE
+            DEL_KBN = '0'
+        <if test=" expertsbank_kind != '' and expertsbank_kind != '-1'">
+        AND EXPERTSBANK_KIND = #{expertsbank_kind}
+        </if>
+        <if test=" expertsbank_level != '' and expertsbank_level != '-1'">
+        AND EXPERTSBANK_LEVEL = #{expertsbank_level}
+        </if>
+    </select>
+</mapper>

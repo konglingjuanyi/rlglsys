@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl090402" extends="rlgl" namespace="/">
+		<action name="rlgl090402Init"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090402.jsp</result>
+		</action>
+		<action name="rlgl090402Search"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090402.jsp</result>
+		</action>
+		<action name="rlgl090402Stop"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402StopAction" method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl090402.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl090402.jsp</result>
+		</action>
+		<action name="rlgl090402Start"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402StartAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090402.jsp</result>
+		</action>
+		<action name="rlgl090402RecirectDetail"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402RedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090403Init</param>
+			</result>
+		</action>
+		<action name="rlgl090402RecirectUpdate"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402RedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090404Init</param>
+			</result>
+		</action>
+		<action name="rlgl090402RecirectPerfect"
+			class="com.rlglsys.action.rlgl.section.Rlgl090402RedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090407Init</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

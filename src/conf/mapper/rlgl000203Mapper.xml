@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl000203Mapper">
+
+    <!-- 待办事项查询SQL -->
+    <select id="getMtb38TodoInfoList" resultType="com.rlglsys.entity.Mtb38TodoList">
+        SELECT
+            *
+        FROM m_tb38_todolist
+        WHERE
+            DEL_KBN = '0'
+         AND USER_ID = #{user_id}
+    </select>
+    
+    <select id="getNoticeInfoList" resultType="com.rlglsys.bean.Rlgl000203Bean">
+        SELECT 
+             M84.*
+		FROM m_tb84_notice  M84
+		WHERE 
+		(M84.USER_ID = #{noticeInfo.notice_to} OR M84.USER_ID='3711')
+		AND M84.DEL_KBN = '0'
+		<if test="noticeInfo.expend_01==001">
+		  AND M84.NOTICE_KBN = '001'
+		</if>
+	    <if test="noticeInfo.expend_01==002">
+		   AND M84.NOTICE_KBN = '002'
+		</if>
+		<if test="noticeInfo.pageCount != 0 and noticeInfo.pageCount != null">
+            LIMIT #{noticeInfo.pageNo},#{noticeInfo.pageCount}
+        </if>
+    </select>
+    
+    <select id="getNoticeInfoCount" resultType="int">
+        SELECT 
+             Count(*)
+		FROM m_tb83_notice_to  M1
+		INNER JOIN m_tb84_notice M2 ON
+		    M1.NOTICE_ID = M2.NOTICE_ID
+		    AND M1.USER_ID = M2.USER_ID
+		    AND M2.DEL_KBN = '0'
+
+		WHERE M1.NOTICE_TO = #{noticeInfo.notice_to}
+		   <!--   <if test="noticeInfo.user_enter !='' and noticeInfo.user_enter != null">
+		        AND M1.USER_ENTER = #{noticeInfo.user_enter}
+		    </if>-->
+		    AND M1.DEL_KBN = '0'
+    </select>
+
+    <!-- 单位信息审核一览查询 -->
+    <select id="getMtb07UnitapplyInfoList" resultType="com.rlglsys.bean.Mtb07UnitapplyBean">
+        SELECT M1.*
+            ,M2.ADM_NAME AS applykbn_name
+            ,M3.UNIT_NM AS unit_nm
+            ,M4.ADM_NAME AS check_resultNm
+        FROM m_tb07_unitapply M1
+        LEFT JOIN m_tb02_adm M2 ON
+           M1.apply_kbn = M2.ADM_NUM
+           AND M2.ADM_TYPE_CD = '041'
+           AND M2.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb04_unit M3 ON
+           M1.unit_no = M3.unit_no
+           AND M3.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb02_adm M4 ON
+           M1.check_result = M4.ADM_NUM
+           AND M4.ADM_TYPE_CD = '042'
+           AND M4.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            AND M1.APPLY_STATUS = '1'
+            AND M1.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '1' AND DEL_KBN = '0')
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+    <!-- 单位信息审核件数查询 -->
+    <select id="getMtb07UnitapplyInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb07_unitapply M1
+        LEFT JOIN m_tb02_adm M2 ON
+           M1.apply_kbn = M2.ADM_NUM
+           AND M2.ADM_TYPE_CD = '041'
+           AND M2.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb04_unit M3 ON
+           M1.unit_no = M3.unit_no
+           AND M3.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb02_adm M4 ON
+           M1.check_result = M4.ADM_NUM
+           AND M4.ADM_TYPE_CD = '042'
+           AND M4.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            AND M1.APPLY_STATUS = '1'
+            AND M1.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '1' AND DEL_KBN = '0')
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+     <!-- 个人信息审核一览查询SQL -->
+    <select id="getMtb29PersonalapplicationInfoList" resultType="com.rlglsys.bean.Mtb29PersonalApplyBean">
+        SELECT M1.*
+            ,M2.ADM_NAME AS apply_nm
+            ,M3.UNIT_NM AS personal_unitnm
+            ,M4.ADM_NAME AS check_resultNm
+        FROM m_tb29_personalapplication M1
+        LEFT JOIN m_tb02_adm M2 ON
+           M1.apply_kbn = M2.ADM_NUM
+           AND M2.ADM_TYPE_CD = '041'
+           AND M2.DEL_KBN = '0'
+           
+         LEFT JOIN m_tb04_unit M3 ON
+           M1.personal_unitno = M3.unit_no
+           AND M3.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb02_adm M4 ON
+           M1.check_result = M4.ADM_NUM
+           AND M4.ADM_TYPE_CD = '042'
+           AND M4.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            AND M1.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+          <!--    <if test="applyInfo.user_enter == 1">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '0' AND DEL_KBN = '0')
+            </if>
+            <if test="applyInfo.user_enter == 2">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_01 = '3' AND DEL_KBN = '0')
+            </if>
+            <if test="applyInfo.user_enter == 3">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_01 = '3' AND DEL_KBN = '0')
+            </if>-->
+           <if test="applyInfo.threeApply_flg == 1">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '2' AND EXPEND_01 = '2' AND DEL_KBN = 0)
+            </if>
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+    <!-- 个人信息审核件数查询SQL -->
+    <select id="getMtb29PersonalapplicationInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb29_personalapplication M1
+        LEFT JOIN m_tb02_adm M2 ON
+           M1.apply_kbn = M2.ADM_NUM
+           AND M2.ADM_TYPE_CD = '041'
+           AND M2.DEL_KBN = '0'
+           
+         LEFT JOIN m_tb04_unit M3 ON
+           M1.personal_unitno = M3.unit_no
+           AND M3.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb02_adm M4 ON
+           M1.check_result = M4.ADM_NUM
+           AND M4.ADM_TYPE_CD = '042'
+           AND M4.DEL_KBN = '0'
+        WHERE 
+            M1.DEL_KBN = '0'
+            AND M1.WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+           <!--   <if test="applyInfo.user_enter == 1">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '0' AND DEL_KBN = '0')
+            </if>
+            <if test="applyInfo.user_enter == 2">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_01 = '3' AND DEL_KBN = '0')
+            </if>
+            <if test="applyInfo.user_enter == 3">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_01 = '3' AND DEL_KBN = '0')
+            </if>-->
+           <if test="applyInfo.threeApply_flg == 1">
+            AND M1.APPLY_KBN IN (SELECT ADM_NUM FROM m_tb02_adm WHERE ADM_TYPE_CD = '041' AND EXPEND_02 = '2' AND EXPEND_01 = '2' AND DEL_KBN = 0)
+            </if>
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+     <!-- 个人信息申请审核中件数-->
+    <select id="getMtb29PersonalReviewInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb29_personalapplication M1
+        LEFT JOIN m_tb02_adm M2 ON
+           M1.apply_kbn = M2.ADM_NUM
+           AND M2.ADM_TYPE_CD = '041'
+           AND M2.DEL_KBN = '0'
+           
+         LEFT JOIN m_tb04_unit M3 ON
+           M1.personal_unitno = M3.unit_no
+           AND M3.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb02_adm M4 ON
+           M1.check_result = M4.ADM_NUM
+           AND M4.ADM_TYPE_CD = '042'
+           AND M4.DEL_KBN = '0'
+        WHERE
+            M1.DEL_KBN = '0'
+            AND M1.APPLY_KBN in ('001','002','003','004','010','011','012','013','017')
+            AND M1.PERSONAL_UNITNO = #{applyInfo.will_checkunitno}
+            AND M1.PERSONAL_ID = #{applyInfo.personal_id}
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+     <!-- 个人信息申请驳回件数 -->
+    <select id="getMtb29PersonalRejectInfoCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb29_personalapplication M1
+        LEFT JOIN m_tb02_adm M2 ON
+           M1.apply_kbn = M2.ADM_NUM
+           AND M2.ADM_TYPE_CD = '041'
+           AND M2.DEL_KBN = '0'
+           
+         LEFT JOIN m_tb04_unit M3 ON
+           M1.personal_unitno = M3.unit_no
+           AND M3.DEL_KBN = '0'
+           
+        LEFT JOIN m_tb02_adm M4 ON
+           M1.check_result = M4.ADM_NUM
+           AND M4.ADM_TYPE_CD = '042'
+           AND M4.DEL_KBN = '0'
+        WHERE
+            M1.DEL_KBN = '0'
+            AND M1.APPLY_KBN in ('001','002','003','004','010','011','012','013','017')
+            AND M1.PERSONAL_UNITNO = #{applyInfo.will_checkunitno}
+            AND M1.PERSONAL_ID = #{applyInfo.personal_id}
+            <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND M1.CHECK_RESULT = #{applyInfo.check_result}
+            </if>
+    </select>
+    
+    <!-- 继续教育待办事项一览查询SQL -->
+    <select id="searchMtb56creditreportInfoCount" resultType="int">
+        SELECT Count(*)
+        FROM m_tb56_credit_reporting_detail
+        WHERE WILL_CHECKUNITNO = #{applyInfo.will_checkunitno}
+         <if test="applyInfo.personal_id != ''">
+            AND personal_id=#{applyInfo.personal_id}
+         </if>
+		 AND NAVI IN
+         <foreach collection="applyInfo.naviIdList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+        AND del_kbn = 0
+        <if test="applyInfo.check_result !='' and applyInfo.check_result != null">
+            AND CHECK_RESULT = #{applyInfo.check_result}
+        </if>
+        <![CDATA[ AND SCORE_YEAR > (#{applyInfo.year} - 6 ) ]]>
+        <![CDATA[ AND SCORE_YEAR <= #{applyInfo.year} ]]>
+    </select>
+
+    <!-- 待办事项一览查询SQL -->
+    <select id="searchUnitinfo" resultType="com.rlglsys.entity.Mtb56creditreportingdetail">
+        SELECT *
+        FROM m_tb56_credit_reporting_detail M
+        LEFT JOIN
+            m_tb01_user M1
+        ON M.personal_id = M1.personnel_id
+        WHERE 1=1 
+        <if test="rlgl020601.personal_id != ''">
+            AND M.personal_id=#{ rlgl020601.personal_id}
+        </if>
+        <if test="rlgl020601.navi != ''">
+            AND M.navi=#{ rlgl020601.navi}
+        </if>
+        AND (WILL_CHECKUNITNO = #{rlgl020601.will_checkunitno} OR CHECK_RESULT = '002' OR CHECK_RESULT = '003')
+        AND M.del_kbn = 0
+        <![CDATA[ AND M.SCORE_YEAR > (#{year} - 6 ) ]]>
+        <![CDATA[ AND M.SCORE_YEAR <= #{year} ]]>
+        ORDER BY M.CHECK_RESULT DESC,M.SCORE_YEAR DESC
+        <if test="pageCount != 0 and pageCount != null">
+            LIMIT #{pageNo},#{pageCount}
+        </if>
+    </select>
+</mapper>

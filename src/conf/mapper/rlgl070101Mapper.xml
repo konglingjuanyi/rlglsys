@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl070101Mapper">
+
+  <!-- 通过单位分类编码查询单位信息 -->
+  <select id="getUnitInfo" resultType="com.rlglsys.entity.Mtb04Unit">
+	SELECT
+	  UNIT_NO,
+	  UNIT_NM
+	FROM
+	  m_tb04_unit
+	WHERE
+	  UNIT_ASSORT = #{rlgl070101Bean.unit_assort}
+	AND
+	  (UNIT_SUPER = #{rlgl070101Bean.unit_no} OR UNIT_NO = #{rlgl070101Bean.unit_no})
+	AND
+	  DEL_KBN = 0  
+  </select>
+  
+  <!-- 通过给定单位编号查询其下级单位 -->
+  <select id="getUnitLowerList" resultType="String">
+	SELECT 
+	  UNIT_NO
+	FROM 
+	  m_tb04_unit 
+	WHERE 
+	  UNIT_SUPER = #{unit_no}
+	AND 
+	  DEL_KBN = 0 
+	AND 
+	  UNIT_STATUS = '1'
+  </select>
+  
+  <!-- 统计人员消费明细总数 -->
+  <select id="getPrepayRecordCount" resultType="int">
+SELECT
+  COUNT(*)
+FROM
+  (
+   (SELECT * FROM m_tb107_prepay_record AS A WHERE A.DEL_KBN = 0
+		<if test="rlgl070101Bean.unitLowerList != null ">
+		AND A.CLUM003 IN 
+			<foreach collection="rlgl070101Bean.unitLowerList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="rlgl070101Bean.bank_no != '' and rlgl070101Bean.bank_no != null">
+		AND A.CLUM007 = #{rlgl070101Bean.bank_no}
+		</if>
+		<if test="rlgl070101Bean.bank_type_no != '' and rlgl070101Bean.bank_type_no != null">
+		AND A.CLUM005 = #{rlgl070101Bean.bank_type_no}
+		</if>
+		<if test="rlgl070101Bean.start_date != 0 and rlgl070101Bean.start_date != null">
+	      <![CDATA[  AND A.CLUM009 >=#{rlgl070101Bean.start_date} ]]>
+	  </if>
+		<if test="rlgl070101Bean.end_date != 0 and rlgl070101Bean.end_date != null">
+	      <![CDATA[  AND A.CLUM009 <=#{rlgl070101Bean.end_date} ]]>
+	  </if>
+   )
+   UNION
+   (SELECT * FROM m_tb88_bank_serial AS B WHERE B.DEL_KBN = 0
+    <if test="rlgl070101Bean.unitLowerList != null ">
+		AND B.PERSONAL_UNIT_NO IN 
+			<foreach collection="rlgl070101Bean.unitLowerList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="rlgl070101Bean.bank_type_no != '' and rlgl070101Bean.bank_type_no != null">
+		AND B.BANK_NO = #{rlgl070101Bean.bank_type_no}
+		</if>
+	  <if test="rlgl070101Bean.start_date != 0 and rlgl070101Bean.start_date != null">
+			<![CDATA[  AND B.PAYMENT_TIME >=#{rlgl070101Bean.start_date} ]]>
+		</if>
+	  <if test="rlgl070101Bean.end_date != 0 and rlgl070101Bean.end_date != null">
+			<![CDATA[  AND B.PAYMENT_TIME <=#{rlgl070101Bean.end_date} ]]>
+		</if>
+   )
+  ) C
+  </select>
+  
+  <!-- 查询消费明细列表 -->
+  <select id="getPrepayRecordList" resultType="com.rlglsys.bean.Rlgl070101Bean">
+	SELECT 
+	  CLUM002,
+	  CLUM006,
+	  CLUM009,
+	  CLUM008,
+	  'inter_bank' AS diff_flg
+	FROM 
+	  m_tb107_prepay_record
+	WHERE
+	  DEL_KBN = 0
+	<if test="rlgl070101Bean.unitLowerList != null ">
+    AND CLUM003 IN 
+      <foreach collection="rlgl070101Bean.unitLowerList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+      </foreach>
+    </if>
+    <if test="rlgl070101Bean.bank_no != '' and rlgl070101Bean.bank_no != null">
+    AND CLUM007 = #{rlgl070101Bean.bank_no}
+    </if>
+    <if test="rlgl070101Bean.bank_type_no != '' and rlgl070101Bean.bank_type_no != null">
+    AND CLUM005 = #{rlgl070101Bean.bank_type_no}
+    </if>
+	<if test="rlgl070101Bean.start_date != 0 and rlgl070101Bean.start_date != null">
+      <![CDATA[  AND CLUM009 >=#{rlgl070101Bean.start_date} ]]>
+    </if>
+	<if test="rlgl070101Bean.end_date != 0 and rlgl070101Bean.end_date != null">
+      <![CDATA[  AND CLUM009 <=#{rlgl070101Bean.end_date} ]]>
+    </if>
+	UNION 
+	(SELECT 
+	  PERSONAL_CODE_NO AS CLUM002,
+	  BANK_CODE_NO AS CLUM006,
+	  PAYMENT_TIME AS  CLUM009,
+	  PAYMENT_MONEY AS CLUM008,
+	  'pre_pay' AS diff_flg 
+	FROM 
+	  m_tb88_bank_serial
+	WHERE
+	  DEL_KBN = 0
+	<if test="rlgl070101Bean.unitLowerList != null ">
+    AND PERSONAL_UNIT_NO IN 
+      <foreach collection="rlgl070101Bean.unitLowerList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+      </foreach>
+    </if>
+    <if test="rlgl070101Bean.bank_type_no != '' and rlgl070101Bean.bank_type_no != null">
+    AND BANK_NO = #{rlgl070101Bean.bank_type_no}
+    </if>
+	<if test="rlgl070101Bean.start_date != 0 and rlgl070101Bean.start_date != null">
+      <![CDATA[  AND PAYMENT_TIME >=#{rlgl070101Bean.start_date} ]]>
+    </if>
+	<if test="rlgl070101Bean.end_date != 0 and rlgl070101Bean.end_date != null">
+      <![CDATA[  AND PAYMENT_TIME <=#{rlgl070101Bean.end_date} ]]>
+    </if>
+	  )
+	<if test="rlgl070101Bean.pageCount != 0 and rlgl070101Bean.pageCount != null">
+    LIMIT #{rlgl070101Bean.pageNo},#{rlgl070101Bean.pageCount}
+    </if>
+  </select>
+  
+  <!-- 通过订单号查询订单明细 -->
+  <select id="getPrepayRecordInfo" resultType="com.rlglsys.bean.Rlgl070101Bean">
+	SELECT
+	  *
+	FROM
+	  m_tb107_prepay_record
+	WHERE
+	 1 = 1
+	<if test="rlgl070101Bean.clum006 != null ">
+	  and CLUM006 = #{rlgl070101Bean.clum006}
+	</if>
+	<if test="rlgl070101Bean.clum002 != null ">
+	  and CLUM002 = #{rlgl070101Bean.clum002}
+	</if>
+	<if test="rlgl070101Bean.clum009 != null ">
+	  and CLUM009 = #{rlgl070101Bean.clum009}
+	</if>
+	AND
+	  DEL_KBN = 0
+  </select>
+  
+  <!-- 通过订单号查询订单明细 -->
+  <select id="getRecordInfoFromMtb88" resultType="com.rlglsys.bean.Rlgl070101Bean">
+	SELECT
+	  BANK_CODE_NO AS clum006,
+	  PERSONAL_CODE_NO AS clum002,
+	  PAYMENT_TIME AS clum009,
+	  PAYMENT_MONEY AS clum008,
+	  ORDER_SUMMARY AS clum011,
+	  BANK_NM AS bank_nm
+	FROM
+	  m_tb88_bank_serial
+	WHERE
+	  DEL_KBN = 0
+	AND
+	  BANK_CODE_NO = #{record_no}
+  </select>
+  
+  <!-- 通过人员ID查询人员姓名 -->
+  <select id="getPersonnelName" resultType="String">
+	SELECT
+	  PERSONNEL_NM
+	FROM
+	  m_tb12_personnel
+	WHERE
+	  PERSONNEL_ID = #{personnel_id}
+	AND
+	  DEL_KBN = 0
+  </select>
+  
+  <!-- 通过银行类别编号查询银行名称 -->
+  <select id="getBankName" resultType="String">
+	SELECT
+	  ADM_NAME
+	FROM
+	  m_tb02_adm
+	WHERE
+	  ADM_TYPE_CD = '229'
+	AND
+	  ADM_NUM = #{bank_type_no}
+	AND 
+	  DEL_KBN = 0
+  </select>
+</mapper>

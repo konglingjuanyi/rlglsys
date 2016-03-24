@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl070106Mapper">
+	<!-- 得到所有的缴费记录 ，分页用-->
+	<select id="getAllJiaoFeiList" resultType="com.rlglsys.bean.Rlgl070106Bean">
+	 SELECT M.*,N.UNIT_NM FROM
+		(SELECT A.userId,A.CLUM003 AS TransactionID,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM008,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM008,A.CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM004,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM004,A.CLUM003,'') 
+		END AS Succeed,
+		A.PAY_DATE,B.USER_NAME,B.UNIT_NO,B.PERSONNEL_ID
+		FROM t_tb02_prepay_msg as A LEFT JOIN m_tb01_user AS B
+		ON A.userId = B.USER_ID 
+		WHERE A.DEL_KBN = 0
+		AND A.CLUM004 like '%7yIBpaqA7Zw='
+		<if test="rlgl070106Bean.unit_no !=null and rlgl070106Bean.unit_no !=''">
+		   AND B.UNIT_NO LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+		</if>
+		<if test="rlgl070106Bean.unit_nm !=null and rlgl070106Bean.unit_nm !=''">
+		   AND B.UNIT_NO = (SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_NM = #{rlgl070106Bean.unit_nm})
+		</if>
+		<if test="rlgl070106Bean.user_name !=null and  rlgl070106Bean.user_name !=''">
+		   AND B. USER_NAME = #{rlgl070106Bean.user_name}
+		</if>
+		
+		<if test="rlgl070106Bean.start_date !=null and rlgl070106Bean.start_date !=''">
+		   <![CDATA[  AND A.PAY_DATE >=#{rlgl070106Bean.start_date} ]]>
+		</if>
+		<if test="rlgl070106Bean.end_date !=null and rlgl070106Bean.end_date !=''">
+		   <![CDATA[  AND A.PAY_DATE <=#{rlgl070106Bean.end_date} ]]>
+		</if>) AS M
+		  LEFT JOIN m_tb04_unit as N ON M.unit_no = N.UNIT_NO
+		<if test="rlgl070106Bean.pageCount != null and rlgl070106Bean.pageCount != 0">
+            LIMIT #{rlgl070106Bean.pageNo},#{rlgl070106Bean.pageCount}
+        </if>
+	</select>
+	<!-- 得到所有的缴费情况 ，分页用-->
+	<select id="getJiaoYuJiaoFeiList" resultType="com.rlglsys.bean.Rlgl070106Bean">
+	 SELECT B.USER_ID AS userId,A.CLUM003 AS TransactionID,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM008,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM008,A.CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM004,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM004,A.CLUM003,'') 
+		END AS Succeed,
+		A.PAY_DATE,B.USER_NAME,B.UNIT_NO,B.PERSONNEL_ID,
+		H.SECTION_NAME AS personnelSectionName,
+        ADM1.ADM_NAME AS departmentName,
+	    ADM2.ADM_NAME AS protype,N.UNIT_NM
+	    FROM m_tb01_user AS B
+	    LEFT JOIN m_tb04_unit as N 
+		ON B.UNIT_NO = N.UNIT_NO
+		AND N.DEL_KBN = '0'
+		LEFT JOIN (select * from t_tb02_prepay_msg as tb02
+		WHERE tb02.CLUM004 like '%7yIBpaqA7Zw=' 
+		AND tb02.DEL_KBN = '0') A
+		ON B.USER_ID = A.userId
+		LEFT JOIN m_tb22_hospital_section AS H
+		ON H.UNIT_NO = B.UNIT_NO
+		AND H.SECTION_ID = B.SECTION_ID
+		AND H.DEL_KBN = '0'	
+		LEFT JOIN m_tb18_personnel_professional_info AS C
+		ON B.PERSONNEL_ID=C.PERSONNEL_ID
+		LEFT JOIN m_tb02_adm AS ADM1
+		ON ADM1.ADM_TYPE_CD = '087'
+		AND ADM1.ADM_NUM = MID(C.LEVEL,3,2)
+		AND ADM1.DEL_KBN = '0'
+		LEFT JOIN m_tb19_personnel_practitioners_info AS D
+		ON B.PERSONNEL_ID=D.PERSONNEL_ID
+		LEFT JOIN m_tb02_adm AS ADM2
+		ON ADM2.ADM_TYPE_CD = '008'
+		AND ADM2.ADM_NUM = D.type
+		AND ADM2.DEL_KBN = '0'	 
+		WHERE B.DEL_KBN = '0'
+		AND LENGTH(B.USER_ID) &gt;=15
+		AND B.UNIT_NO LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+		<if test="rlgl070106Bean.Succeed =='01'">
+		AND A.CLUM004 IS NOT NULL
+		</if>
+		<if test="rlgl070106Bean.Succeed =='02'">
+		AND A.CLUM004 IS NULL
+		</if>
+		<if test="rlgl070106Bean.personnelSectionId !=null and rlgl070106Bean.personnelSectionId !=''">
+		AND B.SECTION_ID = #{rlgl070106Bean.personnelSectionId}
+		</if>
+		<if test="rlgl070106Bean.departmentValue !=null and  rlgl070106Bean.departmentValue !=''">
+		   AND MID(C.LEVEL,3,2) = #{rlgl070106Bean.departmentValue}
+		</if>
+		<if test="rlgl070106Bean.protypeValue !=null and rlgl070106Bean.protypeValue !=''">
+		   AND D.type = #{rlgl070106Bean.protypeValue}
+		</if>
+		<if test="rlgl070106Bean.pageCount != null and rlgl070106Bean.pageCount != 0">
+            LIMIT #{rlgl070106Bean.pageNo},#{rlgl070106Bean.pageCount}
+        </if>
+	</select>
+	<!-- 得到所有的缴费情况 条数，分页用-->
+	<select id="getJiaoYuJiaoFeiCount" resultType="int">
+	 SELECT COUNT(B.USER_ID)
+	    FROM m_tb01_user AS B
+	    LEFT JOIN m_tb04_unit as N 
+		ON B.UNIT_NO = N.UNIT_NO
+		AND N.DEL_KBN = '0'
+		INNER JOIN (select DISTINCT(userId) from t_tb02_prepay_msg as tb02
+		WHERE tb02.CLUM004 like '%7yIBpaqA7Zw=' 
+		AND tb02.DEL_KBN = '0') A
+		ON B.USER_ID = A.userId
+		LEFT JOIN m_tb22_hospital_section AS H
+		ON H.UNIT_NO = B.UNIT_NO
+		AND H.SECTION_ID = B.SECTION_ID
+		AND H.DEL_KBN = '0'	
+		LEFT JOIN m_tb18_personnel_professional_info AS C
+		ON B.PERSONNEL_ID=C.PERSONNEL_ID
+		LEFT JOIN m_tb02_adm AS ADM1
+		ON ADM1.ADM_TYPE_CD = '087'
+		AND ADM1.ADM_NUM = MID(C.LEVEL,3,2)
+		AND ADM1.DEL_KBN = '0'
+		LEFT JOIN m_tb19_personnel_practitioners_info AS D
+		ON B.PERSONNEL_ID=D.PERSONNEL_ID
+		LEFT JOIN m_tb02_adm AS ADM2
+		ON ADM2.ADM_TYPE_CD = '008'
+		AND ADM2.ADM_NUM = D.type
+		AND ADM2.DEL_KBN = '0'	 
+		WHERE B.DEL_KBN = '0'
+		AND LENGTH(B.USER_ID) &gt;=15
+		AND B.UNIT_NO LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+		<!-- <if test="rlgl070106Bean.Succeed =='01'">
+		AND A.CLUM004 IS NOT NULL
+		</if>
+		<if test="rlgl070106Bean.Succeed =='02'">
+		AND A.CLUM004 IS NULL
+		</if> -->
+		<if test="rlgl070106Bean.personnelSectionId !=null and rlgl070106Bean.personnelSectionId !=''">
+		AND B.SECTION_ID = #{rlgl070106Bean.personnelSectionId}
+		</if>
+		<if test="rlgl070106Bean.departmentValue !=null and  rlgl070106Bean.departmentValue !=''">
+		   AND MID(C.LEVEL,3,2) = #{rlgl070106Bean.departmentValue}
+		</if>
+		<if test="rlgl070106Bean.protypeValue !=null and rlgl070106Bean.protypeValue !=''">
+		   AND D.type = #{rlgl070106Bean.protypeValue}
+		</if>
+	</select>
+	<!-- 得到所有的缴费情况 条数，分页用-->
+	<select id="getJiaoYuJiaoFeiCounts" resultType="int">
+	 SELECT COUNT(B.USER_ID)
+	    FROM m_tb01_user AS B	    
+		LEFT JOIN m_tb18_personnel_professional_info AS C
+		ON B.PERSONNEL_ID=C.PERSONNEL_ID		
+		LEFT JOIN m_tb19_personnel_practitioners_info AS D
+		ON B.PERSONNEL_ID=D.PERSONNEL_ID		
+		WHERE B.DEL_KBN = '0'
+		AND LENGTH(B.USER_ID) &gt;=15
+		AND B.UNIT_NO LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')		
+		<if test="rlgl070106Bean.personnelSectionId !=null and rlgl070106Bean.personnelSectionId !=''">
+		AND B.SECTION_ID = #{rlgl070106Bean.personnelSectionId}
+		</if>
+		<if test="rlgl070106Bean.departmentValue !=null and  rlgl070106Bean.departmentValue !=''">
+		   AND MID(C.LEVEL,3,2) = #{rlgl070106Bean.departmentValue}
+		</if>
+		<if test="rlgl070106Bean.protypeValue !=null and rlgl070106Bean.protypeValue !=''">
+		   AND D.type = #{rlgl070106Bean.protypeValue}
+		</if>
+	</select>
+	<!--得到缴费记录的条数  -->
+	<select id="getJiaoFeiCount" resultType="int">
+	 	 select count(*) FROM (
+		 	SELECT A.userId,A.CLUM003 AS TransactionID,
+		 	CASE 
+		WHEN LENGTH(replace(A.CLUM008,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM008,A.CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM004,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM004,A.CLUM003,'') 
+		END AS Succeed,
+		 	A.PAY_DATE,B.USER_NAME,B.UNIT_NO,B.PERSONNEL_ID
+			FROM t_tb02_prepay_msg as A LEFT JOIN m_tb01_user AS B
+			ON A.userId = B.USER_ID 
+			WHERE A.DEL_KBN = 0
+			AND A.CLUM004 like '%7yIBpaqA7Zw='
+			<if test="rlgl070106Bean.unit_no !=null and rlgl070106Bean.unit_no !=''">
+			   AND B.UNIT_NO LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+			</if>
+			<if test="rlgl070106Bean.unit_nm !=null and rlgl070106Bean.unit_nm !=''">
+			   AND B.UNIT_NO = (SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_NM = #{rlgl070106Bean.unit_nm})
+			</if>
+			<if test="rlgl070106Bean.user_name !=null and  rlgl070106Bean.user_name !=''">
+			   AND B. USER_NAME = #{rlgl070106Bean.user_name}
+			</if>
+			<if test="rlgl070106Bean.start_date !=null and rlgl070106Bean.start_date !=''">
+			   <![CDATA[  AND A.PAY_DATE >=#{rlgl070106Bean.start_date} ]]>
+			</if>
+			<if test="rlgl070106Bean.end_date !=null and rlgl070106Bean.end_date !=''">
+			   <![CDATA[  AND A.PAY_DATE <=#{rlgl070106Bean.end_date} ]]>
+			</if>
+	 	 ) AS M
+
+	</select>
+	<!-- 得到缴费一览信息，主要是为了导出信息所用 -->
+  <select id="getJiaoFeiList" resultType="com.rlglsys.bean.Rlgl070106Bean">
+	 SELECT M.*,N.UNIT_NM FROM
+		(SELECT A.userId,A.CLUM003 AS TransactionID,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM008,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM008,A.CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM004,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM004,A.CLUM003,'') 
+		END AS Succeed,
+		A.PAY_DATE,B.USER_NAME,B.UNIT_NO,B.PERSONNEL_ID
+		FROM t_tb02_prepay_msg as A LEFT JOIN m_tb01_user AS B
+		ON A.userId = B.USER_ID 
+		WHERE A.DEL_KBN = 0
+		AND A.CLUM004 like '%7yIBpaqA7Zw='
+		<if test="rlgl070106Bean.unit_no !=null and rlgl070106Bean.unit_no !=''">
+		   AND B.UNIT_NO LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+		</if>
+		<if test="rlgl070106Bean.unit_nm !=null and rlgl070106Bean.unit_nm !=''">
+		   AND B.UNIT_NO = (SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_NM = #{rlgl070106Bean.unit_nm})
+		</if>
+		<if test="rlgl070106Bean.user_name !=null and  rlgl070106Bean.user_name !=''">
+		   AND B. USER_NAME = #{rlgl070106Bean.user_name}
+		</if>
+		<if test="rlgl070106Bean.start_date !=null and rlgl070106Bean.start_date !=''">
+		   <![CDATA[  AND A.PAY_DATE >=#{rlgl070106Bean.start_date} ]]>
+		</if>
+		<if test="rlgl070106Bean.end_date !=null and rlgl070106Bean.end_date !=''">
+		   <![CDATA[  AND A.PAY_DATE <=#{rlgl070106Bean.end_date} ]]>
+		</if>) AS M
+		  LEFT JOIN m_tb04_unit as N ON M.unit_no = N.UNIT_NO
+	</select>
+	<!-- 得到某个时间段内的缴费记录 -->
+	<select id="getAllJiaoFeiListByDate" resultType="com.rlglsys.bean.Rlgl070106Bean">
+	 SELECT M.*,N.UNIT_NM FROM
+		(SELECT A.userId,A.CLUM003 AS TransactionID,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM008,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM008,A.CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(A.CLUM004,A.CLUM003,'')) >= LENGTH(A.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(A.CLUM004,A.CLUM003,'') 
+		END AS Succeed,
+		A.PAY_DATE,B.USER_NAME,B.UNIT_NO,B.PERSONNEL_ID
+		FROM t_tb02_prepay_msg as A LEFT JOIN m_tb01_user AS B
+		ON A.userId = B.USER_ID 
+		WHERE A.DEL_KBN = 0
+		AND A.CLUM004 like '%7yIBpaqA7Zw='
+		<if test="rlgl070106Bean.start_date !=null and rlgl070106Bean.start_date !=''">
+		   <![CDATA[  AND A.PAY_DATE >=#{rlgl070106Bean.start_date} ]]>
+		</if>
+		<if test="rlgl070106Bean.end_date !=null and rlgl070106Bean.end_date !=''">
+		   <![CDATA[  AND A.PAY_DATE <=#{rlgl070106Bean.end_date} ]]>
+		</if>) AS M
+		  LEFT JOIN m_tb04_unit as N ON M.unit_no = N.UNIT_NO
+	</select>
+	<!-- 依据订单号逻辑删除数据 -->
+	<update id="deleteJiaoFeiByNo">
+	  update t_tb02_prepay_msg set DEL_KBN = 1 
+	  where CLUM003 in
+	   <foreach collection="TransactionIDList"  index="index" item="item" open="(" separator="," close=")">
+	        #{item}
+	  </foreach>
+	</update>
+	<!-- 更新支付状态 -->
+	<update id="updateJiaoFeiByNo" parameterType="String">
+	  update t_tb02_prepay_msg set  
+	  CLUM004 = CONCAT(#{TransactionID},#{zfzt}),
+	  CLUM008 = CONCAT(#{TransactionID},#{Amount})
+	  where CLUM003 = #{TransactionID}
+	</update>
+</mapper>

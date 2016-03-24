@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060305Mapper">
+  
+  <!-- 取得考试报名申请结果 -->
+  <select id="getMtb106OnlineApplyInfoList" resultType="com.rlglsys.bean.Rlgl060303Bean">
+    SELECT * 
+    FROM
+    (SELECT 
+      M.*,
+      M1.UNIT_NM AS PERSONAL_UNIT_NM,
+      M2.SECTION_NAME AS PERSONAL_SECTION_NM
+    FROM 
+      m_tb106_online_apply M
+    LEFT JOIN
+      m_tb04_unit M1
+    ON
+      M.PERSONAL_UNIT_NO = M1.UNIT_NO
+    LEFT JOIN
+      m_tb22_hospital_section M2
+    ON
+      M.PERSONAL_UNIT_NO = M2.UNIT_NO
+      AND M.PERSONAL_SECTION_NO = M2.SECTION_ID
+    WHERE 
+      M.DEL_KBN = 0
+    AND 
+      M.CHECK_RESULT = #{checkResult}
+    AND 
+      (EXAM_ROOM IS NULL OR EXAM_ROOM = '')
+    <if test="declareInfo.apply_no != '' and declareInfo.apply_no != null">
+     AND APPLY_NO= #{declareInfo.apply_no}
+    </if>
+    <if test="declareInfo.personal_id != '' and declareInfo.personal_id != null">
+     AND PERSONAL_ID= #{declareInfo.personal_id}
+    </if>
+    <if test="declareInfo.personal_nm != '' and declareInfo.personal_nm != null">
+     AND PERSONAL_NM= #{declareInfo.personal_nm}
+    </if>
+    <if test="declareInfo.exam_no != '' and declareInfo.exam_no != null">
+     AND EXAM_NO = #{declareInfo.exam_no}
+    </if>) MS
+    WHERE 1 = 1
+    <if test="declareInfo.personal_unit_nm != '' and declareInfo.personal_unit_nm != null">
+     AND MS.PERSONAL_UNIT_NM LIKE CONCAT('%', #{declareInfo.personal_unit_nm}, '%')
+    </if>
+    <if test="declareInfo.personal_section_nm != '' and declareInfo.personal_section_nm != null">
+     AND MS.PERSONAL_SECTION_NM LIKE CONCAT('%', #{declareInfo.personal_section_nm}, '%')
+    </if>
+  </select>
+  
+  <!-- 考点考场安排 -->
+  <update id="updateTb106">
+    UPDATE
+      m_tb106_online_apply M
+    SET
+      EXAM_PLACE = #{rlgl060303UpdateInfo.exam_place},
+      EXAM_ROOM = #{rlgl060303UpdateInfo.exam_room},
+      UPDATE_USER_ID = #{rlgl060303UpdateInfo.update_user_id},
+      UPDATE_DATE = #{rlgl060303UpdateInfo.update_date}
+    WHERE
+      APPLY_NO = #{rlgl060303UpdateInfo.apply_no}
+  </update>
+  
+  <!-- 已安排考点考场人数 -->
+  <select id="getArrangedPeople" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb106_online_apply
+    WHERE
+      EXAM_PLACE = #{exam_place}
+      AND EXAM_ROOM = #{exam_room}
+      AND DEL_KBN = 0
+  </select>
+  
+  <!-- 考场能容纳人数 -->
+  <select id="getTotalPeople" resultType="int">
+    SELECT
+      ADM_VALUE_02
+    FROM
+      m_tb02_adm
+    WHERE
+      ADM_VALUE_01 = #{exam_place}
+      AND ADM_NUM = #{exam_room}
+      AND ADM_TYPE_CD = '235'
+      AND DEL_KBN = 0
+  </select>
+  
+  <!-- 考试科目 -->
+  <select id="getExamInfo" resultType="com.rlglsys.entity.Mtb103ExamSetting">
+    SELECT
+      *
+    FROM
+      m_tb103_exam_setting
+    WHERE DEL_KBN = '0' 
+	  AND #{strNow} BETWEEN APPLY_END_DATE AND EXAM_START_DATE
+  </select>
+</mapper>

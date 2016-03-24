@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl022009" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl022009Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022009InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022009.jsp</result>
+       </action>
+       <action name="rlgl022009Search"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022009SearchAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022009.jsp</result>
+       </action>
+       	<action name="rlgl022010Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022010InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022010.jsp</result>
+       </action>
+    </package>
+</struts>
+

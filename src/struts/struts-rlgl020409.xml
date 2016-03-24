@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 继续教育,继续医学教育项目培训班,项目举办,报名申请一览 -->
+<struts>
+    <package name="rlgl020409" extends="rlgl" namespace="/">
+       <!-- 单位举办项目一览 -->
+       <action name="rlgl020409Init" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020409InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl020409_A.jsp</result>
+       </action>
+       <!-- 撤销申请报名 -->
+       <action name="rlgl020409Delete" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020409DeleteAction" method="execute">
+           <result name="init" type="redirectAction">rlgl020409Init</result>
+       </action>
+    </package>
+</struts>
+

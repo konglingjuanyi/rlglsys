@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl010303" extends="rlgl" namespace="/">
+		<action name="rlgl010303Init"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010303InitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl010303.jsp</result>
+		</action>
+		<action name="rlgl010303Delete"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010303DeleteAction"
+			method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl010303Init</param>
+				<param name="backFlag">1</param>
+			</result>
+		</action>
+		<action name="rlgl010306Init"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306InitAction"
+			method="execute">
+		   <result name="success">rlgl010303Init</result> 
+		</action>
+		<action name="rlgl010305Init"
+			class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305InitAction"
+			method="execute">
+		   <result name="success" type="redirectAction">
+				<param name="actionName">rlgl010305Init</param>
+				<param name="personnel_id">${personnel_id}</param>
+				<param name="backAction">${backAction}</param>
+			</result>
+		</action>
+	</package>
+</struts>

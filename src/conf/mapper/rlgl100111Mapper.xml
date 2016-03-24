@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100111Mapper">
+	<!-- 获得缴费情况列表 -->
+	<select id="getPayList" resultType="com.rlglsys.bean.Rlgl100111Bean">
+	SELECT
+	    m1.personnel_id,
+	    m2.personnel_nm,
+	    t1.clum003 as TransactionID,
+	    
+	    CASE 
+		WHEN LENGTH(replace(t1.CLUM008,t1.CLUM003,'')) >= LENGTH(t1.CLUM003) 
+		THEN 'ERROR' 
+		ELSE replace(t1.CLUM008,t1.CLUM003,'') 
+		END AS Amount,
+		CASE 
+		WHEN LENGTH(replace(t1.CLUM004,t1.CLUM003,'')) >= LENGTH(t1.CLUM003) 
+		THEN 'ERROR' 
+		ELSE 
+		case when replace(t1.CLUM004,t1.CLUM003,'') = #{rlgl100111Bean.succeed} then '支付成功' else '支付失败' end
+		END AS Succeed,
+	    t1.clum006 as PayYear
+	FROM
+		t_tb02_prepay_msg t1 join m_tb01_user m1 on t1.userId = m1.user_id
+		left join m_tb12_personnel m2 on m1.personnel_id = m2.personnel_id and m2.DEL_KBN = 0
+	WHERE
+	    t1.DEL_KBN = 0 and replace(t1.CLUM004,t1.CLUM003,'') = #{rlgl100111Bean.succeed} and m1.DEL_KBN = 0
+	    and m1.user_id in (
+	    
+	    select user_id from m_tb01_user where 
+
+           unit_no in (SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{rlgl100111Bean.unit_no}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+           or unit_no LIKE CONCAT('', #{rlgl100111Bean.unit_no}, '%')
+
+	    )
+	    <if test="rlgl100111Bean.personnel_id != '' and rlgl100111Bean.personnel_id != null">
+		  AND m1.personnel_id = #{rlgl100111Bean.personnel_id}
+		</if>
+	  	<if test="rlgl100111Bean.start_date != 0 and rlgl100111Bean.start_date != null">
+	      <![CDATA[ AND t1.clum006 >=#{rlgl100111Bean.start_date} ]]>
+	  </if>
+		<if test="rlgl100111Bean.end_date != 0 and rlgl100111Bean.end_date != null">
+	      <![CDATA[ AND t1.clum006 <=#{rlgl100111Bean.end_date} ]]>
+	  </if>
+	  <if test="rlgl100111Bean.pageCount != 0 and rlgl100111Bean.pageCount != null">
+        LIMIT #{rlgl100111Bean.pageNo},#{rlgl100111Bean.pageCount}
+        </if>
+	</select>
+	
+	<!-- 通过单位分类编码查询单位信息 -->
+  <select id="getUnitNM" resultType="String">
+	SELECT
+	  UNIT_NM
+	FROM
+	  m_tb04_unit
+	WHERE
+	  UNIT_NO = #{rlgl100111Bean.unit_no}
+	AND
+	  DEL_KBN = 0  
+  </select>
+</mapper>

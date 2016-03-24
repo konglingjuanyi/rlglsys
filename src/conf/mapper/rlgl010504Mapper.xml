@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010504Mapper">
+    <!-- 件数取得SQL -->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND WILL_CHECKUNITNO = #{unitNo}
+            AND APPLY_KBN IN (SELECT ADM_NUM
+                              FROM m_tb02_adm
+                              WHERE ADM_TYPE_CD = '041'
+                                AND EXPEND_02 = '0'
+                                AND DEL_KBN = '0')
+           <if test="todoInfo.applyKbn != ''">
+            AND APPLY_KBN = #{todoInfo.applyKbn}
+           </if>
+           <if test="todoInfo.status != ''">
+            AND CHECK_RESULT = #{todoInfo.status}
+           </if>
+           <if test="todoInfo.author != ''">
+            AND PERSONAL_NM = #{todoInfo.author}
+           </if>
+           <if test="todoInfo.date != ''">
+            AND APPLY_DATE = #{todoInfo.date}
+           </if>
+    </select>
+    <!-- 待办事项一览查询SQL -->
+    <select id="getTodoInfo" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND WILL_CHECKUNITNO = #{unitNo}
+            AND APPLY_KBN IN (SELECT ADM_NUM
+                              FROM m_tb02_adm
+                              WHERE ADM_TYPE_CD = '041'
+                                AND EXPEND_02 = '0'
+                                AND DEL_KBN = '0')
+           <if test="todoInfo.applyKbn != ''">
+            AND APPLY_KBN = #{todoInfo.applyKbn}
+           </if>
+           <if test="todoInfo.status != ''">
+            AND CHECK_RESULT = #{todoInfo.status}
+           </if>
+           <if test="todoInfo.author != ''">
+            AND PERSONAL_NM = #{todoInfo.author}
+           </if>
+           <if test="todoInfo.date != ''">
+            AND APPLY_DATE = #{todoInfo.date}
+           </if>
+           <if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+           LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+           </if>
+    </select>
+</mapper>

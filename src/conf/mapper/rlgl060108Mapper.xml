@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060108Mapper">
+    <!--成绩查询结果详细列表查询 -->
+    <select id="getExamResultList" resultType="com.rlglsys.bean.Rlgl060108Bean" >
+        SELECT
+          mtb04.unit_nm,
+          MTB100.PERSONNEL_ID AS PERSONNEL_ID,
+          MTB100.SUBJECT_KB AS SUBJECT_KB,
+          MTB100.EXAM_DATE AS EXAM_DATE,
+          MTB100.SCORE AS SCORE,
+          MTB01.USER_NAME AS USER_NAME,
+          CASE WHEN MTB103.EXAMINATION_NAME IS NULL THEN '' ELSE MTB103.EXAMINATION_NAME END AS EXAM_NAME
+        FROM
+          m_tb100_exam_result MTB100 
+          LEFT JOIN m_tb01_user MTB01
+          ON MTB100.PERSONNEL_ID = MTB01.PERSONNEL_ID
+          left join m_tb04_unit mtb04
+          on mtb01.unit_no = mtb04.unit_no
+          LEFT JOIN m_tb103_exam_setting MTB103
+          ON MTB100.EXAM_NO = MTB103.EXAM_NO
+        WHERE 0=0
+        <if test="flag == 2">
+        	<if test="rlgl060108Bean.personnel_id != null and rlgl060108Bean.personnel_id !=''">
+          		and MTB100.PERSONNEL_ID = #{rlgl060108Bean.personnel_id}
+        	</if>
+        	<if test="rlgl060108Bean.user_name !=null and rlgl060108Bean.user_name !=''">
+          		and MTB01.USER_NAME LIKE CONCAT('', #{rlgl060108Bean.user_name}, '%')
+        	</if>
+        	<if test="rlgl060108Bean.unit_nm !=null and rlgl060108Bean.unit_nm !=''">
+          		and mtb04.unit_nm LIKE CONCAT('',#{rlgl060108Bean.unit_nm} , '%')
+        	</if>
+          	and MTB100.PERSONNEL_ID in (
+			select PERSONNEL_ID 
+			from 
+			m_tb01_user 
+			where 
+			unit_no 
+			in(SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{unit_no}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+			or unit_no LIKE CONCAT('', #{unit_no}, '%'))
+        	</if>
+        <if test="flag == 1">
+        	<if test="rlgl060108Bean.personnel_id !=null and rlgl060108Bean.personnel_id !=''">
+         		 and MTB100.PERSONNEL_ID = #{rlgl060108Bean.personnel_id}
+        	</if>
+        	<if test="rlgl060108Bean.user_name !=null and rlgl060108Bean.user_name !=''">
+          		and MTB01.USER_NAME  LIKE CONCAT('', #{rlgl060108Bean.user_name}, '%')
+        	</if>
+        	<if test="rlgl060108Bean.unit_nm !=null and rlgl060108Bean.unit_nm !=''">
+          		and mtb04.unit_nm LIKE CONCAT('',#{rlgl060108Bean.unit_nm} , '%') 
+        	</if>
+        	and  MTB100.PERSONNEL_ID in (
+			select PERSONNEL_ID 
+			from 
+			m_tb01_user 
+			where 
+			unit_no 
+			in(SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{unit_no}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+			or unit_no LIKE CONCAT('', #{unit_no}, '%'))
+        </if>
+        ORDER BY
+          MTB100.EXAM_DATE
+          <if test="limit != 0 and limit != null">
+           LIMIT #{limit},#{offset}
+          </if>
+          ;
+    </select>
+    
+     <!--成绩查询结果详细列表件数查询 -->
+    <select id="getExamResultCount" resultType="int">
+        SELECT
+         Count(*)
+        FROM
+          ( SELECT
+          mtb04.unit_nm,
+          MTB100.PERSONNEL_ID AS PERSONNEL_ID,
+          MTB100.SUBJECT_KB AS SUBJECT_KB,
+          MTB100.EXAM_DATE AS EXAM_DATE,
+          MTB100.SCORE AS SCORE,
+          MTB01.USER_NAME AS USER_NAME,
+          CASE WHEN MTB103.EXAMINATION_NAME IS NULL THEN '' ELSE MTB103.EXAMINATION_NAME END AS EXAM_NAME
+        FROM
+          m_tb100_exam_result MTB100 
+          LEFT JOIN m_tb01_user MTB01
+          ON MTB100.PERSONNEL_ID = MTB01.PERSONNEL_ID
+          left join m_tb04_unit mtb04
+          on mtb01.unit_no = mtb04.unit_no
+          LEFT JOIN m_tb103_exam_setting MTB103
+          ON MTB100.EXAM_NO = MTB103.EXAM_NO
+        WHERE 0=0
+        <if test="flag == 2">
+        	<if test="rlgl060108Bean.personnel_id != null and rlgl060108Bean.personnel_id !=''">
+          		and MTB100.PERSONNEL_ID = #{rlgl060108Bean.personnel_id}
+        	</if>
+        	<if test="rlgl060108Bean.user_name !=null and rlgl060108Bean.user_name !=''">
+          		and MTB01.USER_NAME LIKE CONCAT('', #{rlgl060108Bean.user_name}, '%')
+        	</if>
+        	<if test="rlgl060108Bean.unit_nm !=null and rlgl060108Bean.unit_nm !=''">
+          		and mtb04.unit_nm LIKE CONCAT('',#{rlgl060108Bean.unit_nm} , '%')
+        	</if>
+          	and MTB100.PERSONNEL_ID in (
+			select PERSONNEL_ID 
+			from 
+			m_tb01_user 
+			where 
+			unit_no 
+			in(SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{unit_no}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+			or unit_no LIKE CONCAT('', #{unit_no}, '%'))
+        	</if>
+        <if test="flag == 1">
+        	<if test="rlgl060108Bean.personnel_id !=null and rlgl060108Bean.personnel_id !=''">
+         		 and MTB100.PERSONNEL_ID = #{rlgl060108Bean.personnel_id}
+        	</if>
+        	<if test="rlgl060108Bean.user_name !=null and rlgl060108Bean.user_name !=''">
+          		and MTB01.USER_NAME  LIKE CONCAT('', #{rlgl060108Bean.user_name}, '%')
+        	</if>
+        	<if test="rlgl060108Bean.unit_nm !=null and rlgl060108Bean.unit_nm !=''">
+          		and mtb04.unit_nm LIKE CONCAT('',#{rlgl060108Bean.unit_nm} , '%') 
+        	</if>
+        	and  MTB100.PERSONNEL_ID in (
+			select PERSONNEL_ID 
+			from 
+			m_tb01_user 
+			where 
+			unit_no 
+			in(SELECT unit_no FROM m_tb04_unit WHERE ESCROW_UNIT_NO=#{unit_no}  AND DEL_KBN=0 AND UNIT_STATUS='1')
+			or unit_no LIKE CONCAT('', #{unit_no}, '%'))
+        </if>
+        ORDER BY
+          MTB100.EXAM_DATE) as table1
+    </select>
+</mapper>

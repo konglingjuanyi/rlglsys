@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl011001Mapper">
+    <!-- 侦测数据分值登录 -->
+    <insert id="insertMtb111AdmscoreInfo">
+       INSERT INTO m_tb111_admscore
+            (ADMSCORE_TYPE_CD
+            ,ADMSCORE_ID
+            ,ADMSCORE_KBN
+            ,ADMSCORE_SCORE
+            ,ADMSCORE_SUMMARY
+            ,ADMSCORE_VALUE_01
+            ,ADMSCORE_VALUE_02
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{admscoreInfo.admscore_type_cd}
+            ,#{admscoreInfo.admscore_id}
+            ,#{admscoreInfo.admscore_kbn}
+            ,#{admscoreInfo.admscore_score}
+            ,#{admscoreInfo.admscore_summary}
+            ,#{admscoreInfo.admscore_value_01}
+            ,#{admscoreInfo.admscore_value_02}
+            ,#{admscoreInfo.ex_key}
+            ,#{admscoreInfo.del_kbn}
+            ,#{admscoreInfo.expend_01}
+            ,#{admscoreInfo.expend_02}
+            ,#{admscoreInfo.expend_03}
+            ,#{admscoreInfo.expend_04}
+            ,#{admscoreInfo.expend_05}
+            ,#{admscoreInfo.login_user_id}
+            ,#{admscoreInfo.login_date}
+            ,#{admscoreInfo.update_user_id}
+            ,#{admscoreInfo.update_date})
+    </insert>
+    
+    <!-- 表变更记录数据登录 -->
+    <insert id="insertMtb112AdmtbupdateInfo">
+       INSERT INTO m_tb112_admtbupdate
+            (admTb_ID
+            ,admTb_TBID
+            ,admTb_updateTime
+            ,admTb_updateType
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{admtbupdateInfo.admtb_id}
+            ,#{admtbupdateInfo.admscore_id}
+            ,#{admtbupdateInfo.admscore_kbn}
+            ,#{admtbupdateInfo.admscore_score}
+            ,#{admtbupdateInfo.admscore_summary}
+            ,#{admtbupdateInfo.admscore_value_01}
+            ,#{admtbupdateInfo.admscore_value_02}
+            ,#{admtbupdateInfo.ex_key}
+            ,#{admtbupdateInfo.del_kbn}
+            ,#{admtbupdateInfo.expend_01}
+            ,#{admtbupdateInfo.expend_02}
+            ,#{admtbupdateInfo.expend_03}
+            ,#{admtbupdateInfo.expend_04}
+            ,#{admtbupdateInfo.expend_05}
+            ,#{admtbupdateInfo.login_user_id}
+            ,#{admtbupdateInfo.login_date}
+            ,#{admtbupdateInfo.update_user_id}
+            ,#{admtbupdateInfo.update_date})
+    </insert>
+    
+    <!--单位表完善查询 -->
+    <select id="getMtb111AdmscoreDataInfo" resultType="com.rlglsys.entity.Mtb111Admscore">
+       SELECT 
+          *
+       FROM m_tb111_admscore
+       WHERE ADMSCORE_TYPE_CD=#{mtb111AdminScore.admscore_type_cd}
+       AND DEL_KBN='0'
+       ;
+    </select>
+    
+    <!--单位表完善进度 查询 -->
+    <select id="getMtb111AdmscoreInfo" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT">
+       <![CDATA[
+        SELECT
+        ${rlgl011001Bean.strSql}
+        FROM m_tb04_unit
+        WHERE UNIT_NO=${rlgl011001Bean.unit_no}
+        ]]>
+    </select>
+    
+    <!--下级单位件数 查询 -->
+    <select id="getMtb111AdmscoreLowerCount" resultType="int" statementType="STATEMENT">
+     <![CDATA[
+        SELECT
+            Count(*)
+        FROM m_tb04_unit
+        WHERE UNIT_SUPER=${rlgl011001Bean.unit_no} AND DEL_KBN='0';
+          ]]>
+    </select>
+    
+    <!--取得单位数 -->
+    <select id="getMtb04UnitCount" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT">
+     <![CDATA[
+        SELECT
+            *
+        FROM m_tb04_unit
+        WHERE ( UNIT_NO = ${rlgl011001Bean.unit_no} OR UNIT_SUPER=${rlgl011001Bean.unit_no} ) 
+            AND UNIT_ASSORT='002'
+            AND DEL_KBN='0'
+          ]]>
+          <if test="rlgl011001Bean.pageCount != 0 and rlgl011001Bean.pageCount != null">
+           LIMIT ${rlgl011001Bean.pageNo},${rlgl011001Bean.pageCount}
+          </if>
+    </select>
+    <select id="getMtb04PersonUnitCount" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT">
+     <![CDATA[
+        SELECT
+            *
+        FROM m_tb04_unit
+        WHERE ( UNIT_NO = ${rlgl011001Bean.unit_no} OR UNIT_SUPER=${rlgl011001Bean.unit_no} ) 
+            AND DEL_KBN='0'
+          ]]>
+          <if test="rlgl011001Bean.pageCount != 0 and rlgl011001Bean.pageCount != null">
+           LIMIT ${rlgl011001Bean.pageNo},${rlgl011001Bean.pageCount}
+          </if>
+    </select>
+    
+    <select id="getMtb04PersonLowerUnitCount" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT">
+     <![CDATA[
+        SELECT
+            *
+        FROM m_tb04_unit
+        WHERE UNIT_SUPER=${rlgl011001Bean.unit_no}
+            AND DEL_KBN='0'
+          ]]>
+          <if test="rlgl011001Bean.pageCount != 0 and rlgl011001Bean.pageCount != null">
+           LIMIT ${rlgl011001Bean.pageNo},${rlgl011001Bean.pageCount}
+          </if>
+    </select>
+    
+    <select id="getMtb04PersonnelCount" resultType="int" statementType="STATEMENT">
+     <![CDATA[
+        select count(*) from m_tb39_personnel where PERSONNEL_UNIT in 
+       (
+        SELECT
+            unit_no
+        FROM m_tb04_unit
+        WHERE UNIT_SUPER=${rlgl011001Bean.unit_no}
+            AND DEL_KBN='0')
+          ]]>
+    </select>
+    
+    <!--下级单位表完善进度 查询 -->
+    <select id="getMtb111AdmscoreLowerInfoList" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT" >
+     <![CDATA[
+        SELECT
+        ${rlgl011001Bean.strSql}
+        FROM m_tb04_unit
+        WHERE UNIT_SUPER=${rlgl011001Bean.unit_no}
+          AND DEL_KBN='0'
+         ]]>
+         <if test="rlgl011001Bean.pageCount != 0 and rlgl011001Bean.pageCount != null">
+           LIMIT ${rlgl011001Bean.pageNo},${rlgl011001Bean.pageCount}
+          </if>
+    </select>
+    
+    <select id="getAreaCityList" resultType="com.rlglsys.bean.Rlgl011001Bean">
+        SELECT
+            SUBSTR(MIN(area_id),1,4) as area_id, city as AreaNm
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${area_id}' ,'%')
+        GROUP BY 
+        	AreaNm
+        ORDER BY
+        area_id
+         <if test="rlgl011001Bean.pageCount != 0 and rlgl011001Bean.pageCount != null">
+           LIMIT ${rlgl011001Bean.pageNo},${rlgl011001Bean.pageCount}
+          </if>
+    </select>
+    <select id="getAreaZoneList" resultType="com.rlglsys.bean.Rlgl011001Bean">
+        SELECT
+            SUBSTR(MIN(area_id),1,6) as area_id, zone as AreaNm
+        FROM m_tb20_area
+        WHERE 
+        	area_id like CONCAT('${area_id}' ,'%')
+        GROUP BY 
+        	AreaNm
+        ORDER BY
+        area_id
+         <if test="rlgl011001Bean.pageCount != 0 and rlgl011001Bean.pageCount != null">
+           LIMIT ${rlgl011001Bean.pageNo},${rlgl011001Bean.pageCount}
+          </if>
+    </select>
+    
+     <!--下级单位表完善进度 查询 -->
+    <select id="getMtb111AdmscoreAreaInfoList" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT" >
+     <![CDATA[
+         ${rlgl011001Bean.strSql}
+          ]]>
+    </select>
+    
+     <!--人员信息检索 -->
+    <select id="getPersoonelInfo" resultType="com.rlglsys.bean.Rlgl011001Bean" statementType="STATEMENT" >
+     <![CDATA[
+         ${rlgl011001Bean.strSql}
+          ]]>
+    </select>
+</mapper>

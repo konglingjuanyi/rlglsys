@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020400Mapper">
+
+  <!-- 通过单位编号统计本单位项目报名人数 -->
+  <select id="getProjectApplyUserCount" resultType="int">
+    SELECT 
+      COUNT(*)
+    FROM 
+      m_tb96_project_credit_apply
+    WHERE 
+      UNIT_NO = #{unit_no}
+    <if test="rlgl020408Bean.search_project_id != '' and rlgl020408Bean.search_project_id != null">
+    AND project_id LIKE CONCAT('%', #{rlgl021104Bean.search_project_id}, '%') 
+    </if>
+    <if test="rlgl020408Bean.search_project_nm != '' and rlgl020408Bean.search_project_nm != null">
+    AND project_nm LIKE CONCAT('%',  #{rlgl020408Bean.search_project_nm}, '%') 
+    </if>
+    AND
+      DEL_KBN = 0
+  </select>
+  
+  <!-- 通过人员编号查询报名详细列表 -->
+  <select id="getProjectApplyUserList" resultType="com.rlglsys.bean.Rlgl020408Bean">
+	SELECT 
+	  M1.*,
+	  M2.CONDUCT_PLACE,
+	  M2.CONDUCT_START_DATE,
+	  M2.PEOFESS_THEORY_PERIOD,
+	  M2.EDUCATION_ALL_PERIOD,
+	  COUNT(PERSONAL_ID) AS sum_count
+	FROM 
+	  m_tb96_project_credit_apply M1
+	LEFT JOIN
+	  m_tb90_project_hold_apply_detail M2
+	ON
+	  M1.APPLY_NO = M2.APPLY_NO
+	AND
+	  M1.APPLY_NUMBER = M2.APPLY_NUMBER
+	AND
+	  M2.DEL_KBN = 0
+	WHERE 
+	  M1.UNIT_NO = #{unit_no} 
+	<if test="rlgl020408Bean.search_project_id != '' and rlgl020408Bean.search_project_id != null">
+    AND M1.project_id LIKE CONCAT('%', #{rlgl021104Bean.search_project_id}, '%') 
+    </if>
+    <if test="rlgl020408Bean.search_project_nm != '' and rlgl020408Bean.search_project_nm != null">
+    AND M1.project_nm LIKE CONCAT('%',  #{rlgl020408Bean.search_project_nm}, '%') 
+    </if>
+	AND
+	  M1.DEL_KBN = 0
+	GROUP BY 
+	  M1.PROJECT_ID
+    <if test="rlgl020408Bean.pageCount != 0 and rlgl020408Bean.pageCount != null">
+    LIMIT #{rlgl020408Bean.pageNo},#{rlgl020408Bean.pageCount}
+    </if>
+  </select>
+  
+  <!-- 通过项目编号获取报名申请人员数量 -->
+  <select id="getApplyUserCountById" resultType="int">
+	SELECT
+	  COUNT(*)
+	FROM
+	  m_tb96_project_credit_apply
+	WHERE
+	  UNIT_NO = #{unit_no} 
+	<if test="rlgl020408Bean.project_id != '' and rlgl020408Bean.project_id != null">
+	AND
+	  PROJECT_ID = #{rlgl020408Bean.project_id}
+	</if>
+	<if test="rlgl020408Bean.search_personal_nm != '' and rlgl020408Bean.search_personal_nm != null">
+    AND PERSONAL_NM LIKE CONCAT('%', #{rlgl020408Bean.search_personal_nm}, '%') 
+    </if>
+    <if test="rlgl020408Bean.search_review_status != '' and rlgl020408Bean.search_review_status != null">
+    AND CHECK_RESULT = #{rlgl020408Bean.search_review_status} 
+    </if>
+	AND
+	  DEL_KBN = 0
+  </select>
+  
+  <!-- 通过项目编号获取报名申请人员信息 -->
+  <select id="getApplyUserList" resultType="com.rlglsys.bean.Rlgl020408Bean">
+	SELECT
+	  *
+	FROM
+	  m_tb96_project_credit_apply
+	WHERE
+	  UNIT_NO = #{unit_no} 
+	<if test="rlgl020408Bean.project_id != '' and rlgl020408Bean.project_id != null">
+	AND
+	  PROJECT_ID = #{rlgl020408Bean.project_id}
+	</if>
+	<if test="rlgl020408Bean.search_personal_nm != '' and rlgl020408Bean.search_personal_nm != null">
+    AND PERSONAL_NM LIKE CONCAT('%', #{rlgl020408Bean.search_personal_nm}, '%') 
+    </if>
+    <if test="rlgl020408Bean.search_review_status != '' and rlgl020408Bean.search_review_status != null">
+    AND CHECK_RESULT = #{rlgl020408Bean.search_review_status} 
+    </if>
+	AND
+	  DEL_KBN = 0
+	<if test="rlgl020408Bean.pageCount != 0 and rlgl020408Bean.pageCount != null">
+    LIMIT #{rlgl020408Bean.pageNo},#{rlgl020408Bean.pageCount}
+    </if>
+  </select>
+  
+  <!-- 更新审核结果 -->
+  <update id="updateMtb96">
+    UPDATE 
+      m_tb96_project_credit_apply 
+    SET 
+      CHECK_RESULT = #{rlgl020408TBean.check_result}  
+    WHERE 
+      personal_id = #{rlgl020408TBean.personal_id} 
+    AND 
+      project_id = #{rlgl020408TBean.project_id}
+  </update>
+  
+</mapper>

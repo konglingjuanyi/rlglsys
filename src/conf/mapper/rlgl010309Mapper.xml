@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010309Mapper">
+    <!-- 职称信息取得SQL -->
+    <select id="getTb18Info" resultType="com.rlglsys.entity.Mtb18PersonnelProfessionalInfo">
+        SELECT *
+        FROM m_tb18_personnel_professional_info
+        WHERE 
+            DEL_KBN = '0'
+            AND PERSONNEL_ID = #{personnelId}
+        order by GET_TIME DESC
+        limit 0,1
+    </select>
+    <!-- 个人人事信息取得SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+    </select>
+    <!-- 更新个人人事信息 -->
+    <update id="updateTb29Info">
+        UPDATE m_tb29_personalapplication
+        SET
+            MAX_NUMBER = #{tb29Info.max_number},
+            APPLY_DATE = #{tb29Info.apply_date},
+            CHECK_RESULT = "001",
+            END_MARK = #{tb29Info.end_mark},
+            NOW_MARK = #{tb29Info.now_mark},
+            WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{tb29Info.personal_id},
+            UPDATE_DATE = #{tb29Info.apply_date}
+        WHERE
+            APPLY_NO = #{tb29Info.apply_no}
+    </update>
+    <!-- 保存进修信息 -->
+    <insert id="insert32Info" parameterType="com.rlglsys.entity.Mtb32PersonalEducationInfo">
+        INSERT INTO m_tb32_personal_education_detail
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            CARD_ID,
+            UNIT_NO,
+            UNIT_NM,
+            POST_TITLE,
+            RECORD_DATE,
+            SEND_DATE,
+            COMPLETION_DATE,
+            RECEIVE_UNIT_NO,
+            RECEIVE_UNIT_NM,
+            ED_SECTION_ID,
+            ED_SECTION_NM,
+            PROFESSION,
+            REFERENCE_NM,
+            REFERENCE_TEL,
+            APPLY_DATE,
+            NOW_MARK,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb32Info.apply_no},
+            #{tb32Info.apply_number},
+            #{tb32Info.personal_id},
+            #{tb32Info.personal_nm},
+            #{tb32Info.card_id},
+            #{tb32Info.unit_no},
+            #{tb32Info.unit_nm},
+            #{tb32Info.post_title},
+            #{tb32Info.record_date},
+            #{tb32Info.send_date},
+            #{tb32Info.completion_date},
+            #{tb32Info.receive_unit_no},
+            #{tb32Info.receive_unit_nm},
+            #{tb32Info.ed_section_id},
+            #{tb32Info.ed_section_nm},
+            #{tb32Info.profession},
+            #{tb32Info.reference_nm},
+            #{tb32Info.reference_tel},
+            #{tb32Info.apply_date},
+            #{tb32Info.now_mark},
+            '1',
+            '0',
+            #{tb32Info.personal_id},
+            #{tb32Info.apply_date},
+            #{tb32Info.personal_id},
+            #{tb32Info.apply_date}
+        )
+    </insert>
+    <!-- 插入进修信息 -->
+    <insert id="insert29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+        INSERT INTO m_tb29_personalapplication
+        (
+            APPLY_NO,
+            MAX_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            PERSONAL_UNITNO,
+            APPLY_DATE,
+            CHECK_USER,
+            CHECK_UNITNO,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb29Info.apply_no},
+            #{tb29Info.max_number},
+            #{tb29Info.apply_kbn},
+            #{tb29Info.personal_id},
+            #{tb29Info.personal_nm},
+            #{tb29Info.personal_unitno},
+            #{tb29Info.apply_date},
+            #{tb29Info.check_user},
+            #{tb29Info.check_unitno},
+            '001',
+            #{tb29Info.end_mark},
+            #{tb29Info.now_mark},
+            #{tb29Info.will_checkunitno},
+            '1',
+            '0',
+            #{tb29Info.personal_id},
+            #{tb29Info.apply_date},
+            #{tb29Info.personal_id},
+            #{tb29Info.apply_date}
+        )
+    </insert>
+
+</mapper>

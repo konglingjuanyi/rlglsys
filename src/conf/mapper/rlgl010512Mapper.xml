@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 个人出国申请审核  houyc -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010512Mapper">
+    <!-- 获取出国申请人员信息明细 -->
+    <select id="getOutsideApplyUserInfo" resultType="com.rlglsys.bean.Rlgl010318Bean">
+      SELECT 
+        M.*,
+        M1.POSITION_NM,
+        M2.PERSONNEL_POLITICAL_LANDSCAPE,
+        M2.PERSONNEL_TEL,
+        M2.PERSONNEL_OFFICETEL,
+        M2.PERSONNEL_GENDER,
+        M2.PERSONNEL_HOMETOWN,
+        M2.PERSONNEL_IMGNAME
+      FROM
+        m_tb53_personal_outside_apply_detail M
+      LEFT JOIN
+        m_tb12_personnel M2
+      ON 
+        M.PERSONAL_ID = M2.PERSONNEL_ID
+      LEFT JOIN
+        m_tb17_personnel_job_info M1
+      ON
+        M.PERSONAL_ID = M1.PERSONNEL_ID
+      WHERE
+        M.APPLY_NO = #{apply_no}
+      AND
+        m.APPLY_NUMBER = #{apply_number}    
+    </select>
+    <update id="updateMtb53Info">
+      update
+         m_tb53_personal_outside_apply_detail
+      set
+        UNIT_CHECKER = #{mtb53Info.unit_checker},
+        UNIT_CHECK_DATE = #{mtb53Info.unit_check_date},
+        UNIT_CHECK_VIEWS = #{mtb53Info.unit_check_views},
+        UNIT_CHECK_RESULT = #{mtb53Info.unit_check_result},
+        COUNTY_CHECKER = #{mtb53Info.county_checker},
+        COUNTY_CHECK_DATE = #{mtb53Info.county_check_date},
+        COUNTY_CHECK_VIEWS = #{mtb53Info.county_check_views},
+        COUNTY_CHECK_RESULT = #{mtb53Info.county_check_result},
+        DOWNTOWN_CHECKER = #{mtb53Info.downtown_checker},
+        DOWNTOWN_CHECK_DATE = #{mtb53Info.downtown_check_date},
+        DOWNTOWN_CHECK_VIEWS = #{mtb53Info.downtown_check_views},
+        DOWNTOWN_CHECK_RESULT = #{mtb53Info.downtown_check_result},
+        MINISTRY_CHECKER = #{mtb53Info.ministry_checker},
+        MINISTRY_CHECK_DATE = #{mtb53Info.ministry_check_date},
+        MINISTRY_CHECK_VIEWS = #{mtb53Info.ministry_check_views},
+        MINISTRY_CHECK_RESULT = #{mtb53Info.ministry_check_result},
+        NOW_MARK = #{mtb53Info.now_mark}
+      where
+        APPLY_NO = #{mtb53Info.apply_no}
+      and
+        APPLY_NUMBER = #{mtb53Info.apply_number}
+    </update>
+    
+    <!-- 更新个人人事申请信息 -->
+    <update id="updateTb29Info">
+        UPDATE 
+            m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{updatetb29Info.check_result},
+            NOW_MARK = #{updatetb29Info.now_mark},
+            WILL_CHECKUNITNO = #{updatetb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{updatetb29Info.update_user_id},
+            UPDATE_DATE = #{updatetb29Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb29Info.apply_no}
+    </update>
+    
+</mapper>

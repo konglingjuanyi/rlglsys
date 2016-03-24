@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020411Mapper">
+    <!--个人查看已公开的项目 -->
+    <select id="getOpenPMByPerson" resultType="com.rlglsys.bean.Rlgl020411Bean">
+        SELECT
+            A.APPLY_NO,
+		    A.APPLY_KBN,
+		    A.UNIT_NO,
+		    A.APPLY_DATE,
+		    B.OPEN_KBN AS OPEN1,
+		    C.OPEN_KBN AS OPEN2,
+            D.OPEN_KBN AS OPEN3
+		FROM
+		    m_tb07_unitapply A
+		LEFT OUTER JOIN m_tb87_new_project_declare B ON A.APPLY_NO = B.APPLY_ID
+		LEFT OUTER JOIN m_tb93_record_project_declare C ON A.APPLY_NO = C.APPLY_ID
+		LEFT OUTER JOIN m_tb97_interim_project_apply D ON A.APPLY_NO = D.APPLY_ID
+		WHERE
+		    A.DEL_KBN = '0'
+		AND A.CHECK_RESULT = '002'
+		AND A.APPLY_KBN IN ('056', '057', '059')
+		AND B.OPEN_KBN = '002'
+		AND C.OPEN_KBN = '002'
+		AND D.OPEN_KBN = '002'
+    </select>
+    <!--个人查看以公开的项目数 -->
+    <select id="getOpenPMByPersonCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            m_tb07_unitapply A
+        LEFT OUTER JOIN m_tb87_new_project_declare B ON A.APPLY_NO = B.APPLY_ID
+        LEFT OUTER JOIN m_tb93_record_project_declare C ON A.APPLY_NO = C.APPLY_ID
+        LEFT OUTER JOIN m_tb97_interim_project_apply D ON A.APPLY_NO = D.APPLY_ID
+        WHERE
+            A.DEL_KBN = '0'
+        AND A.CHECK_RESULT = '002'
+        AND A.APPLY_KBN IN ('056', '057', '059')
+        AND B.OPEN_KBN = '002'
+        AND C.OPEN_KBN = '002'
+        AND D.OPEN_KBN = '002'
+    </select>
+    <!--单位查看已公开的项目 -->
+    <select id="getOpenPMByUnit" resultType="com.rlglsys.bean.Rlgl020411Bean">
+        SELECT
+            A.APPLY_NO,
+		    A.APPLY_KBN,
+		    A.UNIT_NO,
+		    A.APPLY_DATE,
+		    B.OPEN_KBN AS OPEN1,
+		    C.OPEN_KBN AS OPEN2,
+            D.OPEN_KBN AS OPEN3
+		FROM
+		    m_tb07_unitapply A
+		LEFT OUTER JOIN m_tb87_new_project_declare B ON A.APPLY_NO = B.APPLY_ID
+		LEFT OUTER JOIN m_tb93_record_project_declare C ON A.APPLY_NO = C.APPLY_ID
+		LEFT OUTER JOIN m_tb97_interim_project_apply D ON A.APPLY_NO = D.APPLY_ID
+		WHERE
+		    A.DEL_KBN = '0'
+		AND A.WILL_CHECKUNITNO = #{unit_no}
+		AND A.CHECK_RESULT = '002'
+		AND A.APPLY_KBN IN ('056', '057', '059')
+    </select>
+    <!--单位查看已公开的项目数 -->
+    <select id="getOpenPMByUnitCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            m_tb07_unitapply A
+        LEFT OUTER JOIN m_tb87_new_project_declare B ON A.APPLY_NO = B.APPLY_ID
+        LEFT OUTER JOIN m_tb93_record_project_declare C ON A.APPLY_NO = C.APPLY_ID
+        LEFT OUTER JOIN m_tb97_interim_project_apply D ON A.APPLY_NO = D.APPLY_ID
+        WHERE
+            A.DEL_KBN = '0'
+        AND A.WILL_CHECKUNITNO = #{unit_no}
+        AND A.CHECK_RESULT = '002'
+        AND A.APPLY_KBN IN ('056', '057', '059')
+    </select>
+    <!-- 更新项目公布情况（新项目） -->
+    <update id="updateMtb87Open">
+        UPDATE m_tb87_new_project_declare
+		SET OPEN_KBN = #{open}
+		WHERE
+		    APPLY_ID = #{apply_id}
+    </update>
+    <!-- 更新项目公布情况（备案项目） -->
+    <update id="updateMtb93Open">
+        UPDATE m_tb93_record_project_declare
+        SET OPEN_KBN = #{open}
+        WHERE
+            APPLY_ID = #{apply_id}
+    </update>
+    <!-- 更新项目公布情况（临时项目） -->
+    <update id="updateMtb97Open">
+        UPDATE m_tb97_interim_project_apply
+        SET OPEN_KBN = #{open}
+        WHERE
+            APPLY_ID = #{apply_id}
+    </update>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlglLogin" extends="rlgl" namespace="/">
+		<action name="login"
+			class="com.rlglsys.action.loginmanage.userlogin.Rlgl000102LoginAction" method="execute">
+			<result name="show">/WEB-INF/jsp/rlgl000102.jsp</result>
+		</action>
+		<action name="doLogin"
+			class="com.rlglsys.action.loginmanage.userlogin.Rlgl000102LoginAction" method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl000102.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl000200.jsp</result>
+		</action>
+		<action name="doLogout" class="com.rlglsys.action.loginmanage.userlogin.Rlgl000102LogoutAction"
+			method="execute">
+			<result name="logout">/WEB-INF/jsp/rlgl000102.jsp</result>
+		</action>
+		<action name="exitPage" class="com.rlglsys.action.loginmanage.userlogin.Rlgl000102ExitAction"
+			method="execute">
+		</action>
+		<action name="windowsClose" class="com.rlglsys.action.loginmanage.userlogin.Rlgl000102WindowCloseAction"
+			method="windowClose">
+		</action>
+	</package>
+</struts>
+

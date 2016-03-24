@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl090507Mapper">
+    <!-- 管理表信息 -->
+    <insert id="insertMtb20AreaInfo">
+       INSERT INTO m_tb20_area
+            (AREA_ID
+            ,AREA_LEVEL
+            ,PROVINCE
+            ,CITY
+            ,ZONE
+            ,TOWN
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{areaInfo.area_id}
+            ,#{areaInfo.area_level}
+            ,#{areaInfo.province}
+            ,#{areaInfo.city}
+            ,#{areaInfo.zone}
+            ,#{areaInfo.town}
+            ,#{areaInfo.ex_key}
+            ,#{areaInfo.del_kbn}
+            ,#{areaInfo.expend_01}
+            ,#{areaInfo.expend_02}
+            ,#{areaInfo.expend_03}
+            ,#{areaInfo.expend_04}
+            ,#{areaInfo.expend_05}
+            ,#{areaInfo.login_user_id}
+            ,#{areaInfo.login_date}
+            ,#{areaInfo.update_user_id}
+            ,#{areaInfo.update_date})
+    </insert>
+    
+    <!-- 地区表信息更新 -->
+    <update id="updatetMtb20AreaInfo">
+       UPDATE m_tb20_area
+       SET
+             AREA_LEVEL           = #{areaInfo.area_level}
+            ,PROVINCE             = #{areaInfo.province}
+            ,CITY                 = #{areaInfo.city}
+            ,ZONE                 = #{areaInfo.zone}
+            ,TOWN                 = #{areaInfo.town}
+            ,UPDATE_USER_ID       = #{areaInfo.update_user_id}
+            ,UPDATE_DATE          = #{areaInfo.update_date}
+       WHERE
+            AREA_ID = #{areaInfo.area_id}
+    </update>
+    
+    <!-- 删除地区表信息 -->
+    <delete id="deletetMtb20AreaInfo">
+        DELETE FROM  m_tb20_area
+        WHERE
+            AREA_ID = #{areaInfo.area_id}
+    </delete>
+    
+    <!--地区表信息列表查询 -->
+    <select id="getMtb20AreaInfoList" resultType="com.rlglsys.bean.Rlgl090507Bean">
+        SELECT
+          *
+        FROM m_tb20_area
+        WHERE
+         DEL_KBN = '0'
+         <if test="areaInfo.area_id != '' and areaInfo.area_id != null">
+          AND AREA_ID = #{areaInfo.area_id}
+         </if>
+         <if test="areaInfo.area_level != '' and areaInfo.area_level != null">
+          AND AREA_LEVEL = #{areaInfo.area_level}
+         </if>
+         <if test="areaInfo.province != '' and areaInfo.province != null">
+          AND PROVINCE LIKE CONCAT('%', #{areaInfo.province}, '%')
+         </if>
+         <if test="areaInfo.city != '' and areaInfo.city != null">
+          AND CITY LIKE CONCAT('%', #{areaInfo.city}, '%')
+         </if>
+         <if test="areaInfo.zone != '' and areaInfo.zone != null">
+          AND ZONE LIKE CONCAT('%', #{areaInfo.zone}, '%')
+         </if>
+         <if test="areaInfo.town != '' and areaInfo.town != null">
+          AND TOWN LIKE CONCAT('%', #{areaInfo.town}, '%')
+         </if>
+          ORDER BY AREA_ID
+          <if test="areaInfo.pageCount != 0 and areaInfo.pageCount != null">
+           LIMIT #{areaInfo.pageNo},#{areaInfo.pageCount}
+          </if>
+    </select>
+    
+    <!--管理表列表件数查询 -->
+    <select id="getMtb20AreaInfoCount" resultType="int">
+        SELECT
+          Count(*)
+        FROM m_tb20_area
+        WHERE
+         DEL_KBN = '0'
+         <if test="areaInfo.area_id != '' and areaInfo.area_id != null">
+          AND AREA_ID = #{areaInfo.area_id}
+         </if>
+         <if test="areaInfo.area_level != '' and areaInfo.area_level != null">
+          AND AREA_LEVEL = #{areaInfo.area_level}
+         </if>
+         <if test="areaInfo.province != '' and areaInfo.province != null">
+          AND PROVINCE LIKE CONCAT('%', #{areaInfo.province}, '%')
+         </if>
+         <if test="areaInfo.city != '' and areaInfo.city != null">
+          AND CITY LIKE CONCAT('%', #{areaInfo.city}, '%')
+         </if>
+         <if test="areaInfo.zone != '' and areaInfo.zone != null">
+          AND ZONE LIKE CONCAT('%', #{areaInfo.zone}, '%')
+         </if>
+         <if test="areaInfo.town != '' and areaInfo.town != null">
+          AND TOWN LIKE CONCAT('%', #{areaInfo.town}, '%')
+         </if>
+    </select>
+    
+     <!--地区表列表查询 -->
+    <select id="getMtb20AreaInfo" resultType="com.rlglsys.bean.Rlgl090507Bean">
+        SELECT
+          *
+        FROM m_tb20_area
+        WHERE
+            DEL_KBN = '0'
+            AND AREA_ID = #{areaInfo.area_id}
+    </select>
+    <!-- 地区表信息 -->
+    <insert id="insertMtb20AreaInfoByList">
+       INSERT INTO m_tb20_area
+            (AREA_ID
+            ,AREA_LEVEL
+            ,PROVINCE
+            ,CITY
+            ,ZONE
+            ,TOWN
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES 
+        <foreach collection="areaInfoList" item="areaInfo" index="index" separator=",">  
+            (#{areaInfo.area_id}
+            ,#{areaInfo.area_level}
+            ,#{areaInfo.province}
+            ,#{areaInfo.city}
+            ,#{areaInfo.zone}
+            ,#{areaInfo.town}
+            ,#{areaInfo.ex_key}
+            ,#{areaInfo.del_kbn}
+            ,#{areaInfo.expend_01}
+            ,#{areaInfo.expend_02}
+            ,#{areaInfo.expend_03}
+            ,#{areaInfo.expend_04}
+            ,#{areaInfo.expend_05}
+            ,#{areaInfo.login_user_id}
+            ,#{areaInfo.login_date}
+            ,#{areaInfo.update_user_id}
+            ,#{areaInfo.update_date})
+        </foreach>
+    </insert>
+</mapper>

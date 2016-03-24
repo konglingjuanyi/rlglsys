@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 必修课管理 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl020807Mapper">
+  <!-- 通过课程编号查看课程信息 -->
+  <select id="getPublicCourseInfoById" resultType="com.rlglsys.entity.Mtb63CourseWare">
+    SELECT
+      *
+    FROM
+      m_tb63_courseware
+    WHERE
+      COURSE_ID = #{course_id}
+    AND
+      DEL_KBN = 0
+  </select>
+  <!-- 通过课程编号查看课程信息 -->
+  <select id="getPublicCourseWareById" resultType="com.rlglsys.entity.Mtb121PublicCourseWare">
+    SELECT
+      *
+    FROM
+      m_tb121_public_courseware
+    WHERE
+      COURSE_ID = #{course_id}
+    AND
+      DEL_KBN = '0'
+  </select>
+  <!-- 获取医师执业资格 -->
+  <select id="getDoctorTitleList" resultType="com.rlglsys.entity.MTb02Adm">
+    SELECT
+      *
+    FROM
+      m_tb02_adm
+    WHERE
+      ADM_TYPE_CD
+    IN
+      (#{adm_cd1},#{adm_cd2}) 
+  </select>
+  <!-- 通过当前人员执业资格或执业范围查询对应公共必修课程 -->
+  <select id="getMtb63InfoBySuitPerson" resultType="com.rlglsys.entity.Mtb63CourseWare">
+    SELECT 
+      COURSE_ID,
+      COURSE_NAME
+    FROM
+      m_tb63_courseware
+    WHERE
+      DEL_KBN = 0
+    AND  
+      BIXIU_FlAG ='01'
+    AND
+      BEGIN_DATE &gt;= #{begin_date}
+    AND
+      END_DATE &lt;= #{end_date}
+    AND
+      ((SUIT_PERSON IS NULL OR SUIT_PERSON = '' OR SUIT_PERSON LIKE '%${area}%')
+    OR
+      (SUIT_PERSON_1 IS NULL OR SUIT_PERSON_1 = '' OR SUIT_PERSON_1 LIKE '%${type}%'))
+  </select>
+  <select id="getSuitProvinceAndCity" resultType="com.rlglsys.bean.Rlgl020807Bean">
+    SELECT
+      PROVINCE AS suit_province,
+      CITY AS suit_city
+    FROM
+      m_tb20_area
+    WHERE
+      AREA_ID like '${area_id}%'
+    AND
+      DEL_KBN = 0
+    LIMIT
+      0,1
+  </select>
+  <select id="getSuitProvince" resultType="String">
+    SELECT
+      PROVINCE 
+    FROM
+      m_tb20_area
+    WHERE
+      AREA_ID like '${area_id}%'
+    AND
+      DEL_KBN = 0
+    LIMIT
+      0,1
+  </select>
+</mapper>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010108Mapper">
+    <!--单位详细列表查询 -->
+    <select id="getUnitInfo" resultType="Mtb04Unit">
+        SELECT  *     
+        FROM m_tb04_unit
+        WHERE unit_no=#{unit_no} AND UNIT_STATUS='1';
+    </select>
+    <!-- 统计数量单位 -->
+    <update id="updateStatistic" parameterType="int">
+       <!-- DELETE  FROM m_tb04_unit 	WHERE  unit_no=#{unit_no}; -->
+       UPDATE m_tb04_unit set STATISTIC_KBN=#{statistic_kbn} WHERE  unit_no=#{unit_no};
+    </update>
+    <!-- 解除单位注销时同时解除的单位操作人 -->
+    <update id="updateUnitPersonnelInfo" parameterType="int">
+        UPDATE m_tb01_user
+        SET DEL_KBN =0
+        WHERE 
+            UNIT_NO = #{unitNo}
+    </update>
+    <!-- 解除单位注销 -->
+    <update id="updateUnitDelInfo" parameterType="int">
+        UPDATE m_tb04_unit
+        SET DEL_KBN =0
+        WHERE 
+            UNIT_NO = #{unitNo}
+    </update>
+    <!-- 获得单位列表 -->
+     <select id="getUnitlList" resultType="Mtb04Unit">
+         SELECT * FROM  m_tb04_unit WHERE UNIT_NO in(SELECT UNIT_NO_LOWER  
+                                         FROM m_tb28_unit_lower 
+                                         WHERE UNIT_NO=#{unit_no}) AND DEL_KBN=0
+    </select> 
+    <!-- 获得下级单位列表 -->
+     <select id="getLowerUnitlList" resultType="Mtb04Unit">
+     
+       SELECT A.UNIT_NO,A.UNIT_NM ,A.DEL_KBN,A.CONTACT,B.UNIT_NM  UNIT_SUPER,A.UNIT_LOWER,D.UNIT_NM ESCROW_UNIT_NO
+		FROM ( SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} AND UNIT_STATUS='1'
+          <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+           <if test="unit.pageCount != 0 and unit.pageCount != null">
+              LIMIT #{unit.pageNo},#{unit.pageCount}
+          </if>
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+		 
+     <!--   SELECT A.UNIT_NO,A.UNIT_NM ,A.DEL_KBN,B.UNIT_NM  UNIT_SUPER,D.UNIT_NM ESCROW_UNIT_NO,C.UNIT_NM UNIT_LOWER
+		FROM ( SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo}
+          <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO
+		LEFT JOIN m_tb04_unit C ON A.UNIT_LOWER=C.UNIT_NO 
+		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+		 -->
+   </select> 
+    <!-- 获得下级单位用户列表 -->
+     <select id="getLowerUnitUserlList" resultType="Mtb04Unit">
+       SELECT A.UNIT_NO,A.USER_ID EXPEND_01,A.UNIT_NM ,A.DEL_KBN,A.CONTACT,B.UNIT_NM  UNIT_SUPER,A.UNIT_LOWER,D.UNIT_NM ESCROW_UNIT_NO
+		FROM ( 
+		        SELECT U.UNIT_NO,U.UNIT_NM ,U.CONTACT,U.UNIT_LOWER,U.DEL_KBN ,U.UNIT_SUPER ,U.ESCROW_UNIT_NO,F.USER_ID 
+		        FROM 
+		        (SELECT * FROM m_tb01_user WHERE USER_TYPE=1 AND UNIT_NO IN(SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} 
+			          <if test="unit.unit_no != ''">
+			              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+			          </if>
+			          <if test="unit.unit_nm != ''">
+			              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+			          </if>
+			          
+			       )
+			       <if test="unit.pageCount != 0 and unit.pageCount != null">
+			              LIMIT #{unit.pageNo},#{unit.pageCount}
+			      </if>
+			     ) F 
+		        LEFT JOIN 
+		        m_tb04_unit U 
+		        ON(U.UNIT_NO=F.UNIT_NO)
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+   
+    <!-- 获得下级单位用户列表  -->
+     <select id="getCountbyUnitUser" resultType="int">
+       SELECT COUNT(*)
+		FROM (
+		 SELECT U.UNIT_NO,U.UNIT_NM ,U.CONTACT,U.UNIT_LOWER,U.DEL_KBN ,U.UNIT_SUPER ,U.ESCROW_UNIT_NO 
+		        FROM 
+		        (SELECT * FROM m_tb01_user WHERE  USER_TYPE=1 AND UNIT_NO IN(SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} 
+			          <if test="unit.unit_no != ''">
+			              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+			          </if>
+			          <if test="unit.unit_nm != ''">
+			              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+			          </if>
+			        
+			       )
+			     ) F 
+		        LEFT JOIN 
+		        m_tb04_unit U 
+		        ON(U.UNIT_NO=F.UNIT_NO)
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+    <!-- 获得下级单位用户列表 -->
+     <select id="getLowerUnitUserlListNew" resultType="Mtb04Unit">
+       SELECT A.UNIT_NO,A.USER_ID EXPEND_01,A.UNIT_NM ,A.DEL_KBN,A.CONTACT,B.UNIT_NM  UNIT_SUPER,A.UNIT_LOWER,D.UNIT_NM ESCROW_UNIT_NO
+		FROM ( 
+		        SELECT U.UNIT_NO,U.UNIT_NM ,U.CONTACT,U.UNIT_LOWER,U.DEL_KBN ,U.UNIT_SUPER ,U.ESCROW_UNIT_NO,F.USER_ID 
+		        FROM 
+		        (SELECT
+					*
+				FROM
+					m_tb01_user
+				WHERE
+				USER_TYPE = 1
+				AND UNIT_NO='37'
+                AND USER_ID !='37' 
+			          <if test="unit.unit_no != ''">
+			              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+			          </if>
+			          <if test="unit.unit_nm != ''">
+			              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+			          </if>
+			     ) F 
+		        LEFT JOIN 
+		        m_tb04_unit U 
+		        ON(U.UNIT_NO=F.UNIT_NO)
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+   
+    <!-- 获得下级单位用户列表  -->
+     <select id="getCountbyUnitUserNew" resultType="int">
+       SELECT COUNT(*)
+		FROM (
+		 SELECT U.UNIT_NO,U.UNIT_NM ,U.CONTACT,U.UNIT_LOWER,U.DEL_KBN ,U.UNIT_SUPER ,U.ESCROW_UNIT_NO 
+		        FROM 
+		        (SELECT
+					*
+				FROM
+					m_tb01_user
+				WHERE
+				USER_TYPE = 1
+				AND UNIT_NO='37'
+                AND USER_ID !='37' 
+			          <if test="unit.unit_no != ''">
+			              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+			          </if>
+			          <if test="unit.unit_nm != ''">
+			              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+			          </if>
+			     ) F 
+		        LEFT JOIN 
+		        m_tb04_unit U 
+		        ON(U.UNIT_NO=F.UNIT_NO)
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+   
+   
+   
+   
+   
+   
+    <!-- 获得下级单位列表 -->
+     <select id="getCountbyUnit" resultType="int">
+       SELECT COUNT(*)
+		FROM (
+		 SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unitNo} AND UNIT_STATUS='1'
+          <if test="unit.unit_no != ''">
+              AND unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+          </if>
+          <if test="unit.unit_nm != ''">
+              AND unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+          </if>
+		) A  
+		LEFT JOIN 
+		   m_tb04_unit B 
+		   ON A.UNIT_SUPER=B.UNIT_NO		
+		LEFT JOIN m_tb04_unit D ON A.ESCROW_UNIT_NO=D.UNIT_NO
+   </select> 
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl020907" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl020907Init"
+        class="com.rlglsys.action.continumedicaleducation.statisticalanalysis.Rlgl020907InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020907.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+       <action name="rlgl020907Search"
+        class="com.rlglsys.action.continumedicaleducation.statisticalanalysis.Rlgl020907SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020907.jsp</result>
+       </action>
+       <!-- Excel导出处理 -->
+       <action name="rlgl020907Export" class="com.rlglsys.action.continumedicaleducation.statisticalanalysis.Rlgl020907ExportAction"
+            method="execute">
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel;charset=utf-8</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+            </result>
+        </action>
+    </package>
+</struts>
+

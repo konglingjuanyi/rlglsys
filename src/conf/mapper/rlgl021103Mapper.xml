@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl021103Mapper">
+
+    <!--查询院内学分举办项目列表 -->
+    <select id="getHospitalCreditProjectList" resultType="com.rlglsys.bean.Rlgl021103Bean">
+         SELECT
+	    A.*,CASE WHEN B.PERSONAL_ID IS NULL THEN '0' ELSE '1' END ARRLY_KBN ,apply_item
+                FROM(SELECT * FROM m_tb91_hospital_credit_project WHERE  AUDIT_STATUS='1' AND UNIT_NO IN
+         <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+         </foreach>
+          <if test="rlgl021103Bean.project_no != '' and rlgl021103Bean.project_no != null">
+	        AND project_no LIKE CONCAT('%', #{rlgl021103Bean.project_no}, '%') 
+	     </if>
+	     <if test="rlgl021103Bean.project_nm != '' and rlgl021103Bean.project_nm != null">
+	        AND project_nm LIKE CONCAT('%',  #{rlgl021103Bean.project_nm}, '%') 
+	     </if>
+	     )A
+	     LEFT JOIN (
+			SELECT
+				*
+			FROM
+				m_tb92_hospital_credit_apply
+			WHERE
+				PERSONAL_ID =  #{rlgl021103Bean.user_id} AND AUDIT_STATUS !=1) B 
+		    ON A.arrly_no=B.arrly_no 
+	     
+	      <if test="rlgl021103Bean.pageCount != 0 and rlgl021103Bean.pageCount != null">
+           LIMIT #{rlgl021103Bean.pageNo},#{rlgl021103Bean.pageCount}
+        </if>
+    </select>
+     <!--查询院内学分举办项目条数 -->
+    <select id="getCountbyHospitalCreditProject" resultType="int">
+        SELECT count(*) FROM(SELECT * FROM m_tb91_hospital_credit_project WHERE  AUDIT_STATUS='1' AND UNIT_NO IN
+         <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+         </foreach>
+           <if test="rlgl021103Bean.project_no != '' and rlgl021103Bean.project_no != null">
+	        AND project_no LIKE CONCAT('%', #{rlgl021103Bean.project_no}, '%') 
+	     </if>
+	     <if test="rlgl021103Bean.project_nm != '' and rlgl021103Bean.project_nm != null">
+	        AND project_nm LIKE CONCAT('%',  #{rlgl021103Bean.project_nm}, '%') 
+	     </if>
+	     )A
+	      LEFT JOIN (
+			SELECT
+				*
+			FROM
+				m_tb92_hospital_credit_apply
+			WHERE
+				PERSONAL_ID = #{rlgl021103Bean.user_id} AND AUDIT_STATUS !=1) B 
+		    ON A.arrly_no=B.arrly_no 
+	       <if test="rlgl021103Bean.pageCount != 0 and rlgl021103Bean.pageCount != null">
+           LIMIT #{rlgl021103Bean.pageNo},#{rlgl021103Bean.pageCount}
+        </if>
+    </select>
+     <!--获得项目报名人员信息 -->
+    <select id="getProjectApplyUser" resultType="Mtb92HospitalCreditApply">
+    </select>
+    <!--获得单位人员信息 -->
+    <select id="getUnitUser" resultType="Mtb01User">
+        SELECT * FROM m_tb01_user WHERE  DEL_KBN='0'  AND USER_TYPE='0'
+        <if test="personnel.unit_no != '' and personnel.unit_no != null">
+	        AND unit_no = #{personnel.unit_no}
+	    </if>
+	    <if test="personnel.section_id != '' and personnel.section_id != null">
+	        AND section_id = #{personnel.section_id}
+	    </if>
+    </select>
+    <!-- 插入报名用户信息 -->
+    <insert id="insertApplyUser" parameterType="int">  
+     insert into m_tb92_hospital_credit_apply (   
+		PERSONAL_ID ,       
+		PERSONAL_NM ,       
+		PERSONAL_CARD_ID  , 
+		PERSONAL_UNIT_NO  , 
+		PERSONAL_SECTION_NO,
+		ARRLY_NO   ,        
+		PROJECT_NO  ,       
+		PROJECT_UNIT_NO    ,
+		APPLY_ITEM ,        
+		EX_KEY  ,           
+		DEL_KBN,            
+		EXPEND_01 ,         
+		EXPEND_02 ,         
+		EXPEND_03  ,        
+		EXPEND_04 ,         
+		EXPEND_05 ,         
+		LOGIN_USER_ID     , 
+		LOGIN_DATE ,        
+		UPDATE_USER_ID  ,   
+		UPDATE_DATE         
+	)VALUES  
+    <foreach collection="userList" item="item" index="index" separator=",">  
+         (  #{item.personal_id},        
+			#{item.personal_nm} ,       
+			#{item.personal_card_id}  , 
+			#{item.personal_unit_no}  , 
+			#{item.personal_section_no},
+			#{item.arrly_no}   ,        
+			#{item.project_no}  ,       
+			#{item.project_unit_no}    ,
+			#{item.apply_item} ,        
+			#{item.ex_key}  ,           
+			#{item.del_kbn},            
+			#{item.expend_01} ,         
+			#{item.expend_02 },         
+			#{item.expend_03}  ,        
+			#{item.expend_04} ,         
+			#{item.expend_05} ,         
+			#{item.login_user_id}     , 
+			#{item.login_date} ,        
+			#{item.update_user_id}  ,   
+			#{item.update_date}         
+		)  
+    </foreach>  
+ </insert> 
+</mapper>

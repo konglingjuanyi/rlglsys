@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl020410" extends="rlgl" namespace="/">
+        <!-- 项目申报 -->
+        <action name="rlgl020410Init"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020415.jsp</result>
+        </action>
+        <action name="rlgl020410Search"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020415.jsp</result>
+        </action>
+        <action name="rlgl020410Detail"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410DetailAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020416.jsp</result>
+        </action>
+        <action name="rlgl020410ReviewOk"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410ReviewOkAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020410Init</result>
+        </action>
+        <action name="rlgl020410DetailRecord"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410DetailRecordAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020422.jsp</result>
+        </action>
+        <action name="rlgl020410RecordReviewOk"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410RecordReviewOkAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020410Init</result>
+        </action>
+        <action name="rlgl020410Back"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020410BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020410Init</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 单位人员返聘 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010320Mapper">
+    <!-- 退休人员信息列表查询 -->
+    <select id="getRetireUserInfoList" resultType="com.rlglsys.bean.Rlgl010320Bean">
+    SELECT 
+      C.* 
+    FROM(
+        SELECT
+          M.PERSONNEL_UNIT AS employ_personal_unit_no,
+          M.PERSONNEL_UNIT_NM AS employ_personal_unit_nm,
+          M.PERSONNEL_ID AS employ_personal_id,
+          M.PERSONNEL_NM AS employ_personal_nm,
+          M.RETIRE_TIME,
+          M.PERSONNEL_POLITICAL_LANDSCAPE,
+          M.PERSONNEL_TEL,
+          M.PERSONNEL_GENDER,
+          M.PERSONNEL_HOMETOWN,
+          M.PERSONNEL_IMGNAME,
+          M.PERSONNEL_BIRTHDAY,
+          M1.POSITION_NM
+        FROM
+          m_tb12_personnel M
+        LEFT JOIN 
+          (SELECT * FROM m_tb17_personnel_job_info JOB1 WHERE APPOINT_TIME=(SELECT MAX(APPOINT_TIME) FROM m_tb17_personnel_job_info WHERE PERSONNEL_ID=JOB1.PERSONNEL_ID GROUP BY PERSONNEL_ID) ) M1 
+        ON 
+            M.PERSONNEL_ID = M1.PERSONNEL_ID
+        WHERE
+            M.RETIRE_FLAG = 1
+        AND
+            M.DEL_KBN = 1
+        ) AS C
+        <if test="pageCount != 0 and pageCount != null">
+        LIMIT #{pageNo},#{pageCount}
+        </if>
+    </select>
+    <!-- 通过人员ID查询退休人员信息 -->
+    <select id="getRetireUserInfoById" resultType="com.rlglsys.bean.Rlgl010320Bean">
+        SELECT
+            M.PERSONNEL_UNIT AS employ_personal_unit_no,
+            M.PERSONNEL_UNIT_NM AS employ_personal_unit_nm,
+            M.PERSONNEL_ID AS employ_personal_id,
+            M.PERSONNEL_NM AS employ_personal_nm,
+            M.RETIRE_TIME,
+            M.PERSONNEL_POLITICAL_LANDSCAPE,
+            M.PERSONNEL_TEL,
+            M.PERSONNEL_GENDER,
+            M.PERSONNEL_HOMETOWN,
+            M.PERSONNEL_IMGNAME,
+            M.PERSONNEL_BIRTHDAY,
+            M1.POSITION_NM
+        FROM
+            m_tb12_personnel M
+        LEFT JOIN
+            m_tb17_personnel_job_info M1
+        ON
+            M.PERSONNEL_ID = M1.PERSONNEL_ID
+        WHERE
+            M.RETIRE_FLAG = 1
+        AND
+            M.DEL_KBN = 1
+        AND
+            M.PERSONNEL_ID = #{user_id}
+        ORDER BY
+            M1.APPOINT_TIME DESC
+        LIMIT
+            0,1
+    </select>
+    <!-- 通过人员ID和申请返聘单位编号查询该人员是否已申请返聘 -->
+    <select id="getRemployUserInfoByUserId" resultType="Integer">
+        SELECT
+          COUNT(*)
+        FROM
+          m_tb57_personal_remploy_apply_detail
+        WHERE
+          DEL_KBN = 0
+        AND
+          EMPLOY_PERSONAL_ID = #{user_id}
+        AND
+          UNIT_NO = #{unit_no}
+    </select>
+    <!-- 插入返聘人员信息到人员返聘申请明细表 -->
+    <insert id="insertInToMtb57Info" >
+      INSERT INTO
+        m_tb57_personal_remploy_apply_detail (
+            APPLY_NO,
+            APPLY_NUMBER,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            CARD_ID,
+            UNIT_NO,
+            UNIT_NM,
+            EMPLOY_PERSONAL_ID,
+            EMPLOY_PERSONAL_NM,
+            EMPLOY_PERSONAL_UNIT_NO,
+            EMPLOY_PERSONAL_UNIT_NM,
+            EMPLOY_REMARKS,
+            APPLY_DATE,
+            UNIT_CHECKER,
+            UNIT_CHECK_DATE,
+            UNIT_CHECK_VIEWS,
+            UNIT_CHECK_RESULT,
+            COUNTY_CHECKER,
+            COUNTY_CHECK_DATE,
+            COUNTY_CHECK_VIEWS,
+            COUNTY_CHECK_RESULT,
+            DOWNTOWN_CHECKER,
+            DOWNTOWN_CHECK_DATE,
+            DOWNTOWN_CHECK_VIEWS,
+            DOWNTOWN_CHECK_RESULT,
+            MINISTRY_CHECKER,
+            MINISTRY_CHECK_DATE,
+            MINISTRY_CHECK_VIEWS,
+            MINISTRY_CHECK_RESULT,
+            NOW_MARK,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+      ) VALUES (
+            #{mtb57Info.apply_no},
+            #{mtb57Info.apply_number},
+            #{mtb57Info.personal_id},
+            #{mtb57Info.personal_nm},
+            #{mtb57Info.card_id},
+            #{mtb57Info.unit_no},
+            #{mtb57Info.unit_nm},
+            #{mtb57Info.employ_personal_id},
+            #{mtb57Info.employ_personal_nm},
+            #{mtb57Info.employ_personal_unit_no},
+            #{mtb57Info.employ_personal_unit_nm},
+            #{mtb57Info.employ_remarks},
+            #{mtb57Info.apply_date},
+            #{mtb57Info.unit_checker},
+            #{mtb57Info.unit_check_date},
+            #{mtb57Info.unit_check_views},
+            #{mtb57Info.unit_check_result},
+            #{mtb57Info.county_checker},
+            #{mtb57Info.county_check_date},
+            #{mtb57Info.county_check_views},
+            #{mtb57Info.county_check_result},
+            #{mtb57Info.downtown_checker},
+            #{mtb57Info.downtown_check_date},
+            #{mtb57Info.downtown_check_views},
+            #{mtb57Info.downtown_check_result},
+            #{mtb57Info.ministry_checker},
+            #{mtb57Info.ministry_check_date},
+            #{mtb57Info.ministry_check_views},
+            #{mtb57Info.ministry_check_result},
+            #{mtb57Info.now_mark},
+            #{mtb57Info.ex_key},
+            #{mtb57Info.del_kbn},
+            #{mtb57Info.login_user_id},
+            #{mtb57Info.login_date},
+            #{mtb57Info.update_user_id},
+            #{mtb57Info.update_date}
+      )
+    </insert>
+    <!-- 通过申请编号和申请连番获取返聘申请人员信息 -->
+    <select id="getRemployUserInfoById" resultType="com.rlglsys.bean.Rlgl010320Bean">
+        SELECT
+            M2.*,
+            M.RETIRE_TIME,
+            M.PERSONNEL_POLITICAL_LANDSCAPE,
+            M.PERSONNEL_TEL,
+            M.PERSONNEL_GENDER,
+            M.PERSONNEL_HOMETOWN,
+            M.PERSONNEL_IMGNAME,
+            M.PERSONNEL_BIRTHDAY,
+            M1.POSITION_NM
+        FROM
+          m_tb57_personal_remploy_apply_detail M2
+        LEFT JOIN
+          m_tb12_personnel M
+        ON
+          M2.EMPLOY_PERSONAL_ID = M.PERSONNEL_ID
+        LEFT JOIN
+          m_tb17_personnel_job_info M1
+        ON
+          M2.EMPLOY_PERSONAL_ID = M1.PERSONNEL_ID
+        WHERE
+          APPLY_NO = #{apply_no}
+        AND
+          APPLY_NUMBER = #{apply_number}
+        AND
+          M2.DEL_KBN = 0
+        ORDER BY
+          M1.APPOINT_TIME DESC
+        LIMIT
+          0,1
+    </select>
+    <!-- 通过指定条件查询退休人员信息 -->
+    <select id="getRetireUserInfoListByColumn" resultType="com.rlglsys.bean.Rlgl010320Bean">
+        SELECT
+            M.PERSONNEL_UNIT AS employ_personal_unit_no,
+            M.PERSONNEL_UNIT_NM AS employ_personal_unit_nm,
+            M.PERSONNEL_ID AS employ_personal_id,
+            M.PERSONNEL_NM AS employ_personal_nm,
+            M.RETIRE_TIME,
+            M.PERSONNEL_POLITICAL_LANDSCAPE,
+            M.PERSONNEL_TEL,
+            M.PERSONNEL_GENDER,
+            M.PERSONNEL_HOMETOWN,
+            M.PERSONNEL_IMGNAME,
+            M.PERSONNEL_BIRTHDAY,
+            M1.POSITION_NM
+        FROM
+            m_tb12_personnel M
+        LEFT JOIN
+            m_tb17_personnel_job_info M1
+        ON
+            M.PERSONNEL_ID = M1.PERSONNEL_ID
+        WHERE
+            M.RETIRE_FLAG = 1
+        AND
+            M.DEL_KBN = 1
+        <if test="rlgl010320Bean.search_card_id != '' and rlgl010320Bean.search_card_id != null">
+            AND M.PERSONNEL_CARD_ID = #{rlgl010320Bean.search_card_id}
+        </if>
+        <if test="rlgl010320Bean.search_user_nm != '' and rlgl010320Bean.search_user_nm != null">
+            AND M.PERSONNEL_NM like '%${rlgl010320Bean.search_user_nm}%'
+        </if>
+        ORDER BY
+          M1.APPOINT_TIME DESC
+        LIMIT
+          0,1
+    </select>
+    
+    <insert id="insertTb29Info">
+      INSERT INTO m_tb29_personalapplication
+        (
+          APPLY_NO,
+          MAX_NUMBER,
+          APPLY_KBN,
+          PERSONAL_ID,
+          PERSONAL_NM,
+          PERSONAL_UNITNO,
+          APPLY_DATE,
+          CHECK_USER,
+          CHECK_UNITNO,
+          CHECK_RESULT,
+          END_MARK,
+          NOW_MARK,
+          WILL_CHECKUNITNO,
+          EX_KEY,
+          DEL_KBN,
+          LOGIN_USER_ID,
+          LOGIN_DATE,
+          UPDATE_USER_ID,
+          UPDATE_DATE
+        ) values (
+            #{mtb29PersonalApply.apply_no},
+            #{mtb29PersonalApply.max_number},
+            #{mtb29PersonalApply.apply_kbn},
+            #{mtb29PersonalApply.personal_id},
+            #{mtb29PersonalApply.personal_nm},
+            #{mtb29PersonalApply.personal_unitno},
+            #{mtb29PersonalApply.apply_date},
+            #{mtb29PersonalApply.check_user},
+            #{mtb29PersonalApply.check_unitno},
+            #{mtb29PersonalApply.check_result},
+            #{mtb29PersonalApply.end_mark},
+            #{mtb29PersonalApply.now_mark},
+            #{mtb29PersonalApply.will_checkunitno},
+            #{mtb29PersonalApply.ex_key},
+            #{mtb29PersonalApply.del_kbn},
+            #{mtb29PersonalApply.login_user_id},
+            #{mtb29PersonalApply.login_date},
+            #{mtb29PersonalApply.update_user_id},
+            #{mtb29PersonalApply.update_date}
+        )
+    </insert>
+     <!-- 更新审核流程信息 -->
+  <update id="updateNoInfo">
+      UPDATE 
+          t_tb01_auto_getnum
+      SET
+          sequenceNo = sequenceNo + 1
+      WHERE
+          table_id = #{noInfo.table_id}
+      AND 
+          col_id = #{noInfo.col_id}
+  </update>
+  <update id="updateTb29Info">
+      UPDATE m_tb29_personalapplication
+      SET
+          MAX_NUMBER = #{tb29Info.max_number},
+          APPLY_DATE = #{tb29Info.apply_date},
+          CHECK_RESULT = "001",
+          END_MARK = #{tb29Info.end_mark},
+          NOW_MARK = #{tb29Info.now_mark},
+          WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+          UPDATE_USER_ID = #{tb29Info.personal_id},
+          UPDATE_DATE = #{tb29Info.apply_date}
+      WHERE
+          APPLY_NO = #{tb29Info.apply_no}
+  </update>
+  <select id="getRetireUserCount" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      m_tb12_personnel
+    WHERE
+      RETIRE_FLAG = 1
+    AND
+      DEL_KBN = 1
+  </select>
+</mapper>

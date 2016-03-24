@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 网上缴费明细 -->
+	<package name="rlgl100100" extends="rlgl" namespace="/">
+		<!-- 缴费列表一览 -->
+		<action name="rlgl100100Init"
+			class="com.rlglsys.action.learnonline.Rlgl100100InitAction" method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100100.jsp</result>
+			<result name="press">/WEB-INF/jsp/rlgl100103.jsp</result>
+		</action>
+		<!-- 申请退款 -->
+		<action name="rlgl100100Refund"
+			class="com.rlglsys.action.learnonline.Rlgl100100RefundAction" method="execute">
+			<result name="error" type="redirectAction">
+				<param name="actionName">rlgl100100Init</param>
+				<param name="refundable">${refundable}</param>
+			</result>
+			<result name="success" type="redirectAction">rlgl100100Init</result>
+		</action>
+		<!-- 缴费列表一览 -->
+		<action name="rlgl100100_2Init"
+			class="com.rlglsys.action.learnonline.Rlgl100100_2TimeInitAction"
+			method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100100_2.jsp</result>
+			<result name="press">/WEB-INF/jsp/rlgl100100_3.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl100100_4.jsp</result>
+		</action>
+		<!-- 缴费列表查询 -->
+		<action name="rlgl100100_2InitSerach"
+			class="com.rlglsys.action.learnonline.Rlgl100100_2InitAction" method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100100_2.jsp</result>
+		</action>
+		<!-- 缴费列表查询 -->
+		<action name="rlgl100100_3InitSerach"
+			class="com.rlglsys.action.learnonline.Rlgl100100_3InitAction" method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100100_3.jsp</result>
+		</action>
+		<!-- Excel导出处理 -->
+		<action name="rlgl100100export"
+			class="com.rlglsys.action.learnonline.Rlgl100100ExportAction" method="execute">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel;charset=utf-8</param>
+				<param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+				<param name="inputName">excelStream</param>
+			</result>
+		</action>
+		
+		<!-- Excel导出处理 -->
+		<action name="rlgl100100_1export"
+			class="com.rlglsys.action.learnonline.Rlgl100100_1ExportAction" method="execute">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel;charset=utf-8</param>
+				<param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+				<param name="inputName">excelStream</param>
+			</result>
+		</action>
+		<!-- 缴费列表查询 -->
+		<action name="rlgl100100_5InitSerach"
+			class="com.rlglsys.action.learnonline.Rlgl100100_5InitAction" method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100100_4.jsp</result>
+		</action>
+		<!--添加修改余额-->
+		<action name="rlgl100100_4TimeInit"
+			class="com.rlglsys.action.learnonline.Rlgl100100_4TimeInitAction" method="execute">
+			<result name="press">/WEB-INF/jsp/rlgl000104.jsp</result>
+		</action>
+		<!--保存余额-->
+		<action name="rlgl100100_4Init"
+			class="com.rlglsys.action.learnonline.Rlgl100100_4InitAction" method="execute">
+			<result name="init">/WEB-INF/jsp/rlgl100100_4.jsp</result>
+		</action>
+	</package>
+</struts>
+

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010105Mapper">
+
+    <select id="getUnitLowerList" resultType="Mtb04Unit">
+         SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unit_no} AND DEL_KBN=0 AND UNIT_STATUS='1'
+    </select>
+    <select id="getUnitList" resultType="Mtb04Unit">
+    SELECT A.UNIT_NO,A.unit_nm,A.DEL_KBN,A.UNIT_LOWER, B.UNIT_NM UNIT_SUPER,C.UNIT_NM ESCROW_UNIT_NO
+    FROM 
+   (SELECT * FROM m_tb04_unit WHERE UNIT_SUPER=#{unit.unit_no} AND UNIT_STATUS='1' ) A 
+    LEFT JOIN m_tb04_unit B on( A.UNIT_SUPER=B.UNIT_NO )
+    LEFT JOIN m_tb04_unit C on( A.ESCROW_UNIT_NO=C.UNIT_NO) 
+     <if test="unit.pageCount != 0 and unit.pageCount != null">
+           LIMIT #{unit.pageNo},#{unit.pageCount}
+     </if>
+    <!--     SELECT A.UNIT_NO,A.unit_nm,A.UNIT_STATUS, B.UNIT_NM UNIT_SUPER,C.UNIT_NM  UNIT_LOWER FROM (SELECT *
+       FROM m_tb04_unit 
+       WHERE UNIT_SUPER=#{unit_no} AND DEL_KBN=0 ) A 
+       LEFT JOIN m_tb04_unit B 
+           on( A.UNIT_SUPER=B.UNIT_NO ) 
+       LEFT JOIN m_tb04_unit C 
+          on( A.UNIT_LOWER=C.UNIT_NO  ) -->
+    </select>
+    <select id="getUnitsuperList" resultType="Mtb04Unit">
+        SELECT unit_no,unit_nm FROM m_tb04_unit WHERE unit_no in(SELECT unit_no
+        FROM m_tb28_unit_lower
+        WHERE unit_no_lower=#{unit_no}) AND DEL_KBN=0 AND UNIT_STATUS='1'
+    </select>
+    <select id="getUnitLike" resultType="Mtb04Unit">
+      <!-- SELECT * FROM m_tb04_unit WHERE unit_super in
+       <foreach collection="lowerUnitList" index="index" item="item" open="(" separator="," close=")">
+            #{lowerUnitList}
+       </foreach>  -->
+       SELECT A.* 
+       FROM (
+            SELECT * FROM m_tb04_unit WHERE unit_super in(
+        	SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_NO=#{unitNo}
+  			UNION
+  			SELECT unit_no_lower
+        	FROM m_tb28_unit_lower
+        	WHERE unit_no=#{unitNo}  AND DEL_KBN=0 )
+       )A
+       WHERE 1=1 AND DEL_KBN=0 AND UNIT_STATUS='1'
+       <choose>
+          <when test="unit.unit_lower == '' and unit.unit_no == '' and unit.unit_nm == ''">
+               AND A.unit_super=#{unitNo}
+           </when>
+          <otherwise>
+           
+           <if test="unit.unit_no != ''">
+              AND A.unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+	            
+	       </if>
+	       <if test="unit.unit_nm != ''">
+	              AND A.unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+	       </if>
+	       <if test="unit.unit_lower != ''">
+              AND A.unit_super=#{unit.unit_lower}
+              UNION
+              SELECT * FROM m_tb04_unit WHERE UNIT_NO=#{unit.unit_lower}
+           </if>
+          </otherwise>
+       </choose>
+        <if test="unit.pageCount != 0 and unit.pageCount != null">
+           LIMIT #{unit.pageNo},#{unit.pageCount}
+        </if>
+    </select>
+    <update id="deleteUnit" parameterType="int">
+       <!-- DELETE  FROM m_tb04_unit 	WHERE  unit_no=#{unit_no}; -->
+       UPDATE m_tb04_unit set DEL_KBN=1 WHERE  unit_no=#{unit_no};
+    </update>
+     <select id="getUnitApply" resultType="UnitApply">
+       SELECT *  FROM m_tb07_unitapply WHERE UNIT_NO=#{unitNo}  ORDER BY  APPLY_NUMBER DESC 
+    </select>
+     <select id="getCountbyUnit" resultType="int">
+        SELECT COUNT(*) FROM m_tb04_unit WHERE UNIT_SUPER=#{unit.unit_no} AND UNIT_STATUS='1'
+    </select>
+     <select id="getCountbySearchUnit" resultType="int">
+     SELECT  COUNT(*) FROM  (  SELECT * 
+       FROM (
+            SELECT * FROM m_tb04_unit WHERE unit_super in(
+        	SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_NO=#{unitNo} AND UNIT_STATUS='1'
+  			UNION
+  			SELECT unit_no_lower
+        	FROM m_tb28_unit_lower
+        	WHERE unit_no=#{unitNo}  AND DEL_KBN=0 )
+       )A
+       WHERE 1=1 AND DEL_KBN=0 
+       <choose>
+          <when test="unit.unit_lower == '' and unit.unit_no == '' and unit.unit_nm == ''">
+               AND A.unit_super=#{unitNo}
+           </when>
+          <otherwise>
+           
+           <if test="unit.unit_no != ''">
+              AND A.unit_no   LIKE CONCAT('%', #{unit.unit_no}, '%')
+	            
+	       </if>
+	       <if test="unit.unit_nm != ''">
+	              AND A.unit_nm  LIKE CONCAT('%', #{unit.unit_nm}, '%')
+	       </if>
+	       <if test="unit.unit_lower != ''">
+              AND A.unit_super=#{unit.unit_lower}
+              UNION
+              SELECT * FROM m_tb04_unit WHERE UNIT_NO=#{unit.unit_lower}
+           </if>
+          </otherwise>
+       </choose>
+       )B;
+    </select>
+    
+    
+    
+</mapper>

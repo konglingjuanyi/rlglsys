@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020406Mapper">
+
+  <!-- 取得举办项目申请数量 -->
+  <select id="getProjectHoldApplyCount" resultType="int">
+    SELECT 
+      COUNT(*)
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      CHECK_UNITNO = #{unit_no}
+    AND 
+      APPLY_KBN = '058'
+  </select>
+  
+  <!-- 取得举办项目申请列表 -->
+  <select id="getProjectHoldApplyList" resultType="PersonalApplication">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      CHECK_UNITNO = #{unit_no}
+    AND 
+      APPLY_KBN = '058'
+    <if test="pageCount != 0 and pageCount != null">
+    LIMIT #{pageNo},#{pageCount}
+    </if>
+  </select>
+  
+  <!-- 取得举办项目申请列表 -->
+  <select id="getProjectHoldApplyInfoList" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      CHECK_UNITNO = #{unit_no}
+    AND 
+      APPLY_KBN = '058'
+    <if test="pageCount != 0 and pageCount != null">
+    LIMIT #{pageNo},#{pageCount}
+    </if>
+  </select>
+  
+  <!-- 通过申请编号和申请连番获取项目举办申请明细 -->
+  <select id="getProjectHoldApplyInfoFromMtb90" resultType="com.rlglsys.bean.Rlgl020405Bean">
+    SELECT
+      M.*,
+      M1.ADM_NAME AS project_level_nm
+    FROM
+      m_tb90_project_hold_apply_detail M
+    LEFT JOIN
+      m_tb02_adm M1
+    ON
+      M1.ADM_TYPE_CD = '224'
+    AND
+      M1.ADM_NUM = M.PROJECT_LEVEL
+    AND
+      M.DEL_KBN = 0
+    WHERE
+      M.APPLY_NO = #{apply_no}
+    AND
+      M.APPLY_NUMBER = #{apply_num}
+    AND
+      M.DEL_KBN = 0
+  </select>
+  
+  <!-- 个人人事申请明细表的更新处理(m_tb29_personalapplication) -->
+  <update id="updateTb29" parameterType="String">
+    UPDATE 
+      m_tb29_personalapplication
+    SET 
+      DEL_KBN = 1
+    WHERE 
+      APPLY_NO = #{applyNo}
+    AND 
+      MAX_NUMBER = #{apply_num}
+  </update>
+  
+  <!-- 更新项目举办申请明细表 -->
+  <update id="updateTb90" parameterType="String">
+    UPDATE
+      m_tb90_project_hold_apply_detail
+    SET
+      DEL_KBN = 1
+    WHERE
+      APPLY_NO = #{applyNo}
+    AND
+      APPLY_NUMBER = #{apply_num}
+  </update>
+  
+</mapper>

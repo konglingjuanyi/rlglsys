@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100100Mapper">
+	<!-- 查询个人缴费记录数 -->
+	<select id="getPrepayMsgCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		t_tb02_prepay_msg
+		WHERE
+		userId = #{user_id}
+		AND
+		DEL_KBN = '0'
+		AND
+		CLUM004 =
+		CONCAT(clum003,#{succeed})
+	</select>
+	<!-- 查询个人缴费明细列表 -->
+	<select id="getPrepayMsgList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		clum003 as TransactionID
+		,clum006 as pay_year
+		,clum007 as
+		refund_flag,
+		M1.EXPEND_01,
+
+		CASE
+		WHEN LENGTH(replace(CLUM008,CLUM003,'')) >=
+		LENGTH(CLUM003)
+		THEN 'ERROR'
+		ELSE replace(CLUM008,CLUM003,'')
+		END AS
+		Amount,
+		CASE
+		WHEN LENGTH(replace(CLUM004,CLUM003,'')) >= LENGTH(CLUM003)
+		THEN 'ERROR'
+		ELSE replace(CLUM004,CLUM003,'')
+		END AS Succeed
+
+		,clum009 as
+		refund_time
+		,M1.*
+		,M2.MerchantNM AS MerchantNM
+		FROM
+		t_tb02_prepay_msg M1
+		LEFT JOIN
+		m_tb119_merchant_info M2
+		ON
+		M1.MerchantID = M2.MerchantID
+		AND
+		M2.DEL_KBN = '0'
+		WHERE
+		M1.userId = #{user_id}
+		AND
+		M1.DEL_KBN = '0'
+		AND
+		M1.CLUM004 = CONCAT(M1.clum003,#{succeed})
+		ORDER BY M1.PAY_DATE DESC
+		<if test="pageCount != 0 and pageCount != null">
+			LIMIT #{pageNo},#{pageCount}
+		</if>
+	</select>
+	<!-- 查询个人消费明细列表 -->
+	<select id="getPrepayMsgTempList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		M1.COURSE_ID as TransactionID
+		,M1.UPDATE_DATE as pay_date
+		,"3" as
+		refund_flag
+		,M1.Category AS Amount
+		,M1.Name AS MerchantNM
+		FROM
+		t_tb03_record M1
+		WHERE
+		M1.USER_ID = #{user_id}
+		ORDER BY M1.time DESC
+		<if test="pageCount != 0 and pageCount != null">
+			LIMIT #{pageNo},#{pageCount}
+		</if>
+	</select>
+
+	<!-- 查询个人消费记录数 -->
+	<select id="getPrepayMsgTempCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		t_tb03_record
+		WHERE
+		USER_ID = #{user_id}
+	</select>
+	<!-- 通过缴费订单查询订单中包含课程信息列表 -->
+	<select id="getSelectedCourseList" resultType="com.rlglsys.entity.MTb80CourseSelected">
+		SELECT
+		*
+		FROM
+		m_tb80_course_selected
+		WHERE
+		TransactionID = #{TransactionID}
+		AND
+		DEL_KBN
+		= '0'
+	</select>
+	<!-- 更新缴费申请退款状态 -->
+	<update id="updateTTb02PrepayMsg">
+		UPDATE
+		t_tb02_prepay_msg
+		SET
+		CLUM007 =
+		#{rlgl100101_1Bean.refund_flag},
+		CLUM009 =
+		#{rlgl100101_1Bean.refund_time},
+		UPDATE_USER_ID =
+		#{rlgl100101_1Bean.update_user_id},
+		UPDATE_DATE =
+		#{rlgl100101_1Bean.update_date}
+		WHERE
+		CLUM003 =
+		#{rlgl100101_1Bean.TransactionID}
+	</update>
+
+	<!-- 查询个人缴费记录数 -->
+	<select id="getPrepayMsgAdminCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		t_tb02_prepay_msg
+		WHERE
+		DEL_KBN = '0'
+		<if test="id != '' and id != null">
+			AND userId =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND PAY_DATE>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND PAY_DATE<#{succeed}]]>
+		</if>
+	</select>
+	<!-- 查询个人缴费明细列表 -->
+	<select id="getPrepayMsgAdminList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		clum003 as TransactionID
+		,clum006 as pay_year
+		,clum007 as
+		refund_flag
+		,
+		CASE
+		WHEN LENGTH(replace(CLUM008,CLUM003,'')) >=
+		LENGTH(CLUM003)
+		THEN 'ERROR'
+		ELSE replace(CLUM008,CLUM003,'')
+		END AS
+		Amount,
+		CASE
+		WHEN LENGTH(replace(CLUM004,CLUM003,'')) >= LENGTH(CLUM003)
+		THEN 'ERROR'
+		ELSE replace(CLUM004,CLUM003,'')
+		END AS Succeed
+		,clum009 as
+		refund_time
+		,M1.*
+		,m.USER_NAME AS MerchantNM
+		,m.UNIT_NO AS danweibianhao
+		,m4.UNIT_NM AS danweibianNM
+		,CONCAT(m20.PROVINCE,m20.CITY,m20.ZONE) AS
+		dangweidizhi
+		FROM
+		t_tb02_prepay_msg M1
+		LEFT JOIN m_tb01_user m
+		on
+		m.USER_ID = M1.userId
+		LEFT JOIN m_tb04_unit m4
+		ON m.UNIT_NO = m4.UNIT_NO
+		LEFT JOIN m_tb20_area m20
+		ON m4.AREA_ID = m20.AREA_ID
+		WHERE
+		M1.DEL_KBN =
+		'0'
+		<if test="id != '' and id != null">
+			AND M1.userId =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND M1.PAY_DATE>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND M1.PAY_DATE<#{succeed} ]]>
+		</if>
+		ORDER BY
+		M1.PAY_DATE DESC
+		<if test="pageCount != 0 and pageCount != null">
+			LIMIT #{pageNo},#{pageCount}
+		</if>
+	</select>
+
+	<!--管理员查询个人消费明细列表 -->
+	<select id="getPrepayMsgTempAdminList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		m.USER_NAME AS name,
+		m.USER_ID AS userId,
+		m.UNIT_NO AS
+		danweibianhao,
+		m4.UNIT_NM AS danweibianNM,
+		CONCAT(
+		m20.PROVINCE,
+		m20.CITY,
+		m20.ZONE
+		) AS dangweidizhi,
+		M1.Category AS Amount,
+		M1. NAME AS
+		MerchantNM,
+		t4.Balance AS pay_year
+		FROM
+		t_tb03_record M1
+		LEFT JOIN
+		m_tb01_user m ON M1.USER_ID = m.USER_ID
+		LEFT JOIN m_tb04_unit m4 ON
+		m.UNIT_NO = m4.UNIT_NO
+		LEFT JOIN m_tb20_area m20 ON m4.AREA_ID =
+		m20.AREA_ID
+		LEFT JOIN t_tb04_balance t4 ON M1.USER_ID = t4.USER_ID
+		WHERE
+		1=1
+		<if test="id != '' and id != null">
+			AND M1.USER_ID =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND M1.Time>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND M1.Time<#{succeed} ]]>
+		</if>
+		ORDER BY
+		M1.Time DESC
+		<if test="pageCount != 0 and pageCount != null">
+			LIMIT #{pageNo},#{pageCount}
+		</if>
+	</select>
+
+	<!-- 管理员查询个人消费记录数 -->
+	<select id="getPrepayMsgTempAdminCount2" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		t_tb03_record
+		WHERE
+		1=1
+		<if test="id != '' and id != null">
+			AND USER_ID =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND Time>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND Time<#{succeed} ]]>
+		</if>
+		ORDER BY
+		Time DESC
+	</select>
+	
+	<!-- 管理员查询个人余额数 -->
+	<select id="getBalanceAdminCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		t_tb04_balance
+		WHERE
+		1=1
+		<if test="id != '' and id != null">
+			AND USER_ID =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND UPDATE_DATE>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND UPDATE_DATE<#{succeed} ]]>
+		</if>
+		ORDER BY
+		UPDATE_DATE DESC
+	</select>
+	<!--管理员查询个人余额列表 -->
+	<select id="getBalanceAdminList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		m.USER_NAME AS name,
+		M1.USER_ID AS userId,
+		m.UNIT_NO AS
+		danweibianhao,
+		m4.UNIT_NM AS danweibianNM,
+		CONCAT(
+		m20.PROVINCE,
+		m20.CITY,
+		m20.ZONE
+		) AS dangweidizhi,
+		M1.Balance AS Amount
+		FROM
+		t_tb04_balance M1
+		LEFT JOIN
+		m_tb01_user m ON M1.USER_ID = m.USER_ID
+		LEFT JOIN m_tb04_unit m4 ON
+		m.UNIT_NO = m4.UNIT_NO
+		LEFT JOIN m_tb20_area m20 ON m4.AREA_ID =
+		m20.AREA_ID
+		WHERE
+		1=1
+		<if test="id != '' and id != null">
+			AND M1.USER_ID =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND M1.UPDATE_DATE>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND M1.UPDATE_DATE<#{succeed} ]]>
+		</if>
+		ORDER BY
+		M1.UPDATE_DATE DESC
+		<if test="pageCount != 0 and pageCount != null">
+			LIMIT #{pageNo},#{pageCount}
+		</if>
+	</select>
+	<!--管理员查询注册人数-->
+	<select id="getuserAdminList" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		m.USER_NAME AS name,
+		M1.USER_ID AS userId,
+		m.UNIT_NO AS
+		danweibianhao,
+		m4.UNIT_NM AS danweibianNM,
+		CONCAT(
+		m20.PROVINCE,
+		m20.CITY,
+		m20.ZONE
+		) AS dangweidizhi,
+		M1.Balance AS Amount
+		FROM
+		t_tb04_balance M1
+		LEFT JOIN
+		m_tb01_user m ON M1.USER_ID = m.USER_ID
+		LEFT JOIN m_tb04_unit m4 ON
+		m.UNIT_NO = m4.UNIT_NO
+		LEFT JOIN m_tb20_area m20 ON m4.AREA_ID =
+		m20.AREA_ID
+		WHERE
+		1=1
+		<if test="id != '' and id != null">
+			AND M1.USER_ID =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND M1.UPDATE_DATE>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND M1.UPDATE_DATE<#{succeed} ]]>
+		</if>
+		ORDER BY
+		M1.UPDATE_DATE DESC
+		<if test="pageCount != 0 and pageCount != null">
+			LIMIT #{pageNo},#{pageCount}
+		</if>
+	</select>
+	<!-- 管理员查询个人消费记录数 -->
+	<select id="getPrepayMsgTempAdminCount" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		t_tb03_record
+		WHERE
+		1=1
+		<if test="id != '' and id != null">
+			AND USER_ID =#{id}
+		</if>
+		<if test="user_id != '' and user_id != null">
+			AND Time>=#{user_id}
+		</if>
+		<if test="succeed != '' and succeed != null">
+		<![CDATA[AND Time<#{succeed} ]]>
+		</if>
+		ORDER BY
+		Time DESC
+	</select>
+</mapper>

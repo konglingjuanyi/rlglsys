@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010602Mapper">
+  <resultMap type="com.rlglsys.entity.AnnualIndividualQueries" id="applyList">
+        <result property="annual_statement" column="ANNUAL_STATEMENT"/>
+        <result property="unit_no" column="UNIT_NO"/>
+        <result property="unit_nm" column="UNIT_NM"/>
+        <result property="department_name" column="DEPARTMENT_NAME"/>
+        <result property="name" column="NAME"/>
+        <result property="check_message" column="CHECK_MESSAGE"/>
+       
+  </resultMap>
+    <!-- 待办事项一览查询SQL -->
+    <select id="getTodoInfo" resultMap="applyList">
+        SELECT annual_statement,unit_no,unit_nm,department_name,name,check_message
+        FROM M_TB11_AnnualStatement
+        WHERE 
+            DEL_KBN = '0'
+           <if test="todoInfo.annual_statement != ''">
+            AND ANNUAL_STATEMENT = #{todoInfo.annual_statement}
+           </if>
+           <if test="todoInfo.unit_nm != ''">
+            AND UNIT_NM = #{todoInfo.unit_nm}
+           </if>
+           <if test="todoInfo.id_number != ''">
+            AND ID_NUMBER = #{todoInfo.id_number}
+           </if>
+    </select>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl070203" extends="rlgl" namespace="/">
+		<action name="rlgl070203Init" class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl070203InitAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl070203.jsp</result>
+		</action>
+		<action name="rlgl070203Search" class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl070203SearchAction"
+			method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl070203.jsp</result>
+		</action>
+		<action name="rlgl070202Export" class="com.rlglsys.action.examinationsystem.onlineregistration.Rlgl070202ExportAction"
+			method="execute">
+			<result name="error">/WEB-INF/jsp/rlgl070202.jsp</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel;charset=utf-8</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.xls"</param>
+                <param name="inputName">excelStream</param>
+                </result>
+		</action>
+	</package>
+</struts>
+

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl021102Mapper">
+<!-- 插入一个院内学分项目 -->
+<insert id="insertHospitalCreditProject" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+INSERT INTO m_tb91_hospital_credit_project
+(
+ARRLY_NO,
+UNIT_NM,
+UNIT_NO,
+PROJECT_NO,
+PROJECT_NM,
+TEACH_PEOPLE,
+TEACH_PLACE,
+TOTAL_HOURS,
+TEACH_START_DATE,
+TEACH_END_DATE,
+TEACH_START_TIME,
+TEACH_END_TIME,
+IS_HOSPITAL_APPLY,
+AUDIT_STATUS,
+SUPER_UNITNO,
+TEACHER_CREDIT,
+STUDENT_CREDIT,
+EX_KEY,
+DEL_KBN,
+EXPEND_01,
+EXPEND_02,
+EXPEND_03,
+EXPEND_04,
+EXPEND_05,
+LOGIN_USER_ID,
+LOGIN_DATE,
+UPDATE_USER_ID,
+UPDATE_DATE
+)
+VALUES
+   (
+     #{mtb91Info.arrly_no},
+     #{mtb91Info.unit_nm},
+     #{mtb91Info.unit_no},
+     #{mtb91Info.project_no},
+     #{mtb91Info.project_nm},
+     #{mtb91Info.teach_people},
+     #{mtb91Info.teach_place},
+     #{mtb91Info.total_hours},
+     #{mtb91Info.teach_start_date},
+     #{mtb91Info.teach_end_date},
+     #{mtb91Info.teach_start_time},
+     #{mtb91Info.teach_end_time},
+     #{mtb91Info.is_hospital_apply},
+     #{mtb91Info.audit_status},
+     #{mtb91Info.super_unitno},
+     #{mtb91Info.teacher_credit},
+     #{mtb91Info.student_credit},
+     #{mtb91Info.ex_key},
+     '0',
+     #{mtb91Info.expend_01},
+     #{mtb91Info.expend_02},
+     #{mtb91Info.expend_03},
+     #{mtb91Info.expend_04},
+     #{mtb91Info.expend_05},
+     #{mtb91Info.login_user_id},
+     #{mtb91Info.login_date},
+     #{mtb91Info.update_user_id},
+     #{mtb91Info.update_date}
+   )  
+</insert>
+<!--依据单位编号得到院内学分项目信息 -->
+<select id="getHospitalCreditProjectByUnitNo" resultType="com.rlglsys.entity.Mtb91HospitalCreditProject" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+  select * from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+  and UNIT_NO =  #{mtb91Info.unit_no}
+  <if test="mtb91Info.project_nm !=null and mtb91Info.project_nm !=''">
+   and PROJECT_NM = #{mtb91Info.project_nm}
+  </if>
+  <if test="mtb91Info.audit_status !=null and mtb91Info.audit_status !=''">
+   and AUDIT_STATUS = #{mtb91Info.audit_status}
+  </if>
+  <if test="mtb91Info.pageCount != null and  mtb91Info.pageCount != 0">
+       LIMIT #{mtb91Info.pageNo},#{mtb91Info.pageCount}
+   </if>
+</select>
+<!-- 根据单位编号得到单位下院内学分项目数 -->
+<select id="getCountByUintNo" resultType="int" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject"> 
+  select count(*) from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+  and UNIT_NO =  #{mtb91Info.unit_no}
+  <if test="mtb91Info.project_nm !=null and mtb91Info.project_nm !=''">
+   and PROJECT_NM = #{mtb91Info.project_nm}
+  </if>
+  <if test="mtb91Info.audit_status !=null and mtb91Info.audit_status !=''">
+   and AUDIT_STATUS = #{mtb91Info.audit_status}
+  </if>
+</select>
+<!-- 得到所有的院内学分项目信息 -->
+<select id="getAllInfo" resultType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+  select * from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+</select>
+<!-- 更新数据信息 -->
+<update id="updateInfo" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+update m_tb91_hospital_credit_project
+set
+	UNIT_NM = #{mtb91Info.unit_nm},
+	PROJECT_NO = #{mtb91Info.project_no},
+	PROJECT_NM = #{mtb91Info.project_nm},
+	TEACH_PEOPLE =#{mtb91Info.teach_people},
+	TEACH_PLACE = #{mtb91Info.teach_place},
+	TOTAL_HOURS = #{mtb91Info.total_hours},
+	TEACH_START_DATE =#{mtb91Info.teach_start_date},
+	TEACH_END_DATE =#{mtb91Info.teach_end_date},
+	TEACH_START_TIME=#{mtb91Info.teach_start_time},
+	TEACH_END_TIME = #{mtb91Info.teach_end_time},
+	IS_HOSPITAL_APPLY =#{mtb91Info.is_hospital_apply},
+	AUDIT_STATUS =#{mtb91Info.audit_status},
+	TEACHER_CREDIT =#{mtb91Info.teacher_credit},
+    STUDENT_CREDIT =#{mtb91Info.student_credit},
+	EX_KEY='1',
+	EXPEND_01 = #{mtb91Info.expend_01},
+	EXPEND_02 =#{mtb91Info.expend_02},
+	EXPEND_03 =#{mtb91Info.expend_03},
+	EXPEND_04 =#{mtb91Info.expend_04},
+	EXPEND_05 =#{mtb91Info.expend_05},
+	LOGIN_USER_ID =#{mtb91Info.login_user_id},
+	LOGIN_DATE =#{mtb91Info.login_date},
+	UPDATE_USER_ID =#{mtb91Info.update_user_id},
+	UPDATE_DATE =#{mtb91Info.update_date},
+	NOW_MARK = #{mtb91Info.now_mark},
+	END_MARK = #{mtb91Info.end_mark}
+   where  DEL_KBN='0'
+   and ARRLY_NO = #{mtb91Info.arrly_no}
+   and 	UNIT_NO = #{mtb91Info.unit_no}
+</update>
+<!-- 得到一条院内学分项目信息 -->
+<select id="getSingleInfo"  resultType="com.rlglsys.entity.Mtb91HospitalCreditProject" parameterType="String"> 
+  select * from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+  and ARRLY_NO =#{apply_no}
+  and UNIT_NO =#{unit_no}
+</select>
+
+
+
+
+<!-- 得到审核单位下的院内学分项目信息 -->
+<select id="getInfoBySuperUnitNo" resultType="com.rlglsys.entity.Mtb91HospitalCreditProject" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+   select * from m_tb91_hospital_credit_project
+    where DEL_KBN = '0'
+    <if test="sh91Info.super_unitno !=null and sh91Info.super_unitno !=''">
+      and  SUPER_UNITNO =  #{sh91Info.super_unitno}
+    </if>
+  <if test="sh91Info.project_nm !=null and sh91Info.project_nm !=''">
+      and PROJECT_NM = #{sh91Info.project_nm}
+  </if>
+  <if test="sh91Info.audit_status !=null and sh91Info.audit_status !=''">
+      and AUDIT_STATUS = #{sh91Info.audit_status}
+  </if>
+  <if test="sh91Info.pageCount != null and  sh91Info.pageCount != 0">
+      LIMIT #{sh91Info.pageNo},#{sh91Info.pageCount}
+  </if>
+</select>
+<select id="getSuperInfoCount" resultType="int" parameterType="com.rlglsys.entity.Mtb91HospitalCreditProject">
+  select count(*) from m_tb91_hospital_credit_project
+  where DEL_KBN = '0'
+   <if test="sh91Info.super_unitno !=null and sh91Info.super_unitno !=''">
+     and SUPER_UNITNO =  #{sh91Info.super_unitno}
+  </if>
+  <if test="sh91Info.project_nm !=null and sh91Info.project_nm !=''">
+   and PROJECT_NM = #{sh91Info.project_nm}
+  </if>
+  <if test="sh91Info.audit_status !=null and sh91Info.audit_status !=''">
+   and AUDIT_STATUS = #{sh91Info.audit_status}
+  </if>
+</select>
+</mapper>

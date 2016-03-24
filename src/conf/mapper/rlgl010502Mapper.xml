@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010502Mapper">
+    <!-- 查询 -->
+    <select id="getApplyInfo" resultType="com.rlglsys.entity.UnitApply">
+        SELECT *
+        FROM m_tb07_unitapply
+        WHERE 
+            APPLY_NO = #{applyNo}
+        AND APPLY_NUMBER = #{applyNumber}
+    </select>
+
+    <!-- 查询 -->
+    <select id="getResult" resultType="com.rlglsys.entity.UnitApply">
+        SELECT *
+        FROM m_tb07_unitapply
+        WHERE 
+            UNIT_NO = #{unitNo}
+        AND APPLY_KBN = #{applyKbn}
+        AND DEL_KBN = "0"
+        and APPLY_NUMBER = (SELECT MAX(APPLY_NUMBER)
+                            FROM m_tb07_unitapply
+                            WHERE 
+                                UNIT_NO = #{unitNo}
+                            AND APPLY_KBN = #{applyKbn}
+                            AND DEL_KBN = "0")
+    </select>
+
+    <!-- 更新单位审核状态 -->
+    <update id="updateUnit">
+        UPDATE m_tb04_unit
+        SET
+            UNIT_STATUS = "1",
+            UPDATE_USER_ID = #{userId},
+            UPDATE_DATE = #{date}
+        WHERE
+            UNIT_NO = #{unitNo}
+    </update>
+    
+    <!-- 更新单位信息 -->
+    <update id="updateUnitInfo">
+        UPDATE m_tb04_unit
+        SET
+            UNIT_STATUS = "1",
+
+            UNIT_OWN = #{unitChange.unit_own},
+            EARNINGS_NATURE = #{unitChange.earnings_nature},
+            UNIT_ECONOMIC_TYPE = #{unitChange.unit_economic_type},
+            UNIT_NATURE = #{unitChange.unit_nature},
+            UNIT_NATURE_TOW = #{unitChange.unit_nature_tow},
+            UNIT_LEVEL = #{unitChange.unit_level},
+            INDUSTRY_PLAN = #{unitChange.industry_plan},
+            UNIT_MANAGE_SCALE = #{unitChange.unit_manage_scale},
+            UNIT_MANAGE_SCALE_TOW = #{unitChange.unit_manage_scale_tow},
+            UNIT_MANAGE_SCALE_NM = #{unitChange.unit_manage_scale_nm},
+            UNIT_SCALE = #{unitChange.unit_scale},
+            LICENSE_NO = #{unitChange.license_no},
+            ORGANIZATION_NO = #{unitChange.organization_no},
+            HOSPITAL_GRADE = #{unitChange.hospital_grade},
+            HOSPITAL_GRADE_TOW = #{unitChange.hospital_grade_tow},
+            ESTABLISHMENT_NUM = #{unitChange.establishment_num},
+            ORGANIZATION_CODE = #{unitChange.organization_code},
+            AREA_ID = #{unitChange.area_id},
+            AGENCY_LEVEL = #{unitChange.agency_level},
+            AGENCY_LEVEL_TOW = #{unitChange.agency_level_tow},
+            AGENCY_LEVEL_THREE = #{unitChange.agency_level_three},
+            UNIT_ADDRESS = #{unitChange.unit_address},
+            OFFICAL_SCOPE = #{unitChange.offical_scope},
+            UNIT_PRO = #{unitChange.unit_pro},
+            UNIT_IMG=#{unitChange.unit_img},
+            UPDATE_USER_ID = #{unitChange.update_user_id},
+            UPDATE_DATE = #{unitChange.update_date},
+            AREA_ID  = #{unitChange.area_id},
+            system_sort=#{unitChange.system_sort} ,            
+	        industry_divide =#{unitChange.industry_divide} ,  
+            system_sort_two=  #{unitChange.system_sort_two} , 
+	        industry_divide_two =#{unitChange.industry_divide_two},
+	        agency_plan =     #{unitChange.agency_plan}  
+        WHERE
+            UNIT_NO = #{unitChange.unit_no}
+    </update>
+    <!-- 更新单位申请信息 -->
+    <update id="updateUnitApplyOk" >
+        UPDATE m_tb07_unitapply
+        SET
+            CHECK_RESULT = #{applyInfo.check_result},
+            COUNTY_CHECKER = #{applyInfo.county_checker},
+            COUNTY_CHECK_DATE = #{applyInfo.county_check_date},
+            COUNTY_CHECK_VIEWS = #{applyInfo.county_check_views},
+            COUNTY_CHECK_RESULT = #{applyInfo.county_check_result},
+            DOWNTOWN_CHECKER = #{applyInfo.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{applyInfo.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{applyInfo.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{applyInfo.downtown_check_result},
+            MINISTRY_CHECKER = #{applyInfo.ministry_checker},
+            MINISTRY_CHECK_DATE = #{applyInfo.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{applyInfo.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{applyInfo.ministry_check_result},
+            NOW_MARK = #{applyInfo.now_mark},
+            WILL_CHECKUNITNO = #{applyInfo.will_checkunitno},
+            UPDATE_USER_ID = #{applyInfo.update_user_id},
+            UPDATE_DATE = #{applyInfo.update_date}
+        WHERE
+            APPLY_NO = #{applyInfo.apply_no}
+        AND APPLY_NUMBER = #{applyInfo.apply_number}
+    </update>
+</mapper>

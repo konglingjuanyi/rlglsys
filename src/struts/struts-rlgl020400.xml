@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 继续教育,继续医学教育项目培训班,项目举办,项目报名审核 -->
+<struts>
+    <package name="rlgl020400" extends="rlgl" namespace="/">
+       <!-- 待审核一览 -->
+       <action name="rlgl020400Init" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020400InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl020400.jsp</result>
+       </action>
+       <!-- 审核一览检索 -->
+       <action name="rlgl020400Search" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020400SearchAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl020400.jsp</result>
+       </action>
+       <!-- 审核初始化 -->
+       <action name="rlgl020400ReviewInit" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020400ReviewInitAction" method="execute">
+           <result name="review">/WEB-INF/jsp/rlgl020400_A.jsp</result>
+       </action>
+       <!-- 审核初始化检索 -->
+       <action name="rlgl020400ReviewSearch" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020400ReviewSearchAction" method="execute">
+           <result name="search">/WEB-INF/jsp/rlgl020400_A.jsp</result>
+       </action>
+       <!-- 审核通过-不通过 -->
+       <action name="rlgl020400Review" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020400ReviewAction" method="execute">
+           <result name="success" type="redirectAction">
+           <param name="actionName">rlgl020400ReviewInit</param>
+           <param name="project_id">${project_id}</param>
+           </result>
+       </action>
+    </package>
+</struts>
+

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010314Mapper">
+
+    <select id="getExistPersonInfo" resultType="Integer">
+        SELECT count(*)
+        FROM m_tb52_user_offthejob_detail 
+        WHERE PERSONAL_ID = #{personal_id}
+        AND CHECK_RESULT='001'
+        AND DEL_KBN='0'
+    </select> 
+    
+    
+    
+    <select id="getTb12InfoByUserId" resultType="com.rlglsys.entity.Mtb12Personnel">
+		SELECT
+		  *
+		FROM
+		  m_tb12_personnel
+		WHERE
+		  PERSONNEL_ID = #{user_id}
+    </select>
+    
+    <!-- 查询申请的详细信息 -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication 
+        WHERE PERSONAL_ID = #{personnel_id}
+        and PERSONAL_UNITNO = #{personnel_unit}
+        and APPLY_KBN = #{applyKbn}
+    </select>
+    
+        <!-- 查询申请的详细信息 -->
+    <select id="getTb52Info" resultType="com.rlglsys.entity.MTb52UserOffTheJobDetail">
+        SELECT *
+        FROM m_tb52_user_offthejob_detail 
+        WHERE APPLY_NO = #{apply_no}
+        and APPLY_NUMBER = #{max_number}
+    </select>
+    
+    <!-- 插入进修信息 -->
+    <insert id="insertTb29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+        INSERT INTO m_tb29_personalapplication
+        (
+            APPLY_NO,
+            MAX_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            PERSONAL_UNITNO,
+            APPLY_DATE,
+            CHECK_USER,
+            CHECK_UNITNO,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb29Info.apply_no},
+            #{tb29Info.max_number},
+            #{tb29Info.apply_kbn},
+            #{tb29Info.personal_id},
+            #{tb29Info.personal_nm},
+            #{tb29Info.personal_unitno},
+            #{tb29Info.apply_date},
+            #{tb29Info.check_user},
+            #{tb29Info.check_unitno},
+            #{tb29Info.check_result},
+            #{tb29Info.end_mark},
+            #{tb29Info.now_mark},
+            #{tb29Info.will_checkunitno},
+            '1',
+            '0',
+            #{tb29Info.login_user_id},
+            #{tb29Info.login_date},
+            #{tb29Info.login_user_id},
+            #{tb29Info.login_date}
+        )
+    </insert>
+    <!-- 保存不在岗信息 -->
+    <insert id="insertTb52Info"  parameterType="com.rlglsys.entity.MTb52UserOffTheJobDetail">
+        INSERT INTO m_tb52_user_offthejob_detail (
+            APPLY_NO,
+            APPLY_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            CARD_ID,
+            PERSONAL_SEX,
+            UNIT_NO,
+            UNIT_NM,
+            APPLY_TIME,
+            APPLY_REASON,
+            OFFICE,
+            CHECK_RESULT,
+            NOW_MARK,
+            EX_KEY,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES (
+            #{tb52Info.apply_no},
+            #{tb52Info.apply_number},
+            #{tb52Info.apply_kbn},
+            #{tb52Info.personal_id},
+            #{tb52Info.personal_nm},
+            #{tb52Info.card_id},
+            #{tb52Info.personal_sex},
+            #{tb52Info.unit_no},
+            #{tb52Info.unit_nm},
+            #{tb52Info.apply_time},
+            #{tb52Info.apply_reason},
+            #{tb52Info.office},
+            #{tb52Info.check_result},
+            #{tb52Info.now_mark},
+            0,
+            #{tb52Info.login_user_id},
+            #{tb52Info.login_date}, 
+            #{tb52Info.login_user_id},
+            #{tb52Info.login_date}
+        )
+    </insert>
+</mapper>
+

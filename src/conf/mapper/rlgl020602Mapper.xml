@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020602Mapper">
+
+	<select id="getFormList" resultType="com.rlglsys.entity.Mtb60formlist">
+        SELECT *
+        FROM m_tb60_form_list
+        WHERE 1=1 
+       <if test="Mtb60formlist.navi != ''">
+              AND navi=#{ Mtb60formlist.navi}
+       </if>
+       <if test="Mtb60formlist.item_land_flag != ''">
+              AND ITEM_LAND_FLAG=#{ Mtb60formlist.item_land_flag}
+       </if>
+       ORDER BY ITEM_SORT_FLAG
+    </select>
+    <!-- 登录一条新的记录SQL -->
+    <insert id="submitForCredit">
+       INSERT INTO m_tb56_credit_reporting_detail
+			(NAVI
+			,APPLY_NO
+			,PERSONAL_ID
+			,UNIT_NO
+			,CREDIT
+			,SCORE_YEAR
+			,CREDIT_CATEGORY
+			,EXPAND1
+			,EXPAND2
+			,EXPAND3
+			,EXPAND4
+			,EXPAND5
+			,EXPAND6
+			,EXPAND7
+			,EXPAND8
+			,EXPAND9
+			,EXPAND10
+			,EXPAND11
+			,EXPAND12
+			,EXPAND13
+			,EXPAND14
+			,EXPAND15
+			,EXPAND16
+			,EXPAND17
+			,EXPAND18
+			,EXPAND19
+			,EXPAND20
+			,APPLY_STATUS
+			,CHECK_RESULT
+			,COUNTY_CHECKER
+			,COUNTY_CHECK_DATE
+			,COUNTY_CHECK_VIEWS
+			,COUNTY_CHECK_RESULT
+			,DOWNTOWN_CHECKER
+			,DOWNTOWN_CHECK_DATE
+			,DOWNTOWN_CHECK_VIEWS
+			,DOWNTOWN_CHECK_RESULT
+			,MINISTRY_CHECKER
+			,MINISTRY_CHECK_DATE
+			,MINISTRY_CHECK_VIEWS
+			,MINISTRY_CHECK_RESULT
+			,NOW_MARK
+			,END_MARK
+			,WILL_CHECKUNITNO
+			,EX_KEY
+			,DEL_KBN
+			,EXPEND_01
+			,EXPEND_02
+			,EXPEND_03
+			,EXPEND_04
+			,EXPEND_05
+			,LOGIN_USER_ID
+			,LOGIN_DATE
+			,UPDATE_USER_ID
+			,UPDATE_DATE
+			)
+        VALUES (#{rlgl020602.navi}
+				,#{rlgl020602.apply_no}
+				,#{rlgl020602.personal_id}
+				,#{rlgl020602.unit_no}
+				,#{rlgl020602.credit}
+				,#{rlgl020602.score_year}
+				,#{rlgl020602.credit_category}
+				,#{rlgl020602.expand1}
+				,#{rlgl020602.expand2}
+				,#{rlgl020602.expand3}
+				,#{rlgl020602.expand4}
+				,#{rlgl020602.expand5}
+				,#{rlgl020602.expand6}
+				,#{rlgl020602.expand7}
+				,#{rlgl020602.expand8}
+				,#{rlgl020602.expand9}
+				,#{rlgl020602.expand10}
+				,#{rlgl020602.expand11}
+				,#{rlgl020602.expand12}
+				,#{rlgl020602.expand13}
+				,#{rlgl020602.expand14}
+				,#{rlgl020602.expand15}
+				,#{rlgl020602.expand16}
+				,#{rlgl020602.expand17}
+				,#{rlgl020602.expand18}
+				,#{rlgl020602.expand19}
+				,#{rlgl020602.expand20}
+				,#{rlgl020602.apply_status}
+				,#{rlgl020602.check_result}
+				,#{rlgl020602.county_checker}
+				,#{rlgl020602.county_check_date}
+				,#{rlgl020602.county_check_views}
+				,#{rlgl020602.county_check_result}
+				,#{rlgl020602.downtown_checker}
+				,#{rlgl020602.downtown_check_date}
+				,#{rlgl020602.downtown_check_views}
+				,#{rlgl020602.downtown_check_result}
+				,#{rlgl020602.ministry_checker}
+				,#{rlgl020602.ministry_check_date}
+				,#{rlgl020602.ministry_check_views}
+				,#{rlgl020602.ministry_check_result}
+				,#{rlgl020602.now_mark}
+				,#{rlgl020602.end_mark}
+            	,#{rlgl020602.will_checkunitno}
+            	,#{rlgl020602.ex_key}
+            	,#{rlgl020602.del_kbn}
+            	,#{rlgl020602.expend_01}
+            	,#{rlgl020602.expend_02}
+            	,#{rlgl020602.expend_03}
+            	,#{rlgl020602.expend_04}
+            	,#{rlgl020602.expend_05}
+            	,#{rlgl020602.login_user_id}
+            	,#{rlgl020602.login_date}
+            	,#{rlgl020602.update_user_id}
+            	,#{rlgl020602.update_date})
+    </insert>
+    <select id="getForCredit" resultType="String">
+        SELECT credit
+        FROM m_tb69_credit_count
+        WHERE 1=1 
+       <if test="Mtb69creditcount.credit_category != ''">
+              AND credit_category=#{ Mtb69creditcount.credit_category}
+       </if>
+       <if test="Mtb69creditcount.dictionary_cd != ''">
+              AND dictionary_cd=#{ Mtb69creditcount.dictionary_cd}
+       </if>
+       <if test="Mtb69creditcount.second_order != ''">
+              AND second_order=#{ Mtb69creditcount.second_order}
+       </if>
+       <if test="Mtb69creditcount.third_order != ''">
+              AND third_order=#{ Mtb69creditcount.third_order}
+       </if>
+    </select>
+    <select id="getForPublication" resultType="com.rlglsys.entity.Mtb70publication">
+        select PUBLICATION_CD,PUBLICATION_NAME
+		from m_tb70_publication
+		where CHECK_RESULT = '002'
+    </select>
+    <select id="getForPublicationDetail" resultType="com.rlglsys.entity.Mtb70publication">
+        select *
+		from m_tb70_publication
+		WHERE 1=1 
+       <if test="publication_cd != ''">
+              AND PUBLICATION_CD=#{ publication_cd}
+       </if>
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl090909" extends="rlgl" namespace="/">
+		<action name="rlgl090909Init"
+			class="com.rlglsys.action.sysmanage.passwordupdate.Rlgl090909InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090909.jsp</result>
+		</action>
+		<action name="rlgl090909Search"
+			class="com.rlglsys.action.sysmanage.passwordupdate.Rlgl090909SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090909.jsp</result>
+		</action>
+		<action name="rlgl090909Update"
+			class="com.rlglsys.action.sysmanage.passwordupdate.Rlgl090909UpdateAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090909.jsp</result>
+		</action>
+	</package>
+</struts>
+

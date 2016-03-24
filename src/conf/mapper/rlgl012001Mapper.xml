@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl012001Mapper">
+   <select id="getNoEduPeopleList"  resultType="com.rlglsys.bean.Rlgl012001Bean">
+      SELECT DISTINCT A.* ,B.`YEAR` as niandu,C.ADM_NAME  as xingbie  FROM m_tb12_personnel as a LEFT JOIN m_tb66_total_credit AS B  
+      on A.PERSONNEL_ID != B.PERSONAL_ID
+      left join m_tb02_adm as C on A.personnel_gender = C.ADM_NUM  and C.ADM_TYPE_CD='030'
+      WHERE a.DEL_KBN = '0' and  a.CONTINUE_EDUCATION_FLAG ='1'
+      <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+        and A.PERSONNEL_UNIT in 
+        <foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+            open="(" close=")" separator=",">
+            #{lowUnitNo}
+        </foreach>
+        and B.PERSONNEL_UNIT_NO in 
+         <foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+            open="(" close=")" separator=",">
+            #{lowUnitNo}
+        </foreach>
+      </if>
+
+      and B.`YEAR` not in
+        <foreach collection="yearsList" item="years" index="index"
+            open="(" close=")" separator=",">
+            #{years}
+        </foreach>
+      ORDER BY B.YEAR  
+   <if test="rlgl012001Bean.pageCount != null and rlgl012001Bean.pageCount != 0 ">
+   		 LIMIT #{rlgl012001Bean.pageNo},#{rlgl012001Bean.pageCount}
+    </if>
+   </select>
+   <!-- 该方法主要是为了得到list的size值和在导出文件的时候调用，全部导出 -->
+   <select id="getPeopleList" resultType="com.rlglsys.bean.Rlgl012001Bean">
+		SELECT DISTINCT A.* ,B.`YEAR` as niandu,C.ADM_NAME  as xingbie FROM m_tb12_personnel as a LEFT JOIN m_tb66_total_credit AS B  
+	      on A.PERSONNEL_ID != B.PERSONAL_ID
+	      left join m_tb02_adm as C on A.personnel_gender = C.ADM_NUM  and C.ADM_TYPE_CD='030'
+	      WHERE a.DEL_KBN = '0' and a.CONTINUE_EDUCATION_FLAG ='1'
+	      <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+	        and A.PERSONNEL_UNIT in 
+	        <foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+	            open="(" close=")" separator=",">
+	            #{lowUnitNo}
+	        </foreach>
+	        and B.PERSONNEL_UNIT_NO in 
+	         <foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+	            open="(" close=")" separator=",">
+	            #{lowUnitNo}
+	        </foreach>
+	      </if>
+	      and B.`YEAR` not in
+	        <foreach collection="yearsList" item="years" index="index"
+	            open="(" close=")" separator=",">
+	            #{years}
+	        </foreach>
+	      ORDER BY B.YEAR  
+     	 
+   </select>
+   <!-- 得到登陆单位的下级单位 -->
+   <select id="getLowerUnitNoList" resultType="com.rlglsys.bean.Rlgl090103Bean">
+      SELECT * from m_tb04_unit where unit_super = #{unit_no}
+   </select>
+   
+   
+</mapper>

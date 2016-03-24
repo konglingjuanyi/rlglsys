@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="rlgl090507Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.rlglsys.mapper.IRlgl090507Mapper" />
+	</bean>
+	<bean id="rlgl090507Service" parent="baseTxProxy">
+		<property name="target">
+			<bean class="com.rlglsys.service.impl.Rlgl090507ServiceImpl"
+				autowire="byName" />
+		</property>
+	</bean>
+</beans>

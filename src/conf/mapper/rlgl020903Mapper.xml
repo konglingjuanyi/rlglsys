@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020903Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020903Bean" id="resultInfoList">
+      <!-- 姓名-->
+      <result property="personnelNm" column="personnelNm"/>
+      <!-- 身份证号 -->
+      <result property="personnelCardId" column="personnelCardId"/>
+      <!-- 单位编号 -->
+      <result property="personnelUnitNo" column="personnelUnitNo"/>
+      <!-- 单位名称 -->
+      <result property="personnelUnitNm" column="personnelUnitNm"/>
+      <!-- 科室编号 -->
+      <result property="personnelSectionId" column="personnelSectionId"/>
+      <!-- 科室名称 -->
+      <result property="personnelSectionName" column="personnelSectionName"/>
+      <!-- 职称编号 -->
+      <result property="departmentValue" column="departmentValue"/>
+      <!-- 职称名称-->
+      <result property="departmentName" column="departmentName"/>
+      <!-- 合计学分 -->
+      <result property="sumCredit" column="sumCredit"/>
+      <!-- 专业 -->
+      <result property="protype" column="protype"/>
+      <!-- 通过课程门数 -->
+      <result property="courseno" column="courseno"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-证书人员学分达标情况明细表查询SQL -->
+  <select id="doResultList" resultMap="resultInfoList">
+     select 
+       <!-- 姓名 -->
+       tb01.USER_NAME as personnelNm,
+       <!-- 身份证号 -->
+       tb01.PERSONNEL_ID as personnelCardId,
+       <!-- 单位编号 -->
+       tb01.UNIT_NO as personnelUnitNo,
+       <!-- 科室编号 -->
+       tb01.SECTION_ID as personnelSectionId,
+       <!-- 职称编号 -->
+       (select 
+          mid(LEVEL,3,2) 
+        from 
+          m_tb18_personnel_professional_info 
+        where 
+          personnel_id = tb01.PERSONNEL_ID
+          order by get_time desc 
+          limit 0,1
+        ) as departmentValue
+     from 
+       m_tb01_user tb01,
+       m_tb12_personnel tb12,
+       m_tb18_personnel_professional_info tb18,
+       m_tb65_certificate_apply tb65
+     where 
+       tb01.del_kbn = '0'
+       and tb12.del_kbn = '0'
+       and tb18.del_kbn = '0'
+       and tb01.PERSONNEL_ID = tb12.personnel_id
+       and tb01.PERSONNEL_ID = tb18.personnel_id
+       and tb01.PERSONNEL_ID = tb65.PERSONNELID
+       and tb01.UNIT_NO = tb65.UNITNO
+       <!-- 是否继续医学教育：1是 -->
+       and tb12.CONTINUE_EDUCATION_FLAG = '1'
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020903.unitNo != ''">
+           or tb01.unit_no = #{rlgl020903.unitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <!-- <if test="rlgl020903.lowerUnitFlag">
+           or tb01.unit_no in (select 
+                                 unit_no
+                               from 
+                                 m_tb04_unit
+                               where
+                                 del_kbn = '0'
+                                 <if test="rlgl020903.unitNo != ''">
+                                 and unit_super = #{rlgl020903.unitNo}
+                                 </if>
+                               )
+           </if> -->
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020903.unit_assort == '001' and rlgl020903.valueKey != '' and rlgl020903.unitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020903.valueKey}','%')
+                               )
+           </if>
+           )
+       <!-- 科室 -->
+       <if test="rlgl020903.personnelSectionId != ''">
+       and tb01.SECTION_ID = #{rlgl020903.personnelSectionId}
+       </if>
+       <!-- 姓名 -->
+       <if test="rlgl020903.personnelNm != ''">
+       and tb01.USER_NAME like '%${rlgl020903.personnelNm}%'
+       </if>
+       <!-- 身份证号 -->
+       <if test="rlgl020903.personnelCardId != ''">
+       and tb01.PERSONNEL_ID = #{rlgl020903.personnelCardId}
+       </if>
+       <!-- 职称 -->
+       <if test="rlgl020903.departmentValue != ''">
+       and mid(tb18.LEVEL,3,2) = #{rlgl020903.departmentValue}
+       </if>
+       <!-- 证书分类 -->
+       <if test="rlgl020903.certificateValue != ''">
+       and tb65.CERT_NO = #{rlgl020903.certificateValue}
+       </if>
+       group by tb01.PERSONNEL_ID
+       <if test="rlgl020903.pageCount != 0 and rlgl020903.pageCount != null">
+       LIMIT #{rlgl020903.pageNo},#{rlgl020903.pageCount}
+       </if>
+       ;
+  </select>
+  <!-- 继续医学教育-统计分析-证书人员学分达标情况明细表记录数查询SQL -->
+  <select id="getResultCount" resultType="int">
+     select 
+       count(DISTINCT tb01.PERSONNEL_ID)
+     from 
+       m_tb01_user tb01,
+       m_tb12_personnel tb12,
+       m_tb18_personnel_professional_info tb18,
+       m_tb65_certificate_apply tb65
+     where 
+       tb01.del_kbn = '0'
+       and tb12.del_kbn = '0'
+       and tb18.del_kbn = '0'
+       and tb65.del_kbn = '0'
+       and tb01.PERSONNEL_ID = tb12.personnel_id
+       and tb01.PERSONNEL_ID = tb18.personnel_id
+       and tb01.PERSONNEL_ID = tb65.PERSONNELID
+       and tb01.UNIT_NO = tb65.UNITNO
+       <!-- 是否继续医学教育：1是 -->
+       and tb12.CONTINUE_EDUCATION_FLAG = '1'
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020903.unitNo != ''">
+           or tb01.unit_no = #{rlgl020903.unitNo}
+           </if>
+<!--            以是否包含下级单位为检索条件
+           <if test="rlgl020903.lowerUnitFlag">
+           or tb01.unit_no in (select 
+                                 unit_no
+                               from 
+                                 m_tb04_unit
+                               where
+                                 del_kbn = '0'
+                                 <if test="rlgl020903.unitNo != ''">
+                                 and unit_super = #{rlgl020903.unitNo}
+                                 </if>
+                               )
+           </if> -->
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020903.unit_assort == '001' and rlgl020903.valueKey != '' and rlgl020903.unitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020903.valueKey}','%')
+                               )
+           </if>
+           )
+       <!-- 科室 -->
+       <if test="rlgl020903.personnelSectionId != ''">
+       and tb01.SECTION_ID = #{rlgl020903.personnelSectionId}
+       </if>
+       <!-- 姓名 -->
+       <if test="rlgl020903.personnelNm != ''">
+       and tb01.USER_NAME like '%${rlgl020903.personnelNm}'
+       </if>
+       <!-- 身份证号 -->
+       <if test="rlgl020903.personnelCardId != ''">
+       and tb01.PERSONNEL_ID = #{rlgl020903.personnelCardId}
+       </if>
+       <!-- 职称 -->
+       <if test="rlgl020903.departmentValue != ''">
+       and mid(tb18.LEVEL,3,2) = #{rlgl020903.departmentValue}
+       </if>
+       <!-- 证书分类 -->
+       <if test="rlgl020903.certificateValue != ''">
+       and tb65.CERT_NO = #{rlgl020903.certificateValue}
+       </if>
+       ;
+  </select>
+  <!--证书分类明细取得处理SQL-->
+  <select id="getTb65Info" resultType="Mtb65CertificateApply">
+      SELECT *
+      FROM m_tb65_certificate_apply
+      WHERE DEL_KBN = '0'
+        <!-- 证书编号 -->
+        <if test="cert_no != ''">
+        AND CERT_NO = #{cert_no}
+        </if>
+        <!-- 身份证号 -->
+        <if test="personnal_cardId != ''">
+        AND PERSONNELID = #{personnal_cardId}
+        </if>
+        <!-- 单位编号 -->
+        <if test="unit_no != ''">
+        AND UNITNO = #{unit_no}
+        </if>
+        AND APPLY_NUMBER = (SELECT MAX(APPLY_NUMBER)
+                            FROM m_tb65_certificate_apply
+                            WHERE DEL_KBN = '0'
+                                <!-- 证书编号 -->
+                                <if test="cert_no != ''">
+                                AND CERT_NO = #{cert_no}
+                                </if>
+                                <!-- 身份证号 -->
+                                <if test="personnal_cardId != ''">
+                                AND PERSONNELID = #{personnal_cardId}
+                                </if>
+                                <!-- 单位编号 -->
+                                <if test="unit_no != ''">
+                                AND UNITNO = #{unit_no}
+                                </if>
+                           )
+        ;
+  </select>
+  <!-- 继续医学教育-统计分析-缴费未完成考试人员情况明细表查询SQL -->
+  <select id="getResultList" resultMap="resultInfoList">
+			
+			SELECT 
+			U.USER_NAME as personnelNm,
+			U.PERSONNEL_ID as personnelCardId,
+			U.UNIT_NO as personnelUnitNo,
+			N.UNIT_NM as personnelUnitNm, 
+			U.SECTION_ID as personnelSectionId,
+			H.SECTION_NAME as personnelSectionName, 
+			ADM1.ADM_NAME AS departmentName,
+			ADM2.ADM_NAME AS protype,
+			IFNULL(M1.courseno,0) as courseno
+			FROM
+			(SELECT 
+			M.userId,C.courseno
+			FROM t_tb02_prepay_msg M 
+			LEFT JOIN ( select B.courseno,B.USER_ID from 
+			(select COUNT(A.USER_ID) AS courseno,A.USER_ID from m_tb81_course_exams A where A.DEL_KBN = 0 AND A.CREDIT_YEAR = #{rlgl020903.yearString} GROUP BY A.USER_ID) B 
+			where B.courseno &gt; 2) C 
+			ON M.userId = C.USER_ID  
+			WHERE M.CLUM004 LIKE '%7yIBpaqA7Zw=' AND M.CLUM006 = #{rlgl020903.yearString} AND M.DEL_KBN = 0 AND C.courseno IS NULL) M1
+			INNER JOIN m_tb01_user U 
+			ON M1.userId = U.USER_ID
+			LEFT JOIN m_tb04_unit as N 
+			ON U.UNIT_NO = N.UNIT_NO AND N.DEL_KBN = 0 
+			LEFT JOIN m_tb22_hospital_section AS H ON H.UNIT_NO = U.UNIT_NO 
+			AND H.SECTION_ID = U.SECTION_ID 
+			AND H.DEL_KBN = 0 LEFT JOIN m_tb18_personnel_professional_info AS P 
+			ON U.PERSONNEL_ID=P.PERSONNEL_ID 
+			LEFT JOIN m_tb02_adm AS ADM1 
+			ON ADM1.ADM_TYPE_CD = '087' 
+			AND ADM1.ADM_NUM = MID(P.LEVEL,3,2) 
+			AND ADM1.DEL_KBN = 0 
+			LEFT JOIN m_tb19_personnel_practitioners_info AS D 
+			ON U.PERSONNEL_ID=D.PERSONNEL_ID 
+			LEFT JOIN m_tb02_adm AS ADM2 ON ADM2.ADM_TYPE_CD = '008' 
+			AND ADM2.ADM_NUM = D.type AND ADM2.DEL_KBN = 0 
+			WHERE U.DEL_KBN = 0 
+		<if test="rlgl020903.unitNo != null and rlgl020903.unitNo != ''">
+			AND U.UNIT_NO LIKE CONCAT('', #{rlgl020903.unitNo}, '%')
+		</if>
+		<if test="rlgl020903.personnelSectionId != null and rlgl020903.personnelSectionId != ''">
+			AND U.SECTION_ID = #{rlgl020903.personnelSectionId}
+		</if>
+		<if test="rlgl020903.departmentValue != null and rlgl020903.departmentValue != ''">
+			AND mid(P.level,3,2) = #{rlgl020903.departmentValue}
+		</if>
+		<if test="rlgl020903.protypeValue != null and rlgl020903.protypeValue != ''">
+			AND D.TYPE = #{rlgl020903.protypeValue}
+		</if>      
+       <if test="rlgl020903.pageCount != 0 and rlgl020903.pageCount != null">
+       LIMIT #{rlgl020903.pageNo},#{rlgl020903.pageCount}
+       </if>
+       ;
+
+  </select>
+  <!-- 继续医学教育-统计分析-缴费未通过考试课程数记录数查询SQL -->
+  <select id="getResultCount1" resultType="int">
+     select 
+       count(DISTINCT U.PERSONNEL_ID)
+			FROM
+			(SELECT 
+			M.userId,C.courseno
+			FROM t_tb02_prepay_msg M 
+			LEFT JOIN ( select B.courseno,B.USER_ID from 
+			(select COUNT(A.USER_ID) AS courseno,A.USER_ID from m_tb81_course_exams A where A.DEL_KBN = 0 AND A.CREDIT_YEAR = #{rlgl020903.yearString} GROUP BY A.USER_ID) B 
+			where B.courseno &gt; 2) C 
+			ON M.userId = C.USER_ID  
+			WHERE M.CLUM004 LIKE '%7yIBpaqA7Zw=' AND M.CLUM006 = #{rlgl020903.yearString} AND M.DEL_KBN = 0 AND C.courseno IS NULL) M1
+			INNER JOIN m_tb01_user U 
+			ON M1.userId = U.USER_ID
+			LEFT JOIN m_tb04_unit as N 
+			ON U.UNIT_NO = N.UNIT_NO AND N.DEL_KBN = 0 
+			LEFT JOIN m_tb22_hospital_section AS H ON H.UNIT_NO = U.UNIT_NO 
+			AND H.SECTION_ID = U.SECTION_ID 
+			AND H.DEL_KBN = 0 LEFT JOIN m_tb18_personnel_professional_info AS P 
+			ON U.PERSONNEL_ID=P.PERSONNEL_ID 
+			LEFT JOIN m_tb02_adm AS ADM1 
+			ON ADM1.ADM_TYPE_CD = '087' 
+			AND ADM1.ADM_NUM = MID(P.LEVEL,3,2) 
+			AND ADM1.DEL_KBN = 0 
+			LEFT JOIN m_tb19_personnel_practitioners_info AS D 
+			ON U.PERSONNEL_ID=D.PERSONNEL_ID 
+			LEFT JOIN m_tb02_adm AS ADM2 ON ADM2.ADM_TYPE_CD = '008' 
+			AND ADM2.ADM_NUM = D.type AND ADM2.DEL_KBN = 0 
+			WHERE U.DEL_KBN = 0
+		<if test="rlgl020903.unitNo != null and rlgl020903.unitNo != ''">
+			AND U.UNIT_NO LIKE CONCAT('', #{rlgl020903.unitNo}, '%')
+		</if>
+        <if test="rlgl020903.personnelSectionId != null and rlgl020903.personnelSectionId != ''">
+			AND U.SECTION_ID = #{rlgl020903.personnelSectionId}
+		</if>
+		<if test="rlgl020903.departmentValue != null and rlgl020903.departmentValue != ''">
+			AND mid(P.level,3,2) = #{rlgl020903.departmentValue}
+		</if>
+		<if test="rlgl020903.protypeValue != null and rlgl020903.protypeValue != ''">
+			AND D.TYPE = #{rlgl020903.protypeValue}
+		</if>
+       ;
+  </select>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100105Mapper">
+
+    <select id="getMtb04LowerUnitInfoList" resultType="com.rlglsys.bean.Rlgl100105Bean">
+        SELECT
+            M.*
+            ,M1.ADM_NAME AS unit_pamentnm
+        FROM m_tb04_unit M
+        LEFT JOIN m_tb02_adm M1 ON
+        M.UNIT_PAYMENT = M1.ADM_NUM
+        AND M1.ADM_TYPE_CD = '236'
+        AND M1.DEL_KBN='0'
+        
+        WHERE M.UNIT_SUPER=#{rlgl100105Bean.unit_no}
+            <if test="rlgl100105Bean.unit_no_sel != '' and rlgl100105Bean.unit_no_sel != null">
+            AND M.UNIT_NO = #{rlgl100105Bean.unit_no_sel}
+            </if>
+            <if test="rlgl100105Bean.unit_nm_sel != '' and rlgl100105Bean.unit_nm_sel != null">
+            AND M.UNIT_NM LIKE CONCAT('%', #{rlgl100105Bean.unit_nm_sel}, '%')
+            </if>
+            AND M.DEL_KBN='0'
+          <if test="rlgl100105Bean.pageCount != 0 and rlgl100105Bean.pageCount != null">
+           LIMIT #{rlgl100105Bean.pageNo},#{rlgl100105Bean.pageCount}
+          </if>
+    </select>
+    
+     <select id="getMtb04LowerUnitCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb04_unit
+        WHERE UNIT_SUPER=#{rlgl100105Bean.unit_no}
+            AND DEL_KBN='0'
+        <if test="rlgl100105Bean.unit_no_sel != '' and rlgl100105Bean.unit_no_sel != null">
+            AND UNIT_NO = #{rlgl100105Bean.unit_no_sel}
+        </if>
+        <if test="rlgl100105Bean.unit_nm_sel != '' and rlgl100105Bean.unit_nm_sel != null">
+            AND UNIT_NM LIKE CONCAT('%', #{rlgl100105Bean.unit_nm_sel}, '%')
+        </if>
+    </select>
+
+    <!-- 变更支付方式-->
+    <update id="updateUnitPaymentInfo">
+        UPDATE m_tb04_unit
+        SET UNIT_PAYMENT = #{rlgl100105Bean.unit_payment}
+            ,UPDATE_USER_ID = #{rlgl100105Bean.update_user_id}
+            ,UPDATE_DATE = #{rlgl100105Bean.update_date}
+        WHERE 
+        UNIT_NO IN 
+         <foreach collection="rlgl100105Bean.unitList" index="index" item="item" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+    </update>
+    
+      <!-- 插入课件信息 -->
+  <insert id="insertCourseWareInfoData">
+	insert into m_tb63_courseware
+	(
+		COURSE_ID,
+		COURSE_NAME,
+		COURSE_EXPERT,
+		COURSE_EXPERT_UNIT,
+		XUEFEN_LEIBIE,
+		XUEFEN,
+		COURSE_LEVEL,
+		COURSE_CATAGORY,
+		COURSE_CATAGORY2,
+		COURSE_CATAGORY3,
+		ISALLCOURSE,
+		COURSE_PRICE,
+		COURSE_SUPPORT,
+		BEGIN_DATE,
+		END_DATE,
+		COURSE_EXPLAIN,
+		BIXIU_FLAG,
+		YOUHUI_FLAG,
+		YOUHUI_PRICE,
+		VIDEO_FLAG,
+		COURSE_URL,
+		COURSE_IMAGE_URL,
+		LOCAL_FLAG,
+		EX_KEY,
+		DEL_KBN,
+		EXPEND_01,
+		EXPEND_02,
+		EXPEND_03,
+		EXPEND_04,
+		EXPEND_05,
+		LOGIN_USER_ID,
+		LOGIN_DATE,
+		UPDATE_USER_ID,
+		UPDATE_DATE
+	)
+	VALUES
+	<foreach collection="rlgl100102BeanInfoList" item="rlgl100102Bean" index="index" separator=",">  
+	(
+	  #{rlgl100102Bean.course_id},
+	  #{rlgl100102Bean.course_name},
+	  #{rlgl100102Bean.course_expert},
+	  #{rlgl100102Bean.course_expert_unit},
+	  #{rlgl100102Bean.xuefen_leibie},
+	  #{rlgl100102Bean.xuefen},
+	  #{rlgl100102Bean.course_level},
+	  #{rlgl100102Bean.course_catagory},
+	  #{rlgl100102Bean.course_catagory2},
+	  #{rlgl100102Bean.course_catagory3},
+	  #{rlgl100102Bean.isallcourse},
+	  #{rlgl100102Bean.course_price},
+	  #{rlgl100102Bean.course_support},
+	  #{rlgl100102Bean.begin_date},
+	  #{rlgl100102Bean.end_date},
+	  #{rlgl100102Bean.course_explain},
+	  #{rlgl100102Bean.bixiu_flag},
+	  #{rlgl100102Bean.youhui_flag},
+	  #{rlgl100102Bean.youhui_price},
+	  #{rlgl100102Bean.video_flag},
+	  #{rlgl100102Bean.course_url},
+	  #{rlgl100102Bean.course_image_url},
+	  #{rlgl100102Bean.local_flag},
+	  '1',
+	  '0',
+	  #{rlgl100102Bean.expend_01},
+	  #{rlgl100102Bean.expend_02},
+	  #{rlgl100102Bean.expend_03},
+	  #{rlgl100102Bean.expend_04},
+	  #{rlgl100102Bean.expend_05},
+	  #{rlgl100102Bean.login_user_id},
+	  #{rlgl100102Bean.login_date},
+	  #{rlgl100102Bean.update_user_id},
+	  #{rlgl100102Bean.update_date}
+	) 
+	</foreach>
+    </insert>
+    <!--根据编号来查询课件总数  -->
+    <select id="getCourseWareCountById" resultType="int">
+       select count(*) from  m_tb63_courseware
+       where  DEL_KBN ='0'
+       AND COURSE_ID = #{rlgl100102Bean.course_id}
+    </select>
+    <!--根据编号来查询课  -->
+    <select id="getCourseWareInfoList" resultType="com.rlglsys.bean.Rlgl100102Bean">
+       select 
+         *
+       from  m_tb63_courseware
+       where  DEL_KBN ='0'
+        <if test="rlgl100102Bean.course_id != '' and rlgl100102Bean.course_id != null">
+        AND COURSE_ID = #{rlgl100102Bean.course_id}
+        </if>
+        <if test="rlgl100102Bean.course_name != '' and rlgl100102Bean.course_name != null">
+        AND course_name LIKE CONCAT('%', #{rlgl100102Bean.course_name}, '%')
+        </if>
+    </select>
+</mapper>

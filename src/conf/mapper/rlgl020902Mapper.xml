@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020902Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020902Bean" id="resultInfoList">
+      <!-- 姓名-->
+      <result property="personnelNm" column="personnelNm"/>
+      <!-- 身份证号 -->
+      <result property="personnelCardId" column="personnelCardId"/>
+      <!-- 单位编号 -->
+      <result property="personnelUnitNo" column="personnelUnitNo"/>
+      <!-- 科室编号 -->
+      <result property="personnelSectionId" column="personnelSectionId"/>
+      <!-- 职称编号 -->
+      <result property="departmentValue" column="departmentValue"/>
+      <!-- 一类学分 -->
+      <result property="oneCredit" column="oneCredit"/>
+      <!-- 二类学分 -->
+      <result property="twoCredit" column="twoCredit"/>
+      <!-- 合计学分 -->
+      <result property="sumCredit" column="sumCredit"/>
+      <!-- 考核开始时间 -->
+      <result property="checkStartTime" column="checkStartTime"/>
+      <!-- 考核结束时间 -->
+      <result property="checkEndTime" column="checkEndTime"/>
+      <!-- 必修课情况 -->
+      <result property="required_course" column="required_course"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-年度List查询SQL -->
+  <select id="getYearList" resultType="Mtb66TotalCredit">
+     select 
+       *
+     from 
+       m_tb66_total_credit
+     where 
+       DEL_KBN = '0'
+       and YEAR >= #{rlgl020902.syear}
+       <![CDATA[and YEAR <= #{rlgl020902.eyear}]]>
+       and PERSONNEL_UNIT_NO = #{rlgl020902.unitNo}
+     group by YEAR
+     order by YEAR desc;
+  </select>
+  <!-- 继续医学教育-统计分析-年度人员学分达标情况明细表查询SQL -->
+  <select id="doResultList" resultMap="resultInfoList">
+     select 
+       <!-- 姓名 -->
+       tb01.USER_NAME as personnelNm,
+       <!-- 身份证号 -->
+       tb01.PERSONNEL_ID as personnelCardId,
+       <!-- 单位编号 -->
+       tb01.UNIT_NO as personnelUnitNo,
+       <!-- 科室编号 -->
+       tb01.SECTION_ID as personnelSectionId,
+       <!-- 职称编号 -->
+       (select 
+          mid(LEVEL,3,2) 
+        from 
+          m_tb18_personnel_professional_info 
+        where 
+          personnel_id = tb01.PERSONNEL_ID
+          order by get_time desc 
+          limit 0,1
+        ) as departmentValue,
+        <!--
+        一类学分
+        CREDIT_I as oneCredit,
+        二类学分
+        CREDIT_II as twoCredit,
+        合计学分
+        (tb66.CREDIT_I + tb66.CREDIT_II) as sumCredit -->
+        <!-- 考核开始时间 -->
+        tb65.CHECKSTARTDATE as checkStartTime,
+        <!-- 考核开始时间 -->
+        tb65.CHECKENDDATE as checkEndTime
+     from 
+       m_tb01_user tb01,
+       m_tb12_personnel tb12,
+       m_tb18_personnel_professional_info tb18,
+       <!-- m_tb66_total_credit tb66, -->
+       <!-- 证书申请 -->
+       m_tb65_certificate_apply tb65
+     where 
+       tb01.del_kbn = '0'
+       and tb12.del_kbn = '0'
+       and tb18.del_kbn = '0'
+       and tb01.PERSONNEL_ID = tb12.personnel_id
+       and tb01.PERSONNEL_ID = tb18.personnel_id
+       <!-- and tb01.PERSONNEL_ID = tb66.personal_id -->
+       and tb01.PERSONNEL_ID = tb65.PERSONNELID
+       and tb01.UNIT_NO = tb65.UNITNO
+       <!-- 是否继续医学教育：1是 -->
+       and tb12.CONTINUE_EDUCATION_FLAG = '1'
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020902.unitNo != ''">
+           or tb01.unit_no = #{rlgl020902.unitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <if test="rlgl020902.lowerUnitFlag">
+           or tb01.unit_no in (select 
+                                 unit_no
+                               from 
+                                 m_tb04_unit
+                               where
+                                 del_kbn = '0'
+                                 <if test="rlgl020902.unitNo != ''">
+                                 and unit_super = #{rlgl020902.unitNo}
+                                 </if>
+                               )
+           </if>
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020902.unit_assort == '001' and rlgl020902.valueKey != '' and rlgl020902.unitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020902.valueKey}','%')
+                               )
+           </if>
+           )
+       <!-- 科室 -->
+       <if test="rlgl020902.personnelSectionId != ''">
+       and tb01.SECTION_ID = #{rlgl020902.personnelSectionId}
+       </if>
+       <!-- 姓名 -->
+       <if test="rlgl020902.personnelNm != ''">
+       and tb01.USER_NAME like '%${rlgl020902.personnelNm}%'
+       </if>
+       <!-- 身份证号 -->
+       <if test="rlgl020902.personnelCardId != ''">
+       and tb01.PERSONNEL_ID = #{rlgl020902.personnelCardId}
+       </if>
+       <!-- 职称 -->
+       <if test="rlgl020902.departmentValue != ''">
+       and mid(tb18.LEVEL,3,2) = #{rlgl020902.departmentValue}
+       </if>
+       <!-- 证书申请 -->
+       and concat(tb65.APPLY_NO,tb65.APPLY_NUMBER) in (select 
+                                                          concat(m_tb65_certificate_apply.APPLY_NO,
+                                                                 max(m_tb65_certificate_apply.APPLY_NUMBER))
+                                                       from 
+                                                          m_tb01_user,
+                                                          m_tb65_certificate_apply
+                                                       where 
+                                                          m_tb01_user.del_kbn = '0'
+                                                          and m_tb65_certificate_apply.del_kbn = '0'
+                                                          and m_tb01_user.unit_no = m_tb65_certificate_apply.UNITNO
+                                                          and (1 = 2
+                                                              <!-- 以单位编号为检索条件 -->
+                                                              <if test="rlgl020902.unitNo != ''">
+                                                              or m_tb01_user.unit_no = #{rlgl020902.unitNo}
+                                                              </if>
+                                                              <!-- 以是否包含下级单位为检索条件 -->
+                                                              <if test="rlgl020902.lowerUnitFlag">
+                                                              or m_tb01_user.unit_no in (select 
+                                                                                    unit_no
+                                                                                  from 
+                                                                                    m_tb04_unit
+                                                                                  where
+                                                                                    del_kbn = '0'
+                                                                                    <if test="rlgl020902.unitNo != ''">
+                                                                                    and unit_super = #{rlgl020902.unitNo}
+                                                                                    </if>
+                                                                                  )
+                                                              </if>
+                                                              <!-- 市卫生局，区县卫生局统计的情况 -->
+                                                              <if test="rlgl020902.unit_assort == '001' and rlgl020902.valueKey != '' and rlgl020902.unitNo == ''">
+                                                              or m_tb01_user.UNIT_NO in (select 
+                                                                                    UNIT_NO
+                                                                                  from 
+                                                                                    m_tb04_unit
+                                                                                  where
+                                                                                    DEL_KBN = '0'
+                                                                                    and UNIT_ASSORT = '002'
+                                                                                    and AREA_ID like CONCAT('${rlgl020902.valueKey}','%')
+                                                                                  )
+                                                              </if>
+                                                              )
+                                                              GROUP BY m_tb65_certificate_apply.APPLY_NO
+                                                          )
+       <!-- 年度 -->
+       <!-- <if test="rlgl020902.selectYear != ''">
+       and tb66.YEAR = #{rlgl020902.selectYear}
+       </if> -->
+       group by tb01.PERSONNEL_ID
+       <if test="rlgl020902.pageCount != 0 and rlgl020902.pageCount != null">
+       LIMIT #{rlgl020902.pageNo},#{rlgl020902.pageCount}
+       </if>
+       ;
+  </select>
+  <!-- 继续医学教育-统计分析-年度人员学分达标情况明细表记录数查询SQL -->
+  <select id="getResultCount" resultType="int">
+     select 
+       count(DISTINCT tb01.PERSONNEL_ID)
+     from 
+       m_tb01_user tb01,
+       m_tb12_personnel tb12,
+       m_tb18_personnel_professional_info tb18,
+       <!-- m_tb66_total_credit tb66 -->
+       <!-- 证书申请 -->
+       m_tb65_certificate_apply tb65
+     where 
+       tb01.del_kbn = '0'
+       and tb12.del_kbn = '0'
+       and tb18.del_kbn = '0'
+       and tb01.PERSONNEL_ID = tb12.personnel_id
+       and tb01.PERSONNEL_ID = tb18.personnel_id
+       <!-- and tb01.PERSONNEL_ID = tb66.personal_id -->
+       and tb01.PERSONNEL_ID = tb65.PERSONNELID
+       and tb01.UNIT_NO = tb65.UNITNO
+       <!-- 是否继续医学教育：1是 -->
+       and tb12.CONTINUE_EDUCATION_FLAG = '1'
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020902.unitNo != ''">
+           or tb01.unit_no = #{rlgl020902.unitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <if test="rlgl020902.lowerUnitFlag">
+           or tb01.unit_no in (select 
+                                 unit_no
+                               from 
+                                 m_tb04_unit
+                               where
+                                 del_kbn = '0'
+                                 <if test="rlgl020902.unitNo != ''">
+                                 and unit_super = #{rlgl020902.unitNo}
+                                 </if>
+                               )
+           </if>
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020902.unit_assort == '001' and rlgl020902.valueKey != '' and rlgl020902.unitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020902.valueKey}','%')
+                               )
+           </if>
+           )
+       <!-- 科室 -->
+       <if test="rlgl020902.personnelSectionId != ''">
+       and tb01.SECTION_ID = #{rlgl020902.personnelSectionId}
+       </if>
+       <!-- 姓名 -->
+       <if test="rlgl020902.personnelNm != ''">
+       and tb01.USER_NAME like '%${rlgl020902.personnelNm}'
+       </if>
+       <!-- 身份证号 -->
+       <if test="rlgl020902.personnelCardId != ''">
+       and tb01.PERSONNEL_ID = #{rlgl020902.personnelCardId}
+       </if>
+       <!-- 职称 -->
+       <if test="rlgl020902.departmentValue != ''">
+       and mid(tb18.LEVEL,3,2) = #{rlgl020902.departmentValue}
+       </if>
+       <!-- 证书申请 -->
+       and concat(tb65.APPLY_NO,tb65.APPLY_NUMBER) in (select 
+                                                          concat(m_tb65_certificate_apply.APPLY_NO,
+                                                                 max(m_tb65_certificate_apply.APPLY_NUMBER))
+                                                       from 
+                                                          m_tb01_user,
+                                                          m_tb65_certificate_apply
+                                                       where 
+                                                          m_tb01_user.del_kbn = '0'
+                                                          and m_tb65_certificate_apply.del_kbn = '0'
+                                                          and m_tb01_user.unit_no = m_tb65_certificate_apply.UNITNO
+                                                          and (1 = 2
+                                                              <!-- 以单位编号为检索条件 -->
+                                                              <if test="rlgl020902.unitNo != ''">
+                                                              or m_tb01_user.unit_no = #{rlgl020902.unitNo}
+                                                              </if>
+                                                              <!-- 以是否包含下级单位为检索条件 -->
+                                                              <if test="rlgl020902.lowerUnitFlag">
+                                                              or m_tb01_user.unit_no in (select 
+                                                                                    unit_no
+                                                                                  from 
+                                                                                    m_tb04_unit
+                                                                                  where
+                                                                                    del_kbn = '0'
+                                                                                    <if test="rlgl020902.unitNo != ''">
+                                                                                    and unit_super = #{rlgl020902.unitNo}
+                                                                                    </if>
+                                                                                  )
+                                                              </if>
+                                                              <!-- 市卫生局，区县卫生局统计的情况 -->
+                                                              <if test="rlgl020902.unit_assort == '001' and rlgl020902.valueKey != '' and rlgl020902.unitNo == ''">
+                                                              or m_tb01_user.UNIT_NO in (select 
+                                                                                    UNIT_NO
+                                                                                  from 
+                                                                                    m_tb04_unit
+                                                                                  where
+                                                                                    DEL_KBN = '0'
+                                                                                    and UNIT_ASSORT = '002'
+                                                                                    and AREA_ID like CONCAT('${rlgl020902.valueKey}','%')
+                                                                                  )
+                                                              </if>
+                                                              )
+                                                              GROUP BY m_tb65_certificate_apply.APPLY_NO
+                                                          )
+       <!-- 年度 -->
+       <!-- <if test="rlgl020902.selectYear != ''">
+       and tb66.YEAR = #{rlgl020902.selectYear}
+       </if> -->
+       ;
+  </select>
+  <select id="getCerditYearId" resultType="String">
+   select 
+     CREDIT_YEAR_ID
+   from 
+     m_tb76_credit_year_set
+   where
+     1 = 1
+     and DEL_KBN = '0'
+     <if test="area_id != ''">
+     and AREA_ID = #{area_id}
+     </if>
+  </select>
+</mapper>

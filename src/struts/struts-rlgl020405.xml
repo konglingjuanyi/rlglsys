@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 继续医学教育项目培训班>项目举办申请 -->
+<struts>
+    <package name="rlgl020405" extends="rlgl" namespace="/">
+       <!-- 查看三名申请列表 -->
+       <action name="rlgl020405Init" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020405InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl020405_H.jsp</result>
+       </action>
+       <!-- 进入项目举办申请页面 -->
+       <action name="rlgl020405Apply" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020405ApplyAction" method="execute">
+           <result name="success">/WEB-INF/jsp/rlgl020405_I.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl020405_I.jsp</result>
+       </action>
+       <!-- 提交项目举办申请，跳转到申请一览-->
+       <action name="rlgl020405Commit" class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020405CommitAction" method="execute">
+           <result name="success" type="redirectAction">rlgl020406Init</result>
+           <result name="error">/WEB-INF/jsp/rlgl020405_I.jsp</result>
+       </action>
+    </package>
+</struts>
+

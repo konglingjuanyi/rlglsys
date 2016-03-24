@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010902Mapper">
+  <resultMap type="com.rlglsys.bean.Rlgl010902Bean" id="unitInforList">
+    <result property="unit_no" column="unit_no"/>
+    <result property="unit_nm" column="unit_nm"/>
+    <result property="unit_super" column="unit_super"/>
+    <result property="unit_status" column="unit_status"/>
+    <result property="escrow_unit_kbn" column="escrow_unit_kbn"/>
+    <result property="escrow_unit_no" column="escrow_unit_no"/>
+    <result property="unit_lower" column="unit_lower"/>
+  </resultMap>
+  <!-- 人员基本信息综合查询一览SQL -->
+  <select id="getSearchUnitInfo" resultMap="unitInforList">
+      SELECT 
+        M_TB04_UNIT.UNIT_NO as unit_no,
+        M_TB04_UNIT.UNIT_NM as unit_nm,
+        M_TB04_UNIT.UNIT_SUPER as unit_super,
+        M_TB04_UNIT.UNIT_STATUS as unit_status,
+        M_TB04_UNIT.ESCROW_UNIT_KBN as escrow_unit_kbn,
+        M_TB04_UNIT.ESCROW_UNIT_NO as escrow_unit_no,
+        M_TB04_UNIT.UNIT_LOWER as unit_lower
+      FROM 
+        M_TB04_UNIT
+      WHERE 
+          DEL_KBN = '0'
+         <if test="rlgl010902.unit_no != ''">
+          AND M_TB04_UNIT.UNIT_NO = #{rlgl010902.unit_no}
+         </if>
+         <if test="rlgl010902.unit_area != ''">
+         AND M_TB04_UNIT.AREA_ID = #{rlgl010902.unit_area}
+         </if>
+         <if test="rlgl010902.unit_nm != ''">
+         AND M_TB04_UNIT.UNIT_NM like '%${rlgl010902.unit_nm}%'
+         </if>
+         
+         
+         
+         <!-- 范围 -->
+         <if test="rlgl010902.iunit || rlgl010902.subunit || rlgl010902.esunit || (rlgl010902.searchUnitNo != '' and rlgl010902.speunit)">
+           AND ( 1 = 2
+         </if>
+         <!-- 本单位-->
+         <if test="rlgl010902.iunit">
+          OR M_TB04_UNIT.UNIT_NO = #{rlgl010902.iunitNo}
+         </if>
+         <!-- 下级单位-->
+         <if test="rlgl010902.subunit">
+          OR M_TB04_UNIT.UNIT_NO in ( SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_SUPER = #{rlgl010902.iunitNo} AND DEL_KBN=0)
+         </if>
+         <!-- 代管单位-->
+         <if test="rlgl010902.esunit">
+          OR M_TB04_UNIT.UNIT_NO in ( SELECT UNIT_NO FROM m_tb04_unit WHERE ESCROW_UNIT_NO = #{rlgl010902.iunitNo} AND DEL_KBN=0)
+         </if>
+         <!-- 指定单位-->
+         <if test="rlgl010902.searchUnitNo != '' and rlgl010902.speunit">
+          OR M_TB04_UNIT.UNIT_NO = #{rlgl010902.searchUnitNo}
+         </if>
+         <if test="rlgl010902.iunit || rlgl010902.subunit || rlgl010902.esunit || (rlgl010902.searchUnitNo != '' and rlgl010902.speunit)">
+           )
+         </if>
+         
+         <!-- 主管部门 -->
+         <if test="rlgl010902.province || rlgl010902.city || rlgl010902.county">
+         AND ( 1 = 2
+         </if>
+          <!-- 省卫生厅-->
+         <if test="rlgl010902.province">
+         OR M_TB04_UNIT.UNIT_LOWER = '001'
+         </if>
+         <!-- 市卫生局-->
+         <if test="rlgl010902.city">
+         OR M_TB04_UNIT.UNIT_LOWER = '002'
+         </if>
+         <!-- 各区县卫生局-->
+         <if test="rlgl010902.county">
+         OR M_TB04_UNIT.UNIT_LOWER = '003'
+         </if> 
+         <if test="rlgl010902.province || rlgl010902.city || rlgl010902.county">
+         )
+         </if>
+         
+         <!-- 单位性质-->
+         <if test="rlgl010902.organ || rlgl010902.institution1 || rlgl010902.institution2 || rlgl010902.institutionSelf || rlgl010902.economy || rlgl010902.stateowned || rlgl010902.collective || rlgl010902.individual">
+           AND ( 1 = 2
+         </if>
+         <!-- 机关-->
+         <if test="rlgl010902.organ ">
+         OR M_TB04_UNIT.UNIT_NATURE = "060"
+         </if>
+         <!-- 公益一类事业单位-->
+         <if test="rlgl010902.institution1 ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "001")
+         </if>
+         <!-- 公益二类事业单位-->
+         <if test="rlgl010902.institution2 ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "002")
+         </if>
+         <!-- 自收自支事业单位-->
+         <if test="rlgl010902.institutionSelf ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "003")
+         </if>
+         <!-- 参公事业单位-->
+         <if test="rlgl010902.economy ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "004")
+         </if>
+         <!-- 国有企业-->
+         <if test="rlgl010902.stateowned ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "059"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "001")
+         </if>
+         <!-- 集体企业-->
+         <if test="rlgl010902.collective ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "059"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "002")
+         </if>
+         <!-- 个体、私营-->
+         <if test="rlgl010902.individual ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "059"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "003")
+         </if>
+         <if test="rlgl010902.organ || rlgl010902.institution1 || rlgl010902.institution2 || rlgl010902.institutionSelf || rlgl010902.economy || rlgl010902.stateowned || rlgl010902.collective || rlgl010902.individual">
+           )
+         </if>
+         
+         <!-- 盈利性质-->
+         <if test="rlgl010902.profi || rlgl010902.noProfi">
+           AND ( 1 = 2
+         </if>
+         <!-- 盈利性-->
+         <if test="rlgl010902.profi ">
+         OR M_TB04_UNIT.EARNINGS_NATURE = "002"
+         </if>
+         <!-- 非盈利性-->
+         <if test="rlgl010902.noProfi ">
+         OR M_TB04_UNIT.EARNINGS_NATURE = "001"
+         </if>
+         <if test="rlgl010902.profi || rlgl010902.noProfi">
+           )
+         </if>
+         
+         <!-- 管理层次-->
+         <if test="rlgl010902.pinstitutions || rlgl010902.phospital || rlgl010902.cinstitutions || rlgl010902.chospital || rlgl010902.dinstitutions || rlgl010902.dhospital">
+           AND ( 1 = 2
+         </if>
+         <!-- 省属医疗卫生机构-->
+         <if test="rlgl010902.pinstitutions ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "062"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "001"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068")
+         </if>
+         <!-- 省管医院-->
+         <if test="rlgl010902.phospital ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "062"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "002"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069")
+         </if>
+         <!-- 市属医疗卫生机构-->
+         <if test="rlgl010902.cinstitutions ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "063"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "001"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068")
+         </if>
+         <!-- 市管医院-->
+         <if test="rlgl010902.chospital ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "063"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW= "002"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069")
+         </if>
+         <!-- 区县属医疗卫生机构-->
+         <if test="rlgl010902.dinstitutions ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "064"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "001"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068")
+         </if>
+         <!-- 区县管企业医院-->
+         <if test="rlgl010902.dhospital ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "064"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "002"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069")
+         </if>
+         <if test="rlgl010902.pinstitutions || rlgl010902.phospital || rlgl010902.cinstitutions || rlgl010902.chospital || rlgl010902.dinstitutions || rlgl010902.dhospital">
+           )
+         </if>
+         
+         <!-- 机构类型-->
+         <if test="rlgl010902.general || rlgl010902.special || rlgl010902.centerHospital || rlgl010902.hospital || rlgl010902.clinic || rlgl010902.chsc || rlgl010902.chss || rlgl010902.clinique || rlgl010902.healthc || rlgl010902.villages">
+           AND ( 1 = 2
+         </if>
+         <!-- 综合医院-->
+         <if test="rlgl010902.general ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 专科医院-->
+         <if test="rlgl010902.special ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "003")
+         </if>
+         <!-- 中心卫生院-->
+         <if test="rlgl010902.centerHospital ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "070"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 卫生院-->
+         <if test="rlgl010902.hospital ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "070"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <!-- 门诊部-->
+         <if test="rlgl010902.clinic ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "071")
+         </if>
+         <!-- 社区卫生服务中心-->
+         <if test="rlgl010902.chsc ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "072"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 社区卫生服务站-->
+         <if test="rlgl010902.chss ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "072"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <!-- 诊所-->
+         <if test="rlgl010902.clinique ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "073"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 卫生所-->
+         <if test="rlgl010902.healthc ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "073"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <!-- 村卫生室-->
+         <if test="rlgl010902.villages ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "073"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <if test="rlgl010902.general || rlgl010902.special || rlgl010902.centerHospital || rlgl010902.hospital || rlgl010902.clinic || rlgl010902.chsc || rlgl010902.chss || rlgl010902.clinique || rlgl010902.healthc || rlgl010902.villages">
+           )
+         </if>
+         
+         <!-- 医院等级-->
+         <if test="rlgl010902.three0 || rlgl010902.three1 || rlgl010902.three2 || rlgl010902.three3 || rlgl010902.two1 || rlgl010902.two2 || rlgl010902.two3 || rlgl010902.one1 || rlgl010902.one2 || rlgl010902.one3">
+           AND ( 1 = 2
+         </if>
+         <!-- 三级特-->
+         <if test="rlgl010902.three0 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "001")
+         </if>
+         <!-- 三级甲-->
+         <if test="rlgl010902.three1 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "002")
+         </if>
+         <!-- 三级乙-->
+         <if test="rlgl010902.three2 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "003")
+         </if>
+         <!-- 三级丙-->
+         <if test="rlgl010902.three3 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "004")
+         </if>
+         <!-- 二级甲-->
+         <if test="rlgl010902.two1 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "084"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "001")
+         </if>
+         <!-- 二级乙-->
+         <if test="rlgl010902.two2 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "084"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "002")
+         </if>
+         <!-- 二级丙-->
+         <if test="rlgl010902.two3 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "084"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "003")
+         </if>
+         <!-- 一级甲-->
+         <if test="rlgl010902.one1 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "085"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "001")
+         </if>
+         <!-- 一级乙-->
+         <if test="rlgl010902.one2 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "085"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "002")
+         </if>
+         <!-- 一级丙-->
+         <if test="rlgl010902.one3 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "085"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "003")
+         </if>
+         <if test="rlgl010902.three0 || rlgl010902.three1 || rlgl010902.three2 || rlgl010902.three3 || rlgl010902.two1 || rlgl010902.two2 || rlgl010902.two3 || rlgl010902.one1 || rlgl010902.one2 || rlgl010902.one3">
+           )
+         </if>
+         
+         <!-- 隶属-->
+         <if test="rlgl010902.cityInstitutions || rlgl010902.countryInstitutions">
+           AND ( 1 = 2
+         </if>
+         <!-- 城市医疗机构-->
+         <if test="rlgl010902.cityInstitutions">
+          OR M_TB04_UNIT.AGENCY_PLAN = "001"
+         </if>
+         <!-- 农村医疗机构-->
+         <if test="rlgl010902.countryInstitutions ">
+          OR M_TB04_UNIT.AGENCY_PLAN = "002"
+         </if>
+         <if test="rlgl010902.cityInstitutions || rlgl010902.countryInstitutions">
+           )
+         </if>
+         
+         <if test="rlgl010902.pageCount != 0 and rlgl010902.pageCount != null">
+         LIMIT #{rlgl010902.pageNo},#{rlgl010902.pageCount}
+         </if>
+  </select>
+  
+  <!-- 件数查询SQL -->
+  <select id="getCount" resultType="int">
+      SELECT COUNT(*)
+      FROM 
+        M_TB04_UNIT
+      WHERE 
+          DEL_KBN = '0'
+         <if test="rlgl010902.unit_no != ''">
+          AND M_TB04_UNIT.UNIT_NO = #{rlgl010902.unit_no}
+         </if>
+         <if test="rlgl010902.unit_area != ''">
+         AND M_TB04_UNIT.AREA_ID = #{rlgl010902.unit_area}
+         </if>
+         <if test="rlgl010902.unit_nm != ''">
+         AND M_TB04_UNIT.UNIT_NM like '%${rlgl010902.unit_nm}%'
+         </if>
+         
+         
+         <!-- 范围 -->
+         <if test="rlgl010902.iunit || rlgl010902.subunit || rlgl010902.esunit || (rlgl010902.searchUnitNo != '' and rlgl010902.speunit)">
+           AND ( 1 = 2
+         </if>
+         <!-- 本单位-->
+         <if test="rlgl010902.iunit">
+          OR M_TB04_UNIT.UNIT_NO = #{rlgl010902.iunitNo}
+         </if>
+         <!-- 下级单位-->
+         <if test="rlgl010902.subunit">
+          OR M_TB04_UNIT.UNIT_NO in ( SELECT UNIT_NO FROM m_tb04_unit WHERE UNIT_SUPER = #{rlgl010902.iunitNo} AND DEL_KBN=0)
+         </if>
+         <!-- 代管单位-->
+         <if test="rlgl010902.esunit">
+          OR M_TB04_UNIT.UNIT_NO in ( SELECT UNIT_NO FROM m_tb04_unit WHERE ESCROW_UNIT_NO = #{rlgl010902.iunitNo} AND DEL_KBN=0)
+         </if>
+         <!-- 指定单位-->
+         <if test="rlgl010902.searchUnitNo != '' and rlgl010902.speunit">
+          OR M_TB04_UNIT.UNIT_NO = #{rlgl010902.searchUnitNo}
+         </if>
+         <if test="rlgl010902.iunit || rlgl010902.subunit || rlgl010902.esunit || (rlgl010902.searchUnitNo != '' and rlgl010902.speunit)">
+           )
+         </if>
+         
+         <!-- 主管部门 -->
+         <if test="rlgl010902.province || rlgl010902.city || rlgl010902.county">
+         AND ( 1 = 2
+         </if>
+          <!-- 省卫生厅-->
+         <if test="rlgl010902.province">
+         OR M_TB04_UNIT.UNIT_LOWER = '001'
+         </if>
+         <!-- 市卫生局-->
+         <if test="rlgl010902.city">
+         OR M_TB04_UNIT.UNIT_LOWER = '002'
+         </if>
+         <!-- 各区县卫生局-->
+         <if test="rlgl010902.county">
+         OR M_TB04_UNIT.UNIT_LOWER = '003'
+         </if> 
+         <if test="rlgl010902.province || rlgl010902.city || rlgl010902.county">
+         )
+         </if>
+         
+         <!-- 单位性质-->
+         <if test="rlgl010902.organ || rlgl010902.institution1 || rlgl010902.institution2 || rlgl010902.institutionSelf || rlgl010902.economy || rlgl010902.stateowned || rlgl010902.collective || rlgl010902.individual">
+           AND ( 1 = 2
+         </if>
+         <!-- 机关-->
+         <if test="rlgl010902.organ ">
+         OR M_TB04_UNIT.UNIT_NATURE = "060"
+         </if>
+         <!-- 公益一类事业单位-->
+         <if test="rlgl010902.institution1 ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "001")
+         </if>
+         <!-- 公益二类事业单位-->
+         <if test="rlgl010902.institution2 ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "002")
+         </if>
+         <!-- 自收自支事业单位-->
+         <if test="rlgl010902.institutionSelf ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "003")
+         </if>
+         <!-- 参公事业单位-->
+         <if test="rlgl010902.economy ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "056"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "004")
+         </if>
+         <!-- 国有企业-->
+         <if test="rlgl010902.stateowned ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "059"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "001")
+         </if>
+         <!-- 集体企业-->
+         <if test="rlgl010902.collective ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "059"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "002")
+         </if>
+         <!-- 个体、私营-->
+         <if test="rlgl010902.individual ">
+         OR (M_TB04_UNIT.UNIT_NATURE = "059"
+         AND M_TB04_UNIT.UNIT_NATURE_TOW = "003")
+         </if>
+         <if test="rlgl010902.organ || rlgl010902.institution1 || rlgl010902.institution2 || rlgl010902.institutionSelf || rlgl010902.economy || rlgl010902.stateowned || rlgl010902.collective || rlgl010902.individual">
+           )
+         </if>
+         
+         <!-- 盈利性质-->
+         <if test="rlgl010902.profi || rlgl010902.noProfi">
+           AND ( 1 = 2
+         </if>
+         <!-- 盈利性-->
+         <if test="rlgl010902.profi ">
+         OR M_TB04_UNIT.EARNINGS_NATURE = "002"
+         </if>
+         <!-- 非盈利性-->
+         <if test="rlgl010902.noProfi ">
+         OR M_TB04_UNIT.EARNINGS_NATURE = "001"
+         </if>
+         <if test="rlgl010902.profi || rlgl010902.noProfi">
+           )
+         </if>
+         
+         <!-- 管理层次-->
+         <if test="rlgl010902.pinstitutions || rlgl010902.phospital || rlgl010902.cinstitutions || rlgl010902.chospital || rlgl010902.dinstitutions || rlgl010902.dhospital">
+           AND ( 1 = 2
+         </if>
+         <!-- 省属医疗卫生机构-->
+         <if test="rlgl010902.pinstitutions ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "062"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "001"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068")
+         </if>
+         <!-- 省管医院-->
+         <if test="rlgl010902.phospital ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "062"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "002"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069")
+         </if>
+         <!-- 市属医疗卫生机构-->
+         <if test="rlgl010902.cinstitutions ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "063"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "001"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068")
+         </if>
+         <!-- 市管医院-->
+         <if test="rlgl010902.chospital ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "063"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW= "002"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069")
+         </if>
+         <!-- 区县属医疗卫生机构-->
+         <if test="rlgl010902.dinstitutions ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "064"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "001"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068")
+         </if>
+         <!-- 区县管企业医院-->
+         <if test="rlgl010902.dhospital ">
+         OR (M_TB04_UNIT.UNIT_MANAGE_SCALE = "064"
+         AND M_TB04_UNIT.UNIT_MANAGE_SCALE_TOW = "002"
+         AND M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069")
+         </if>
+         <if test="rlgl010902.pinstitutions || rlgl010902.phospital || rlgl010902.cinstitutions || rlgl010902.chospital || rlgl010902.dinstitutions || rlgl010902.dhospital">
+           )
+         </if>
+         
+         <!-- 机构类型-->
+         <if test="rlgl010902.general || rlgl010902.special || rlgl010902.centerHospital || rlgl010902.hospital || rlgl010902.clinic || rlgl010902.chsc || rlgl010902.chss || rlgl010902.clinique || rlgl010902.healthc || rlgl010902.villages">
+           AND ( 1 = 2
+         </if>
+         <!-- 综合医院-->
+         <if test="rlgl010902.general ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 专科医院-->
+         <if test="rlgl010902.special ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "069"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "003")
+         </if>
+         <!-- 中心卫生院-->
+         <if test="rlgl010902.centerHospital ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "070"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 卫生院-->
+         <if test="rlgl010902.hospital ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "070"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <!-- 门诊部-->
+         <if test="rlgl010902.clinic ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "071")
+         </if>
+         <!-- 社区卫生服务中心-->
+         <if test="rlgl010902.chsc ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "072"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 社区卫生服务站-->
+         <if test="rlgl010902.chss ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "072"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <!-- 诊所-->
+         <if test="rlgl010902.clinique ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "073"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "001")
+         </if>
+         <!-- 卫生所-->
+         <if test="rlgl010902.healthc ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "073"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <!-- 村卫生室-->
+         <if test="rlgl010902.villages ">
+         OR (M_TB04_UNIT.AGENCY_LEVEL = "068"
+         AND M_TB04_UNIT.AGENCY_LEVEL_TOW = "073"
+         AND M_TB04_UNIT.AGENCY_LEVEL_THREE = "002")
+         </if>
+         <if test="rlgl010902.general || rlgl010902.special || rlgl010902.centerHospital || rlgl010902.hospital || rlgl010902.clinic || rlgl010902.chsc || rlgl010902.chss || rlgl010902.clinique || rlgl010902.healthc || rlgl010902.villages">
+           )
+         </if>
+         
+         <!-- 医院等级-->
+         <if test="rlgl010902.three0 || rlgl010902.three1 || rlgl010902.three2 || rlgl010902.three3 || rlgl010902.two1 || rlgl010902.two2 || rlgl010902.two3 || rlgl010902.one1 || rlgl010902.one2 || rlgl010902.one3">
+           AND ( 1 = 2
+         </if>
+         <!-- 三级特-->
+         <if test="rlgl010902.three0 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "001")
+         </if>
+         <!-- 三级甲-->
+         <if test="rlgl010902.three1 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "002")
+         </if>
+         <!-- 三级乙-->
+         <if test="rlgl010902.three2 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "003")
+         </if>
+         <!-- 三级丙-->
+         <if test="rlgl010902.three3 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "083"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "004")
+         </if>
+         <!-- 二级甲-->
+         <if test="rlgl010902.two1 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "084"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "001")
+         </if>
+         <!-- 二级乙-->
+         <if test="rlgl010902.two2 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "084"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "002")
+         </if>
+         <!-- 二级丙-->
+         <if test="rlgl010902.two3 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "084"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "003")
+         </if>
+         <!-- 一级甲-->
+         <if test="rlgl010902.one1 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "085"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "001")
+         </if>
+         <!-- 一级乙-->
+         <if test="rlgl010902.one2 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "085"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "002")
+         </if>
+         <!-- 一级丙-->
+         <if test="rlgl010902.one3 ">
+         OR (M_TB04_UNIT.HOSPITAL_GRADE = "085"
+         AND M_TB04_UNIT.HOSPITAL_GRADE_TOW = "003")
+         </if>
+         <if test="rlgl010902.three0 || rlgl010902.three1 || rlgl010902.three2 || rlgl010902.three3 || rlgl010902.two1 || rlgl010902.two2 || rlgl010902.two3 || rlgl010902.one1 || rlgl010902.one2 || rlgl010902.one3">
+           )
+         </if>
+         <!-- 隶属-->
+         <if test="rlgl010902.cityInstitutions || rlgl010902.countryInstitutions">
+           AND ( 1 = 2
+         </if>
+         <!-- 城市医疗机构-->
+         <if test="rlgl010902.cityInstitutions">
+          OR M_TB04_UNIT.AGENCY_PLAN = "001"
+         </if>
+         <!-- 农村医疗机构-->
+         <if test="rlgl010902.countryInstitutions ">
+          OR M_TB04_UNIT.AGENCY_PLAN = "002"
+         </if>
+         <if test="rlgl010902.cityInstitutions || rlgl010902.countryInstitutions">
+           )
+         </if>
+  </select>
+</mapper>

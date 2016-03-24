@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl010306" extends="rlgl" namespace="/">
+	   <action name="rlgl010306Init" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306InitAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Init</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306.jsp</result>
+        </action>
+        <action name="rlgl010306Add" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306AddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Init</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306Change" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306.jsp</result>
+        </action>
+        <action name="upload" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306AddAction" method="upload">
+            <result name="success" type="redirectAction">rlgl010306Init</result>
+        </action>
+        
+	</package>
+</struts>
+

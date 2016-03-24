@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 项目申报 -->
+<struts>
+    <package name="rlgl020401" extends="rlgl" namespace="/">
+        <!-- 新项目申报一览 -->
+        <action name="rlgl020401Init"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020401InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl020403.jsp</result>
+        </action>
+        <!-- 添加新项目申报 -->
+        <action name="rlgl020401Add"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020401AddAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020401.jsp</result>
+        </action>
+        <!-- 提交新项目申报信息，成功后跳转新项目申报一览 -->
+        <action name="rlgl020401Confirm"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020401ConfirmAction"
+            method="execute"> 
+         <result name="success" type="redirectAction">
+             <param name="actionName">rlgl020401Init</param> 
+         </result>
+         <result name="error">/WEB-INF/jsp/rlgl020401.jsp</result>
+        </action>
+        <!-- 修改新项目申报信息 -->
+        <action name="rlgl020403Update"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403UpdateAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020403RedirectReturn</result>
+        </action>
+        <action name="rlgl020403RedirectReturn"
+            class="com.rlglsys.action.continumedicaleducation.projectstraining.Rlgl020403RedirectReturnAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020403Init</result>
+        </action>
+    </package>
+</struts>
+

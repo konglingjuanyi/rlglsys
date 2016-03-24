@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010513Mapper">
+    <!-- 更新个人进修申请明细信息 -->
+    <update id="updateTb52Info">
+        UPDATE m_tb52_user_offthejob_detail
+        SET
+            UNIT_CHECKER = #{updatetb52Info.unit_checker},
+            UNIT_CHECK_DATE = #{updatetb52Info.unit_check_date},
+            UNIT_CHECK_VIEWS = #{updatetb52Info.unit_check_views},
+            UNIT_CHECK_RESULT = #{updatetb52Info.unit_check_result},
+            COUNTY_CHECKER = #{updatetb52Info.county_checker},
+            COUNTY_CHECK_DATE = #{updatetb52Info.county_check_date},
+            COUNTY_CHECK_VIEWS = #{updatetb52Info.county_check_views},
+            COUNTY_CHECK_RESULT = #{updatetb52Info.county_check_result},
+            DOWNTOWN_CHECKER = #{updatetb52Info.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{updatetb52Info.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{updatetb52Info.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{updatetb52Info.downtown_check_result},
+            MINISTRY_CHECKER = #{updatetb52Info.ministry_checker},
+            MINISTRY_CHECK_DATE = #{updatetb52Info.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{updatetb52Info.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{updatetb52Info.ministry_check_result},
+            CHECK_RESULT = #{updatetb52Info.check_result},
+            NOW_MARK = #{updatetb52Info.now_mark},
+            UPDATE_USER_ID = #{updatetb52Info.update_user_id},
+            UPDATE_DATE = #{updatetb52Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb52Info.apply_no}
+        AND APPLY_NUMBER = #{updatetb52Info.apply_number}
+    </update>
+</mapper>

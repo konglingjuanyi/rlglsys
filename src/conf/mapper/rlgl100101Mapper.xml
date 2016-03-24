@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100101Mapper">
+	<!-- 查询余额 -->
+	<select id="getData" resultType="com.rlglsys.bean.Rlgl100101Bean">
+		SELECT * FROM
+		m_tb105_prepay_charge WHERE PAY_FLG = '1' and DEL_KBN =
+		0 and
+		CLUM001=#{rlgl100101Bean.clum001}
+	</select>
+	<!--插入缴费信息 -->
+	<insert id="insertData" parameterType="int">
+		INSERT INTO
+		t_tb02_prepay_msg (
+		userId,
+		MerchantID,
+		CLUM003,
+		CLUM004,
+		pay_date,
+		CLUM006,
+		CLUM007,
+		CLUM008,
+		CLUM009,
+		EX_KEY ,
+		DEL_KBN,
+		EXPEND_01 ,
+		EXPEND_02 ,
+		EXPEND_03 ,
+		EXPEND_04 ,
+		EXPEND_05 ,
+		LOGIN_USER_ID ,
+		LOGIN_DATE ,
+		UPDATE_USER_ID ,
+		UPDATE_DATE
+		) VALUES
+		(
+		#{rlgl100101_1Bean.clum001},
+		#{rlgl100101_1Bean.MerchantID},
+		#{rlgl100101_1Bean.clum003},
+		CONCAT(#{rlgl100101_1Bean.clum003},#{rlgl100101_1Bean.clum004}),
+		#{rlgl100101_1Bean.clum005},
+		#{rlgl100101_1Bean.clum006},
+		#{rlgl100101_1Bean.clum007},
+		CONCAT(#{rlgl100101_1Bean.clum003},#{rlgl100101_1Bean.clum008}),
+		#{rlgl100101_1Bean.clum009},
+		#{rlgl100101_1Bean.ex_key} ,
+		#{rlgl100101_1Bean.del_kbn},
+		#{rlgl100101_1Bean.expend_01} ,
+		#{rlgl100101_1Bean.expend_02 },
+		#{rlgl100101_1Bean.expend_03} ,
+		#{rlgl100101_1Bean.expend_04} ,
+		#{rlgl100101_1Bean.expend_05} ,
+		#{rlgl100101_1Bean.login_user_id} ,
+		#{rlgl100101_1Bean.login_date} ,
+		#{rlgl100101_1Bean.update_user_id} ,
+		#{rlgl100101_1Bean.update_date}
+		)
+	</insert>
+	<!--插入余额信息 -->
+	<insert id="insertBalanceData" parameterType="com.rlglsys.bean.Rlgl500102Bean">
+		INSERT INTO
+		t_tb04_Balance (
+		user_id,
+		Balance,
+		expend_01 ,
+		expend_02 ,
+		expend_03 ,
+		expend_04 ,
+		expend_05 ,
+		login_user_id ,
+		login_date ,
+		update_user_id ,
+		update_date
+		) values
+		(
+		#{rlgl500102Bean.user_id},
+		#{rlgl500102Bean.Balance},
+		#{rlgl500102Bean.expend_01} ,
+		#{rlgl500102Bean.expend_02 },
+		#{rlgl500102Bean.expend_03} ,
+		#{rlgl500102Bean.expend_04} ,
+		#{rlgl500102Bean.expend_05} ,
+		#{rlgl500102Bean.login_user_id} ,
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+		)
+	</insert>
+	<!--更新余额信息 -->
+	<update id="updateBalanceData" parameterType="com.rlglsys.bean.Rlgl500102Bean">
+		UPDATE t_tb04_Balance
+		SET Balance = Balance-#{rlgl500102Bean.Balance},
+		update_user_id=#{rlgl500102Bean.update_user_id},
+		update_date =
+		#{rlgl500102Bean.update_date}
+		WHERE user_id = #{rlgl500102Bean.user_id}
+	</update>
+	
+		<!--更新余额信息 -->
+	<update id="updateBalance" parameterType="com.rlglsys.bean.Rlgl500102Bean">
+		UPDATE t_tb04_Balance
+		SET Balance = Balance+#{rlgl500102Bean.Balance},
+		update_user_id=#{rlgl500102Bean.update_user_id},
+		update_date =
+		#{rlgl500102Bean.update_date}
+		WHERE user_id = #{rlgl500102Bean.user_id}
+	</update>
+	
+		<!--更新余额信息 -->
+	<update id="updateAdminBalance" parameterType="com.rlglsys.bean.Rlgl500102Bean">
+		UPDATE t_tb04_Balance
+		SET Balance =#{rlgl500102Bean.Balance},
+		update_user_id=#{rlgl500102Bean.update_user_id},
+		update_date =
+		#{rlgl500102Bean.update_date}
+		WHERE user_id = #{rlgl500102Bean.user_id}
+	</update>
+
+	<!--插入消费记录信息 -->
+	<insert id="insertRecordData" parameterType="com.rlglsys.bean.Rlgl500103Bean">
+		INSERT INTO
+		t_tb03_record (
+		user_id,
+		COURSE_ID,
+		Category,
+		Time,
+		Name,
+		expend_01 ,
+		expend_02 ,
+		expend_03 ,
+		expend_04 ,
+		expend_05 ,
+		login_user_id ,
+		login_date
+		,
+		update_user_id ,
+		update_date
+		) values
+		(
+		#{rlgl500103Bean.user_id},
+		#{rlgl500103Bean.COURSE_ID},
+		#{rlgl500103Bean.Category},
+		#{rlgl500103Bean.Time},
+		#{rlgl500103Bean.Name},
+		#{rlgl500103Bean.expend_01} ,
+		#{rlgl500103Bean.expend_02 },
+		#{rlgl500103Bean.expend_03} ,
+		#{rlgl500103Bean.expend_04} ,
+		#{rlgl500103Bean.expend_05} ,
+		#{rlgl500103Bean.login_user_id} ,
+		#{rlgl500103Bean.login_date} ,
+		#{rlgl500103Bean.update_user_id} ,
+		#{rlgl500103Bean.update_date}
+		)
+	</insert>
+
+	<!-- INSERT INTO T_TB02_PREPAY_MSG ( userId, MerchantID, TransactionID, 
+		Amount, Succeed, PAY_YEAR, PAY_DATE, EX_KEY , DEL_KBN, EXPEND_01 , EXPEND_02 
+		, EXPEND_03 , EXPEND_04 , EXPEND_05 , LOGIN_USER_ID , LOGIN_DATE , UPDATE_USER_ID 
+		, UPDATE_DATE ) VALUES ( #{rlgl100101_1Bean.userId}, #{rlgl100101_1Bean.MerchantID}, 
+		#{rlgl100101_1Bean.TransactionID}, #{rlgl100101_1Bean.Amount}, #{rlgl100101_1Bean.Succeed}, 
+		#{rlgl100101_1Bean.pay_year}, #{rlgl100101_1Bean.pay_date}, #{rlgl100101_1Bean.ex_key} 
+		, #{rlgl100101_1Bean.del_kbn}, #{rlgl100101_1Bean.expend_01} , #{rlgl100101_1Bean.expend_02 
+		}, #{rlgl100101_1Bean.expend_03} , #{rlgl100101_1Bean.expend_04} , #{rlgl100101_1Bean.expend_05} 
+		, #{rlgl100101_1Bean.login_user_id} , #{rlgl100101_1Bean.login_date} , #{rlgl100101_1Bean.update_user_id} 
+		, #{rlgl100101_1Bean.update_date} ) -->
+
+	<!--更新缴费信息 -->
+	<update id="updateData" parameterType="int">
+		UPDATE t_tb02_prepay_msg
+		SET CLUM004 =
+		CONCAT(#{rlgl100101_1Bean.clum003},#{rlgl100101_1Bean.clum004}),
+		CLUM008 =
+		CONCAT(#{rlgl100101_1Bean.clum003},#{rlgl100101_1Bean.amount}),
+		DEL_KBN = '0'
+		WHERE CLUM003 = #{rlgl100101_1Bean.clum003}
+	</update>
+
+	<!--更新项目学习 -->
+	<update id="updateMtb81CourseExams" parameterType="com.rlglsys.entity.MTb81CourseExams">
+		UPDATE
+		m_tb81_course_exams
+		SET IsApply =#{mtb81Bean.isapply},
+		update_user_id
+		=#{mtb81Bean.update_user_id},
+		update_date =#{mtb81Bean.update_date}
+		WHERE COURSE_ID = #{mtb81Bean.course_id}
+		And USER_ID =#{mtb81Bean.user_id}
+	</update>
+
+	<!-- 查询余额 -->
+	<select id="getData2" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		clum003 as TransactionID
+		,
+		CASE
+		WHEN LENGTH(replace(CLUM008,CLUM003,'')) >= LENGTH(CLUM003)
+		THEN
+		'ERROR'
+		ELSE replace(CLUM008,CLUM003,'')
+		END AS Amount,
+		CASE
+		WHEN
+		LENGTH(replace(CLUM004,CLUM003,'')) >= LENGTH(CLUM003)
+		THEN 'ERROR'
+		ELSE replace(CLUM004,CLUM003,'')
+		END AS Succeed
+
+		,clum006 as pay_year
+		,clum007 as refund_flag
+		,clum009 as refund_time
+		,p.*
+		FROM
+		t_tb02_prepay_msg p
+		WHERE CLUM003=#{rlgl100101_1Bean.clum003}
+		AND
+		replace(CLUM004,CLUM003,'')=#{rlgl100101_1Bean.clum004}
+		AND DEL_KBN=0
+	</select>
+	<select id="getData3" resultType="int">
+		SELECT count(*) FROM
+		t_tb02_prepay_msg
+		WHERE userId=#{rlgl100101_1Bean.clum001}
+		AND
+		replace(CLUM004,CLUM003,'')=#{rlgl100101_1Bean.clum004}
+		AND DEL_KBN=0
+		AND CLUM006=#{rlgl100101_1Bean.clum006}
+	</select>
+
+	<select id="getData4" resultType="int">
+		SELECT Count(*) FROM
+		t_tb02_prepay_msg
+		WHERE CLUM003=#{rlgl100101_1Bean.clum003}
+		AND
+		DEL_KBN=0
+	</select>
+
+	<select id="getData5" resultType="com.rlglsys.bean.Rlgl100101_1Bean">
+		SELECT
+		clum003 as TransactionID,
+
+		CASE
+		WHEN LENGTH(replace(CLUM008,CLUM003,'')) >= LENGTH(CLUM003)
+		THEN
+		'ERROR'
+		ELSE replace(CLUM008,CLUM003,'')
+		END AS Amount,
+		CASE
+		WHEN
+		LENGTH(replace(CLUM004,CLUM003,'')) >= LENGTH(CLUM003)
+		THEN 'ERROR'
+		ELSE replace(CLUM004,CLUM003,'')
+		END AS Succeed
+
+
+		,PAY_DATE as pay_date
+		,clum006 as pay_year
+		,clum007 as refund_flag
+
+		,clum009 as refund_time
+		,p.*
+		FROM t_tb02_prepay_msg p
+		WHERE userId=#{rlgl100101_1Bean.clum001}
+		AND replace(CLUM004,CLUM003,'')=#{rlgl100101_1Bean.clum004}
+		AND
+		DEL_KBN=0
+		AND CLUM006=#{rlgl100101_1Bean.clum006}
+		limit 0,1
+	</select>
+	<select id="getJFInfoByUserId" resultType="com.rlglsys.entity.TTb02PrepayMsg">
+		select * from
+		t_tb02_prepay_msg where userId = #{rlgl100101_1Bean.userId}
+		and CLUM006
+		= #{rlgl100101_1Bean.pay_year}
+	</select>
+	<!-- 查询余额 -->
+	<select id="getBalanceData" resultType="com.rlglsys.bean.Rlgl500102Bean">
+		SELECT Balance FROM
+		t_tb04_balance WHERE
+		USER_ID=#{rlgl500102Bean.user_id}
+	</select>
+
+	<select id="getUserData" resultType="String" parameterType="String">
+		SELECT count(*) FROM
+		m_tb39_personnel WHERE
+		PERSONNEL_ID=#{user_id}
+		AND PERSONNEL_EMAIL = #{email}
+	</select>
+</mapper>

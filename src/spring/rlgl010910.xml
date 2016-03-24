@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 综合查询-单位综合查询-按年龄段分专业统计 -->
+<beans>
+    <bean id="rlgl010910Mapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.rlglsys.mapper.IRlgl010910Mapper" />
+    </bean>
+    <bean id="rlgl010910Service" parent="baseTxProxy">
+        <property name="target">
+            <bean class="com.rlglsys.service.impl.Rlgl010910ServiceImpl"
+                autowire="byName" />
+        </property>
+    </bean>
+</beans>

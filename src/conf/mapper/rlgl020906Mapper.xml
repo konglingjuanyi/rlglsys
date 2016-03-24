@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020906Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020906Bean" id="resultInfoList">
+      <!-- 单位编号 -->
+      <result property="unitNo" column="unitNo"/>
+      <!-- 全院总人数 -->
+      <result property="allPersonCount" column="allPersonCount"/>
+      <!-- 应参加继续医学教育人数 -->
+      <result property="joinPersonCount" column="joinPersonCount"/>
+      <!-- 实际参加继续医学教育人数 -->
+      <result property="realjoinPersonCount" column="realjoinPersonCount"/>
+      <!-- 医疗机构总数 -->
+      <result property="hospitalCount" column="hospitalCount"/>
+      <!-- 开展继续医学教育数量-->
+      <result property="hospitalEducationCount" column="hospitalEducationCount"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-继续医学教育人员开展情况统计表查询SQL -->
+  <select id="doResultPersonList" resultMap="resultInfoList">
+     select
+       <!-- 单位编号 -->
+       (select
+          tb01.UNIT_NO
+        from 
+          m_tb01_user tb01
+        where 
+          tb01.DEL_KBN = '0'
+          and (1 = 2
+            <if test="rlgl020906.unitNo != ''">
+            or tb01.UNIT_NO = #{rlgl020906.unitNo}
+            </if>
+            <if test="rlgl020906.lowerUnitFlag">
+            or tb01.UNIT_NO in (select UNIT_NO
+                                from m_tb04_unit
+                                where 
+                                  DEL_KBN = '0'
+                                  <!-- 单位分类：医疗机构 -->
+                                  and UNIT_ASSORT = '002'
+                                  <if test="rlgl020906.unitNo != ''">
+                                  and UNIT_SUPER = #{rlgl020906.unitNo}
+                                  </if>
+                                )
+            </if>
+            )
+          group by tb01.UNIT_NO
+        ) as unitNo,
+       <!-- 全院总人数 -->
+       (select
+          count(*)
+        from 
+          m_tb12_personnel tb12,
+          m_tb01_user tb01
+        where 
+          tb12.DEL_KBN = '0'
+          and tb12.PERSONNEL_ID = tb01.PERSONNEL_ID
+          <!-- 岗位状态：001在职，002停薪留职 -->
+          and tb12.PERSONNEL_STATUS in ('001','002')
+          and tb01.DEL_KBN = '0'
+          and (1 = 2
+            <if test="rlgl020906.unitNo != ''">
+            or tb01.UNIT_NO = #{rlgl020906.unitNo}
+            </if>
+            <if test="rlgl020906.lowerUnitFlag">
+            or tb01.UNIT_NO in (select UNIT_NO
+                                from m_tb04_unit
+                                where 
+                                  DEL_KBN = '0'
+                                  <!-- 单位分类：医疗机构 -->
+                                  and UNIT_ASSORT = '002'
+                                  <if test="rlgl020906.unitNo != ''">
+                                  and UNIT_SUPER = #{rlgl020906.unitNo}
+                                  </if>
+                                )
+            </if>
+            )
+            group by tb01.UNIT_NO
+        ) as allPersonCount,
+       <!-- 应参加继续医学教育人数 -->
+       (select
+          count(*)
+        from 
+          m_tb12_personnel tb12,
+          m_tb01_user tb01
+        where 
+          tb12.DEL_KBN = '0'
+          and tb12.PERSONNEL_ID = tb01.PERSONNEL_ID
+          <!-- 岗位状态：001在职，002停薪留职 -->
+          and tb12.PERSONNEL_STATUS in ('001','002')
+          <!-- 是否继续教育:1是 -->
+          and tb12.CONTINUE_EDUCATION_FLAG = '1'
+          and tb01.DEL_KBN = '0'
+          and (1 = 2
+            <if test="rlgl020906.unitNo != ''">
+            or tb01.UNIT_NO = #{rlgl020906.unitNo}
+            </if>
+            <if test="rlgl020906.lowerUnitFlag">
+            or tb01.UNIT_NO in (select UNIT_NO
+                                from m_tb04_unit
+                                where 
+                                  DEL_KBN = '0'
+                                  <!-- 单位分类：医疗机构 -->
+                                  and UNIT_ASSORT = '002'
+                                  <if test="rlgl020906.unitNo != ''">
+                                  and UNIT_SUPER = #{rlgl020906.unitNo}
+                                  </if>
+                                )
+            </if>
+            )
+            group by tb01.UNIT_NO
+        ) as joinPersonCount,
+        <!-- 实际参加继续医学教育人数 -->
+       (select
+          count(*)
+        from 
+          m_tb12_personnel tb12,
+          m_tb01_user tb01
+        where 
+          tb12.DEL_KBN = '0'
+          and tb12.PERSONNEL_ID = tb01.PERSONNEL_ID
+          <!-- 岗位状态：001在职，002停薪留职 -->
+          and tb12.PERSONNEL_STATUS in ('001','002')
+          <!-- 是否继续教育:1是 -->
+          and tb12.CONTINUE_EDUCATION_FLAG = '1'
+          and tb01.DEL_KBN = '0'
+          and (1 = 2
+            <if test="rlgl020906.unitNo != ''">
+            or tb01.UNIT_NO = #{rlgl020906.unitNo}
+            </if>
+            <if test="rlgl020906.lowerUnitFlag">
+            or tb01.UNIT_NO in (select UNIT_NO
+                                from m_tb04_unit
+                                where 
+                                  DEL_KBN = '0'
+                                  <!-- 单位分类：医疗机构 -->
+                                  and UNIT_ASSORT = '002'
+                                  <if test="rlgl020906.unitNo != ''">
+                                  and UNIT_SUPER = #{rlgl020906.unitNo}
+                                  </if>
+                                )
+            </if>
+            )
+            and tb01.PERSONNEL_ID in (select 
+                                    PERSONAL_ID
+                                 from 
+                                    m_tb66_total_credit
+                                 where
+                                    DEL_KBN = '0'
+                                    and CREDIT_I != 0
+                                    and CREDIT_II != 0
+                                    and YEAR between #{rlgl020906.syear} and #{rlgl020906.eyear}
+                                    and (1 = 2
+                                    <if test="rlgl020906.unitNo != ''">
+                                    or PERSONNEL_UNIT_NO = #{rlgl020906.unitNo}
+                                    </if>
+                                    <if test="rlgl020906.lowerUnitFlag">
+                                    or PERSONNEL_UNIT_NO in (select 
+                                                               UNIT_NO
+                                                             from 
+                                                               m_tb04_unit
+                                                             where 
+                                                               DEL_KBN = '0'
+                                                               <!-- 单位分类：医疗机构 -->
+                                                               and UNIT_ASSORT = '002'
+                                                               <if test="rlgl020906.unitNo != ''">
+                                                               and UNIT_SUPER = #{rlgl020906.unitNo}
+                                                               </if>
+                                                             )
+                                    </if>
+                                    )
+                                  GROUP BY PERSONAL_ID
+                                 )
+            group by tb01.UNIT_NO
+        ) as realjoinPersonCount
+        ;
+  </select>
+  
+  <!-- 继续医学教育-统计分析-继续医学教育单位开展情况统计表查询SQL -->
+  <select id="doResultUnitList" resultMap="resultInfoList">
+     select
+       <!-- 医疗机构总数 -->
+       (select count(*)
+        from m_tb04_unit tb04
+        where 
+          tb04.DEL_KBN = '0'
+          <!-- 统计为一个单位 -->
+          and STATISTIC_KBN = '1'
+          <!-- 单位分类：医疗机构 -->
+          and tb04.UNIT_ASSORT = '002'
+          <if test="rlgl020906.unitNo != ''">
+          and tb04.UNIT_SUPER = #{rlgl020906.unitNo}
+          </if>
+        ) + 2*(select count(*)
+             from m_tb04_unit tb04
+             where 
+              tb04.DEL_KBN = '0'
+              <!-- 统计为两个单位 -->
+              and STATISTIC_KBN = '2'
+              <!-- 单位分类：医疗机构 -->
+              and tb04.UNIT_ASSORT = '002'
+              <if test="rlgl020906.unitNo != ''">
+              and tb04.UNIT_SUPER = #{rlgl020906.unitNo}
+              </if>
+             ) as hospitalCount,
+       <!-- 开展继续医学教育数量 -->
+       (select
+          count(*)
+        from 
+          m_tb04_unit tb4
+        where 
+          tb4.DEL_KBN = '0'
+          <!-- 统计为一个单位 -->
+          and STATISTIC_KBN = '1'
+          <!-- 单位分类：医疗机构 -->
+          and tb4.UNIT_ASSORT = '002'
+          <if test="rlgl020906.unitNo != ''">
+          and tb4.UNIT_SUPER = #{rlgl020906.unitNo}
+          </if>
+        ) + 2*(select count(*)
+             from m_tb04_unit tb04
+             where 
+              tb04.DEL_KBN = '0'
+              <!-- 统计为两个单位 -->
+              and STATISTIC_KBN = '2'
+              <!-- 单位分类：医疗机构 -->
+              and tb04.UNIT_ASSORT = '002'
+              <if test="rlgl020906.unitNo != ''">
+              and tb04.UNIT_SUPER = #{rlgl020906.unitNo}
+              </if>
+             ) as hospitalEducationCount
+        ;
+  </select>
+</mapper>

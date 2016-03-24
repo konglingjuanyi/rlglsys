@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060312Mapper">
+  
+  <!-- 查询学分获得情况 -->
+  <select id="getList" resultType="com.rlglsys.bean.Rlgl060310Bean">
+	SELECT tb01.user_name as personnel_nm,
+	tb01.personnel_id as personnel_id,
+	tb04.UNIT_NM as personnel_unit,
+	tb22.SECTION_NAME as office_nm,
+	IFNULL(mtb122.xuefen,0) as xuefen FROM
+	m_tb01_user tb01
+	LEFT JOIN 
+	m_tb04_unit tb04
+	ON tb01.UNIT_NO = tb04.UNIT_NO
+	AND tb04.DEL_KBN = '0'
+	LEFT JOIN
+	m_tb22_hospital_section tb22
+	ON tb01.UNIT_NO = tb22.UNIT_NO
+	AND tb01.SECTION_ID = tb22.SECTION_ID
+	AND tb22.DEL_KBN = '0'
+	LEFT JOIN 
+	(SELECT SUM(tb121.XUEFEN) AS xuefen,tb122.USER_ID FROM m_tb122_public_course_exams tb122
+	LEFT JOIN m_tb121_public_courseware tb121
+	ON tb122.COURSE_ID = tb121.COURSE_ID
+	AND tb121.DEL_KBN = '0'
+	WHERE tb122.DEL_KBN = '0'
+	AND SUBSTRING(tb122.CREDIT_YEAR,1,4) = #{rlgl060310Bean.year}
+	GROUP BY tb122.USER_ID) mtb122
+	ON tb01.USER_ID = mtb122.USER_ID
+	WHERE tb01.DEL_KBN = '0'
+	AND LENGTH(tb01.PERSONNEL_ID) &gt; 14	
+	AND mtb122.xuefen &gt; 0
+	<if test="rlgl060310Bean.personnel_unit != null and rlgl060310Bean.personnel_unit != ''">
+		AND tb01.UNIT_NO LIKE CONCAT('', #{rlgl060310Bean.personnel_unit}, '%')
+	</if>
+    <if test="rlgl060310Bean.personnel_id != '' and rlgl060310Bean.personnel_id != null">
+     AND tb01.personnel_id = #{rlgl060310Bean.personnel_id}
+    </if>
+    <if test="rlgl060310Bean.personnel_nm != '' and rlgl060310Bean.personnel_nm != null">
+     AND tb01.user_name like '%${rlgl060310Bean.personnel_nm}%'
+    </if>
+    ORDER BY tb01.UNIT_NO
+    <if test="rlgl060310Bean.pageCount != 0 and rlgl060310Bean.pageCount != null">
+    LIMIT #{rlgl060310Bean.pageNo},#{rlgl060310Bean.pageCount} 
+    </if>
+  </select>
+  <!-- 查询学分获得情况条数 -->
+  <select id="getCounts" resultType="int">
+    SELECT count(*)
+	from 
+	m_tb01_user tb01
+	LEFT JOIN 
+	m_tb04_unit tb04
+	ON tb01.UNIT_NO = tb04.UNIT_NO
+	AND tb04.DEL_KBN = '0'
+	LEFT JOIN
+	m_tb22_hospital_section tb22
+	ON tb01.UNIT_NO = tb22.UNIT_NO
+	AND tb01.SECTION_ID = tb22.SECTION_ID
+	AND tb22.DEL_KBN = '0'
+	LEFT JOIN 
+	(SELECT SUM(tb121.XUEFEN) AS xuefen,tb122.USER_ID FROM m_tb122_public_course_exams tb122
+	LEFT JOIN m_tb121_public_courseware tb121
+	ON tb122.COURSE_ID = tb121.COURSE_ID
+	AND tb121.DEL_KBN = '0'
+	WHERE tb122.DEL_KBN = '0'
+	AND SUBSTRING(tb122.CREDIT_YEAR,1,4) = #{rlgl060310Bean.year}
+	GROUP BY tb122.USER_ID) mtb122
+	ON tb01.USER_ID = mtb122.USER_ID
+	WHERE tb01.DEL_KBN = '0'
+	AND LENGTH(tb01.PERSONNEL_ID) &gt; 14	
+	AND mtb122.xuefen &gt; 0
+	<if test="rlgl060310Bean.personnel_unit != null and rlgl060310Bean.personnel_unit != ''">
+		AND tb01.UNIT_NO LIKE CONCAT('', #{rlgl060310Bean.personnel_unit}, '%')
+	</if>
+    <if test="rlgl060310Bean.personnel_id != '' and rlgl060310Bean.personnel_id != null">
+     AND tb01.personnel_id = #{rlgl060310Bean.personnel_id}
+    </if>
+    <if test="rlgl060310Bean.personnel_nm != '' and rlgl060310Bean.personnel_nm != null">
+     AND tb01.user_name like '%${rlgl060310Bean.personnel_nm}%'
+    </if>    
+  </select>
+</mapper>

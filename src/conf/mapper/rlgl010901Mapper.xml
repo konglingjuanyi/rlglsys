@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010901Mapper">
+   <!-- 查询人员基本信息 -->
+    <select id="getPersonnelList" resultType="Mtb12Personnel">
+        SELECT 
+                (select M1.UNIT_NM from m_tb04_unit M1 
+                    where M1.UNIT_NO=a.PERSONNEL_UNIT 
+                    AND M1.DEL_KBN = '0' 
+                    limit 0,1
+                ) as personnel_unit_nm,
+                (select C.SECTION_NAME from m_tb22_hospital_section C 
+                    where a.PERSONNEL_OFFICE = C.SECTION_ID 
+                    AND a.PERSONNEL_UNIT = C.UNIT_NO 
+                    AND C.DEL_KBN = '0' 
+                    limit 0,1 
+                ) as personnel_office_nm,
+            a.*,
+                (select educational_bg from m_tb15_personnel_edu_info 
+                    where personnel_id=a.personnel_id
+                 order by GRADUATION_TIME desc 
+                    limit 0,1
+                ) as personnel_educational_bg,
+                (select position_nm from m_tb17_personnel_job_info 
+                    where personnel_id=a.personnel_id
+                 order by APPOINT_TIME desc 
+                    limit 0,1
+                ) as personnel_position_nm,
+                (select M2.ADM_NAME from m_tb19_personnel_practitioners_info TB19 
+                    LEFT JOIN m_tb02_adm M2 ON 
+                    TB19.TYPE = M2.ADM_NUM 
+                    AND M2.ADM_TYPE_CD = '008' 
+                    AND M2.DEL_KBN = '0' 
+                    where TB19.personnel_id=a.personnel_id
+                 order by ISSUE_TIME desc 
+                    limit 0,1
+                ) as personnel_practitioners_info
+        FROM m_tb12_personnel a
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon1"/>
+        <if test="personnelBean.pageCount != 0 and personnelBean.pageCount != null">
+        LIMIT #{personnelBean.pageNo},#{personnelBean.pageCount}
+        </if>
+       ;
+    </select>
+</mapper>

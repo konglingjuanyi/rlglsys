@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010303Mapper">
+   <!-- 查询人员基本信息 -->
+    <select id="getPersonnelList" resultType="Mtb12Personnel">
+        SELECT
+            *,
+				(select educational_bg from m_tb42_personnel_edu_info 
+					where personnel_id=a.personnel_id
+				 order by GRADUATION_TIME desc 
+					limit 0,1
+				) as personnel_educational_bg,
+				(select MID(LEVEL,3,2) from m_tb18_personnel_professional_info 
+					where personnel_id=a.personnel_id
+				 order by level desc 
+					limit 0,1
+				) as personnel_position_nm,
+				(select area from m_tb78_personnel_practice_info 
+					where personnel_id=a.personnel_id
+				 order by ISSUE_TIME desc 
+					limit 0,1
+				) as personnel_practitioners_info
+        FROM m_tb12_personnel a 
+
+        <include refid= "com.rlglsys.mapper.ICommonMapper.personalDetailWhereCommon"/>
+
+       ;
+    </select>
+    <!-- 删除人员 -->
+    <delete id="deletePersonnel" parameterType="int">
+       UPDATE m_tb12_personnel set DEL_KBN=1 WHERE  personnel_id=#{personnel_id};
+    </delete>
+    <delete id="deleteUser" parameterType="int">
+       UPDATE m_tb01_user set DEL_KBN=1 WHERE  personnel_id=#{personnel_id};
+    </delete>
+</mapper>

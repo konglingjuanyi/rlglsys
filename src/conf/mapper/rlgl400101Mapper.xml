@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl400101Mapper">
+	<!-- 查询公共课试题 -->
+    <select id="selectCourseware" resultType="com.rlglsys.bean.Rlgl400101Bean" >
+    		SELECT m121.COURSE_ID,m121.COURSE_NAME,
+			m121.COURSE_EXPLAIN,m121.COURSE_EXPERT_UNIT, 
+			m121.COURSE_IMAGE_URL,m121.COURSE_SUPPORT, 
+			m121.END_DATE,m121.XUEFEN, 
+			CASE WHEN m122.USER_ID IS NULL THEN 0 ELSE 2 END IS_PREP
+			FROM m_tb121_doctor_courseware AS m121
+			LEFT JOIN m_tb122_doctor_course_exams AS m122
+			ON m121.COURSE_ID = m122.COURSE_ID
+			AND m122.USER_ID = #{rlgl400101Bean.user_id}
+			<!--  AND m122.CREDIT_YEAR = #{rlgl400101Bean.credit_year}-->
+			AND m122.DEL_KBN = '0'
+			WHERE m121.DEL_KBN = '0'
+	</select>
+	<!-- 查询公共课试题 -->
+    <select id="selectCoursewareCount" resultType="float">
+    		SELECT IFNULL(sum(m122.CREDIT),0)
+			FROM m_tb122_doctor_course_exams AS m122
+			WHERE m122.USER_ID = #{rlgl400101Bean.user_id}
+			<!--  AND m122.CREDIT_YEAR = #{rlgl400101Bean.credit_year}-->
+			AND m122.DEL_KBN = '0'
+	</select>
+	<!-- 查询公共课试题 -->
+    <select id="selectCoursewareCount2" resultType="Integer">
+    		SELECT count(m122.COURSE_ID)
+			FROM m_tb122_doctor_course_exams AS m122
+			WHERE m122.USER_ID = #{rlgl400101Bean.user_id}
+			<!--  AND m122.CREDIT_YEAR = #{rlgl400101Bean.credit_year}-->
+			AND m122.DEL_KBN = '0'
+	</select>
+	
+  <!-- 通过课程编号查看课程信息 -->
+  <select id="getDoctorCourseWareById" resultType="com.rlglsys.entity.Mtb121PublicCourseWare">
+    SELECT
+      *
+    FROM
+      m_tb121_doctor_courseware
+    WHERE
+      COURSE_ID = #{course_id}
+    AND
+      DEL_KBN = '0'
+  </select>
+
+  <insert id="insertMtb122DoctorCourseExams">
+          INSERT INTO m_tb122_doctor_course_exams 
+				(
+						COURSE_ID	,          
+						COURSE_NAME	,        
+						CREDIT	,          
+						EXAMS_TIME	,      
+						CREDIT_YEAR	,      
+						CREDIT_CATEGORY	  ,        
+						USER_ID	,      
+						EX_KEY	 ,           
+						DEL_KBN	   ,         
+						EXPEND_01   ,        
+						EXPEND_02	 ,         
+						EXPEND_03	 ,         
+						EXPEND_04	  ,        
+						EXPEND_05	  ,        
+						LOGIN_USER_ID  ,     
+						LOGIN_DATE	 ,       
+						UPDATE_USER_ID	,    
+						UPDATE_DATE	        
+						)
+						VALUES (
+						#{mtb81Bean.course_id},       
+						#{mtb81Bean.course_name},     
+						#{mtb81Bean.credit},       
+						#{mtb81Bean.exams_time}, 
+						#{mtb81Bean.credit_year},  
+						#{mtb81Bean.credit_category},   
+						#{mtb81Bean.user_id}, 
+						#{mtb81Bean.ex_key},      
+						#{mtb81Bean.del_kbn}, 
+						#{mtb81Bean.expend_01},
+						#{mtb81Bean.expend_02},  
+						#{mtb81Bean.expend_03},   
+						#{mtb81Bean.expend_04},
+						#{mtb81Bean.expend_05},   
+						#{mtb81Bean.login_user_id },
+						#{mtb81Bean.login_date}, 
+						#{mtb81Bean.update_user_id},
+						#{mtb81Bean.update_date}
+						);
+    </insert>
+</mapper>

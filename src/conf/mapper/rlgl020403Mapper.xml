@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020403Mapper">
+    <!--新项目申报详细列表查询 -->
+    <select id="getMtb87NewProjectDeclareInfoList" resultType="com.rlglsys.bean.Rlgl020401Bean">
+        SELECT
+          *
+        FROM
+          m_tb87_new_project_declare
+        WHERE
+          UNIT_NO = #{declareInfo.unit_no}
+          <if test="declareInfo.apply_id != '' and declareInfo.apply_id != null">
+           AND APPLY_ID= #{declareInfo.apply_id}
+          </if>
+          <if test="declareInfo.project_nm != '' and declareInfo.project_nm != null">
+           AND PROJECT_NM LIKE CONCAT('%',  #{declareInfo.project_nm}, '%')
+          </if>
+          <if test="declareInfo.project_liable_nm != '' and declareInfo.project_liable_nm != null">
+            AND PROJECT_LIABLE_NM LIKE CONCAT('%', #{declareInfo.project_liable_nm}, '%')
+          </if>
+          <if test="declareInfo.conduct_pattern != '' and declareInfo.conduct_pattern != null">
+          AND CONDUCT_PATTERN LIKE CONCAT('%', #{declareInfo.conduct_pattern}, '%')
+          </if>
+          ORDER BY APPLY_ID
+          <if test="offset != 0 and offset != null">
+           LIMIT #{limit},#{offset}
+          </if>
+          ;
+    </select>
+    
+     <!--新项目申报件数查询-->
+    <select id="getMtb87NewProjectDeclareInfoCount" resultType="int">
+        SELECT
+         Count(*)
+        FROM
+          m_tb87_new_project_declare
+        WHERE
+          UNIT_NO = #{declareInfo.unit_no}
+          <if test="declareInfo.apply_id != '' and declareInfo.apply_id != null">
+           AND APPLY_ID= #{declareInfo.apply_id}
+          </if>
+          <if test="declareInfo.project_nm != '' and declareInfo.project_nm != null">
+           AND PROJECT_NM LIKE CONCAT('%',  #{declareInfo.project_nm}, '%')
+          </if>
+          <if test="declareInfo.project_liable_nm != '' and declareInfo.project_liable_nm != null">
+            AND PROJECT_LIABLE_NM LIKE CONCAT('%', #{declareInfo.project_liable_nm}, '%')
+          </if>
+          <if test="declareInfo.conduct_pattern != '' and declareInfo.conduct_pattern != null">
+          AND CONDUCT_PATTERN LIKE CONCAT('%', #{declareInfo.conduct_pattern}, '%')
+          </if>
+          ORDER BY APPLY_ID;
+    </select>
+    
+     <!--新项目申报详细信息-->
+    <select id="getProjectInfoById" resultType="com.rlglsys.bean.Rlgl020401Bean">
+        SELECT
+         *
+        FROM
+          m_tb87_new_project_declare
+        WHERE
+          APPLY_ID= #{apply_id}
+    </select>
+   
+</mapper>

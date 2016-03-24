@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl070108" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl070108Init"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070108InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070108.jsp</result>
+       </action>
+    </package>
+</struts>
+

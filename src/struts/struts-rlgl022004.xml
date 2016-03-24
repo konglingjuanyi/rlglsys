@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl022004" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl022004TimeInit" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022004TimeInitAction" 
+        method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl022011.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+       <action name="rlgl022004Search"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022004SearchAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl022011.jsp</result>
+       </action>
+       
+       <!-- 初期化处理 -->
+       <action name="rlgl022004_2TimeInit" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022004_2TimeInitAction" 
+        method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl022011_2.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+       <action name="rlgl022004_2Search"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022004_2SearchAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl022011_2.jsp</result>
+       </action>
+        <!-- 初期化处理 -->
+       <action name="rlgl400103TimeInit" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl400103TimeInitAction" 
+        method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl400103.jsp</result>
+       </action>
+       <!-- 查询处理 -->
+       <action name="rlgl400103Search"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl400103SearchAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl400103.jsp</result>
+       </action>		
+         <!-- 交费画面实现 -->
+       <action name="Rlgl022001101Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022001101InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl02201101.jsp</result>
+       </action>
+       
+         <!-- 交费成功 -->
+       <action name="Rlgl022110Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022110InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl022110.jsp</result>
+       </action>
+        <action name="rlgl100112Init"
+        class="com.rlglsys.action.learnonline.Rlgl100112InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl100112.jsp</result>
+       </action>
+          <action name="rlgl100112_2Init"
+        class="com.rlglsys.action.learnonline.Rlgl100112_2InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl100112_2.jsp</result>
+       </action>
+<!--        <action name="forgetPassword" -->
+<!--         class="com.rlglsys.action.learnonline.forgetPasswordAction" -->
+<!--             method="execute"> -->
+<!--             <result name="init">/WEB-INF/jsp/rlgl100112.jsp</result> -->
+<!--        </action> -->
+    </package>
+</struts>
+

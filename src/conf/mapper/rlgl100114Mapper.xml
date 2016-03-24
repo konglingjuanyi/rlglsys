@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl100114Mapper">
+ <resultMap type="com.rlglsys.bean.Rlgl020902Bean" id="resultInfoList">
+      <!-- 姓名-->
+      <result property="personnelNm" column="personnelNm"/>
+      <!-- 身份证号 -->
+      <result property="personnelCardId" column="personnelCardId"/>
+      <!-- 单位编号 -->
+      <result property="personnelUnitNo" column="personnelUnitNo"/>
+      <!-- 科室编号 -->
+      <result property="personnelSectionId" column="personnelSectionId"/>
+      <!-- 职称编号 -->
+      <result property="departmentValue" column="departmentValue"/>
+      <!-- 职称编号 -->
+      <result property="protypeValue" column="protypeValue"/>
+      <!-- 一类学分 -->
+      <result property="oneCredit" column="oneCredit"/>
+      <!-- 二类学分 -->
+      <result property="twoCredit" column="twoCredit"/>
+      <!-- 合计学分 -->
+      <result property="sumCredit" column="sumCredit"/>
+      <!-- 考核开始时间 -->
+      <result property="checkStartTime" column="checkStartTime"/>
+      <!-- 考核结束时间 -->
+      <result property="checkEndTime" column="checkEndTime"/>
+      <!-- 必修课情况 -->
+      <result property="required_course" column="required_course"/>
+      <result property="year" column="year"/>
+      <result property="course_name" column="course_name"/>
+      <result property="credit" column="credit"/>
+      <result property="cerdit_category" column="cerdit_category"/>
+  </resultMap>
+	<!-- 获得学分列表 -->
+	<select id="getCreditList" resultType="com.rlglsys.entity.Mtb66TotalCredit">
+	SELECT
+        *,
+        (CREDIT_I + CREDIT_II) as credit_sum
+    FROM
+        m_tb66_total_credit
+	WHERE
+	  	del_kbn='0'
+	  	<if test="creditBean.personal_id != '' and creditBean.personal_id != null">
+       	and PERSONAL_ID = #{creditBean.personal_id}
+        </if>
+        <if test="creditBean.personnel_unit_no != '' and creditBean.personnel_unit_no != null">
+        and personnel_unit_no = #{creditBean.personnel_unit_no}
+        </if>
+        <if test="creditBean.year != '' and creditBean.year != null">
+        and YEAR = #{creditBean.year}
+        </if>
+        <if test="creditBean.pageCount != 0 and creditBean.pageCount != null">
+        LIMIT #{creditBean.pageNo},#{creditBean.pageCount}
+        </if>
+	</select>
+	
+  <!-- 继续医学教育-统计分析-学分查询查询SQL -->
+  <select id="doResultInfoList" resultMap="resultInfoList">
+  	 select        
+       tb01.USER_NAME as personnelNm,       
+       tb01.PERSONNEL_ID as personnelCardId,       
+       tb01.UNIT_NO as personnelUnitNo,      
+       tb01.SECTION_ID as personnelSectionId,      
+	   mid(tb18.level,3,2) as departmentValue,
+	   tb19.type as protypeValue,         
+       IFNULL(tb66.CREDIT_I,0) as oneCredit,         
+       IFNULL(tb66.CREDIT_II,0) as twoCredit,       
+       (IFNULL(tb66.CREDIT_I,0) + IFNULL(tb66.CREDIT_II,0)) as sumCredit,
+	   tb66.year AS year
+     from m_tb01_user AS tb01 LEFT JOIN 
+	    m_tb66_total_credit AS tb66
+	    ON tb66.PERSONAL_ID=tb01.PERSONNEL_ID
+	    AND tb66.year=#{rlgl070106Bean.year}
+	    AND tb66.DEL_KBN='0'
+		LEFT JOIN m_tb18_personnel_professional_info AS tb18
+		ON tb01.PERSONNEL_ID=tb18.PERSONNEL_ID 
+		LEFT JOIN m_tb19_personnel_practitioners_info AS tb19
+		ON tb01.PERSONNEL_ID=tb19.PERSONNEL_ID 
+		where tb01.DEL_KBN='0'
+		AND tb01.USER_TYPE = '0'
+		<if test="rlgl070106Bean.personnelSectionId != null and rlgl070106Bean.personnelSectionId != ''">
+			AND tb01.SECTION_ID = #{rlgl070106Bean.personnelSectionId}
+		</if>
+		<if test="rlgl070106Bean.departmentValue != null and rlgl070106Bean.departmentValue != ''">
+			AND mid(tb18.level,3,2) = #{rlgl070106Bean.departmentValue}
+		</if>
+		<if test="rlgl070106Bean.protypeValue != null and rlgl070106Bean.protypeValue != ''">
+			AND tb19.TYPE = #{rlgl070106Bean.protypeValue}
+		</if>
+		AND tb01.unit_no LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+       <if test="rlgl070106Bean.pageCount != 0 and rlgl070106Bean.pageCount != null">
+       LIMIT #{rlgl070106Bean.pageNo},#{rlgl070106Bean.pageCount}
+       </if>
+       ;
+  </select>
+  <!-- 继续医学教育-统计分析-学分查询查询SQL -->
+  <select id="doResultInfoCount" resultType="int">
+  	 select count(tb01.PERSONNEL_ID)
+     from m_tb01_user AS tb01
+		LEFT JOIN m_tb18_personnel_professional_info AS tb18
+		ON tb01.PERSONNEL_ID=tb18.PERSONNEL_ID 
+		LEFT JOIN m_tb19_personnel_practitioners_info AS tb19
+		ON tb01.PERSONNEL_ID=tb19.PERSONNEL_ID 
+		where tb01.DEL_KBN='0'
+		AND tb01.USER_TYPE = '0'
+		<if test="rlgl070106Bean.personnelSectionId != null and rlgl070106Bean.personnelSectionId != ''">
+			AND tb01.SECTION_ID = #{rlgl070106Bean.personnelSectionId}
+		</if>
+		<if test="rlgl070106Bean.departmentValue != null and rlgl070106Bean.departmentValue != ''">
+			AND mid(tb18.level,3,2) = #{rlgl070106Bean.departmentValue}
+		</if>
+		<if test="rlgl070106Bean.protypeValue != null and rlgl070106Bean.protypeValue != ''">
+			AND tb19.TYPE = #{rlgl070106Bean.protypeValue}
+		</if>
+		AND tb01.unit_no LIKE CONCAT('', #{rlgl070106Bean.unit_no}, '%')
+  </select>
+</mapper>

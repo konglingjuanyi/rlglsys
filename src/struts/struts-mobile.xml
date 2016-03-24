@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="mobile" extends="json-default">
+		<action name="loginOnMobile"
+			class="com.rlglsys.action.mobile.LoginOnMobileAction"
+			method="login">
+			<result type="json"></result>
+		</action>
+		<action name="creditOnMobile"
+			class="com.rlglsys.action.mobile.CreditMobileAction"
+			method="search">
+			<result type="json"></result>
+		</action>
+		<action name="personnelOnMobile"
+			class="com.rlglsys.action.mobile.PersonnelMobileAction"
+			method="search">
+			<result type="json"></result>
+		</action>
+		<action name="learnOnMobile"
+			class="com.rlglsys.action.mobile.LearnMobileAction"
+			method="search">
+			<result type="json"></result>
+		</action>
+		<action name="versionControlOnMobile"
+			class="com.rlglsys.action.mobile.VersionControlOnMobileAction"
+			method="getVersion">
+			<result type="json"></result>
+		</action>
+        <action name="rlgl060102InitOnMobile" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060102InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl060109.jsp</result>
+        </action>
+        <action name="rlgl060102SearchOnMobile" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060102SearchAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl060107.jsp</result>
+        </action>
+        <action name="rlgl060102UpdateOnMobile" class="com.rlglsys.action.examinationsystem.onlineexamination.Rlgl060102UpdateAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl060106.jsp</result>
+        </action>
+        
+         <action name="rlgl090806InitOnMobile" class="com.rlglsys.action.sysmanage.notice.Rlgl090806InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl090806.jsp</result>
+        </action>
+	</package>
+</struts>
+

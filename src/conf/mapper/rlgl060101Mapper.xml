@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060101Mapper">
+
+  <!-- 获取题目类别名称 -->
+  <select id="getQuestionTypeName" resultType="string">
+    SELECT
+      ADM_NAME
+    FROM
+      m_tb02_adm
+    WHERE
+      ADM_TYPE_CD = '222'
+    AND
+      ADM_NUM = #{question_type}
+    AND
+      DEL_KBN = 0
+  </select>
+  
+  <!-- 插入申请信息到名医申请明细表 -->
+  <insert id="insertIntoMtb99">
+    insert into
+      m_tb99_question_bank_manage (
+        QUESTION_ID, 
+        SUBJECT_KB,
+        QUESTION_NO,
+        QUESTION_TYPE,
+        CHAPTER_NO,
+        STEM,
+        OPTION_ITEM,
+        ANSWER,
+        EX_KEY,
+        DEL_KBN,
+        LOGIN_USER_ID,
+        LOGIN_DATE,
+        UPDATE_USER_ID,
+        UPDATE_DATE
+      ) values (
+        #{rlgl060101Bean.question_id},
+        #{rlgl060101Bean.subject_kb},
+        #{rlgl060101Bean.question_no},
+        #{rlgl060101Bean.question_type},
+        #{rlgl060101Bean.chapter_no},
+        #{rlgl060101Bean.stem},
+        #{rlgl060101Bean.option_item},
+        #{rlgl060101Bean.answer},
+        #{rlgl060101Bean.ex_key},
+        #{rlgl060101Bean.del_kbn},
+        #{rlgl060101Bean.login_user_id},
+        #{rlgl060101Bean.login_date},
+        #{rlgl060101Bean.update_user_id},
+        #{rlgl060101Bean.update_date}
+      )
+  </insert>
+  
+  <delete id="deleteQuestionBySuitArea">
+    DELETE FROM
+      m_tb99_question_bank_manage
+    WHERE
+      SUBJECT_KB = #{subject_kb}
+    AND
+      DEL_KBN = 0
+  </delete>
+
+  
+</mapper>

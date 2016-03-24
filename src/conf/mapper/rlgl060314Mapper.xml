@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060314Mapper">
+  
+  <!-- 课件提供商使用情况 -->
+  <select id="getList" resultType="com.rlglsys.bean.Rlgl060314Bean">
+		SELECT n81.course_id,
+		n81.course_name,
+		n81.credit,
+		n81.courseCounts,
+		tb02.ADM_NAME as course_support from 
+		(SELECT tb81.course_id,
+		tb81.course_name,
+		tb81.credit,
+		COUNT(tb81.course_id) AS courseCounts FROM
+		m_tb81_course_exams tb81
+		WHERE
+		tb81.DEL_KBN = '0'
+		AND tb81.CREDIT_YEAR = #{rlgl060314Bean.credit_year}
+		<if test="rlgl060314Bean.course_id != '' and rlgl060314Bean.course_id != null">
+		AND tb81.course_id = #{rlgl060314Bean.course_id}
+		</if>
+		<if test="rlgl060314Bean.course_name != '' and rlgl060314Bean.course_name != null">
+		AND tb81.course_name like '%${rlgl060314Bean.course_name}%'
+		</if>
+		group BY tb81.course_id) n81
+		LEFT JOIN
+		m_tb63_courseware tb63
+		ON n81.COURSE_ID = tb63.COURSE_ID
+		AND tb63.DEL_KBN = '0'
+		LEFT JOIN
+		m_tb02_adm tb02
+		ON tb02.ADM_NUM = tb63.COURSE_SUPPORT
+		AND tb02.ADM_TYPE_CD = '193'
+		AND tb02.DEL_KBN = '0'
+		ORDER BY n81.courseCounts DESC
+		<if test="rlgl060314Bean.pageCount != 0 and rlgl060314Bean.pageCount != null">
+    	LIMIT #{rlgl060314Bean.pageNo},#{rlgl060314Bean.pageCount} 
+    	</if>		
+  </select>
+  <!-- 课件提供商使用情况条数 -->
+  <select id="getCounts" resultType="int">
+    	SELECT count(*) from 
+		(SELECT tb81.course_id,
+		tb81.course_name,
+		tb81.credit,
+		COUNT(tb81.course_id) AS courseCounts FROM
+		m_tb81_course_exams tb81
+		WHERE
+		tb81.DEL_KBN = '0'
+		AND tb81.CREDIT_YEAR = #{rlgl060314Bean.credit_year}
+		<if test="rlgl060314Bean.course_id != '' and rlgl060314Bean.course_id != null">
+		AND tb81.course_id = #{rlgl060314Bean.course_id}
+		</if>
+		<if test="rlgl060314Bean.course_name != '' and rlgl060314Bean.course_name != null">
+		AND tb81.course_name like '%${rlgl060314Bean.course_name}%'
+		</if>
+		group BY tb81.course_id) n81
+  </select>
+</mapper>

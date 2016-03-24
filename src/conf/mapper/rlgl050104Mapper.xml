@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl050104Mapper">
+
+    <!--根据传过来的教学点ID查询该教学点获得的学时数-->
+     <select id="getPointCredit" resultType="float" >
+		SELECT
+        IFNULL(sum(sumTime1),0) as point_PassTime 
+		FROM(
+		select
+		IF(SUM(tb122.CREDIT)>100,100,SUM(tb122.CREDIT)) as sumTime1
+		FROM
+		
+		m_tb122_doctor_course_exams tb122
+		
+		INNER JOIN m_tb01_user tb01
+		
+		on tb122.user_id = tb01.user_id
+		
+		where tb01.unit_no = #{point_id}
+		
+		and tb122.del_kbn = '0'
+		and tb01.del_kbn='0'
+		
+		GROUP BY tb122.user_id
+		)n81
+    </select>
+    
+    
+        <!--根据传过来的教学点ID查询该教学点的人数-->
+     <select id="getPointPersonNO" resultType="int" >
+		select count(0) as point_PersonNO
+		from m_tb01_user as tb01
+		where tb01.unit_no = #{point_id}
+		and LENGTH(tb01.user_id) > 14
+		and tb01.del_kbn = '0'
+    </select>
+    
+            <!--根据登录用户ID查询该ID下辖的教学点信息-->
+     <select id="getPointList" resultType="com.rlglsys.bean.Rlgl050104Bean">
+			SELECT 
+			tb04.unit_no as point_id,
+			tb04.unit_nm as point_nm
+			from 
+			m_tb04_unit as tb04
+			where tb04.unit_super=#{rlgl050104Bean.unit_no}
+			and
+			length(tb04.unit_no)='9'
+		    and
+			tb04.del_kbn = '0'
+		  <if test="rlgl050104Bean.pageCount != 0 and rlgl050104Bean.pageCount != null" >
+           LIMIT #{rlgl050104Bean.pageNo},#{rlgl050104Bean.pageCount} 
+          </if>
+    </select>
+    
+    <!--根据登录用户ID查询该ID下辖的教学点信息-->
+         <select id="getPointNO" resultType="int">
+			SELECT 
+			count(tb04.unit_no)
+			from 
+			m_tb04_unit as tb04
+			where tb04.unit_super=#{unit_no}
+			and length(tb04.unit_no)='9'
+			and
+			tb04.del_kbn = '0'
+    </select>
+    
+    <!-- 取得县市区卫生局列表 -->
+	<select id="getCounty" resultType = "com.rlglsys.bean.Rlgl050104Bean">
+	SELECT
+	a.UNIT_NO unit_no,
+	a.unit_nm 
+	FROM
+	m_tb04_unit a 
+	WHERE
+	LENGTH(a.UNIT_NO) = '6'
+	and
+	a.del_kbn = '0'
+	GROUP BY
+	a.UNIT_NO
+	</select>
+	<!-- 取得县市区卫生局列表条数 -->
+	<select id="getCountyCount" resultType = "int">
+	SELECT
+	count(0)
+	FROM
+	m_tb04_unit a 
+	WHERE
+	LENGTH(a.UNIT_NO) = '6'
+	and
+	a.del_kbn = '0'
+	GROUP BY
+	a.UNIT_NO
+	</select>
+</mapper>

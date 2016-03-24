@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 单位管理联系人信息 -->
+<struts>
+    <package name="rlgl010110" extends="rlgl" namespace="/">
+        <!-- 单位管理联系人列表查看 -->
+        <action name="rlgl010110Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010110Action"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl010112.jsp</result>
+        </action>
+        <!-- 单位管理联系人信息编辑 -->
+        <action name="rlgl010112Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010112Action"
+            method="execute">
+            <result name="edit">/WEB-INF/jsp/rlgl010114.jsp</result>
+        </action>
+        <!-- 单位管理联系人详细信息查看 -->
+        <action name="rlgl010111Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010111Action"
+            method="execute">
+            <result name="view">/WEB-INF/jsp/rlgl010113.jsp</result>
+        </action>
+        
+        <!-- 单位管理联系人信息删除 -->
+        <action name="rlgl010113Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010113Action"
+            method="execute">
+            <result name="init" type="redirectAction">rlgl010110Init</result>
+            <!-- <result name="init">/WEB-INF/jsp/rlgl010112.jsp</result> -->
+        </action>
+        
+        <!-- 单位管理联系人新建 -->
+        <action name="rlgl010114Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010114Action"
+            method="execute">
+            <result name="create">/WEB-INF/jsp/rlgl010110.jsp</result>
+        </action>
+        
+        <!-- 用户人员信息查询 -->
+        <action name="rlgl010115Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010115Action"
+            method="execute">
+            <result name="create">/WEB-INF/jsp/rlgl010110.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010110.jsp</result>
+        </action>
+        
+        <!-- 保存单位管理联系人信息 -->
+        <action name="rlgl010116Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010116Action"
+            method="execute">
+            <!-- <result name="init">/WEB-INF/jsp/rlgl010112.jsp</result> -->
+            <result name="init" type="redirectAction">rlgl010110Init</result>
+            <result name="error">/WEB-INF/jsp/rlgl010110.jsp</result>
+        </action>
+        
+        <!-- 编辑管理员信息后，保存信息 -->
+        <action name="rlgl010117Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010117Action"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl010114.jsp</result>
+            <!-- <result name="init">/WEB-INF/jsp/rlgl010112.jsp</result> -->
+            <result name="init" type="redirectAction">rlgl010110Init</result>
+        </action>
+        
+        <!-- 管理人员替换，重新选择人员 -->
+        <action name="rlgl010118Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010118Action"
+            method="execute">
+            <result name="view">/WEB-INF/jsp/rlgl010115.jsp</result>
+        </action>
+        
+        <!-- 取消管理人员替换，返回信息编辑界面 -->
+        <action name="rlgl010119Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010119Action"
+            method="execute">
+            <result name="edit">/WEB-INF/jsp/rlgl010114.jsp</result>
+        </action>
+        <!-- 指定新的管理人员，返回信息编辑界面，替换原管理员信息 -->
+        <action name="rlgl010120Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010120Action"
+            method="execute">
+            <result name="edit">/WEB-INF/jsp/rlgl010114.jsp</result>
+        </action>
+        <!-- 删除原来管理员信息，插入新的管理员信息 -->
+        <action name="rlgl010121Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010121Action"
+            method="execute">
+            <!-- <result name="init">/WEB-INF/jsp/rlgl010112.jsp</result> -->
+            <result name="init" type="redirectAction">rlgl010110Init</result>
+        </action>
+        
+        <!-- 人员选择 打开人员选择列表 -->
+        <action name="rlgl010110SelectUser"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010110SelectUserAction"
+            method="execute">
+            <result name="select">/WEB-INF/jsp/rlgl010117.jsp</result>
+        </action>
+        
+        <!-- 选择人员后，返回新建管理员页面 -->
+        <action name="rlgl010110UserSelected"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010110UserSelectedAction"
+            method="execute">
+            <result name="create">/WEB-INF/jsp/rlgl010110.jsp</result>
+        </action>
+        
+        <!-- 下级单位管理员查看 -->
+        <action name="rlgl010122Init"
+            class="com.rlglsys.action.hiringmanage.unitmanage.Rlgl010122Action"
+            method="execute">
+            <result name="view">/WEB-INF/jsp/rlgl010116.jsp</result>
+        </action>
+    </package>
+</struts>
+

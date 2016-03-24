@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl022005" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl022005Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022005InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022005.jsp</result>
+       </action>	
+       <action name="rlgl022005Delete"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022005DeleteAction"
+            method="execute">
+           <result name="success" type="redirectAction">
+			  <param name="actionName">rlgl022005Init</param></result>
+       </action>	   
+    </package>
+</struts>
+

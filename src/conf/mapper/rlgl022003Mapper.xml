@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl022003Mapper">
+    <!-- 查询该分类用户没有选择的课件 -->
+    <select id="courseList" resultType="com.rlglsys.bean.Rlgl022003Bean" >
+          SELECT  *  FROM m_tb63_courseware WHERE 1=1
+          		<if test="course_catagory !=''">
+			          AND (COURSE_CATAGORY  LIKE CONCAT(#{course_catagory}, '%')
+			          or COURSE_CATAGORY2 LIKE CONCAT(#{course_catagory}, '%') 
+			          or COURSE_CATAGORY3 LIKE CONCAT(#{course_catagory}, '%') 
+			          or ISALLCOURSE ='001'
+			          )
+				</if> 
+          			AND END_DATE>#{rlgl022003Bean.current_date} AND COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			            USER_ID=#{user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			            USER_ID=#{user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID in (#{user_id},#{rlgl022003Bean.personnel_id})
+							)
+	 <if test="rlgl022003Bean.pageCount != 0 and rlgl022003Bean.pageCount != null">
+           LIMIT #{rlgl022003Bean.pageNo},#{rlgl022003Bean.pageCount}
+     </if>
+    </select>
+    <!-- 查询该分类用户没有选择的课件 -->
+    <select id="getCourseCount" resultType="int" >
+          SELECT  count(*)  FROM m_tb63_courseware WHERE 1=1
+                <if test="course_catagory !=''">
+			          AND (COURSE_CATAGORY  LIKE CONCAT(#{course_catagory}, '%')
+			          or COURSE_CATAGORY2 LIKE CONCAT(#{course_catagory}, '%') 
+			          or COURSE_CATAGORY3 LIKE CONCAT(#{course_catagory}, '%') 
+			          or ISALLCOURSE ='001'
+			          )
+				</if> 
+          		AND END_DATE>#{rlgl022003Bean.current_date} AND COURSE_ID NOT IN (
+								SELECT
+									COURSE_ID
+								FROM
+									m_tb79_course_temporary
+								WHERE
+			            USER_ID=#{user_id}
+			          UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb80_course_selected
+								WHERE
+			            USER_ID=#{user_id}
+			           UNION 
+			          SELECT
+									COURSE_ID
+								FROM
+									m_tb81_course_exams
+								WHERE
+			            USER_ID=#{user_id}
+							)
+    </select>
+    <insert id="insertTemporary" parameterType="int">
+          INSERT INTO m_tb79_course_temporary(
+					COURSE_ID,	      
+					COURSE_NAME,     
+					COURSE_OPT_TIME,
+					USER_ID,        
+					EX_KEY,        
+					DEL_KBN,       
+					EXPEND_01,     
+					EXPEND_02,     
+					EXPEND_03,     
+					EXPEND_04,     
+					EXPEND_05,     
+					LOGIN_USER_ID,
+					LOGIN_DATE,   
+					UPDATE_USER_ID,
+					UPDATE_DATE	  
+		   )
+		   VALUES 
+		  (
+					#{mtb79CourseTemporary.course_id},	       
+					#{mtb79CourseTemporary.course_name},       
+					#{mtb79CourseTemporary.course_opt_time },  
+					#{mtb79CourseTemporary.user_id	},         
+					#{mtb79CourseTemporary.ex_key	},           
+					#{mtb79CourseTemporary.del_kbn	 },        
+					#{mtb79CourseTemporary.expend_01	 },      
+					#{mtb79CourseTemporary.expend_02	 },      
+					#{mtb79CourseTemporary.expend_03	 },      
+					#{mtb79CourseTemporary.expend_04	 },      
+					#{mtb79CourseTemporary.expend_05	 },      
+					#{mtb79CourseTemporary.login_user_id	  }, 
+					#{mtb79CourseTemporary.login_date	 },      
+					#{mtb79CourseTemporary.update_user_id	},   
+					#{mtb79CourseTemporary.update_date}	       
+           )
+    </insert>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010508Mapper">
+    <!-- 在编信息查询SQL -->
+    <select id="getTb34Info" resultType="com.rlglsys.entity.Mtb34PersonalEnrolledInfo">
+        SELECT *
+        FROM m_tb34_personal_enrolled_detail
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+            AND APPLY_NUMBER = #{applyNumber}
+    </select>
+    <!-- 个人人事申请信息查询SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{apply_no}
+    </select>
+    <!-- 更新个人在编申请明细信息 -->
+    <update id="updateTb34Info">
+        UPDATE m_tb34_personal_enrolled_detail
+        SET
+            UNIT_CHECKER = #{updatetb34Info.unit_checker},
+            UNIT_CHECK_DATE = #{updatetb34Info.unit_check_date},
+            UNIT_CHECK_VIEWS = #{updatetb34Info.unit_check_views},
+            UNIT_CHECK_RESULT = #{updatetb34Info.unit_check_result},
+            COUNTY_CHECKER = #{updatetb34Info.county_checker},
+            COUNTY_CHECK_DATE = #{updatetb34Info.county_check_date},
+            COUNTY_CHECK_VIEWS = #{updatetb34Info.county_check_views},
+            COUNTY_CHECK_RESULT = #{updatetb34Info.county_check_result},
+            DOWNTOWN_CHECKER = #{updatetb34Info.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{updatetb34Info.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{updatetb34Info.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{updatetb34Info.downtown_check_result},
+            MINISTRY_CHECKER = #{updatetb34Info.ministry_checker},
+            MINISTRY_CHECK_DATE = #{updatetb34Info.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{updatetb34Info.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{updatetb34Info.ministry_check_result},
+            NOW_MARK = #{updatetb34Info.now_mark},
+            UPDATE_USER_ID = #{updatetb34Info.update_user_id},
+            UPDATE_DATE = #{updatetb34Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb34Info.apply_no}
+        AND APPLY_NUMBER = #{updatetb34Info.apply_number}
+    </update>
+  <!-- 更新个人人事申请信息 -->
+    <update id="updateTb29Info">
+        UPDATE m_tb29_personalapplication
+        SET
+            CHECK_RESULT = #{updatetb29Info.check_result},
+            NOW_MARK = #{updatetb29Info.now_mark},
+            WILL_CHECKUNITNO = #{updatetb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{updatetb29Info.update_user_id},
+            UPDATE_DATE = #{updatetb29Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb29Info.apply_no}
+    </update>
+    <!-- 个人基本信息的更新SQL -->
+    <update id="updateTb12Info">
+        UPDATE m_tb12_personnel
+        SET
+            PERSONNEL_REGULAR = #{mtb12Info.personnel_regular},
+            PERSONNEL_REGULARNUM = #{mtb12Info.personnel_regularnum},
+            PERSONNEL_REGULARNUM_TIME = #{mtb12Info.personnel_regularnum_time},
+            UPDATE_USER_ID = #{mtb12Info.update_user_id},
+            UPDATE_DATE = #{mtb12Info.update_date}
+        WHERE
+            PERSONNEL_ID = #{mtb12Info.personnel_id}
+            AND PERSONNEL_CARD_ID = #{mtb12Info.personnel_card_id}
+            AND PERSONNEL_UNIT = #{mtb12Info.personnel_unit}
+    </update>
+    <!-- 在编申请明细表_编制时间更新SQL -->
+    <update id="updateTb34Info1">
+        UPDATE m_tb34_personal_enrolled_detail
+        SET
+            APPROVE_DATE = #{updatetb34Info.approve_date},
+            UPDATE_USER_ID = #{updatetb34Info.update_user_id},
+            UPDATE_DATE = #{updatetb34Info.update_date}
+        WHERE
+            APPLY_NO = #{updatetb34Info.apply_no}
+        AND APPLY_NUMBER = #{updatetb34Info.apply_number}
+    </update>
+</mapper>

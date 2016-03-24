@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl070103" extends="rlgl" namespace="/">
+       <!-- 初期化处理 -->
+       <action name="rlgl070103Init"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070103InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl070103.jsp</result>
+       </action>
+        <action name="rlgl070103Search"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070103SearchAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl070103.jsp</result>
+       </action>
+        <action name="rlgl070104Init"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070104InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl070104.jsp</result>
+       </action>
+       <action name="rlgl070104Search"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070104SearchAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl070104.jsp</result>
+       </action>
+      <action name="rlgl070104Detail"
+        class="com.rlglsys.action.reconciliationsystem.account.Rlgl070104DetailAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl070105.jsp</result>
+       </action>
+    </package>
+</struts>
+

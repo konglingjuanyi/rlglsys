@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+
+       <package name="userExamInfoReport" extends="rlgl" namespace="/">
+         <!-- 我的学习卡 -->
+       <action name="userExamReportInit"
+        class="com.rlglsys.action.learnonline.UserExamInfoReportInitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/userExamInfo.jsp</result> 
+       </action>  
+        <action name="userRegisterReportInit"
+        class="com.rlglsys.action.learnonline.UserExamInfoReportInitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/userRegisterInfo.jsp</result> 
+       </action>  
+     
+     </package>
+
+    <!-- 20141125追加start -->
+    <!-- 学分证明打印 -->
+    <include file="/struts/struts-rlgl070203.xml" />
+    <!-- 发票申请 -->
+    <include file="/struts/struts-rlgl070201.xml" />
+    <!-- 发票申请查询 -->
+    <include file="/struts/struts-rlgl070202.xml" />
+    <!-- 乡医进度县市区卫生局用 -->
+    <include file="/struts/struts-rlgl050104.xml" />
+    <!-- 乡医进度查询(卫生局专用) -->
+    <include file="/struts/struts-rlgl050105.xml" />
+    
+    <!-- 20141125追加end -->
+    
+    <!-- 基础数据 -->
+    <include file="/struts/struts-rlgl090501.xml" />
+    <include file="/struts/struts-rlgl090502.xml" />
+    <include file="/struts/struts-rlgl090503.xml" />
+    <include file="/struts/struts-rlgl090504.xml" />
+    <include file="/struts/struts-rlgl090505.xml" />
+    <include file="/struts/struts-rlgl090506.xml" />
+    <include file="/struts/struts-rlgl090507.xml" />
+    <include file="/struts/struts-rlgl090508.xml" />
+    <include file="/struts/struts-rlgl090509.xml" />
+    <include file="/struts/struts-rlgl090510.xml" />
+    <include file="/struts/struts-rlgl090511.xml" />
+    <include file="/struts/struts-rlgl090512.xml" />
+    <include file="/struts/struts-rlgl090513.xml" />
+    <!-- 已选课件学习-->
+    <include file="/struts/struts-rlgl100104.xml" />
+    <!-- 公共课考试-->
+    <include file="/struts/struts-rlgl100106.xml" />
+    <!-- 手机端-->
+    <include file="/struts/struts-mobile.xml" />
+    <!-- 密码修改-->
+    <include file="/struts/struts-rlgl000103.xml" />
+    <!-- 人力管理用户模块 -->
+    <include file="/struts/struts-rlgl000102.xml" />
+    <include file="/struts/struts-rlgl000202.xml" />
+    <include file="/struts/struts-rlgl000203.xml" />
+    <include file="/struts/struts-rlgl000201.xml" />
+    <!-- 用户角色管理 -->
+    <include file="/struts/struts-rlgl000211.xml" />
+    <include file="/struts/struts-rlgl000212.xml" />
+    <!-- 单位角色管理 -->
+    <include file="/struts/struts-rlgl000213.xml" />
+   <!-- 单位用户注册 -->
+    <include file="/struts/struts-rlgl090101.xml" />
+    <include file="/struts/struts-rlgl090105.xml" />
+    <include file="/struts/struts-rlgl090102.xml" />
+     <!-- 个人用户注册 -->
+     <include file="/struts/struts-rlgl090201.xml" />
+     <include file="/struts/struts-rlgl090202.xml" />
+    <!--编制管理信息 -->
+    <include file="/struts/struts-rlgl010201.xml" />
+    <include file="/struts/struts-rlgl010202.xml" />
+    <include file="/struts/struts-rlgl010203.xml" />
+    <include file="/struts/struts-rlgl010204.xml" />
+    <include file="/struts/struts-rlgl010205.xml" />
+    <!--名医申请 -->
+    <include file="/struts/struts-rlgl010401.xml" />
+    <!--名科申请 -->
+    <include file="/struts/struts-rlgl010402.xml" />
+    <!--名院申请 -->
+    <include file="/struts/struts-rlgl010403.xml" />
+    <!--三名申请 -->
+    <include file="/struts/struts-rlgl010400.xml" />
+    <!--三名审核 -->
+    <include file="/struts/struts-rlgl010404.xml" />
+    <!--年度考核-->
+    <include file="/struts/struts-rlgl010601.xml" />
+    <include file="/struts/struts-rlgl010602.xml" />
+    <!--统计分析-医院内部-->
+    <include file="/struts/struts-rlgl010802.xml" />
+    <!--统计分析-卫生行政部门-->
+    <include file="/struts/struts-rlgl010803.xml" />
+    <!--综合查询-人员综合查询-->
+    <include file="/struts/struts-rlgl010901.xml" />
+    <!--综合查询-单位综合查询-->
+    <include file="/struts/struts-rlgl010902.xml" />
+    <!--人事账号建立数量统计-->
+    <include file="/struts/struts-rlgl010903.xml" />
+    <!--综合查询-日常报表查询-->
+    <include file="/struts/struts-rlgl010904.xml" />
+    <!--综合查询-单位综合查询-按年龄段分专业统计-->
+    <include file="/struts/struts-rlgl010910.xml" />
+    <!--单位信息完善 -->
+    <include file="/struts/struts-rlgl010101.xml" />
+     <!--单位信息变更申请 -->
+    <include file="/struts/struts-rlgl010103.xml" />
+    <!--单位信息列表 -->
+    <include file="/struts/struts-rlgl010105.xml" />
+     <!--单位信息详细 -->
+    <include file="/struts/struts-rlgl010106.xml" />
+    <!--代管单位管理 -->
+    <include file="/struts/struts-rlgl010109.xml" />
+    <!--单位状态注销管理 -->
+    <include file="/struts/struts-rlgl010108.xml" />
+    <!--单位状态统计数量管理 -->
+    <include file="/struts/struts-rlgl010124.xml" />
+    <!--代管单位操作人管理 -->
+    <include file="/struts/struts-rlgl010125.xml" />
+    <!--查询单位操作员 -->
+    <include file="/struts/struts-rlgl010123.xml" />
+    <!--单位选择 -->
+    <include file="/struts/struts-rlgl300101.xml" />
+    
+    <!-- 人事审核 -->
+    <include file="/struts/struts-rlgl010501.xml" />
+    <include file="/struts/struts-rlgl010502.xml" />
+    <include file="/struts/struts-rlgl010503.xml" />
+    <include file="/struts/struts-rlgl010504.xml" />
+    <include file="/struts/struts-rlgl010505.xml" />
+    <include file="/struts/struts-rlgl010506.xml" />
+    <include file="/struts/struts-rlgl010507.xml" />
+    <include file="/struts/struts-rlgl010508.xml" />
+    <include file="/struts/struts-rlgl010509.xml" />
+    <include file="/struts/struts-rlgl010510.xml" />
+    <include file="/struts/struts-rlgl010511.xml" />
+    <include file="/struts/struts-rlgl010512.xml" />
+    <include file="/struts/struts-rlgl010513.xml" />
+    <include file="/struts/struts-rlgl010514.xml" />
+    <!--人事管理 -->
+    <include file="/struts/struts-rlgl010302.xml" />
+    <include file="/struts/struts-rlgl010303.xml" />
+    <include file="/struts/struts-rlgl010304.xml" />
+    <include file="/struts/struts-rlgl010319.xml" />
+    <include file="/struts/struts-rlgl010305.xml" />
+    <include file="/struts/struts-rlgl010306.xml" />
+    <include file="/struts/struts-rlgl010307.xml" />
+    <include file="/struts/struts-rlgl010309.xml" />
+    <include file="/struts/struts-rlgl010310.xml" />
+    <!-- 人事管理-单位申请-人员调出申请 -->
+    <include file="/struts/struts-rlgl010311.xml" />
+    <!-- 人事管理-单位申请-人员调入申请 -->
+    <include file="/struts/struts-rlgl010312.xml" />
+    <!-- 人事管理-个人申请-党员申请 -->
+    <include file="/struts/struts-rlgl010313.xml" />
+     <!-- 人事管理-单位申请-不在岗人员申请 -->
+    <include file="/struts/struts-rlgl010314.xml" />
+    <!-- 人事管理-单位申请-退休申请 -->
+    <include file="/struts/struts-rlgl010315.xml" />
+    <!-- 人事管理-单位申请-单位申请列表 -->
+    <include file="/struts/struts-rlgl010316.xml" />
+    <!-- 人事管理-单位申请-单位人员列表 -->
+    <include file="/struts/struts-rlgl010317.xml" />
+    <!-- 人事管理-个人申请-出国申请 -->
+    <include file="/struts/struts-rlgl010318.xml" />
+    <!-- 人事管理-单位申请-人员返聘 -->
+    <include file="/struts/struts-rlgl010320.xml" />
+    <!-- 单位管理联系人信息 -->
+    <include file="/struts/struts-rlgl010110.xml" />
+    <!-- 专家库 -->
+    <include file="/struts/struts-rlgl010701.xml" />
+    <include file="/struts/struts-rlgl010703.xml" />
+    <include file="/struts/struts-rlgl010704.xml" />
+    <include file="/struts/struts-rlgl010705.xml" />
+    <!-- 单位申请节点选择 -->
+    <include file="/struts/struts-rlgl090301.xml" />
+    <include file="/struts/struts-rlgl090302.xml" />
+    
+    <!-- 继续医学教育-学分申报-山东卫生-历史申报信息列表 -->
+    <include file="/struts/struts-rlgl020601.xml" />
+    <!-- 继续医学教育-学分申报-山东卫生-录入申请 -->
+    <include file="/struts/struts-rlgl020602.xml" />
+    <!-- 继续医学教育-学分申报-山东卫生-进行审核 -->
+    <include file="/struts/struts-rlgl020603.xml" />
+    <include file="/struts/struts-rlgl020604.xml" />
+    <include file="/struts/struts-rlgl020607.xml" />
+    <include file="/struts/struts-rlgl020608.xml" />
+    <!-- 继续医学教育-学分查询 -->
+    <include file="/struts/struts-rlgl020701.xml" />
+    <include file="/struts/struts-rlgl100114.xml" />
+    <!-- 继续医学教育-学分设置-选课学分设置 -->
+    <include file="/struts/struts-rlgl020703.xml" />
+    <!-- 继续医学教育-学分设置-其他学分设置 -->
+    <include file="/struts/struts-rlgl020704.xml" />
+    <!-- 继续医学教育-统计分析 -->
+    <include file="/struts/struts-rlgl020901.xml" />
+    <include file="/struts/struts-rlgl020902.xml" />
+    <include file="/struts/struts-rlgl020903.xml" />
+    <include file="/struts/struts-rlgl020904.xml" />
+    <include file="/struts/struts-rlgl020905.xml" />
+    <include file="/struts/struts-rlgl020906.xml" />
+    <include file="/struts/struts-rlgl020907.xml" />
+    <include file="/struts/struts-rlgl020908.xml" />
+    <include file="/struts/struts-rlgl020909.xml" />
+    <include file="/struts/struts-rlgl020910.xml" />
+    <!-- 继续医学教育-证书管理-必修课管理 -->
+    <include file="/struts/struts-rlgl020807.xml" />
+    <!-- 继续医学教育-证书管理 -个人年度考核合格证明-->
+    <include file="/struts/struts-rlgl020802.xml" />
+    <!-- 继续医学教育-刊物信息 -注册刊物信息-->
+    <include file="/struts/struts-rlgl021001.xml" />
+    <!-- 继续医学教育-刊物信息 -审核刊物信息列表-->
+    <include file="/struts/struts-rlgl021002.xml" />
+    <include file="/struts/struts-rlgl050201.xml" />
+    <!-- 继续医学教育-在线视频 -在线选课-->
+    <include file="/struts/struts-rlgl022001.xml" />
+    <!-- 继续医学教育-在线视频 -待支付课件-->
+    <include file="/struts/struts-rlgl022005.xml" />
+    <!-- 继续医学教育-在线视频 -学习并通过的课程-->
+    <include file="/struts/struts-rlgl022004.xml" />
+    <!-- 继续医学教育-在线视频 -补考-->
+    <include file="/struts/struts-rlgl022006.xml" />
+     <!-- 继续医学教育-在线视频 -网上支付-->
+    <include file="/struts/struts-rlgl022007.xml" />
+     <!-- 继续医学教育-在线视频 -已选课程-->
+    <include file="/struts/struts-rlgl022008.xml" />
+    <!-- 继续医学教育-在线视频 -退费课程-->
+    <include file="/struts/struts-rlgl022009.xml" />
+    <!-- 继续医学教育-在线视频 -预付费-->
+    <include file="/struts/struts-rlgl022012.xml" />
+    <!-- 继续教育>继续医学教育项目培训班>项目举办>项目报名审核 -->
+    <include file="/struts/struts-rlgl020400.xml" />
+    <!-- 继续医学教育-继续医学教育项目培训班 -项目申报-新项目申报-->
+    <include file="/struts/struts-rlgl020401.xml" />
+    <include file="/struts/struts-rlgl020402.xml" />
+    <include file="/struts/struts-rlgl020403.xml" />
+    <!-- 继续医学教育-继续医学教育项目培训班 -项目举办-举办申请 -->
+    <include file="/struts/struts-rlgl020405.xml" />
+    <!-- 继续医学教育-继续医学教育项目培训班 -项目举办-申请一览 -->
+    <include file="/struts/struts-rlgl020406.xml" />
+    <!-- 继续教育>继续医学教育项目培训班>项目举办>举办审核 -->
+    <include file="/struts/struts-rlgl020407.xml" />
+    <!-- 继续教育>继续医学教育项目培训班>项目举办>项目报名申请 -->
+    <include file="/struts/struts-rlgl020408.xml" />
+    <!-- 继续教育>继续医学教育项目培训班>项目举办>报名申请一览 -->
+    <include file="/struts/struts-rlgl020409.xml" />
+    <include file="/struts/struts-rlgl020410.xml" />
+    <include file="/struts/struts-rlgl020411.xml" />
+    <include file="/struts/struts-rlgl020412.xml" />
+    <!-- 继续医学教育-院内学分 -项目发起-->
+    <include file="/struts/struts-rlgl021102.xml" />
+    <!-- 继续医学教育-院内学分 -授予学分-->
+    <include file="/struts/struts-rlgl021120.xml" />
+    
+    <!-- 新建科室 -->
+    <include file="/struts/struts-rlgl090401.xml" />
+    <include file="/struts/struts-rlgl090402.xml" />
+    <include file="/struts/struts-rlgl090403.xml" />
+    <include file="/struts/struts-rlgl090404.xml" />
+    <include file="/struts/struts-rlgl090405.xml" />
+    <include file="/struts/struts-rlgl090406.xml" />
+    <include file="/struts/struts-rlgl090407.xml" />
+    <include file="/struts/struts-rlgl090408.xml" />
+    <!-- 人事列表批量导入 -->
+    <include file="/struts/struts-rlgl010321.xml" />
+    <include file="/struts/struts-rlgl090909.xml" />
+    <include file="/struts/struts-rlgl090908.xml" />
+    <!-- 系统管理-证书设置 -->
+    <include file="/struts/struts-rlgl020801.xml" />
+    <include file="/struts/struts-rlgl020803.xml" />
+    <include file="/struts/struts-rlgl020804.xml" />
+    <include file="/struts/struts-rlgl020805.xml" />
+    <!-- 系统管理-权限 -->
+    <include file="/struts/struts-rlgl000204.xml" />
+    <include file="/struts/struts-rlgl000205.xml" />
+    <include file="/struts/struts-rlgl000206.xml" />
+    <include file="/struts/struts-rlgl000207.xml" />
+    <include file="/struts/struts-rlgl000208.xml" />
+    <include file="/struts/struts-rlgl000209.xml" />
+     <!-- 系统管理-课件设置 -->
+    <include file="/struts/struts-rlgl090601.xml" />
+    <!-- 系统管理-院内学分举办权设定 -->
+    <include file="/struts/struts-rlgl021101.xml" />
+    <!-- 系统管理-院内学分项目报名审核 -->
+    <include file="/struts/struts-rlgl021104.xml" />
+     <!-- 系统管理-院内学分项目补充签到 -->
+    <include file="/struts/struts-rlgl021110.xml" />
+    <!-- 系统管理-项目举办 -->
+    <include file="/struts/struts-rlgl021103.xml" />
+    <!-- 学分年度设置 -->
+    <include file="/struts/struts-rlgl050101.xml" />
+    <include file="/struts/struts-rlgl050102.xml" />
+    <include file="/struts/struts-rlgl070103.xml" />
+    <!-- 通知公告 -->
+    <include file="/struts/struts-rlgl090801.xml" />
+    <include file="/struts/struts-rlgl090802.xml" />
+    <include file="/struts/struts-rlgl090803.xml" />
+    <include file="/struts/struts-rlgl090804.xml" />
+    <include file="/struts/struts-rlgl090805.xml" />
+    <!-- 上传文件-->
+    <include file="/struts/struts-rlgl300102.xml" />
+     <!-- 项目办结-->
+    <include file="/struts/struts-rlgl020430.xml" />
+    <include file="/struts/struts-rlgl020441.xml" />
+    <include file="/struts/struts-rlgl020442.xml" />
+    <include file="/struts/struts-rlgl020443.xml" />
+    <include file="/struts/struts-rlgl020444.xml" />
+    <!-- 系统管理>在线考试管理>题库管理 -->
+    <include file="/struts/struts-rlgl060101.xml" />
+    <include file="/struts/struts-rlgl060103.xml" />
+    <include file="/struts/struts-rlgl060105.xml" />
+    <!-- 成绩查询-->
+    <include file="/struts/struts-rlgl060108.xml" />
+    <!-- 学员学分查询-->
+    <include file="/struts/struts-rlgl050103.xml" />
+    <!-- 在线报名 -->
+    <include file="/struts/struts-rlgl060301.xml" />
+    <!-- 报名审核-->
+    <include file="/struts/struts-rlgl060302.xml" />
+    <!-- 考点考场安排-->
+    <include file="/struts/struts-rlgl060305.xml" />
+    <!-- 统计、导出报名数据 -->
+    <include file="/struts/struts-rlgl060303.xml" />
+    <!-- 生成、导出准考证号 -->
+    <include file="/struts/struts-rlgl060308.xml" />
+    <include file="/struts/struts-rlgl060307.xml" />
+    
+    <include file="/struts/struts-rlgl060102.xml" />
+    <include file="/struts/struts-rlgl060203.xml" />
+    <!-- 在线打证 -->
+    <include file="/struts/struts-rlgl060306.xml" />
+    <!-- 共课程考试人员列表 -->
+    <include file="/struts/struts-rlgl060310.xml" />
+    <!-- 公共课导入 -->
+    <include file="/struts/struts-rlgl060311.xml" />
+    <!-- 公共课学分获得情况 -->
+    <include file="/struts/struts-rlgl060312.xml" />
+    <!-- 公共课考试 -->
+    <include file="/struts/struts-rlgl060313.xml" />
+    <!-- 课件提供商使用情况 -->
+    <include file="/struts/struts-rlgl060314.xml" />
+    <!-- 对账系统>消费明细 -->
+    <include file="/struts/struts-rlgl070101.xml" />
+    <!-- 对账系统>缴费记录一览 -->
+    <include file="/struts/struts-rlgl070106.xml" />
+    <include file="/struts/struts-rlgl070108.xml" />
+    
+    <!-- 数据侦测 -->
+    <include file="/struts/struts-rlgl011001.xml" />
+    <include file="/struts/struts-rlgl011002.xml" />
+    <include file="/struts/struts-rlgl011003.xml" />
+    <include file="/struts/struts-rlgl011004.xml" />
+    <include file="/struts/struts-rlgl011005.xml" />
+    <include file="/struts/struts-rlgl011006.xml" />
+    <include file="/struts/struts-rlgl011007.xml" />
+    <include file="/struts/struts-rlgl011008.xml" />
+    <include file="/struts/struts-rlgl011009.xml" />
+    <include file="/struts/struts-rlgl011010.xml" />
+    <include file="/struts/struts-rlgl011011.xml" />
+    <include file="/struts/struts-rlgl011012.xml" />
+    <include file="/struts/struts-rlgl011013.xml" />
+    <include file="/struts/struts-rlgl011014.xml" />
+    <include file="/struts/struts-rlgl011015.xml" />
+    <include file="/struts/struts-rlgl012001.xml" />
+    <include file="/struts/struts-rlgl012002.xml" />
+    <include file="/struts/struts-rlgl012003.xml" />
+    <include file="/struts/struts-rlgl012004.xml" />
+    <!-- 济南卫生局专属 -->
+    <include file="/struts/struts-rlgl100103.xml" />
+    <!-- 课程来源设置 -->
+    <include file="/struts/struts-rlgl100108.xml" />
+    <!-- 在线学习 -->
+    <include file="/struts/struts-rlgl100105.xml" />
+    <include file="/struts/struts-rlgl100101.xml" />
+    <!-- 缴费明细一览 -->
+    <include file="/struts/struts-rlgl100100.xml" />
+    <!-- 退费申请一览 -->
+    <include file="/struts/struts-rlgl100109.xml" />
+    <include file="/struts/struts-rlgl100102.xml" />
+    <include file="/struts/struts-rlgl100111.xml" />
+    <include file="/struts/struts-rlgl200101.xml" />
+    <!-- 用户注册 -->
+    <include file="/struts/struts-usrRegister.xml" />
+    <!-- 课件学习 -->
+    <include file="/struts/struts-rlgl400101.xml" />
+    <!-- 学习情况 -->
+    <include file="/struts/struct_userexaminforeport.xml" />
+    
+    <package name="topMenu" extends="rlgl" namespace="/">
+        <action name="topMenu"
+            class="com.rlglsys.action.rlgl.login.Rlgl000101InitAction" method="execute">
+            <result name="show">/index.jsp</result>
+        </action>
+        <action name="doRedirect"
+			class="com.rlglsys.action.loginmanage.loginredirect.LoginRedirectAction"
+			method="execute">
+			<result name="show">/WEB-INF/jsp/rlgl000101.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl000102.jsp</result>
+		</action>
+        <action name="contents"
+            class="com.rlglsys.action.rlgl.main.ContentsInitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/contents.jsp</result>
+        </action>
+        <action name="LearnOnlineLink"
+            class="com.rlglsys.base.ComboxCommonAction" method="editLearnOnlineDataInfo">
+        </action>
+        <action name="sessioncheck"
+            class="com.rlglsys.base.ComboxCommonAction" method="getSessionTimeoutFlg">
+        </action>
+        <action name="paudataEdit"
+            class="com.rlglsys.base.ComboxCommonAction" method="payDataedit">
+        </action>
+        <action name="insertPrepaydata"
+            class="com.rlglsys.base.ComboxCommonAction" method="insertPrepaydata">
+        </action>
+        <action name="paydataInsert"
+            class="com.rlglsys.base.ComboxCommonAction" method="insertEcypaydata">
+        </action>
+        <action name="ComboxContextFromAdm"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromAdm">
+        </action>
+        <action name="ComboxContextFromAdmForGrade"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromAdmForGrade">
+        </action>
+        <action name="getContextFromAdmForExam"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromAdmForExam">
+        </action>
+        <!-- 人员离开方式 -->
+        <action name="ComboxContextFromAdmJoinMode"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromAdmJoinMode">
+        </action>
+         <action name="ComboxCommonContextFromArea"
+            class="com.rlglsys.base.AreaCommonAction" method="getContextFromArea">
+        </action>
+          <action name="ComboxCommonContextFromZone"
+            class="com.rlglsys.base.AreaCommonAction" method="getContextFromZone">
+        </action>
+         <action name="SectionCommonAction"
+            class="com.rlglsys.base.SectionCommonAction" method="getContextFromSection">
+        </action>
+         <action name="SectionArrlyCommonAction"
+            class="com.rlglsys.base.SectionArrlyCommonAction" method="getContextFromSection">
+        </action>
+          <action name="SectionAuditCommonAction"
+            class="com.rlglsys.base.SectionAuditCommonAction" method="getContextFromSection">
+        </action>
+         <action name="certInfoAction"
+            class="com.rlglsys.base.CertInfoAction" method="getCertInfo">
+        </action>
+        <!-- 图片上传 -->
+        <action name="previewChange"
+            class="com.rlglsys.base.previewChangeAction" method="uploadPhotos">
+        </action>
+        <action name="publication"
+            class="com.rlglsys.base.PublicationAction" method="getPublicationDetailWithCD">
+        </action>
+        <action name="ComboxContextFromListFor000204"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromListFor000204">
+        </action>
+        <action name="ComboxContextFromListFor000102"
+            class="com.rlglsys.base.ComboxCommonAction" method="getContextFromListFor000102">
+        </action>
+        
+        <action name="learnonlinecallback" class="com.rlglsys.action.learnonline.RlgllearnOnlineCallbackAction" method="execute">
+         <result name="success">/WEB-INF/jsp/rlgl100110.jsp</result>
+        </action>
+        <action name="rlglecpayCallback" class="com.rlglsys.action.learnonline.RlglecpayCallbackAction" method="execute">
+        </action>
+        <action name="rlgl022007Callback" class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022007CallbackAction" method="execute">
+            <result name="show">/WEB-INF/jsp/rlgl10010102.jsp</result>
+        </action>
+          <action name="rlglpayCallback" class="com.rlglsys.action.learnonline.Rlgl060311_2InitAction" method="execute">
+          <result name="success">/WEB-INF/jsp/rlgl022111.jsp</result>
+        </action>
+        
+         <action name="updateAliPay" class="com.rlglsys.action.learnonline.UpdateAliPayAction" method="execute">
+            <result name="success">/WEB-INF/jsp/alipayresult.jsp</result>
+            <result name="false">/WEB-INF/jsp/alipayresultfalse.jsp</result>
+        </action>
+        
+    </package>
+
+    <!-- 全局定义 -->
+    <package name="rlgl" extends="struts-default">
+        <global-results>
+            <result name="login" type="redirectAction">
+                <param name="actionName">login</param>
+                <param name="namespace">/rlgl</param>
+            </result>
+            <!-- 没有可读权限画面 -->
+            <result name="roleError">/WEB-INF/jsp/roleError.jsp</result>
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping result="error" exception="java.lang.Exception" />
+        </global-exception-mappings>
+    </package>
+
+    <!-- 各种设定 -->
+    <!-- 后缀 -->
+    <constant name="struts.action.extension" value="action,do" />
+    <!-- 标签模式 -->
+    <constant name="struts.ui.theme" value="simple" />
+    <!-- 文件上传错误信息 -->
+    <constant name="struts.custom.i18n.resources" value="message" />
+    <!-- 文件大小 -->
+    <constant name="struts.multipart.maxSize" value="204800000" />
+    <!-- 编码 -->
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+    <constant name="struts.locale" value="zh_CN" />
+    <!-- 详细信息 开发用 -->
+    <constant name="devMode" value="true" />
+    <!-- 动态加载XML 开发用 -->
+    <constant name="struts.configuration.xml.reload" value="true" />
+    <!-- browserCache 开发用 -->
+    <constant name="struts.serve.static.browserCache" value="false" />
+    <constant name="struts.multipart.saveDir" value="/tmp"/>
+</struts>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl050103Mapper">
+
+    <!--根据单位选择 取得该单位中学员学时-->
+     <select id="getCourseResultList" resultType="com.rlglsys.bean.Rlgl050103Bean" >
+		SELECT 
+		tb01.PERSONNEL_ID,
+		tb01.USER_NAME,
+		tb04.UNIT_NM as department_name,
+		IFNULL(SUM(tb122.CREDIT),0) as passTime,
+		IF(SUM(tb122.CREDIT)>100,0,100-SUM(tb122.CREDIT)) as noPassTime
+		<!--  (100-IFNULL(SUM(tb122.CREDIT),0)) as noPassTime-->
+		FROM
+		m_tb01_user tb01
+		INNER JOIN 
+		m_tb04_unit tb04
+		ON tb01.unit_no = tb04.unit_no
+		LEFT JOIN
+		m_tb122_doctor_course_exams tb122
+		ON tb01.personnel_id = tb122.user_id
+		WHERE 
+		tb04.unit_no = #{rlgl050103Bean.department_id}
+		and tb01.user_id != #{rlgl050103Bean.department_id}
+		<!--  AND
+		tb01.USER_TYPE= '2'-->
+		GROUP BY tb01.USER_ID
+        ORDER BY tb04.unit_no
+          <if test="rlgl050103Bean.pageCount != 0 and rlgl050103Bean.pageCount != null" >
+           LIMIT #{rlgl050103Bean.pageNo},#{rlgl050103Bean.pageCount} 
+          </if>
+    </select>
+    
+             <!--根据单位选择 取得该单位中学员学时件数查询 -->
+    <select id="getCourseResultCount" resultType="int">
+        SELECT
+        COUNT(*)
+        from
+        (
+		SELECT 
+		tb01.PERSONNEL_ID,
+		tb01.USER_NAME,
+		tb04.UNIT_NM as department_name,
+		IFNULL(SUM(tb122.CREDIT),0) as passTime,
+		(100-IFNULL(SUM(tb122.CREDIT),0)) as noPassTime
+		FROM
+		m_tb01_user tb01
+		INNER JOIN 
+		m_tb04_unit tb04
+		ON tb01.unit_no = tb04.unit_no
+		LEFT JOIN
+		m_tb122_doctor_course_exams tb122
+		ON tb01.personnel_id = tb122.user_id
+		WHERE 
+		tb04.unit_no = #{rlgl050103Bean.department_id}
+		and tb01.user_id != #{rlgl050103Bean.department_id}
+		<!--  AND
+		tb01.USER_TYPE= '2'-->
+		GROUP BY tb01.USER_ID
+        ORDER BY tb04.unit_no
+        )n81
+    </select>
+
+</mapper>

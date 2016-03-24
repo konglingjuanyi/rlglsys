@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020402Mapper">
+
+	<insert id="insertDeclareInfo">
+        INSERT INTO m_tb93_record_project_declare(
+             APPLY_ID
+            ,USER_ID
+            ,UNIT_NO
+            ,PROJECT_ID
+            ,PROJECT_NM
+            ,PROJECT_LEVEL
+            ,ENTER_TABLE_PERSON
+            ,PHONE
+            ,DECLARE_DATE
+            ,OLD_PROJECT_ID
+            ,PROJECT_LIABLE_NM
+            ,PROJECT_LIABLE_PHONE
+            ,DECLARE_UNIT
+            ,DECLARE_UNIT_PHONE
+            ,DECLARE_UNIT_CONTACTS
+            ,DIRECT_UNIT
+            ,DIRECT_UNIT_PHONE
+            ,DIRECT_UNIT_CONTACTS
+            ,AGO_CONDUCT_UNIT
+            ,AGO_CONDUCT_TERM
+            ,AGO_CONFER_CREDIT
+            ,AGO_FACT_CONFER_CREDIT
+            ,NEXT_CONDUCT_START_DATE
+            ,NEXT_CONDUCT_END_DATE
+            ,NEXT_CONDUCT_TERM
+            ,NEXT_CONDUCT_PLACE
+            ,NEXT_PROTOCOL_RECRUIT
+            ,NEXT_PROTOCOL_CONFER_CREDIT
+            ,NEXT_EDUCATION_OBJECT
+            ,REMARK
+            ,EX_KEY
+            ,APPLY_KBN
+            ,NOW_MARK
+            ,END_MARK
+            ,WILL_CHECKUNITNO
+            ,OPEN_KBN
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{declareInfo.apply_id}
+            ,#{declareInfo.user_id}
+            ,#{declareInfo.unit_no}
+            ,#{declareInfo.project_id}
+            ,#{declareInfo.project_nm}
+            ,#{declareInfo.project_level}
+            ,#{declareInfo.enter_table_person}
+            ,#{declareInfo.phone}
+            ,#{declareInfo.declare_date}
+            ,#{declareInfo.old_project_id}
+            ,#{declareInfo.project_liable_nm}
+            ,#{declareInfo.project_liable_phone}
+            ,#{declareInfo.declare_unit}
+            ,#{declareInfo.declare_unit_phone}
+            ,#{declareInfo.declare_unit_contacts}
+            ,#{declareInfo.direct_unit}
+            ,#{declareInfo.direct_unit_phone}
+            ,#{declareInfo.direct_unit_contacts}
+            ,#{declareInfo.ago_conduct_unit}
+            ,#{declareInfo.ago_conduct_term}
+            ,#{declareInfo.ago_confer_credit}
+            ,#{declareInfo.ago_fact_confer_credit}
+            ,#{declareInfo.next_conduct_start_date}
+            ,#{declareInfo.next_conduct_end_date}
+            ,#{declareInfo.next_conduct_term}
+            ,#{declareInfo.next_conduct_place}
+            ,#{declareInfo.next_protocol_recruit}
+            ,#{declareInfo.next_protocol_confer_credit}
+            ,#{declareInfo.next_education_object}
+            ,#{declareInfo.remark}
+            ,'0'
+            ,#{declareInfo.apply_kbn}
+            ,#{declareInfo.now_mark}
+            ,#{declareInfo.end_mark}
+            ,#{declareInfo.will_checkunitno}
+            ,#{declareInfo.open_kbn}
+            ,#{declareInfo.login_user_id}
+            ,#{declareInfo.login_date}
+            ,#{declareInfo.update_user_id}
+            ,#{declareInfo.update_date})
+    </insert>
+    <update id="updateDeclareInfo">
+        UPDATE m_tb93_record_project_declare
+        SET
+             USER_ID = #{declareInfo.user_id}
+            ,UNIT_NO = #{declareInfo.unit_no}
+            ,PROJECT_ID = #{declareInfo.project_id}
+            ,PROJECT_NM = #{declareInfo.project_nm}
+            ,PROJECT_LEVEL = #{declareInfo.project_level}
+            ,ENTER_TABLE_PERSON = #{declareInfo.enter_table_person}
+            ,PHONE = #{declareInfo.phone}
+            ,DECLARE_DATE = #{declareInfo.declare_date}
+            ,OLD_PROJECT_ID = #{declareInfo.old_project_id}
+            ,PROJECT_LIABLE_NM = #{declareInfo.project_liable_nm}
+            ,PROJECT_LIABLE_PHONE = #{declareInfo.project_liable_phone}
+            ,DECLARE_UNIT = #{declareInfo.declare_unit}
+            ,DECLARE_UNIT_PHONE = #{declareInfo.declare_unit_phone}
+            ,DECLARE_UNIT_CONTACTS = #{declareInfo.declare_unit_contacts}
+            ,DIRECT_UNIT = #{declareInfo.direct_unit}
+            ,DIRECT_UNIT_PHONE = #{declareInfo.direct_unit_phone}
+            ,DIRECT_UNIT_CONTACTS = #{declareInfo.direct_unit_contacts}
+            ,AGO_CONDUCT_UNIT = #{declareInfo.ago_conduct_unit}
+            ,AGO_CONDUCT_TERM = #{declareInfo.ago_conduct_term}
+            ,AGO_CONFER_CREDIT = #{declareInfo.ago_confer_credit}
+            ,AGO_FACT_CONFER_CREDIT = #{declareInfo.ago_fact_confer_credit}
+            ,NEXT_CONDUCT_START_DATE = #{declareInfo.next_conduct_start_date}
+            ,NEXT_CONDUCT_END_DATE = #{declareInfo.next_conduct_end_date}
+            ,NEXT_CONDUCT_TERM = #{declareInfo.next_conduct_term}
+            ,NEXT_CONDUCT_PLACE = #{declareInfo.next_conduct_place}
+            ,NEXT_PROTOCOL_RECRUIT = #{declareInfo.next_protocol_recruit}
+            ,NEXT_PROTOCOL_CONFER_CREDIT = #{declareInfo.next_protocol_confer_credit}
+            ,NEXT_EDUCATION_OBJECT = #{declareInfo.next_education_object}
+            ,REMARK = #{declareInfo.remark}
+            ,EX_KEY = #{declareInfo.ex_key}
+            ,DEL_KBN = #{declareInfo.del_kbn}
+            ,EXPEND_01 = #{declareInfo.expend_01}
+            ,EXPEND_02 = #{declareInfo.expend_02}
+            ,EXPEND_03 = #{declareInfo.expend_03}
+            ,EXPEND_04 = #{declareInfo.expend_04}
+            ,EXPEND_05 = #{declareInfo.expend_05}
+            ,LOGIN_USER_ID = #{declareInfo.login_user_id}
+            ,LOGIN_DATE = #{declareInfo.login_date}
+            ,UPDATE_USER_ID = #{declareInfo.update_user_id}
+            ,UPDATE_DATE = #{declareInfo.update_date}
+       WHERE
+            APPLY_ID = #{declareInfo.apply_id}
+    </update>
+    <!--备案项目申报详细列表查询 -->
+    <select id="getMtb93RecordProjectDeclareInfoList" resultType="com.rlglsys.bean.Rlgl020402Bean">
+        SELECT
+          *
+        FROM
+          m_tb93_record_project_declare
+        WHERE
+          UNIT_NO = #{declareInfo.unit_no}
+          <if test="declareInfo.apply_id != '' and declareInfo.apply_id != null">
+           AND APPLY_ID= #{declareInfo.apply_id}
+          </if>
+          <if test="declareInfo.project_nm != '' and declareInfo.project_nm != null">
+           AND PROJECT_NM LIKE CONCAT('%',  #{declareInfo.project_nm}, '%')
+          </if>
+          <if test="declareInfo.project_liable_nm != '' and declareInfo.project_liable_nm != null">
+            AND PROJECT_LIABLE_NM LIKE CONCAT('%', #{declareInfo.project_liable_nm}, '%')
+          </if>
+          <if test="declareInfo.old_project_id != '' and declareInfo.old_project_id != null">
+          AND OLD_PROJECT_ID= #{declareInfo.old_project_id}
+          </if>
+          ORDER BY APPLY_ID
+          <if test="offset != 0 and offset != null">
+           LIMIT #{limit},#{offset}
+          </if>
+          ;
+    </select>
+    
+     <!--备案项目申报件数查询-->
+    <select id="getMtb93RecordProjectDeclareInfoCount" resultType="int">
+        SELECT
+         Count(*)
+        FROM
+          m_tb93_record_project_declare
+        WHERE
+          UNIT_NO = #{declareInfo.unit_no}
+          <if test="declareInfo.apply_id != '' and declareInfo.apply_id != null">
+           AND APPLY_ID= #{declareInfo.apply_id}
+          </if>
+          <if test="declareInfo.project_nm != '' and declareInfo.project_nm != null">
+           AND PROJECT_NM LIKE CONCAT('%',  #{declareInfo.project_nm}, '%')
+          </if>
+          <if test="declareInfo.project_liable_nm != '' and declareInfo.project_liable_nm != null">
+            AND PROJECT_LIABLE_NM LIKE CONCAT('%', #{declareInfo.project_liable_nm}, '%')
+          </if>
+          <if test="declareInfo.old_project_id != '' and declareInfo.old_project_id != null">
+          AND OLD_PROJECT_ID= #{declareInfo.old_project_id}
+          </if>
+          ORDER BY APPLY_ID
+    </select>
+    
+     <!--备案项目申报详细信息-->
+    <select id="getProjectInfoById" resultType="com.rlglsys.bean.Rlgl020402Bean">
+        SELECT
+         *
+        FROM
+          m_tb93_record_project_declare
+        WHERE
+          APPLY_ID= #{apply_id}
+    </select>
+   
+</mapper>

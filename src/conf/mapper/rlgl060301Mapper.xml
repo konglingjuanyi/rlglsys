@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060301Mapper">
+
+    <!--查询在线选课当前页的信息  -->
+    <select id="getExamSettingList" resultType="com.rlglsys.bean.Rlgl060301Bean">
+        SELECT 
+            EXAM.EXAM_NO, 
+            EXAM.SUBJECT_KB, 
+            EXAM.EXAMINATION_NAME, 
+            EXAM.EXAM_PLACE, 
+            EXAM.START_UNIT, 
+            EXAM.APPLY_SCOPE, 
+            EXAM.EXAM_TIME, 
+            DATE_FORMAT(APPLY_START_DATE,'%Y年%m月%d日 %k:%i:%s') AS APPLY_START_DATE, 
+            DATE_FORMAT(APPLY_END_DATE,'%Y年%m月%d日 %k:%i:%s') AS APPLY_END_DATE, 
+            DATE_FORMAT(EXAM_START_DATE,'%Y年%m月%d日 %k:%i:%s') AS EXAM_START_DATE, 
+            DATE_FORMAT(EXAM_END_DATE,'%Y年%m月%d日 %k:%i:%s') AS EXAM_END_DATE, 
+            CASE WHEN ADM.ADM_NAME IS NULL THEN '' ELSE ADM.ADM_NAME END AS SUBJECT_NAME, 
+            CASE WHEN UNIT.UNIT_NM IS NULL THEN '' ELSE UNIT.UNIT_NM END AS START_UNIT_NAME 
+            FROM m_tb103_exam_setting EXAM 
+            LEFT JOIN m_tb02_adm ADM 
+            ON ADM.ADM_NUM = EXAM.SUBJECT_KB 
+            AND ADM.ADM_TYPE_CD = '008' 
+            LEFT JOIN m_tb04_unit UNIT 
+            ON UNIT.UNIT_NO = EXAM.START_UNIT 
+            WHERE EXAM.DEL_KBN = '0' 
+            AND EXAM_NO NOT IN (
+            SELECT APPLY1.EXAM_NO 
+            FROM m_tb106_online_apply APPLY1 
+            INNER JOIN m_tb103_exam_setting EXAM1 ON APPLY1.EXAM_NO = EXAM1.EXAM_NO 
+            AND APPLY1.UPDATE_DATE BETWEEN APPLY_START_DATE AND APPLY_END_DATE 
+            WHERE PERSONAL_CARD_ID = #{rlgl060301Bean.personal_card_id} 
+            AND CHECK_RESULT != '003') 
+            AND LOCATE(#{rlgl060301Bean.apply_scope}, APPLY_SCOPE) > 0 
+            AND #{rlgl060301Bean.apply_start_date} BETWEEN APPLY_START_DATE AND APPLY_END_DATE 
+	    <if test="rlgl060301Bean.exam_no != '' and rlgl060301Bean.exam_no != null">
+	        AND exam_no = #{rlgl060301Bean.exam_no} 
+	    </if>	     
+	    <if test="rlgl060301Bean.pageCount != 0 and rlgl060301Bean.pageCount != null">
+            LIMIT #{rlgl060301Bean.pageNo},#{rlgl060301Bean.pageCount} 
+        </if>
+    </select>
+    <!--查询在线考试信息 -->
+    <select id="getExamNameList" resultType="com.rlglsys.bean.Rlgl060301Bean">
+        SELECT * FROM m_tb103_exam_setting WHERE DEL_KBN = '0'             
+        <if test="flag == 0">
+            AND LOCATE(#{unit_no}, APPLY_SCOPE) > 0 
+	        AND #{date_now} BETWEEN APPLY_START_DATE AND APPLY_END_DATE 
+	    </if>
+	    <if test="flag == 1">
+	        AND (start_unit = #{unit_no} or start_unit = mid(#{unit_no},1,4))
+	        AND #{date_now} BETWEEN APPLY_START_DATE AND EXAM_END_DATE 
+	    </if>
+	    <if test="flag == 2">
+	        AND 
+	        (start_unit = #{unit_no} or start_unit = mid(#{unit_no},1,4))
+	        
+	        AND #{date_now} BETWEEN APPLY_END_DATE AND EXAM_START_DATE 
+	    </if>
+    </select>
+    
+    <!--根据当前时间,查询有效的考试信息 -->
+    <select id="getExamList" resultType="com.rlglsys.bean.Rlgl060301Bean" parameterType="String">
+        SELECT * FROM m_tb103_exam_setting WHERE DEL_KBN = '0' 
+	        AND #{now_date} BETWEEN APPLY_END_DATE AND EXAM_START_DATE 
+    </select>
+    
+    <!--查询在线选课的总条数 -->
+    <select id="getCountbyExamSetting" resultType="int">
+        SELECT count(*) FROM m_tb103_exam_setting WHERE DEL_KBN = '0' 
+        	AND EXAM_NO NOT IN (
+            SELECT APPLY1.EXAM_NO 
+            FROM m_tb106_online_apply APPLY1 
+            INNER JOIN m_tb103_exam_setting EXAM1 ON APPLY1.EXAM_NO = EXAM1.EXAM_NO 
+            AND APPLY1.UPDATE_DATE BETWEEN APPLY_START_DATE AND APPLY_END_DATE 
+            WHERE PERSONAL_CARD_ID = #{rlgl060301Bean.personal_card_id} 
+            AND CHECK_RESULT != '003') 
+            AND LOCATE(#{rlgl060301Bean.apply_scope}, APPLY_SCOPE) > 0 
+            AND #{rlgl060301Bean.apply_start_date} BETWEEN APPLY_START_DATE AND APPLY_END_DATE  
+        <if test="rlgl060301Bean.exam_no != '' and rlgl060301Bean.exam_no != null">
+	        AND exam_no = #{rlgl060301Bean.exam_no} 
+	    </if>
+    </select>
+    <!-- 插入在线报名人员信息 -->
+    <insert id="insertonlineApply" parameterType="int">  
+     insert into m_tb106_online_apply (
+        APPLY_NO,   
+		PERSONAL_ID,       
+		PERSONAL_NM,       
+		PERSONAL_CARD_ID, 
+		PERSONAL_UNIT_NO, 
+		PERSONAL_SECTION_NO,
+		EXAM_NO,   
+		SUBJECT_KB,       
+		EXAMINATION_NAME,
+		SPONSOR,
+		EXAM_PLACE,
+		TICKET_NO,
+		CHECK_RESULT,       
+		EX_KEY,           
+		DEL_KBN,            
+		EXPEND_01,         
+		EXPEND_02,         
+		EXPEND_03,        
+		EXPEND_04,         
+		EXPEND_05,         
+		LOGIN_USER_ID, 
+		LOGIN_DATE,        
+		UPDATE_USER_ID,   
+		UPDATE_DATE, 
+		NOW_MARK        
+	)VALUES    
+	(   #{mtb106OnlineApply.apply_no},
+        #{mtb106OnlineApply.personal_id},        
+		#{mtb106OnlineApply.personal_nm},       
+		#{mtb106OnlineApply.personal_card_id}, 
+		#{mtb106OnlineApply.personal_unit_no}, 
+		#{mtb106OnlineApply.personal_section_no},
+		#{mtb106OnlineApply.exam_no},			       
+		#{mtb106OnlineApply.subject_kb},       
+		#{mtb106OnlineApply.examination_name},
+		#{mtb106OnlineApply.sponsor},
+		#{mtb106OnlineApply.exam_place},
+		#{mtb106OnlineApply.ticket_no},
+		#{mtb106OnlineApply.check_result},        
+		#{mtb106OnlineApply.ex_key},           
+		#{mtb106OnlineApply.del_kbn},            
+		#{mtb106OnlineApply.expend_01},         
+		#{mtb106OnlineApply.expend_02},         
+		#{mtb106OnlineApply.expend_03},        
+		#{mtb106OnlineApply.expend_04},         
+		#{mtb106OnlineApply.expend_05},         
+		#{mtb106OnlineApply.login_user_id}, 
+		#{mtb106OnlineApply.login_date},        
+		#{mtb106OnlineApply.update_user_id},   
+		#{mtb106OnlineApply.update_date},
+		#{mtb106OnlineApply.now_mark}         
+	)
+	</insert> 
+	<!-- 依据主键查询考试设置信息 -->
+	<select id="getExamInfo" resultType="com.rlglsys.bean.Rlgl060301Bean" parameterType="String">
+	  select * from m_tb103_exam_setting WHERE DEL_KBN = '0' 
+	  and SUBJECT_KB = #{subject_kb}
+	  and EXAMINATION_NAME = #{exam_nm}
+	  and EXAM_NO = #{exam_no}
+	</select>
+</mapper>

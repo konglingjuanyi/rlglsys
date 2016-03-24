@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl020805" extends="rlgl" namespace="/">
+        <action name="rlgl020805Init"
+        class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020805InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020805.jsp</result>
+        </action>
+        <action name="rlgl020805ReviewOk"
+        class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020805ReviewOkAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020804Search</result>
+        </action>
+        <action name="rlgl020805Back"
+        class="com.rlglsys.action.continumedicaleducation.certificatemanage.Rlgl020805BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020804Search</result>
+        </action>
+    </package>
+</struts>
+

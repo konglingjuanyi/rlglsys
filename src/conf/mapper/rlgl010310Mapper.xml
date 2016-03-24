@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010310Mapper">
+  <resultMap type="com.rlglsys.entity.Mtb34PersonalEnrolledInfo" id="personInfoList">
+      <!-- 科室 -->
+      <result property="section_id" column="section_id"/>
+      <!-- 学历 -->
+      <result property="educationbg" column="educationbg"/>
+      <!-- 职称 -->
+      <result property="whether" column="whether"/>
+      <!-- 在编状态 -->
+      <result property="regular" column="regular"/>
+  </resultMap>
+    <!-- 科室，学历，职称，在编状态取得处理 -->
+    <select id="getPersonInfo" resultMap="personInfoList">
+        SELECT
+             tb01.SECTION_ID as section_id,
+             (select
+                educational_bg 
+              from
+                m_tb15_personnel_edu_info 
+              where 
+                DEL_KBN = '0'
+                and PERSONNEL_ID = tb01.PERSONNEL_ID
+                order by GRADUATION_TIME desc 
+                limit 0,1
+              ) as educationbg,
+              (select
+                 NAME 
+               from
+                 m_tb18_personnel_professional_info 
+               where 
+                 DEL_KBN = '0'
+                 and PERSONNEL_ID = tb01.PERSONNEL_ID
+                 order by GET_TIME desc 
+                 limit 0,1
+               ) as whether,
+               (select
+                 PERSONNEL_REGULAR 
+               from
+                 m_tb12_personnel 
+               where 
+                 DEL_KBN = '0'
+                 and PERSONNEL_ID = tb01.PERSONNEL_ID
+               ) as regular
+        FROM m_tb01_user tb01
+        WHERE
+            tb01.DEL_KBN = '0'
+            <if test="personnalId != ''">
+            and tb01.PERSONNEL_ID = #{personnalId}
+            </if>
+            <if test="unitNo != ''">
+            and tb01.UNIT_NO = #{unitNo}
+            </if>
+            ;
+    </select>
+
+     <!-- 个人人事信息取得SQL -->
+    <select id="getTb29Info" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+        SELECT *
+        FROM m_tb29_personalapplication
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+    </select>
+    <!-- 更新个人人事信息 -->
+    <update id="updateTb29Info">
+        UPDATE m_tb29_personalapplication
+        SET
+            MAX_NUMBER = #{tb29Info.max_number},
+            APPLY_DATE = #{tb29Info.apply_date},
+            CHECK_RESULT = "001",
+            END_MARK = #{tb29Info.end_mark},
+            NOW_MARK = #{tb29Info.now_mark},
+            WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+            UPDATE_USER_ID = #{tb29Info.personal_id},
+            UPDATE_DATE = #{tb29Info.apply_date}
+        WHERE
+            APPLY_NO = #{tb29Info.apply_no}
+    </update>
+    <!-- 保存进修信息 -->
+    <insert id="insert34Info" parameterType="com.rlglsys.entity.Mtb34PersonalEnrolledInfo">
+        INSERT INTO m_tb34_personal_enrolled_detail
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            CARD_ID,
+            WHETHER,
+            EDUCATIONBG,
+            SECTION_ID,
+            UNIT_NO,
+            UNIT_NM,
+            APPLY_DATE,
+            NOW_MARK,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb34Info.apply_no},
+            #{tb34Info.apply_number},
+            #{tb34Info.personal_id},
+            #{tb34Info.personal_nm},
+            #{tb34Info.card_id},
+            #{tb34Info.whether},
+            #{tb34Info.educationbg},
+            #{tb34Info.section_id},
+            #{tb34Info.unit_no},
+            #{tb34Info.unit_nm},
+            #{tb34Info.apply_date},
+            #{tb34Info.now_mark},
+            '1',
+            '0',
+            #{tb34Info.personal_id},
+            #{tb34Info.apply_date},
+            #{tb34Info.personal_id},
+            #{tb34Info.apply_date}
+        )
+    </insert>
+    <!-- 插入进修信息 -->
+    <insert id="insert29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+        INSERT INTO m_tb29_personalapplication
+        (
+            APPLY_NO,
+            MAX_NUMBER,
+            APPLY_KBN,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            PERSONAL_UNITNO,
+            APPLY_DATE,
+            CHECK_USER,
+            CHECK_UNITNO,
+            CHECK_RESULT,
+            END_MARK,
+            NOW_MARK,
+            WILL_CHECKUNITNO,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb29Info.apply_no},
+            #{tb29Info.max_number},
+            #{tb29Info.apply_kbn},
+            #{tb29Info.personal_id},
+            #{tb29Info.personal_nm},
+            #{tb29Info.personal_unitno},
+            #{tb29Info.apply_date},
+            #{tb29Info.check_user},
+            #{tb29Info.check_unitno},
+            #{tb29Info.check_result},
+            #{tb29Info.end_mark},
+            #{tb29Info.now_mark},
+            #{tb29Info.will_checkunitno},
+            '1',
+            '0',
+            #{tb29Info.personal_id},
+            #{tb29Info.apply_date},
+            #{tb29Info.personal_id},
+            #{tb29Info.apply_date}
+        )
+    </insert>
+
+</mapper>

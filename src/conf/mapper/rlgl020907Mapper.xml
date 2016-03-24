@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020907Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020907Bean" id="resultInfoList">
+     <!--  姓名 -->
+     <result property="personnelNm" column="personnelNm"/>
+     <!--  身份证号 -->
+     <result property="personnelCardId" column="personnelCardId"/>
+     <!-- 单位编号 -->
+     <result property="personnelUnitNo" column="personnelUnitNo"/>
+     <!-- 科室编号 -->
+     <result property="personnelSectionId" column="personnelSectionId"/>
+     <!--  职称编号 -->
+     <result property="departmentValue" column="departmentValue"/>
+     <!--  学历编号 -->
+     <result property="educationValue" column="educationValue"/>
+     <!--  执业资格编号 -->
+     <result property="practitionValue" column="practitionValue"/>
+     <!--  联系方式 -->
+     <result property="telephone" column="telephone"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-人员信息基本情况一览表查询SQL -->
+  <select id="doResultList" resultMap="resultInfoList">
+      SELECT
+          <!-- 姓名 -->
+          tb01.USER_NAME as personnelNm,
+          <!-- 身份证号 -->
+          tb01.PERSONNEL_ID as personnelCardId,
+          <!-- 工作单位 -->
+          tb01.UNIT_NO as personnelUnitNo,
+          <!-- 科室 -->
+          tb01.SECTION_ID as personnelSectionId,
+          <!-- 联系方式 -->
+          tb12.PERSONNEL_TEL as telephone,
+          
+          <!-- 职称 -->
+          (select mid(LEVEL,3,2) from m_tb18_personnel_professional_info 
+              where personnel_id = tb12.personnel_id
+           order by GET_TIME desc 
+              limit 0,1
+          ) as departmentValue,
+          
+          <!-- 学历 -->
+          (select educational_bg from m_tb15_personnel_edu_info 
+              where personnel_id = tb12.personnel_id
+           order by GRADUATION_TIME desc 
+              limit 0,1
+          ) as educationValue,
+          
+          <!-- 执业信息 -->
+          (select TYPE from m_tb77_personnel_practice_info 
+              where personnel_id = tb12.personnel_id
+           order by ISSUE_TIME desc 
+              limit 0,1
+          ) as practitionValue
+          
+      FROM 
+        m_tb01_user tb01,
+        m_tb12_personnel tb12
+      WHERE 
+       1=1 
+       AND tb01.DEL_KBN = '0'
+       AND tb12.DEL_KBN = '0'
+       and tb01.PERSONNEL_ID = tb12.personnel_id
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020907.personnelUnitNo != ''">
+           or tb01.UNIT_NO = #{rlgl020907.personnelUnitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <if test="rlgl020907.lowerUnitFlag">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 <if test="rlgl020907.personnelUnitNo != ''">
+                                 and UNIT_SUPER = #{rlgl020907.personnelUnitNo}
+                                 </if>
+                               )
+           </if>
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020907.unit_assort == '001' and rlgl020907.valueKey != '' and rlgl020907.personnelUnitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020907.valueKey}','%')
+                               )
+           </if>
+           )
+       <if test="rlgl020907.personnelCardId != ''">
+       AND PERSONNEL_CARD_ID = #{rlgl020907.personnelCardId}
+       </if>
+       <if test="rlgl020907.personnelNm != ''">
+       AND personnel_nm like '%${rlgl020907.personnelNm}%'
+       </if>
+       <!-- 执业资格 -->
+       <if test="rlgl020907.protypeList != null">
+       AND personnel_id in 
+           (SELECT personnel_id 
+            FROM m_tb77_personnel_practice_info
+            WHERE TYPE in
+              <foreach collection="rlgl020907.protypeList" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+              </foreach>
+            GROUP BY 
+            PERSONNEL_ID
+           )
+       </if>
+       <if test="rlgl020907.pageCount != 0 and rlgl020907.pageCount != null">
+       LIMIT #{rlgl020907.pageNo},#{rlgl020907.pageCount}
+       </if>
+  </select>
+  <!-- 获取检索件数查询SQL -->
+  <select id="getCount" resultType="int">
+      SELECT count(*)
+      FROM 
+        m_tb01_user tb01,
+        m_tb12_personnel tb12
+      WHERE 
+       1=1 
+       AND tb01.DEL_KBN = '0'
+       AND tb12.DEL_KBN = '0'
+       and tb01.PERSONNEL_ID = tb12.personnel_id
+       and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020907.personnelUnitNo != ''">
+           or tb01.UNIT_NO = #{rlgl020907.personnelUnitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <if test="rlgl020907.lowerUnitFlag">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 <if test="rlgl020907.personnelUnitNo != ''">
+                                 and UNIT_SUPER = #{rlgl020907.personnelUnitNo}
+                                 </if>
+                               )
+           </if>
+           <!-- 市卫生局，区县卫生局统计的情况 -->
+           <if test="rlgl020907.unit_assort == '001' and rlgl020907.valueKey != '' and rlgl020907.personnelUnitNo == ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020907.valueKey}','%')
+                               )
+           </if>
+           )
+       <if test="rlgl020907.personnelCardId != ''">
+       AND PERSONNEL_CARD_ID = #{rlgl020907.personnelCardId}
+       </if>
+       <if test="rlgl020907.personnelNm != ''">
+       AND personnel_nm like '%${rlgl020907.personnelNm}%'
+       </if>
+       <!-- 执业资格 -->
+       <if test="rlgl020907.protypeList != null">
+       AND personnel_id in 
+           (SELECT personnel_id 
+            FROM m_tb77_personnel_practice_info
+            WHERE TYPE in
+              <foreach collection="rlgl020907.protypeList" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+              </foreach>
+            GROUP BY 
+            PERSONNEL_ID
+           )
+       </if>
+  </select>
+</mapper>

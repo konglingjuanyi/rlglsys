@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 单位人员返聘  -->
+<struts>
+	<package name="rlgl010320" extends="rlgl" namespace="/">
+	   <!-- 人员返聘初始化 -->
+	   <action name="rlgl010320Init" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010320InitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010320.jsp</result>
+       </action>
+       <!-- 人员返聘申请画面 -->
+	   <action name="rlgl010320View" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010320ViewAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010324.jsp</result>
+       </action>
+       <!-- 人员返聘申请提交 -->
+	   <action name="rlgl010320Commit" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010320CommitAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010324.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010324.jsp</result>
+       </action>
+       <!-- 人员返聘申请查看 -->
+       <action name="rlgl010320ViewDetail" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010320ViewDetailAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010323.jsp</result>
+       </action>
+       <!-- 人员返聘信息查看-返回 -->
+       <action name="rlgl010320Back" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010320BackAction"
+            method="execute">
+            <result name="rlgl010316" type="redirectAction">rlgl010316Search</result>
+       </action>
+       <!-- 通过指定条件检索人员 -->
+       <action name="rlgl010320Search" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010320SearchAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010320.jsp</result>
+       </action>
+	</package>
+</struts>
+

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl070201Mapper">
+
+    <!-- 该单位已经交费人员信息查询 -->
+        <select id="getT_tb02PersonList" resultType="com.rlglsys.bean.Rlgl070202Bean">
+        SELECT
+        DISTINCT tb02.userId as personnal_id,
+        tb01.USER_NAME as personnal_nm,
+        tb01.PERSONNEL_ID as card_id,
+        tb01.UNIT_NO as unit_no,
+        tb04.UNIT_NM as unit_nm,
+        tb02.CLUM006 as apply_year
+        FROM t_tb02_prepay_msg tb02
+        LEFT JOIN m_tb01_user tb01
+        ON tb02.userID = tb01.USER_ID
+        LEFT JOIN m_tb04_unit tb04
+        ON tb01.UNIT_NO = tb04.UNIT_NO
+        
+        WHERE 
+        tb02.userId IN(SELECT USER_ID FROM m_tb01_user WHERE UNIT_NO =#{rlgl070202Bean.unit_no})
+        and tb02.CLUM006 = #{rlgl070202Bean.apply_year}
+        and tb02.CLUM004 like '%${'7yIBpaqA7Zw='}%'
+        ORDER BY tb02.userID
+        
+       <!--<if test="rlgl070202Bean.pageCount != 0 and rlgl070202Bean.pageCount != null" >
+        LIMIT #{rlgl070202Bean.pageNo},#{rlgl070202Bean.pageCount} 
+        </if>-->
+       
+    </select>
+        <!-- 该单位已经交费人员人数查询-->
+     <select id="getT_tb02Count" resultType="int">
+        SELECT
+        count(DISTINCT tb02.userId)
+        
+        FROM t_tb02_prepay_msg tb02
+        LEFT JOIN m_tb01_user tb01
+        ON tb02.userID = tb01.USER_ID
+        LEFT JOIN m_tb04_unit tb04
+        ON tb01.UNIT_NO = tb04.UNIT_NO
+        
+        WHERE 
+        tb02.userId IN(SELECT USER_ID FROM m_tb01_user WHERE UNIT_NO =#{rlgl070202Bean.unit_no})
+        and tb02.CLUM006 = #{rlgl070202Bean.apply_year}
+        and tb02.CLUM004 like '%${'7yIBpaqA7Zw='}%' 
+    </select>
+    
+            <!-- 已经开具发票人员信息查询-->
+     <select id="getMtb123InvoicPersonList" resultType="com.rlglsys.bean.Rlgl070202Bean">
+        SELECT
+        tb123.PERSONAL_ID as personnal_id,
+        tb123.PERSONAL_NM as personnal_nm,
+        tb123.UNIT_NO,
+        tb123.UNIT_NM,
+        tb123.APPLY_YEAR
+        FROM m_tb123_apply_invoice tb123
+        WHERE 
+        UNIT_NO =#{rlgl070202Bean.unit_no}
+        AND
+        APPLY_YEAR =#{rlgl070202Bean.apply_year}
+        
+        <if test="rlgl070202Bean.pageCount != 0 and rlgl070202Bean.pageCount != null" >
+        LIMIT #{rlgl070202Bean.pageNo},#{rlgl070202Bean.pageCount} 
+        </if>
+    </select>
+    
+    <!-- 已经开具发票人员人数查询-->
+     <select id="getMtb123InvoicPersonCount" resultType="int">
+        SELECT
+        count(tb123.PERSONAL_ID)
+        FROM m_tb123_apply_invoice tb123
+        WHERE 
+        UNIT_NO =#{rlgl070202Bean.unit_no}
+        AND
+        APPLY_YEAR =#{rlgl070202Bean.apply_year}
+    </select>
+    
+    <!-- 发票申请信息登录 -->
+    <insert id="insertApplyInvoice">
+       INSERT INTO m_tb123_apply_invoice
+            (PERSONAL_ID
+            ,PERSONAL_NM
+            ,CARD_ID
+            ,UNIT_NO
+            ,UNIT_NM
+            ,APPLY_YEAR
+            ,APPLY_UNIT_NM
+            ,APPLY_PERSON_NM
+            ,APPLY_PERSON_TEL
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{rlgl070202Bean.personnal_id}
+            ,#{rlgl070202Bean.personnal_nm}
+            ,#{rlgl070202Bean.card_id}
+            ,#{rlgl070202Bean.unit_no}
+            ,#{rlgl070202Bean.unit_nm}
+            ,#{rlgl070202Bean.apply_year}
+            ,#{rlgl070202Bean.apply_unit_nm}
+            ,#{rlgl070202Bean.apply_person_nm}
+            ,#{rlgl070202Bean.apply_person_tel}
+            ,0
+            ,'0'
+            ,#{rlgl070202Bean.expend_01}
+            ,#{rlgl070202Bean.expend_02}
+            ,#{rlgl070202Bean.expend_03}
+            ,#{rlgl070202Bean.expend_04}
+            ,#{rlgl070202Bean.expend_05}
+            ,#{rlgl070202Bean.login_user_id}
+            ,#{rlgl070202Bean.login_date}
+            ,#{rlgl070202Bean.update_user_id}
+            ,#{rlgl070202Bean.update_date})
+    </insert>
+
+</mapper>

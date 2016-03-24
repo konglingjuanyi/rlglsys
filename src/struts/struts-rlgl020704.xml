@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl020704" extends="rlgl" namespace="/">
+		<!-- 初期化处理 -->
+		<action name="rlgl020704Init"
+			class="com.rlglsys.action.continumedicaleducation.creditmanage.Rlgl020704InitAction"
+			method="execute">
+			<result name="input">/WEB-INF/jsp/rlgl020704.jsp</result>
+			<result name="success">/WEB-INF/jsp/rlgl020704.jsp</result>
+		</action>
+	</package>
+</struts>

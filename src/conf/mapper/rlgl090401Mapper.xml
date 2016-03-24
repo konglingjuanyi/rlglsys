@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl090401Mapper">
+    <!-- 科室信息登录 -->
+    <insert id="insertMtb22HospitalSectionInfo">
+       INSERT INTO m_tb22_hospital_section
+            (SECTION_ID
+            ,SECTION_NAME
+            ,SECTION_CONTACT
+            ,SECTION_INFO
+            ,UNIT_NO
+            ,SECTION_PROPERTY
+            ,SECTION_CREATE_DT
+            ,SECTION_STATUS
+            ,SECTION_MANAGER
+            ,SECTION_TEL
+            ,EX_KEY
+            ,DEL_KBN
+            ,EXPEND_01
+            ,EXPEND_02
+            ,EXPEND_03
+            ,EXPEND_04
+            ,EXPEND_05
+            ,LOGIN_USER_ID
+            ,LOGIN_DATE
+            ,UPDATE_USER_ID
+            ,UPDATE_DATE)
+        VALUES (#{sectionInfo.section_id}
+            ,#{sectionInfo.section_name}
+            ,#{sectionInfo.section_contact}
+            ,#{sectionInfo.section_info}
+            ,#{sectionInfo.unit_no}
+            ,#{sectionInfo.section_property}
+            ,#{sectionInfo.section_create_dt}
+            ,#{sectionInfo.section_status}
+            ,#{sectionInfo.section_manager}
+            ,#{sectionInfo.section_tel}
+            ,#{sectionInfo.ex_key}
+            ,#{sectionInfo.del_kbn}
+            ,#{sectionInfo.expend_01}
+            ,#{sectionInfo.expend_02}
+            ,#{sectionInfo.expend_03}
+            ,#{sectionInfo.expend_04}
+            ,#{sectionInfo.expend_05}
+            ,#{sectionInfo.login_user_id}
+            ,#{sectionInfo.login_date}
+            ,#{sectionInfo.update_user_id}
+            ,#{sectionInfo.update_date})
+    </insert>
+    
+    <!-- 科室信息更新 -->
+    <update id="updateMtb22HospitalSectionInfo">
+       UPDATE m_tb22_hospital_section
+       SET
+             SECTION_NAME      = #{sectionInfo.section_name}
+            ,SECTION_INFO     = #{sectionInfo.section_info}
+            ,SECTION_CONTACT = #{sectionInfo.section_contact}
+            ,SECTION_MANAGER = #{sectionInfo.section_manager}
+            ,SECTION_TEL = #{sectionInfo.section_tel}
+            ,SECTION_PROPERTY = #{sectionInfo.section_property}
+            ,EX_KEY           = #{sectionInfo.ex_key}
+            ,UPDATE_USER_ID   = #{sectionInfo.update_user_id}
+            ,UPDATE_DATE     = #{sectionInfo.update_date}
+       WHERE
+            UNIT_NO = #{sectionInfo.unit_no}
+            AND SECTION_ID = #{sectionInfo.section_id}
+    </update>
+    
+        <!-- 科室信息完善 -->
+    <update id="updateMtb22HospitalSectionPerfecInfo">
+       UPDATE m_tb22_hospital_section
+       SET
+             section_manager       = #{sectionInfo.section_manager}
+            ,SECTION_INFO          = #{sectionInfo.section_info}
+            ,SECTION_CONTACT 	   = #{sectionInfo.section_contact}
+            ,section_direct        = #{sectionInfo.section_direct}
+            ,section_tel           = #{sectionInfo.section_tel}
+            ,section_fax           = #{sectionInfo.section_fax}
+            ,section_scope         = #{sectionInfo.section_scope}
+            ,section_status        = #{sectionInfo.section_status}
+            ,UPDATE_USER_ID        = #{sectionInfo.update_user_id}
+            ,UPDATE_DATE           = #{sectionInfo.update_date}
+       WHERE
+            UNIT_NO = #{sectionInfo.unit_no}
+            AND SECTION_ID = #{sectionInfo.section_id}
+    </update>
+    
+    <!-- 逻辑删除下级单位信息 -->
+    <update id="updateMtb22HospitalSectionInfoWithLogic">
+        UPDATE m_tb22_hospital_section
+        SET DEL_KBN = #{sectionInfo.del_kbn}
+            ,UPDATE_USER_ID = #{sectionInfo.update_user_id}
+            ,UPDATE_DATE = #{sectionInfo.update_date}
+        WHERE 
+            SECTION_ID = #{sectionInfo.section_id}
+            AND UNIT_NO = #{sectionInfo.unit_no}
+    </update>
+    
+    <!--科室详细列表查询 -->
+    <select id="getMtb22HospitalSectionInfoList" resultType="com.rlglsys.bean.Rlgl090401Bean">
+        SELECT
+          M.*
+          ,M1.ADM_NAME     AS section_property_nm
+          ,M2.UNIT_NM      AS UNIT_NM
+          ,M3.USER_NAME    AS section_manager_nm
+        FROM m_tb22_hospital_section M
+        
+        LEFT JOIN m_tb02_adm M1 ON
+        M.SECTION_PROPERTY = M1.ADM_NUM
+        AND M1.ADM_TYPE_CD = '097'
+        AND M1.DEL_KBN = '0'
+        
+        LEFT JOIN m_tb04_unit M2 ON
+        M.UNIT_NO = M2.UNIT_NO
+        AND M2.DEL_KBN = '0'
+        
+        LEFT JOIN m_tb01_user M3 ON
+        M.section_manager = M3.USER_ID
+        AND M3.DEL_KBN = '0'
+        
+        WHERE
+        M.DEL_KBN = '0'
+         AND M.UNIT_NO = #{sectionInfo.unit_no}
+         <if test="sectionInfo.del_kbn != '' and sectionInfo.del_kbn != null">
+          AND M.DEL_KBN= #{sectionInfo.del_kbn}
+         </if>
+         <if test="sectionInfo.section_id != '' and sectionInfo.section_id != null">
+          AND M.SECTION_ID= #{sectionInfo.section_id}
+         </if>
+         <if test="sectionInfo.section_name != '' and sectionInfo.section_name != null">
+            AND M.SECTION_NAME LIKE CONCAT('%', #{sectionInfo.section_name}, '%')
+         </if>
+         <if test="sectionInfo.section_property != '' and sectionInfo.section_property != null">
+          AND M.SECTION_PROPERTY= #{sectionInfo.section_property}
+         </if>
+        ORDER BY M.SECTION_ID
+        <if test="offset != 0 and offset != null">
+         LIMIT #{limit},#{offset}
+        </if>
+        ;
+    </select>
+    
+     <!--科室件数查询-->
+    <select id="getMtb22HospitalSectionInfoCount" resultType="int">
+        SELECT
+         Count(*)
+        FROM m_tb22_hospital_section M
+        
+        LEFT JOIN m_tb02_adm M1 ON
+        M.SECTION_PROPERTY = M1.ADM_NUM
+        AND M1.ADM_TYPE_CD = '097'
+        WHERE
+         M.DEL_KBN = '0'
+        AND M.UNIT_NO = #{sectionInfo.unit_no}
+         <if test="sectionInfo.del_kbn != '' and sectionInfo.del_kbn != null">
+          AND M.DEL_KBN= #{sectionInfo.del_kbn}
+         </if>
+         <if test="sectionInfo.section_id != '' and sectionInfo.section_id != null">
+          AND M.SECTION_ID= #{sectionInfo.section_id}
+         </if>
+         <if test="sectionInfo.section_name != '' and sectionInfo.section_name != null">
+            AND M.SECTION_NAME LIKE CONCAT('%', #{sectionInfo.section_name}, '%')
+         </if>
+         <if test="sectionInfo.section_property != '' and sectionInfo.section_property != null">
+          AND M.SECTION_PROPERTY= #{sectionInfo.section_property}
+         </if>
+        ORDER BY M.SECTION_ID;
+    </select>
+    
+    <!--科室列表查询 -->
+    <select id="getMtb22HospitalInfoList" resultType="com.rlglsys.entity.Mtb22HospitalSection">
+        SELECT
+          *
+        FROM m_tb22_hospital_section 
+        WHERE
+         UNIT_NO = #{unit_no}
+          AND DEL_KBN= '0'
+        ORDER BY SECTION_ID;
+    </select>
+    
+    <!-- 用户组一览查询SQL -->
+    <select id="getUserInfoBysectionList" resultType="com.rlglsys.entity.Mtb01User">
+        SELECT
+            *
+        FROM m_tb01_user
+        WHERE
+            UNIT_NO = #{userInfo.unit_no}
+            AND USER_TYPE = '0'
+            <if test="userInfo.section_id != '' and userInfo.section_id != null">
+                AND SECTION_ID = #{userInfo.section_id}
+            </if>
+            <if test="userInfo.del_kbn != '' and userInfo.del_kbn != null">
+                AND DEL_KBN = #{userInfo.del_kbn}
+            </if>
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND user_id = #{userInfo.user_id}
+            </if>
+            <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+            </if>
+            <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND personnel_id  =  #{userInfo.personnel_id}
+            </if>
+            <if test="offset != 0 and offset != null">
+	         LIMIT #{limit},#{offset}
+	        </if>
+    </select>
+    
+    <!-- 用户组一览查询SQL -->
+    <select id="getUserInfoBysectionCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb01_user
+        WHERE
+            UNIT_NO = #{userInfo.unit_no}
+            AND USER_TYPE = '0'
+            <if test="userInfo.section_id != '' and userInfo.section_id != null">
+                AND SECTION_ID = #{userInfo.section_id}
+            </if>
+            <if test="userInfo.del_kbn != '' and userInfo.del_kbn != null">
+                AND DEL_KBN = #{userInfo.del_kbn}
+            </if>
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND user_id = #{userInfo.user_id}
+            </if>
+            <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+            </if>
+            <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND personnel_id  =  #{userInfo.personnel_id}
+            </if>
+    </select>
+    
+     <!--科室查询 -->
+    <select id="getMtb22HospitalSectionInfo" resultType="com.rlglsys.bean.Rlgl090401Bean">
+        SELECT
+          M.*
+          ,M1.ADM_NAME     AS section_property_nm
+          ,M2.UNIT_NM      AS UNIT_NM
+          ,M3.USER_NAME    AS section_manager_nm
+          ,M4.USER_NAME    AS section_manager_nm_view
+        FROM m_tb22_hospital_section M
+        LEFT JOIN m_tb02_adm M1 ON
+        M.SECTION_PROPERTY = M1.ADM_NUM
+        AND M1.ADM_TYPE_CD = '097'
+        
+        LEFT JOIN m_tb04_unit M2 ON
+        M.UNIT_NO = M2.UNIT_NO
+        AND M2.DEL_KBN = '0'
+        
+        LEFT JOIN m_tb01_user M3 ON
+        M.section_manager = M3.USER_ID 
+        AND M3.DEL_KBN = '0'
+        
+      	LEFT JOIN m_tb01_user M4 ON
+		M.SECTION_CONTACT = M4.USER_ID 
+		AND M4.DEL_KBN = '0'    
+        
+        WHERE
+         M.UNIT_NO = #{sectionInfo.unit_no}
+        <if test="sectionInfo.del_kbn != '' and sectionInfo.del_kbn != null">
+          AND M.DEL_KBN= #{sectionInfo.del_kbn}
+        </if>
+        AND M.SECTION_ID = #{sectionInfo.section_id}
+        ORDER BY M.SECTION_ID;
+    </select>
+    
+    <!-- 用户组科室一览查询SQL -->
+    <select id="getUserInfoWithsectionList" resultType="com.rlglsys.bean.Rlgl090406Bean">
+        SELECT
+            M.*
+            ,M1.SECTION_NAME
+        FROM m_tb01_user M
+        LEFT JOIN m_tb22_hospital_section M1
+        ON M.SECTION_ID = M1.SECTION_ID
+        AND M.UNIT_NO = M1.UNIT_NO
+        WHERE
+            M.UNIT_NO = #{userInfo.unit_no}
+            AND M.USER_TYPE = '0'
+            <if test="userInfo.section_id != '' and userInfo.section_id != null">
+            AND M.SECTION_ID = #{userInfo.section_id}
+            </if>
+            <if test="userInfo.del_kbn != '' and userInfo.del_kbn != null">
+                AND M.DEL_KBN = #{userInfo.del_kbn}
+           </if>
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+            <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND M.personnel_id  =  #{userInfo.personnel_id}
+           </if>
+           <if test="offset != 0 and offset != null">
+	         LIMIT #{limit},#{offset}
+	        </if>
+    </select>
+    
+     <!-- 用户组科室一览件数SQL -->
+    <select id="getUserInfoWithsectionCount" resultType="int">
+        SELECT
+            Count(*)
+        FROM m_tb01_user M
+        LEFT JOIN m_tb22_hospital_section M1
+        ON M.SECTION_ID = M1.SECTION_ID
+        AND M.UNIT_NO = M1.UNIT_NO
+        WHERE
+            M.UNIT_NO = #{userInfo.unit_no}
+            AND M.USER_TYPE = '0'
+            <if test="userInfo.section_id != '' and userInfo.section_id != null">
+            AND M.SECTION_ID = #{userInfo.section_id}
+            </if>
+            <if test="userInfo.del_kbn != '' and userInfo.del_kbn != null">
+                AND M.DEL_KBN = #{userInfo.del_kbn}
+           </if>
+            <if test="userInfo.user_id != '' and userInfo.user_id != null">
+                AND M.user_id = #{userInfo.user_id}
+           </if>
+           <if test="userInfo.user_name != '' and userInfo.user_name != null">
+                AND M.user_name LIKE CONCAT('%', #{userInfo.user_name}, '%')
+           </if>
+            <if test="userInfo.personnel_id != '' and userInfo.personnel_id != null">
+                AND M.personnel_id  =  #{userInfo.personnel_id}
+           </if>
+    </select>
+    
+    <!-- 用户科室信息更新 -->
+    <update id="updateMtb01UserSectionInfo">
+       UPDATE m_tb01_user
+       SET
+             SECTION_ID       = #{userInfo.section_id}
+            ,UPDATE_USER_ID   = #{userInfo.update_user_id}
+            ,UPDATE_DATE     = #{userInfo.update_date}
+       WHERE
+            USER_ID = #{userInfo.user_id}
+    </update>
+    <!-- 个人基本信息科室信息更新(审核后) -->
+    <update id="updateMtb12PersonnelSectionInfo">
+       UPDATE m_tb12_personnel
+       SET
+             PERSONNEL_OFFICE       = #{personnelInfo.personnel_office}
+            ,UPDATE_USER_ID   = #{personnelInfo.update_user_id}
+            ,UPDATE_DATE     = #{personnelInfo.update_date}
+       WHERE
+            PERSONNEL_ID = #{personnelInfo.personnel_id}
+    </update>
+    <!-- 个人基本信息科室信息更新(审核qian) -->
+    <update id="updateMb39PersonnelSectionInfo">
+       UPDATE m_tb39_personnel
+       SET
+             PERSONNEL_OFFICE       = #{personnelInfo.personnel_office}
+            ,UPDATE_USER_ID   = #{personnelInfo.update_user_id}
+            ,UPDATE_DATE     = #{personnelInfo.update_date}
+       WHERE
+            PERSONNEL_ID = #{personnelInfo.personnel_id}
+    </update>
+    <!-- 根据单位编号，科室编号获取科室名称SQL -->
+    <select id="getSectionName" resultType="String">
+        SELECT SECTION_NAME
+        FROM m_tb22_hospital_section tb22
+        WHERE
+           tb22.DEL_KBN = '0'
+           <if test="sectionId != '' and sectionId != null">
+           and tb22.SECTION_ID = #{sectionId}
+           </if>
+           <if test="unitNo != '' and unitNo != null">
+           and tb22.UNIT_NO = #{unitNo}
+           </if>
+    </select>
+</mapper>

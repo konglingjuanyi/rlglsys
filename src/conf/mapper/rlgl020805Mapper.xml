@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020805Mapper">
+
+    <!-- 申请信息取得 -->
+    <select id="getApplyInfo" resultType="com.rlglsys.entity.Mtb65CertificateApply">
+        SELECT *
+        FROM m_tb65_certificate_apply
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+            AND APPLY_NUMBER = #{applyNumber}
+    </select>
+    
+    <!-- 必修课信息取得 -->
+    <select id="getCourseInfo" resultType="com.rlglsys.entity.Mtb75CourseInfo">
+        SELECT *
+        FROM m_tb75_courseinfo
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+            AND APPLY_NUMBER = #{applyNumber}
+    </select>
+    
+    <!-- 更新位申请信息 -->
+    <update id="updateApplyInfo" >
+        UPDATE m_tb65_certificate_apply
+        SET
+            CHECK_RESULT = #{rlgl020803bean.check_result},
+            UNIT_CHECKER = #{rlgl020803bean.unit_checker},
+            UNIT_CHECK_DATE = #{rlgl020803bean.unit_check_date},
+            UNIT_CHECK_VIEWS = #{rlgl020803bean.unit_check_views},
+            UNIT_CHECK_RESULT = #{rlgl020803bean.unit_check_result},
+            COUNTY_CHECKER = #{rlgl020803bean.county_checker},
+            COUNTY_CHECK_DATE = #{rlgl020803bean.county_check_date},
+            COUNTY_CHECK_VIEWS = #{rlgl020803bean.county_check_views},
+            COUNTY_CHECK_RESULT = #{rlgl020803bean.county_check_result},
+            DOWNTOWN_CHECKER = #{rlgl020803bean.downtown_checker},
+            DOWNTOWN_CHECK_DATE = #{rlgl020803bean.downtown_check_date},
+            DOWNTOWN_CHECK_VIEWS = #{rlgl020803bean.downtown_check_views},
+            DOWNTOWN_CHECK_RESULT = #{rlgl020803bean.downtown_check_result},
+            MINISTRY_CHECKER = #{rlgl020803bean.ministry_checker},
+            MINISTRY_CHECK_DATE = #{rlgl020803bean.ministry_check_date},
+            MINISTRY_CHECK_VIEWS = #{rlgl020803bean.ministry_check_views},
+            MINISTRY_CHECK_RESULT = #{rlgl020803bean.ministry_check_result},
+            NOW_MARK = #{rlgl020803bean.now_mark},
+            WILL_CHECKUNITNO = #{rlgl020803bean.will_checkunitno},
+            UPDATE_USER_ID = #{rlgl020803bean.update_user_id},
+            UPDATE_DATE = #{rlgl020803bean.update_date}
+        WHERE
+            APPLY_NO = #{rlgl020803bean.apply_no}
+        AND APPLY_NUMBER = #{rlgl020803bean.apply_number}
+    </update>
+</mapper>

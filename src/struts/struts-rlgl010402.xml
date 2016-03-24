@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 三名申请>名科申请 -->
+<struts>
+    <package name="rlgl010402" extends="rlgl" namespace="/">
+       <!-- 科室一览列表 -->
+       <action name="rlgl010402Init" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl010402.jsp</result>
+       </action>
+       <!-- 名科申请 -->
+       <action name="rlgl010402Apply" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402ApplyAction" method="execute">
+           <result name="rlgl010407">/WEB-INF/jsp/rlgl010407.jsp</result>
+           <result name="error">/WEB-INF/jsp/rlgl010407.jsp</result>
+       </action>
+       <!-- 查看名医详细信息 -->
+       <action name="rlgl010402ViewDoctor" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402ViewAction" method="execute">
+           <result name="rlgl010408">/WEB-INF/jsp/rlgl010408.jsp</result>
+       </action>
+       <!-- 提交名科申请信息 -->
+       <!-- <action name="rlgl010402Commit" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402CommitAction" method="execute">
+           <result name="success" type="redirectAction">
+              <param name="actionName">rlgl010402CommitOK</param>
+              <param name="section_id">${section_id}</param>
+              <param name="applyNo">${applyNo}</param>
+              <param name="applyNumber">${applyNumber}</param>
+              <param name="view_flag">${view_flag}</param>
+           </result>
+       </action> -->
+       <action name="rlgl010402Commit" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402CommitAction" method="execute">
+           <result name="success" type="redirectAction">rlgl010400Init</result>
+           <result name="error" type="redirectAction">
+              <param name="actionName">rlgl010402Apply</param>
+              <param name="error_flg">${error_flg}</param>
+              <param name="section_id">${section_id}</param>
+           </result>
+       </action>
+       <!-- 名科申请信息提交后，返回申请明细界面 -->
+       <action name="rlgl010402CommitOK" class="com.rlglsys.action.hiringmanage.threeapply.Rlgl010402CommitOKAction" method="execute">
+           <result name="rlgl010407">/WEB-INF/jsp/rlgl010407.jsp</result>
+       </action>
+    </package>
+</struts>
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl010201Detail" extends="rlgl" namespace="/">
+        <action name="rlgl010201Start"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010201StartAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010208.jsp</result>
+        </action>
+        <action name="rlgl010201Detail"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010201DetailAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl010205.jsp</result>
+        </action>
+        <action name="rlgl010201Init"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010201InitAction" method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl010201.jsp</result>
+        </action>
+        <action name="rlgl010201Add"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010201AddAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010201.jsp</result>
+        </action>
+        <action name="rlgl010201Update"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010201UpdateAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010205.jsp</result>
+            <result name="error">/WEB-INF/jsp/rlgl010205.jsp</result>
+        </action>
+        <action name="rlgl010201Delete"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010201DeleteAction" method="execute">
+            <result name="error">/WEB-INF/jsp/rlgl010201.jsp</result>
+            <result name="deleteSuccess">/WEB-INF/jsp/rlgl010201.jsp</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010106Mapper">
+ <!--单位详细列表查询 -->
+    <select id="getUnitInfo" resultType="Mtb04Unit">
+        SELECT  *     
+        FROM m_tb04_unit
+        WHERE unit_no=#{unit_no};
+    </select>
+    <!--单位信息完善 -->
+    <update id="updateUnit" parameterType="int">
+        UPDATE m_tb04_unit SET                     
+		    unit_own             =#{unit.unit_own},
+			earnings_nature      =#{unit.earnings_nature}  ,
+			unit_manage_scale    =#{unit.unit_manage_scale} ,
+			unit_manage_scale_tow=#{unit.unit_manage_scale_tow},
+			unit_manage_scale_nm=#{unit.unit_manage_scale_nm},
+			unit_economic_type   =#{unit.unit_economic_type},
+			unit_nature          =#{unit.unit_nature},
+			unit_nature_tow      =#{unit.unit_nature_tow},
+			unit_level           =#{unit.unit_level}  ,
+			industry_plan        =#{unit.industry_plan},
+			agency_level         =#{unit.agency_level},
+			agency_level_tow     =#{unit.agency_level_tow} ,
+			agency_level_three    =#{unit.agency_level_three}  ,
+			unit_scale           =#{unit.unit_scale},
+			license_no           =#{unit.license_no},
+			establishment_num    =#{unit.establishment_num},
+			organization_no      =#{unit.organization_no} ,
+			organization_code    =#{unit.organization_code} ,
+			unit_address         =#{unit.unit_address},
+			offical_scope        =#{unit.offical_scope},
+			unit_pro             =#{unit.unit_pro} ,   
+			hospital_grade       =#{unit.hospital_grade} ,   
+            hospital_grade_tow   =#{unit.hospital_grade_tow} ,         
+	        unit_img             =#{unit.unit_img} ,  
+            area_id              =#{unit.area_id} , 
+	        unit_lower           =#{unit.unit_lower}  , 
+	        system_sort          =#{unit.system_sort} ,         
+	        industry_divide      =#{unit.industry_divide} ,  
+            system_sort_two      =#{unit.system_sort_two} , 
+	        industry_divide_two  =#{unit.industry_divide_two}  ,
+	        agency_plan =#{unit.agency_plan}  ,
+			ex_key = #{unit.ex_key},  
+			del_kbn = #{unit.del_kbn},                       
+			expend_01 = #{unit.expend_01},       
+			expend_02 = #{unit.expend_02},       
+			expend_03 = #{unit.expend_03},       
+			expend_04 = #{unit.expend_04},       
+			expend_05 = #{unit.expend_05},       
+			login_user_id = #{unit.login_user_id},           
+			login_date = #{ unit.login_date  },                  
+			update_user_id = #{unit.update_user_id},         
+			update_date = #{ unit.update_date}
+		     
+		            
+       WHERE unit_no =	#{unit.unit_no};  
+    </update>
+</mapper>

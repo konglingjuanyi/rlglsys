@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!-- 对账管理>消费明细 -->
+<struts>
+    <package name="rlgl070101" extends="rlgl" namespace="/">
+       <!-- 消费明细初始化 -->
+       <action name="rlgl070101Init" class="com.rlglsys.action.reconciliationsystem.account.Rlgl070101InitAction" method="execute">
+           <result name="init">/WEB-INF/jsp/rlgl070101.jsp</result>
+       </action>
+       <!-- 消费明细检索 -->
+       <action name="rlgl070101Search" class="com.rlglsys.action.reconciliationsystem.account.Rlgl070101SearchAction" method="execute">
+           <result name="search">/WEB-INF/jsp/rlgl070101.jsp</result>
+       </action>
+       <!-- 订单消费明细查看 -->
+       <action name="rlgl070101View" class="com.rlglsys.action.reconciliationsystem.account.Rlgl070101ViewAction" method="execute">
+           <result name="rlgl070102">/WEB-INF/jsp/rlgl070102.jsp</result>
+       </action>
+    </package>
+</struts>
+

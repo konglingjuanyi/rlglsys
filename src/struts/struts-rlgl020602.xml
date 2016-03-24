@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl020602" extends="rlgl" namespace="/">
+      <!--  初期化处理 -->
+       <action name="rlgl020602Init"
+        class="com.rlglsys.action.continumedicaleducation.creditreport.Rlgl020602InitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl020602.jsp</result>
+       </action>
+       <!--  审核提交处理 -->
+       <action name="rlgl020602Submit"
+            class="com.rlglsys.action.continumedicaleducation.creditreport.Rlgl020602SubmitAction" method="execute">
+            <result name="ERROR">/WEB-INF/jsp/error.jsp</result>
+            <result name="success" type="redirectAction">
+				<param name="actionName">rlgl020601Init</param>
+				<param name="page_flg">${page_flg}</param>
+			</result>
+        </action>
+        <action name="rlgl020602Back"
+        	class="com.rlglsys.action.continumedicaleducation.creditreport.Rlgl020602BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl020601Init</result>
+        </action>
+    </package>
+</struts>

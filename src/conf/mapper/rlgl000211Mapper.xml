@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl000211Mapper">
+
+    <!--该单位角色查询SQL -->
+   <!--  <select id="roleManagementList" resultType="com.rlglsys.entity.Mtb24RoleManagement">
+        SELECT
+            *
+        FROM m_tb24_role_management
+        WHERE
+            UNIT_NO=#{unit_no}
+            AND user_enter=#{user_type}
+            AND DEL_KBN = '0'
+    </select> -->
+    <select id="roleManagementList" resultType="com.rlglsys.bean.Rlgl000212Bean">
+         SELECT R.*, CASE  WHEN U.USER_ID IS NULL THEN "0" ELSE "1" END  user_role  FROM (  SELECT
+            *
+        FROM m_tb24_role_management
+        WHERE
+            UNIT_NO=#{unit_no}
+           <!--   AND user_enter=#{user_enter}-->
+            AND DEL_KBN = '0') R 
+        LEFT JOIN (SELECT * FROM M_TB72_USERROLE WHERE USER_ID=#{user_id}  AND user_enter=#{user_enter}) U 
+        ON(R.ROLE_ID=U.ROLE_ID 
+       <if test="user_type==1">
+        <!--     AND R.user_enter=U.user_enter-->
+       </if> 
+        )
+    </select>
+    
+    
+     <!--该单位角色查询SQL -->
+    <select id="userRoleList" resultType="com.rlglsys.entity.Mtb24RoleManagement">
+        SELECT * FROM m_tb72_userrole WHERE USER_ID=#{user_id} <!--  AND user_enter=#{user_type}-->
+    </select>
+</mapper>

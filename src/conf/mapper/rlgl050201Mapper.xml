@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl050201Mapper">
+    <!-- 个人信息查询SQL -->
+    <select id="getInfo" resultType="com.rlglsys.bean.Rlgl050201Bean">
+        SELECT
+		    A.USER_NAME AS name,
+		    A.PERSONNEL_ID AS person_id,
+		    B.UNIT_NM
+		FROM
+		    m_tb01_user A
+		LEFT JOIN m_tb04_unit B ON A.UNIT_NO = B.UNIT_NO
+		WHERE
+		    A.PERSONNEL_ID = #{person_no}
+    </select>
+    <!-- 公共必修课信息检索 -->
+    <select id="getNextInfo" resultType="com.rlglsys.entity.Mtb56creditreportingdetail">
+        SELECT
+		    *
+		FROM
+		    m_tb56_credit_reporting_detail
+		WHERE
+		    DEL_KBN = '0'
+		AND NAVI = 'navi055'
+		AND PERSONAL_ID = #{person_no}
+		AND CHECK_RESULT = '002'
+    </select>
+</mapper>

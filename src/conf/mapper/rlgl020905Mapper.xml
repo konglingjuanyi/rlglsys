@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020905Mapper">
+    <resultMap type="com.rlglsys.bean.Rlgl020905Bean" id="resultInfoList">
+      <!-- 统计数量 -->
+      <result property="areaCount" column="areaCount"/>
+  </resultMap>
+  <!-- 继续医学教育-统计分析-人员分类情况统计查询SQL -->
+  <select id="doResultListLevel" resultMap="resultInfoList">
+     select count(*) as areaCount
+     from 
+        m_tb04_unit tb04,
+        m_tb01_user tb01,
+        m_tb18_personnel_professional_info tb18,
+        <!-- 执业信息表 -->
+        m_tb77_personnel_practice_info tb77
+     where
+        tb04.DEL_KBN = '0'
+        and tb01.DEL_KBN = '0'
+        and tb18.DEL_KBN = '0'
+        and tb77.DEL_KBN = '0'
+        and tb04.UNIT_NO = tb01.UNIT_NO
+        and tb01.PERSONNEL_ID = tb18.PERSONNEL_ID
+        and tb01.PERSONNEL_ID = tb77.PERSONNEL_ID
+        <!-- 单位分类：002医疗机构 -->
+        and tb04.UNIT_ASSORT = '002'
+        and (1 = 2
+           <!-- 以单位编号为检索条件 -->
+           <if test="rlgl020905.unitNo != ''">
+           or tb01.UNIT_NO = #{rlgl020905.unitNo}
+           </if>
+           <!-- 以是否包含下级单位为检索条件 -->
+           <if test="rlgl020905.lowerUnitFlag">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 <if test="rlgl020905.unitNo != ''">
+                                 and UNIT_SUPER = #{rlgl020905.unitNo}
+                                 </if>
+                               )
+           </if>
+           <if test="rlgl020905.user_area_id != ''">
+           or tb01.UNIT_NO in (select 
+                                 UNIT_NO
+                               from 
+                                 m_tb04_unit
+                               where
+                                 DEL_KBN = '0'
+                                 and UNIT_ASSORT = '002'
+                                 and AREA_ID like CONCAT('${rlgl020905.user_area_id}','%')
+                               )
+           </if>
+           )
+        <!-- 职称级别 -->
+        <if test="rlgl020905.levelValue != ''">
+        and mid(tb18.LEVEL,3,2) = #{rlgl020905.levelValue}
+        </if>
+        <!-- 执业范围 -->
+        <if test="rlgl020905.areaValue != ''">
+        and tb77.TYPE = #{rlgl020905.areaValue}
+        </if>
+  </select>
+</mapper>

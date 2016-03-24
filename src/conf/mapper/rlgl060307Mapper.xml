@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl060307Mapper">
+    <!-- 取得考试报名申请结果 -->
+    <select id="getMtb106OnlineApplyInfoList" resultType="com.rlglsys.entity.Mtb106OnlineApply">
+        SELECT
+		    *
+		FROM
+		    m_tb106_online_apply 
+		WHERE
+		    DEL_KBN = '0'
+		AND SPONSOR = #{unit_no}
+		AND TICKET_NO is not NULL 
+		AND TICKET_NO != ''
+        <if test="exam_no != '' and exam_no != null">
+		AND EXAM_NO = #{exam_no}
+		</if>
+		AND CHECK_RESULT = '002'
+        ORDER BY EXAM_NO
+		<if test="todoInfo.pageCount != 0 and todoInfo.pageCount != null">
+        LIMIT #{todoInfo.pageNo},#{todoInfo.pageCount}
+        </if>
+    </select>
+    <!-- 取得考试报名申请结果 -->
+    <select id="getMtb106OnlineApplyInfoList1" resultType="com.rlglsys.entity.Mtb106OnlineApply">
+        SELECT
+            B.UNIT_NM,
+            C.EXAM_START_DATE,
+            C.EXAM_TIME,
+            D.PERSONNEL_IMGNAME,
+            A.*
+        FROM
+            m_tb106_online_apply A
+        LEFT JOIN m_tb04_unit B ON A.PERSONAL_UNIT_NO = B.UNIT_NO
+        LEFT JOIN m_tb103_exam_setting C ON A.EXAM_NO = C.EXAM_NO
+        LEFT JOIN m_tb12_personnel D ON A.PERSONAL_CARD_ID = D.PERSONNEL_ID
+        WHERE
+            A.DEL_KBN = '0'
+        AND A.SPONSOR = #{unit_no}
+        AND A.TICKET_NO is not NULL 
+		AND A.TICKET_NO != ''
+        <if test="exam_no != '' and exam_no != null">
+        AND A.EXAM_NO = #{exam_no}
+        </if>
+        AND A.CHECK_RESULT = '002'
+        ORDER BY A.EXAM_NO
+    </select>
+    <select id="getCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            m_tb106_online_apply 
+        WHERE
+            DEL_KBN = '0'
+        AND SPONSOR = #{unit_no}
+        AND TICKET_NO is not NULL 
+		AND TICKET_NO != ''
+        <if test="exam_no != '' and exam_no != null">
+        AND EXAM_NO = #{exam_no}
+        </if>
+        AND CHECK_RESULT = '002'
+        ORDER BY EXAM_NO
+    </select>
+</mapper>

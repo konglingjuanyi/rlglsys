@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl012002Mapper">
+   <select id="getNoPasPeoList"  resultType="com.rlglsys.bean.Rlgl012002Bean">
+		SELECT
+		     PERSONAL_NM as personal_nm,
+		     PERSONAL_ID as personal_id,  
+		     SUM(CREDIT_I + CREDIT_II) as zongxuefen,
+		     `YEAR` as `YEAR`,
+		     PERSONNEL_UNIT_NO  as personnel_unit_no 
+		FROM m_tb66_total_credit
+		WHERE `YEAR` =#{rlgl012002Bean.year}
+		AND   10 > CREDIT_I + CREDIT_II
+	      <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+	        and PERSONNEL_UNIT_NO  in 
+	         <foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+	            open="(" close=")" separator=",">
+	            #{lowUnitNo}
+	        </foreach>
+      		</if>
+			GROUP BY  PERSONNEL_UNIT_NO,`YEAR`,PERSONAL_ID
+   <if test="rlgl012002Bean.pageCount != null and rlgl012002Bean.pageCount != 0 ">
+   		 LIMIT #{rlgl012002Bean.pageNo},#{rlgl012002Bean.pageCount}
+    </if>
+   </select>
+   <!-- 该方法主要是为了得到list的size值和在导出文件的时候调用，全部导出 -->
+   <select id="getNoPassList" resultType="com.rlglsys.bean.Rlgl012002Bean">
+		SELECT
+		     PERSONAL_NM as personal_nm,
+		     PERSONAL_ID as personal_id,  
+		     SUM(CREDIT_I + CREDIT_II) as zongxuefen,
+		     `YEAR` as `YEAR`,
+		     PERSONNEL_UNIT_NO  as personnel_unit_no 
+		FROM m_tb66_total_credit
+		WHERE `YEAR` =#{rlgl012002Bean.year}
+		AND   10 > CREDIT_I + CREDIT_II
+	      <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+	        and PERSONNEL_UNIT_NO  in 
+	         <foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+	            open="(" close=")" separator=",">
+	            #{lowUnitNo}
+	        </foreach>
+      		</if>
+			GROUP BY  PERSONNEL_UNIT_NO,`YEAR`,PERSONAL_ID
+   </select>
+</mapper>

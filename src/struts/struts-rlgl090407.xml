@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl090407" extends="rlgl" namespace="/">
+		<action name="rlgl090407Init"
+			class="com.rlglsys.action.rlgl.section.Rlgl090407InitlAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl090407.jsp</result>
+		</action>
+		<action name="rlgl090407Update"
+			class="com.rlglsys.action.rlgl.section.Rlgl090407UpdateAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090404Redirect</param>
+			</result>
+		</action>
+		<action name="rlgl090407Redirect"
+			class="com.rlglsys.action.rlgl.section.Rlgl090407RedirectAction" method="execute">
+			<result name="success" type="redirectAction">
+				<param name="actionName">rlgl090402Init</param>
+			</result>
+		</action>
+	</package>
+</struts>
+

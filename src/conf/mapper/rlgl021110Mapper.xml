@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl021110Mapper">
+<!--查询院内学分举办项目列表 -->
+    <select id="getProjectAuditList" resultType="com.rlglsys.bean.Rlgl021110Bean">
+        SELECT C.* FROM (SELECT A.sumnum,B.* FROM (SELECT
+         project_no,count(*) sumnum	FROM
+		m_tb98_replenish_register  WHERE PROJECT_UNIT_AUDIT='1' and  PROJECT_UNIT_NO IN
+         <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+         </foreach> 
+		group by project_no) A LEFT JOIN m_tb91_hospital_credit_project B ON A.PROJECT_NO=B.PROJECT_NO)C
+		WHERE 1=1
+		<if test="rlgl021110Bean.project_no != '' and rlgl021110Bean.project_no != null">
+			       AND C.project_no LIKE CONCAT('%', #{rlgl021110Bean.project_no}, '%') 
+			   </if>
+			   <if test="rlgl021110Bean.project_nm != '' and rlgl021110Bean.project_nm != null">
+			       AND C.project_nm LIKE CONCAT('%',  #{rlgl021110Bean.project_nm}, '%') 
+			   </if>
+	    <if test="rlgl021110Bean.pageCount != 0 and rlgl021110Bean.pageCount != null">
+                 LIMIT #{rlgl021110Bean.pageNo},#{rlgl021110Bean.pageCount}
+        </if>   
+    </select>
+    <!--查询院内学分举办项目 -->
+    <select id="getProject" resultType="com.rlglsys.bean.Rlgl021110Bean">
+       SELECT * FROM m_tb91_hospital_credit_project WHERE PROJECT_NO=#{rlgl021116Bean.project_no} 
+    </select>
+     <!--查询院内学分举办项目条数 -->
+    <select id="getCountbyProjectAudit" resultType="int">
+         SELECT count(*) FROM (SELECT A.sumnum,B.* FROM (SELECT
+         project_no,count(*) sumnum	FROM
+		m_tb98_replenish_register  WHERE PROJECT_UNIT_AUDIT='1' and PROJECT_UNIT_NO IN
+         <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+         </foreach>
+		group by project_no) A LEFT JOIN m_tb91_hospital_credit_project B ON A.PROJECT_NO=B.PROJECT_NO)C
+		WHERE 1=1
+		<if test="rlgl021110Bean.project_no != '' and rlgl021110Bean.project_no != null">
+			       AND C.project_no LIKE CONCAT('%', #{rlgl021110Bean.project_no}, '%') 
+			   </if>
+			   <if test="rlgl021110Bean.project_nm != '' and rlgl021110Bean.project_nm != null">
+			       AND C.project_nm LIKE CONCAT('%',  #{rlgl021110Bean.project_nm}, '%') 
+			   </if>
+	    <if test="rlgl021110Bean.pageCount != 0 and rlgl021110Bean.pageCount != null">
+                 LIMIT #{rlgl021110Bean.pageNo},#{rlgl021110Bean.pageCount}
+        </if>   
+    </select>
+    <select id="getHospitalCreditProjectList" resultType="com.rlglsys.bean.Rlgl021112Bean">
+         SELECT
+	    A.*,CASE WHEN B.PERSONAL_ID IS NULL THEN '0' ELSE '1' END ARRLY_KBN ,B.apply_item
+                FROM(SELECT * FROM m_tb91_hospital_credit_project WHERE  AUDIT_STATUS='1' AND UNIT_NO IN
+         <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+         </foreach>
+          <if test="rlgl021112Bean.project_no != '' and rlgl021112Bean.project_no != null">
+	        AND project_no LIKE CONCAT('%', #{rlgl021112Bean.project_no}, '%') 
+	     </if>
+	     <if test="rlgl021112Bean.project_nm != '' and rlgl021112Bean.project_nm != null">
+	        AND project_nm LIKE CONCAT('%',  #{rlgl021112Bean.project_nm}, '%') 
+	     </if>
+	      AND PROJECT_NO NOT IN(SELECT
+		PROJECT_NO	FROM
+				m_tb92_hospital_credit_apply
+			WHERE
+				AUDIT_STATUS != 1 AND
+			PERSONAL_ID =  #{rlgl021112Bean.user_id} )
+	     )A
+	     LEFT JOIN (
+			SELECT
+				*
+			FROM
+				m_tb98_replenish_register
+			WHERE
+				PERSONAL_ID =  #{rlgl021112Bean.user_id} AND  AUDIT_STATUS !=2) B 
+		    ON A.project_no=B.project_no 
+	    
+	      <if test="rlgl021112Bean.pageCount != 0 and rlgl021112Bean.pageCount != null">
+           LIMIT #{rlgl021112Bean.pageNo},#{rlgl021112Bean.pageCount}
+        </if>
+    </select>
+     <!--查询院内学分举办项目条数 -->
+    <select id="getCountbyHospitalCreditProject" resultType="int">
+        SELECT count(*) FROM(SELECT * FROM m_tb91_hospital_credit_project WHERE  AUDIT_STATUS!=2 AND UNIT_NO IN
+         <foreach collection="unitList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+         </foreach>
+           <if test="rlgl021112Bean.project_no != '' and rlgl021112Bean.project_no != null">
+	        AND project_no LIKE CONCAT('%', #{rlgl021112Bean.project_no}, '%') 
+	     </if>
+	     <if test="rlgl021112Bean.project_nm != '' and rlgl021112Bean.project_nm != null">
+	        AND project_nm LIKE CONCAT('%',  #{rlgl021112Bean.project_nm}, '%') 
+	     </if>
+	     AND PROJECT_NO NOT IN(SELECT
+		PROJECT_NO	FROM
+				m_tb92_hospital_credit_apply
+			WHERE
+				AUDIT_STATUS != 1 AND
+			PERSONAL_ID =  #{rlgl021112Bean.user_id} )
+	     ) A
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				m_tb98_replenish_register
+			WHERE
+				PERSONAL_ID =  #{rlgl021112Bean.user_id}
+			AND  AUDIT_STATUS !=2
+		) B ON A.project_no = B.project_no
+
+	       <if test="rlgl021112Bean.pageCount != 0 and rlgl021112Bean.pageCount != null">
+           LIMIT #{rlgl021112Bean.pageNo},#{rlgl021112Bean.pageCount}
+        </if>
+    </select>
+    
+    <!--查询院内学分举办项目列表 -->
+    <select id="getProjectList" resultType="com.rlglsys.bean.Rlgl021110Bean">
+        SELECT C.* FROM (SELECT A.sumnum,B.* FROM (SELECT
+         project_no,count(*) sumnum	FROM
+		m_tb98_replenish_register  WHERE PROJECT_UNIT_NO=#{rlgl021110Bean.unit_no} 
+		group by project_no) A LEFT JOIN m_tb91_hospital_credit_project B ON A.PROJECT_NO=B.PROJECT_NO)C
+		WHERE 1=1
+		<if test="rlgl021110Bean.project_no != '' and rlgl021110Bean.project_no != null">
+			       AND C.project_no LIKE CONCAT('%', #{rlgl021110Bean.project_no}, '%') 
+			   </if>
+			   <if test="rlgl021110Bean.project_nm != '' and rlgl021110Bean.project_nm != null">
+			       AND C.project_nm LIKE CONCAT('%',  #{rlgl021110Bean.project_nm}, '%') 
+			   </if>
+	    <if test="rlgl021110Bean.pageCount != 0 and rlgl021110Bean.pageCount != null">
+                 LIMIT #{rlgl021110Bean.pageNo},#{rlgl021110Bean.pageCount}
+        </if>   
+    </select>
+     <!--查询院内学分举办项目条数 -->
+    <select id="getCountbyProject" resultType="int">
+         SELECT count(*) FROM (SELECT A.sumnum,B.* FROM (SELECT
+         project_no,count(*) sumnum	FROM
+		m_tb98_replenish_register  WHERE PROJECT_UNIT_NO=#{rlgl021110Bean.unit_no}
+		group by project_no) A LEFT JOIN m_tb91_hospital_credit_project B ON A.PROJECT_NO=B.PROJECT_NO)C
+		WHERE 1=1
+		<if test="rlgl021110Bean.project_no != '' and rlgl021110Bean.project_no != null">
+			       AND C.project_no LIKE CONCAT('%', #{rlgl021110Bean.project_no}, '%') 
+			   </if>
+			   <if test="rlgl021110Bean.project_nm != '' and rlgl021110Bean.project_nm != null">
+			       AND C.project_nm LIKE CONCAT('%',  #{rlgl021110Bean.project_nm}, '%') 
+			   </if>
+	    <if test="rlgl021110Bean.pageCount != 0 and rlgl021110Bean.pageCount != null">
+                 LIMIT #{rlgl021110Bean.pageNo},#{rlgl021110Bean.pageCount}
+        </if>   
+    </select>
+     <!--获得项目报名人员信息 -->
+    <select id="getProjectRegisterUser" resultType="com.rlglsys.bean.Rlgl021115Bean">
+       SELECT A.*, B.SECTION_NAME personal_section_name ,C.UNIT_NM PERSONAL_UNIT_NM FROM (SELECT * FROM m_tb98_replenish_register WHERE project_no=#{rlgl021115Bean.project_no} 
+	   <choose>
+	      <when test="rlgl021115Bean.audit_kbn!= '' and rlgl021115Bean.audit_kbn != null">
+	             AND PROJECT_UNIT_AUDIT='1'
+	         <if test="rlgl021115Bean.audit_status!= '' and rlgl021115Bean.audit_status != null">
+			    AND END_UNIT_AUDIT=#{rlgl021115Bean.audit_status} 
+	         </if>
+	      </when>
+	      <otherwise>
+	            <if test="rlgl021115Bean.audit_status!= '' and rlgl021115Bean.audit_status != null">
+			     AND PROJECT_UNIT_AUDIT=#{rlgl021115Bean.audit_status} 
+	           </if>
+	          
+	      </otherwise>
+	   </choose>
+        <if test="rlgl021115Bean.personal_unit_no!= '' and rlgl021115Bean.personal_unit_no != null">
+			   AND  PERSONAL_UNIT_NO=#{rlgl021115Bean.personal_unit_no}
+	   </if>
+	   <if test="rlgl021115Bean.personal_section_no!= '' and rlgl021115Bean.personal_section_no!= null">
+			   AND  PERSONAL_SECTION_NO=#{rlgl021115Bean.personal_section_no}
+	   </if>
+	   <if test="rlgl021115Bean.personal_nm!= '' and rlgl021115Bean.personal_nm!= null">
+			   AND  PERSONAL_NM LIKE CONCAT('%', {rlgl021115Bean.personal_nm}, '%')
+	   </if>
+	   ) A
+		LEFT JOIN m_tb22_hospital_section B ON (
+			A.PERSONAL_SECTION_NO = B.SECTION_ID
+			AND A.PERSONAL_UNIT_NO = B.UNIT_NO
+		) LEFT JOIN m_tb04_unit c on(A.PERSONAL_UNIT_NO = C.UNIT_NO)
+    </select>
+     <!--获得项目报名人员条数-->
+    <select id="getProjectRegisterUserCount" resultType="int">
+       SELECT count(*) FROM m_tb98_replenish_register WHERE  
+        project_no=#{rlgl021115Bean.project_no} 
+        <choose>
+	      <when test="rlgl021115Bean.audit_kbn!= '' and rlgl021115Bean.audit_kbn != null">
+	             AND PROJECT_UNIT_AUDIT='1'
+	         <if test="rlgl021115Bean.audit_status!= '' and rlgl021115Bean.audit_status != null">
+			    AND END_UNIT_AUDIT=#{rlgl021115Bean.audit_status} 
+	         </if>
+	      </when>
+	      <otherwise>
+	            <if test="rlgl021115Bean.audit_status!= '' and rlgl021115Bean.audit_status != null">
+			     AND PROJECT_UNIT_AUDIT=#{rlgl021115Bean.audit_status} 
+	           </if>
+	          
+	      </otherwise>
+	   </choose>
+       <if test="rlgl021115Bean.audit_status!= '' and rlgl021115Bean.audit_status != null">
+			AND AUDIT_STATUS=#{rlgl021115Bean.audit_status} 
+	   </if>
+        <if test="rlgl021115Bean.personal_unit_no!= '' and rlgl021115Bean.personal_unit_no != null">
+			   AND  PERSONAL_UNIT_NO=#{rlgl021115Bean.personal_unit_no}
+	   </if>
+	   <if test="rlgl021115Bean.personal_section_no!= '' and rlgl021115Bean.personal_section_no!= null">
+			   AND  PERSONAL_SECTION_NO=#{rlgl021115Bean.personal_section_no}
+	   </if>
+	    <if test="rlgl021115Bean.personal_nm!= '' and rlgl021115Bean.personal_nm!= null">
+			   AND  PERSONAL_NM LIKE CONCAT('%', {rlgl021115Bean.personal_nm}, '%')
+	   </if>
+	   
+    </select>
+    <!--获得项目单位信息 -->
+    <select id="getProjectUnitList" resultType="com.rlglsys.bean.Rlgl021115Bean">
+	    SELECT A.*,B.UNIT_NM PERSONAL_UNIT_NM FROM (
+		SELECT
+			PERSONAL_UNIT_NO
+		FROM
+			m_tb98_replenish_register
+		WHERE
+			project_no=#{rlgl021115Bean.project_no}
+		GROUP BY
+			PERSONAL_UNIT_NO
+	    ) A
+	    LEFT JOIN m_tb04_unit B ON(A.PERSONAL_UNIT_NO=B.UNIT_NO)
+    </select>
+    <!--获得项目科室信息 -->
+    <select id="getProjectSectionList" resultType="com.rlglsys.bean.Rlgl021115Bean">
+       SELECT A.*,B.SECTION_NAME PERSONAL_SECTION_NAME FROM (
+		SELECT
+			PERSONAL_SECTION_NO,PERSONAL_UNIT_NO
+		FROM
+			m_tb98_replenish_register
+		WHERE
+			project_no =#{rlgl021115Bean.project_no}
+	    AND  PERSONAL_UNIT_NO=#{rlgl021115Bean.personal_unit_no}
+		GROUP BY
+			PERSONAL_SECTION_NO,PERSONAL_UNIT_NO
+	    ) A
+	   LEFT JOIN m_tb22_hospital_section B ON(A.PERSONAL_SECTION_NO=B.SECTION_ID AND A.PERSONAL_UNIT_NO=B.UNIT_NO)
+    </select>
+    <!--获得单位人员信息 -->
+    <select id="getUnitUser" resultType="Mtb01User">
+        SELECT * FROM m_tb01_user WHERE  DEL_KBN='0'  AND USER_TYPE='0'
+        <if test="personnel.unit_no != '' and personnel.unit_no != null">
+	        AND unit_no = #{personnel.unit_no}
+	    </if>
+	    <if test="personnel.section_id != '' and personnel.section_id != null">
+	        AND section_id = #{personnel.section_id}
+	    </if>
+    </select>
+    <delete id="deleteRegisterInfo" parameterType="int">
+        DELETE FROM m_tb98_replenish_register
+        WHERE PERSONAL_ID =  #{rlgl021113Bean.personal_id}
+        AND PROJECT_UNIT_NO=	#{rlgl021113Bean.project_unit_no} 
+        AND PROJECT_NO=#{rlgl021113Bean.project_no}
+    </delete>
+    <!-- 插入报名用户信息 -->
+    <insert id="insertRegisterUser" parameterType="int">  
+     insert into m_tb98_replenish_register (   
+		PERSONAL_ID ,       
+		PERSONAL_NM ,       
+		PERSONAL_CARD_ID  , 
+		PERSONAL_UNIT_NO  , 
+		PERSONAL_SECTION_NO,
+		ARRLY_NO   ,        
+		PROJECT_NO  ,       
+		PROJECT_UNIT_NO    ,
+		APPLY_ITEM ,
+		REMARK  ,      
+		EX_KEY  ,           
+		DEL_KBN,            
+		EXPEND_01 ,         
+		EXPEND_02 ,         
+		EXPEND_03  ,        
+		EXPEND_04 ,         
+		EXPEND_05 ,         
+		LOGIN_USER_ID     , 
+		LOGIN_DATE ,        
+		UPDATE_USER_ID  ,   
+		UPDATE_DATE         
+	)VALUES  
+         (  #{rlgl021113Bean.personal_id},        
+			#{rlgl021113Bean.personal_nm} ,       
+			#{rlgl021113Bean.personal_card_id}  , 
+			#{rlgl021113Bean.personal_unit_no}  , 
+			#{rlgl021113Bean.personal_section_no},
+			#{rlgl021113Bean.arrly_no}   ,        
+			#{rlgl021113Bean.project_no}  ,       
+			#{rlgl021113Bean.project_unit_no}    ,
+			#{rlgl021113Bean.apply_item} ,
+			#{rlgl021113Bean.remark} , 
+			#{rlgl021113Bean.ex_key}  ,           
+			#{rlgl021113Bean.del_kbn},            
+			#{rlgl021113Bean.expend_01} ,         
+			#{rlgl021113Bean.expend_02 },         
+			#{rlgl021113Bean.expend_03}  ,        
+			#{rlgl021113Bean.expend_04} ,         
+			#{rlgl021113Bean.expend_05} ,         
+			#{rlgl021113Bean.login_user_id}     , 
+			#{rlgl021113Bean.login_date} ,        
+			#{rlgl021113Bean.update_user_id}  ,   
+			#{rlgl021113Bean.update_date}         
+		)  
+ </insert> 
+ <update id="updateRegisterAudit" parameterType="int">
+   UPDATE m_tb98_replenish_register 
+	<choose>
+	 <when test="rlgl021116Bean.audit_kbn != '' and rlgl021116Bean.audit_kbn != null">
+	      SET  END_UNIT_AUDIT=#{rlgl021116Bean.project_unit_audit} , AUDIT_STATUS=#{rlgl021116Bean.project_unit_audit}
+	 </when>
+	<otherwise>
+	     SET PROJECT_UNIT_AUDIT=#{rlgl021116Bean.project_unit_audit} , AUDIT_STATUS=#{rlgl021116Bean.project_unit_audit}
+	</otherwise>
+	</choose>
+    WHERE PERSONAL_ID=#{rlgl021116Bean.personal_id} AND PROJECT_NO=#{rlgl021116Bean.project_no}
+ </update>
+ <select id="getProjectRegisterInfo" resultType="com.rlglsys.bean.Rlgl021116Bean">
+ 
+    SELECT * FROM m_tb98_replenish_register WHERE 	project_no = #{rlgl021116Bean.project_no} AND PERSONAL_ID=#{rlgl021116Bean.personal_id}
+ 
+ </select>
+ 
+ 
+ 
+</mapper>

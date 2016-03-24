@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 个人出国申请 -->
+<mapper namespace="com.rlglsys.mapper.IRlgl010318Mapper">
+  <!-- 通过用户ID获取用户信息 -->
+  <select id="getUserInfoByUserID" resultType="com.rlglsys.bean.Rlgl010318Bean">
+    <!-- select 
+      POSITION_NM,
+      PERSONNEL_POLITICAL_LANDSCAPE,
+      PERSONNEL_TEL,
+      PERSONNEL_OFFICETEL,
+      PERSONNEL_GENDER,
+      PERSONNEL_HOMETOWN,
+      PERSONNEL_IMGNAME
+    from
+     (SELECT * FROM  m_tb12_personnel WHERE PERSONNEL_ID = #{user_id}) M 
+    LEFT JOIN
+      m_tb17_personnel_job_info M1
+    ON
+      M.PERSONNEL_ID = M1.PERSONNEL_ID
+    AND
+      M.DEL_KBN = 0 -->
+    SELECT
+        M1.POSITION_NM,
+        M.PERSONNEL_POLITICAL_LANDSCAPE,
+        M.PERSONNEL_TEL,
+        M.PERSONNEL_OFFICETEL,
+        M.PERSONNEL_GENDER,
+        M.PERSONNEL_HOMETOWN,
+        M.PERSONNEL_IMGNAME
+    FROM
+        m_tb12_personnel M
+    LEFT JOIN
+        m_tb17_personnel_job_info M1
+    ON
+        M.PERSONNEL_ID = M1.PERSONNEL_ID
+    WHERE
+        M.PERSONNEL_ID = #{user_id}
+    AND
+        M.DEL_KBN = 0
+    ORDER BY
+        M1.APPOINT_TIME DESC 
+    LIMIT
+        0,1
+      
+  </select>
+  <!-- 通过申请编号和申请连番获取个人出国申请信息 -->
+  <select id="getPersonelApplyOutsideInfo" resultType="com.rlglsys.bean.Rlgl010318Bean">
+        SELECT
+            M2.*,
+            M1.POSITION_NM,
+            M.PERSONNEL_POLITICAL_LANDSCAPE,
+            M.PERSONNEL_TEL,
+            M.PERSONNEL_OFFICETEL,
+            M.PERSONNEL_GENDER,
+            M.PERSONNEL_HOMETOWN,
+            M.PERSONNEL_IMGNAME
+        FROM
+          m_tb53_personal_outside_apply_detail M2
+        LEFT JOIN
+          m_tb12_personnel M
+        ON
+          M2.PERSONAL_ID = M.PERSONNEL_ID
+        LEFT JOIN
+          m_tb17_personnel_job_info M1
+        ON
+          M2.PERSONAL_ID = M1.PERSONNEL_ID
+        WHERE
+          APPLY_NO = #{apply_no}
+        AND
+          APPLY_NUMBER = #{apply_number}
+        AND
+          M2.DEL_KBN = 0
+        ORDER BY
+          M1.APPOINT_TIME DESC 
+        LIMIT
+          0,1
+  </select>
+  <!-- 插入出国申请信息到个人出国申请信息表 -->
+  <insert id="insertOutSideApplyInfoToMtb53">
+    insert into
+      m_tb53_personal_outside_apply_detail (
+        APPLY_NO, 
+        APPLY_NUMBER,
+        PERSONAL_ID,
+        PERSONAL_NM,
+        CARD_ID,
+        UNIT_NO,
+        UNIT_NM,
+        POST_TITLE,
+        PRE_GO_OUT_DATE,
+        PRE_COME_BACK_DATE,
+        DIR_COUNTRY,
+        DIR_CITY,
+        OUTSIDE_REASON,
+        APPLY_DATE,
+        NOW_MARK,
+        EX_KEY,
+        DEL_KBN,
+        LOGIN_USER_ID,
+        LOGIN_DATE,
+        UPDATE_USER_ID,
+        UPDATE_DATE
+      ) values (
+        #{mtb53Info.apply_no},
+        #{mtb53Info.apply_number},
+        #{mtb53Info.personal_id},
+        #{mtb53Info.personal_nm},
+        #{mtb53Info.card_id},
+        #{mtb53Info.unit_no},
+        #{mtb53Info.unit_nm},
+        #{mtb53Info.post_title},
+        #{mtb53Info.pre_go_out_date},
+        #{mtb53Info.pre_come_back_date},
+        #{mtb53Info.dir_country},
+        #{mtb53Info.dir_city},
+        #{mtb53Info.outside_reason},
+        #{mtb53Info.apply_date},
+        #{mtb53Info.now_mark},
+        #{mtb53Info.ex_key},
+        #{mtb53Info.del_kbn},
+        #{mtb53Info.login_user_id},
+        #{mtb53Info.login_date},
+        #{mtb53Info.update_user_id},
+        #{mtb53Info.update_date}
+      )
+  </insert>
+  <!-- 更新个人人事信息 -->
+  <update id="updateTb29Info">
+      UPDATE m_tb29_personalapplication
+      SET
+          MAX_NUMBER = #{tb29Info.max_number},
+          APPLY_DATE = #{tb29Info.apply_date},
+          CHECK_RESULT = "001",
+          END_MARK = #{tb29Info.end_mark},
+          NOW_MARK = #{tb29Info.now_mark},
+          WILL_CHECKUNITNO = #{tb29Info.will_checkunitno},
+          UPDATE_USER_ID = #{tb29Info.personal_id},
+          UPDATE_DATE = #{tb29Info.apply_date}
+      WHERE
+          APPLY_NO = #{tb29Info.apply_no}
+  </update>
+  
+  <!-- 插入进修信息 -->
+  <insert id="insertToTb29Info" parameterType="com.rlglsys.entity.Mtb29PersonalApply">
+      INSERT INTO m_tb29_personalapplication
+      (
+          APPLY_NO,
+          MAX_NUMBER,
+          APPLY_KBN,
+          PERSONAL_ID,
+          PERSONAL_NM,
+          PERSONAL_UNITNO,
+          APPLY_DATE,
+          CHECK_USER,
+          CHECK_UNITNO,
+          CHECK_RESULT,
+          END_MARK,
+          NOW_MARK,
+          WILL_CHECKUNITNO,
+          EX_KEY,
+          DEL_KBN,
+          LOGIN_USER_ID,
+          LOGIN_DATE,
+          UPDATE_USER_ID,
+          UPDATE_DATE
+      ) VALUES(
+          #{tb29Info.apply_no},
+          #{tb29Info.max_number},
+          #{tb29Info.apply_kbn},
+          #{tb29Info.personal_id},
+          #{tb29Info.personal_nm},
+          #{tb29Info.personal_unitno},
+          #{tb29Info.apply_date},
+          #{tb29Info.check_user},
+          #{tb29Info.check_unitno},
+          #{tb29Info.check_result},
+          #{tb29Info.end_mark},
+          #{tb29Info.now_mark},
+          #{tb29Info.will_checkunitno},
+          '1',
+          '0',
+          #{tb29Info.personal_id},
+          #{tb29Info.apply_date},
+          #{tb29Info.personal_id},
+          #{tb29Info.apply_date}
+      )
+  </insert>
+  <!-- 更新审核流程信息 -->
+  <update id="updateNoInfo">
+      UPDATE 
+          t_tb01_auto_getnum
+      SET
+          sequenceNo = sequenceNo + 1
+      WHERE
+          table_id = #{noInfo.table_id}
+      AND 
+          col_id = #{noInfo.col_id}
+  </update>
+  <!-- 通过申请编号和申请连番获取审核结果 -->
+  <select id="getCheckResulstFromTb29" resultType="String">
+    SELECT
+      CHECK_RESULT
+    FROM
+      m_tb29_personalapplication
+    WHERE
+      APPLY_NO = #{apply_no}
+    AND
+      MAX_NUMBER = #{apply_number}
+  </select>
+</mapper>

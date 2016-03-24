@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020407Mapper">
+
+  <!-- 取得项目举办申请数量 -->
+  <select id="getProjectHoldApplyCount" resultType="int">
+    SELECT 
+      COUNT(*)
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      WILL_CHECKUNITNO = #{unit_no}
+    AND 
+      APPLY_KBN = '058'
+  </select>
+  
+  <!-- 取得项目举办申请列表-->
+  <select id="getProjectHoldApplyInfoList" resultType="com.rlglsys.entity.Mtb29PersonalApply">
+    SELECT 
+      *
+    FROM 
+      m_tb29_personalapplication
+    WHERE 
+      DEL_KBN = 0
+    AND 
+      WILL_CHECKUNITNO = #{unit_no}
+    AND 
+      APPLY_KBN = '058'
+    <if test="pageCount != 0 and pageCount != null">
+    LIMIT #{pageNo},#{pageCount}
+    </if>
+  </select>
+
+  <!-- 更新个人人事申请信息SQL -->
+  <update id="updateTb29Info">
+      UPDATE 
+        m_tb29_personalapplication
+      SET
+        CHECK_RESULT = #{mtb29Info.check_result},
+        NOW_MARK = #{mtb29Info.now_mark},
+        WILL_CHECKUNITNO = #{mtb29Info.will_checkunitno},
+        UPDATE_USER_ID = #{mtb29Info.update_user_id},
+        UPDATE_DATE = #{mtb29Info.update_date}
+      WHERE
+        APPLY_NO = #{mtb29Info.apply_no}
+  </update>
+  
+  <!-- 更新名医申请明细表 -->
+  <update id="updateMtb90Info">
+    update 
+      m_tb90_project_hold_apply_detail
+    set
+      UNIT_CHECKER = #{mtb90UpdateInfo.unit_checker},
+      UNIT_CHECK_DATE = #{mtb90UpdateInfo.unit_check_date},
+      UNIT_CHECK_VIEWS = #{mtb90UpdateInfo.unit_check_views},
+      UNIT_CHECK_RESULT = #{mtb90UpdateInfo.unit_check_result},
+      COUNTY_CHECKER = #{mtb90UpdateInfo.county_checker},
+      COUNTY_CHECK_DATE = #{mtb90UpdateInfo.county_check_date},
+      COUNTY_CHECK_VIEWS = #{mtb90UpdateInfo.county_check_views},
+      COUNTY_CHECK_RESULT = #{mtb90UpdateInfo.county_check_result},
+      DOWNTOWN_CHECKER = #{mtb90UpdateInfo.downtown_checker},
+      DOWNTOWN_CHECK_DATE = #{mtb90UpdateInfo.downtown_check_date},
+      DOWNTOWN_CHECK_VIEWS = #{mtb90UpdateInfo.downtown_check_views},
+      DOWNTOWN_CHECK_RESULT = #{mtb90UpdateInfo.downtown_check_result},
+      MINISTRY_CHECKER = #{mtb90UpdateInfo.ministry_checker},
+      MINISTRY_CHECK_DATE = #{mtb90UpdateInfo.ministry_check_date},
+      MINISTRY_CHECK_VIEWS = #{mtb90UpdateInfo.ministry_check_views},
+      MINISTRY_CHECK_RESULT = #{mtb90UpdateInfo.ministry_check_result},
+      NOW_MARK = #{mtb90UpdateInfo.now_mark},
+      UPDATE_USER_ID = #{mtb90UpdateInfo.update_user_id},
+      UPDATE_DATE = #{mtb90UpdateInfo.update_date},
+      CONDUCT_FLG = #{mtb90UpdateInfo.conduct_flg}
+    where
+      APPLY_NO = #{mtb90UpdateInfo.apply_no}
+    AND 
+      APPLY_NUMBER = #{mtb90UpdateInfo.apply_number}
+  </update>
+  
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl010313Mapper">
+    <!-- 职称信息取得SQL -->
+    <select id="getTb55Info" resultType="com.rlglsys.entity.Mtb55PartymemberApplyDetail">
+        SELECT *
+        FROM m_tb55_partymenmber_apply_detail
+        WHERE 
+            DEL_KBN = '0'
+            AND APPLY_NO = #{applyNo}
+            AND APPLY_NUMBER = #{applyNumber}
+    </select>
+    <!-- 保存进修信息 -->
+    <insert id="insertTb55Info" parameterType="com.rlglsys.entity.Mtb55PartymemberApplyDetail">
+        INSERT INTO m_tb55_partymenmber_apply_detail
+        (
+            APPLY_NO,
+            APPLY_NUMBER,
+            PERSONAL_ID,
+            PERSONAL_NM,
+            CARD_ID,
+            GENDER,
+            BIRTHDAY,
+            ETHNIC,
+            HOMETOWN,
+            UNIT_NO,
+            UNIT_NM,
+            POST_TITLE,
+            REFERENCE,
+            APPLY_DATE,
+            NOW_MARK,
+            EX_KEY,
+            DEL_KBN,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES(
+            #{tb55Info.apply_no},
+            #{tb55Info.apply_number},
+            #{tb55Info.personal_id},
+            #{tb55Info.personal_nm},
+            #{tb55Info.card_id},
+            #{tb55Info.gender},
+            #{tb55Info.birthday},
+            #{tb55Info.ethnic},
+            #{tb55Info.hometown},
+            #{tb55Info.unit_no},
+            #{tb55Info.unit_nm},
+            #{tb55Info.post_title},
+            #{tb55Info.reference},
+            #{tb55Info.apply_date},
+            #{tb55Info.now_mark},
+            '1',
+            '0',
+            #{tb55Info.personal_id},
+            #{tb55Info.apply_date},
+            #{tb55Info.personal_id},
+            #{tb55Info.apply_date}
+        )
+    </insert>
+</mapper>

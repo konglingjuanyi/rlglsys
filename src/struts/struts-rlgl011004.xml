@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rlgl011004" extends="rlgl" namespace="/">
+		<action name="rlgl011004Init"
+			class="com.rlglsys.action.datadetect.Rlgl011004InitAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl011004.jsp</result>
+		</action>
+		<action name="rlgl011004Search"
+			class="com.rlglsys.action.datadetect.Rlgl011004SearchAction" method="execute">
+			<result name="success">/WEB-INF/jsp/rlgl011004.jsp</result>
+		</action>
+		<action name="rlgl011004Export"
+			class="com.rlglsys.action.datadetect.Rlgl011004ExportAction" method="execute">
+			 <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-word;charset=utf-8</param>
+                <param name="contentDisposition">attachment;filename="${fileName}.doc"</param>
+                <param name="inputName">inputStream</param>
+            </result>
+		</action>
+	</package>
+</struts>
+

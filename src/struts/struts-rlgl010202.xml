@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl010202Init" extends="rlgl" namespace="/">
+        <action name="rlgl010202Init"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010202InitAction" method="execute">
+            <result name="notexist">/WEB-INF/jsp/rlgl010202.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010202.jsp</result>
+        </action>
+        <action name="rlgl010202Update"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010202UpdateAction" method="execute">
+            <result name="exist">/WEB-INF/jsp/rlgl010202.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010202.jsp</result>
+        </action>
+        <action name="rlgl010202ApplyInit"
+            class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010202ApplyInitAction" method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010207.jsp</result>
+        </action>
+        <action name="rlgl010202ReviewOk"
+        class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010202ReviewOkAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010501Search</result>
+        </action>
+        <action name="rlgl010202Back"
+        class="com.rlglsys.action.hiringmanage.knitmanage.Rlgl010202BackAction" method="execute">
+            <result name="success" type="redirectAction">rlgl010501Search</result>
+        </action>
+    </package>
+</struts>

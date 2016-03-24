@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020804Mapper">
+    <!-- 件数取得SQL -->
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM m_tb65_certificate_apply
+        WHERE 
+            DEL_KBN = '0'
+           <if test="rlgl020804bean.searchKbn == 0">
+            AND WILL_CHECKUNITNO = #{userUnitNo}
+           </if>
+           <if test="rlgl020804bean.cert_no != ''">
+            AND CERT_NO = #{rlgl020804bean.cert_no}
+           </if>
+           <if test="rlgl020804bean.check_result != ''">
+            AND CHECK_RESULT = #{rlgl020804bean.check_result}
+           </if>
+           <if test="rlgl020804bean.personnelId != ''">
+            AND PERSONNELID = #{rlgl020804bean.personnelId}
+           </if>
+           <if test="rlgl020804bean.personnelNm != ''">
+            AND PERSONNELNM = #{rlgl020804bean.personnelNm}
+           </if>
+           <if test="rlgl020804bean.unitNo != ''">
+            AND UNITNO = #{rlgl020804bean.unitNo}
+           </if>
+    </select>
+    <!-- 待办事项一览查询SQL -->
+    <select id="getTodoInfo" resultType="com.rlglsys.entity.Mtb65CertificateApply">
+        SELECT *
+        FROM m_tb65_certificate_apply
+        WHERE 
+            DEL_KBN = '0'
+           <if test="rlgl020804bean.searchKbn == 0">
+            AND WILL_CHECKUNITNO = #{userUnitNo}
+           </if>
+           <if test="rlgl020804bean.cert_no != ''">
+            AND CERT_NO = #{rlgl020804bean.cert_no}
+           </if>
+           <if test="rlgl020804bean.check_result != ''">
+            AND CHECK_RESULT = #{rlgl020804bean.check_result}
+           </if>
+           <if test="rlgl020804bean.personnelId != ''">
+            AND PERSONNELID = #{rlgl020804bean.personnelId}
+           </if>
+           <if test="rlgl020804bean.personnelNm != ''">
+            AND PERSONNELNM = #{rlgl020804bean.personnelNm}
+           </if>
+           <if test="rlgl020804bean.unitNo != ''">
+            AND UNITNO = #{rlgl020804bean.unitNo}
+           </if>
+           <if test="rlgl020804bean.pageCount != 0 and rlgl020804bean.pageCount != null">
+           LIMIT #{rlgl020804bean.pageNo},#{rlgl020804bean.pageCount}
+           </if>
+    </select>
+</mapper>

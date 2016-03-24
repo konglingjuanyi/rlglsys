@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl012004Mapper">
+   <select id="getPuJiLvList"  resultType="com.rlglsys.bean.Rlgl012004Bean">
+		SELECT COUNT(A.personnel_card_id) as ycjrs,COUNT(DISTINCT B.PERSONAL_ID) as cjrs ,A.PERSONNEL_UNIT as szdw
+		,ROUND(COUNT(DISTINCT B.PERSONAL_ID)/COUNT(A.personnel_card_id) *100,2) as pjl
+		from m_tb12_personnel AS A, m_tb66_total_credit AS B 
+		WHERE A.CONTINUE_EDUCATION_FLAG = '1'
+		AND  A.PERSONNEL_UNIT  = B.PERSONNEL_UNIT_NO
+	<if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+         AND  A.PERSONNEL_UNIT IN
+         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+           	 open="(" close=")" separator=",">
+            #{lowUnitNo}
+        	</foreach>
+     </if>
+     <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+         AND  B.personnel_unit_no IN
+         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+           	 open="(" close=")" separator=",">
+            #{lowUnitNo}
+        	</foreach>
+     </if>
+          AND B.`YEAR` IN
+       <foreach collection="yearsList" item="years" index="index"
+           open="(" close=")" separator=",">
+           #{years}
+       </foreach>
+       <if test="rlgl012004Bean.niandu !=null and rlgl012004Bean.niandu !=''">
+       		AND B.`YEAR` = #{rlgl012004Bean.niandu}
+       </if>
+		GROUP BY A.PERSONNEL_UNIT
+   <if test="rlgl012004Bean.pageCount != null and rlgl012004Bean.pageCount != 0 ">
+   		 LIMIT #{rlgl012004Bean.pageNo},#{rlgl012004Bean.pageCount}
+    </if>
+   </select>
+   <!-- 该方法主要是为了得到list的size值和在导出文件的时候调用，全部导出 -->
+   <select id="getPuJiLv"  resultType="com.rlglsys.bean.Rlgl012004Bean">
+		SELECT COUNT(A.personnel_card_id) as ycjrs,COUNT(DISTINCT B.PERSONAL_ID) as cjrs ,A.PERSONNEL_UNIT as szdw
+		,ROUND(COUNT(DISTINCT B.PERSONAL_ID)/COUNT(A.personnel_card_id) *100,2) as pjl
+		from m_tb12_personnel AS A, m_tb66_total_credit AS B 
+		WHERE A.CONTINUE_EDUCATION_FLAG = '1'
+		AND  A.PERSONNEL_UNIT  = B.PERSONNEL_UNIT_NO
+	<if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+         AND  A.PERSONNEL_UNIT IN
+         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+           	 open="(" close=")" separator=",">
+            #{lowUnitNo}
+        	</foreach>
+     </if>
+     <if test="lowUnitNoList !=null and lowUnitNoList.size() >0">
+         AND  B.personnel_unit_no IN
+         	<foreach collection="lowUnitNoList" item="lowUnitNo" index="index"
+           	 open="(" close=")" separator=",">
+            #{lowUnitNo}
+        	</foreach>
+     </if>
+          AND B.`YEAR` IN
+       <foreach collection="yearsList" item="years" index="index"
+           open="(" close=")" separator=",">
+           #{years}
+       </foreach>
+       <if test="rlgl012004Bean.niandu !=null and rlgl012004Bean.niandu !=''">
+       		AND B.`YEAR` = #{rlgl012004Bean.niandu}
+       </if>
+		GROUP BY A.PERSONNEL_UNIT
+   </select>
+</mapper>

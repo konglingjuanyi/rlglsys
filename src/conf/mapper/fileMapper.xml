@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IFileMapper">
+
+    <select id="getFileInfoList" resultType="com.rlglsys.entity.TblFile">
+        SELECT
+            fileId as fileid,
+            fileNameId as filenameid,
+            fileName as filename,
+            filePath as filepath
+        FROM tbl_file
+        WHERE 1= 1
+           <if test="fileInfo.fileid != '' and fileInfo.fileid != null">
+            and fileId = #{fileInfo.fileid}
+           </if>
+           <if test="fileInfo.filenameid != '' and fileInfo.filenameid != null">
+            and fileNameId = #{fileInfo.filenameid}
+           </if>
+    </select>
+    
+    <select id="getFileInfo" resultType="com.rlglsys.entity.TblFile">
+        SELECT
+            fileId as fileid,
+            fileNameId as filenameid,
+            fileName as filename,
+            filePath as filepath
+        FROM tbl_file
+        WHERE fileId = #{fileInfo.fileid}
+            and fileNameId = #{fileInfo.filenameid}
+    </select>
+    
+    <delete id="deleteTblFileInfoByKey">
+        DELETE FROM tbl_file
+        WHERE 1=1
+		<if test="fileInfo.fileid != '' and fileInfo.fileid != null">
+            and fileId = #{fileInfo.fileid}
+           </if>
+        <if test="fileInfo.filenameid != '' and fileInfo.filenameid != null">
+            and fileNameId = #{fileInfo.filenameid}
+        </if>
+    </delete>
+    
+    <insert id="insertFileInfo">
+        INSERT INTO tbl_file (
+            fileId,
+            fileNameId,
+            fileName,
+            filePath,
+            EX_KEY,
+            DEL_KBN,
+            EXPEND_01,
+            EXPEND_02,
+            EXPEND_03,
+            EXPEND_04,
+            EXPEND_05,
+            LOGIN_USER_ID,
+            LOGIN_DATE,
+            UPDATE_USER_ID,
+            UPDATE_DATE
+        ) VALUES (
+            #{fileInfo.fileid},
+            #{fileInfo.filenameid},
+            #{fileInfo.filename},
+            #{fileInfo.filepath}
+            ,1
+            ,'0'
+            ,#{fileInfo.expend_01}
+            ,#{fileInfo.expend_02}
+            ,#{fileInfo.expend_03}
+            ,#{fileInfo.expend_04}
+            ,#{fileInfo.expend_05}
+            ,#{fileInfo.login_user_id}
+            ,#{fileInfo.login_date}
+            ,#{fileInfo.update_user_id}
+            ,#{fileInfo.update_date}
+        )
+    </insert>
+</mapper>

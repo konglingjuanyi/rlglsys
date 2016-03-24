@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="rlgl022012" extends="rlgl" namespace="/">
+       <!-- 网银支付初期化处理 -->
+       <action name="rlgl022012Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022012InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022012.jsp</result>
+       </action>
+       <!-- 线下支付 -->
+       <action name="rlgl022013Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022013InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022013.jsp</result>
+            
+       </action>
+       <!-- 网上支付 -->
+       <action name="rlgl022012Prepay"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022012PrepayAction"
+            method="execute">
+            <result name="successW" type="redirectAction">
+			  <param name="actionName">rlgl022012Init</param>
+			  <param name="status">1</param>
+			</result>
+			<result name="successX" type="redirectAction">
+			  <param name="actionName">rlgl022013Init</param>
+			  <param name="status">1</param>
+			</result>
+       </action>
+        <action name="rlgl022012Callback" 
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022012CallbackAction" 
+        method="execute">
+            <result name="show" type="redirectAction">rlgl022012Init</result>
+        </action>
+       <!-- 详细列表 -->
+       <action name="rlgl022014Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022014InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022014.jsp</result>
+       </action>
+        <action name="rlgl022014Search"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022014SearchAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022014.jsp</result>
+       </action>
+       <action name="rlgl022016Init"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022016InitAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022016.jsp</result>
+       </action>
+        <action name="rlgl022016Search"
+        class="com.rlglsys.action.continumedicaleducation.videoonline.Rlgl022016SearchAction"
+            method="execute">
+            <result name="init">/WEB-INF/jsp/rlgl022016.jsp</result>
+       </action>
+    </package>
+</struts>
+

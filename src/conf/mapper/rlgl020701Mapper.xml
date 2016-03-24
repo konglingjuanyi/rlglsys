@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rlglsys.mapper.IRlgl020701Mapper">
+	<!-- 获得个人学分列表 -->
+	<select id="getCourseList" resultType="com.rlglsys.bean.Rlgl020701Bean">
+	SELECT
+	    A.navi,
+		B.MENU_NAME as prdName,
+		sum(a.credit) as credits,
+		(select adm_name from m_tb02_adm where adm_type_cd='104' and adm_num=credit_category) as credit_category,
+		case when A.navi = 'navi054' then sum(a.expand8) else '' end  as creditCount
+	FROM
+		m_tb56_credit_reporting_detail A
+	LEFT JOIN m_tb03_menu B ON A.NAVI = B.EXPEND_01
+	WHERE
+		PERSONAL_ID = #{creditBean.personal_id}
+	  	and credit_category != ''
+	  	and A.del_kbn='0'
+	  	and A.check_result='002'
+	  	<if test="creditBean.start_year != '' and creditBean.start_year != null">
+       	and A.SCORE_YEAR &gt;= #{creditBean.start_year}
+        </if>
+        <if test="creditBean.end_year != 0 and creditBean.end_year != null">
+        and A.SCORE_YEAR &lt;= #{creditBean.end_year}
+        </if>
+	GROUP BY
+		NAVI,
+	  credit_category
+       <if test="creditBean.pageCount != 0 and creditBean.pageCount != null">
+       LIMIT #{creditBean.pageNo},#{creditBean.pageCount}
+       </if>
+	</select>
+</mapper>
