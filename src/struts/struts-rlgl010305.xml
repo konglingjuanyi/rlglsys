@@ -8,6 +8,42 @@
             method="execute">
             <result name="success">/WEB-INF/jsp/rlgl010305.jsp</result>
         </action>
+        <action name="rlgl010305Zige" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305ZigeAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_zige.jsp</result>
+        </action>
+        <action name="rlgl010305Zhiye" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305ZhiyeAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_zhiye.jsp</result>
+        </action>
+        <action name="rlgl010305Jishu" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305JishuAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_jishu.jsp</result>
+        </action>
+        <action name="rlgl010305Xingzheng" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305XingzhengAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_xingzheng.jsp</result>
+        </action>
+        <action name="rlgl010305Shehui" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305ShehuiAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_shehui.jsp</result>
+        </action>
+        <action name="rlgl010305Jiaoyu" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305JiaoyuAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_jiaoyu.jsp</result>
+        </action>
+        <action name="rlgl010305Gongzuo" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305GongzuoAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_gongzuo.jsp</result>
+        </action>
+        <action name="rlgl010305Dangpai" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305DangpaiAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_dangpai.jsp</result>
+        </action>
+        <action name="rlgl010305Daoshi" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305DaoshiAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_daoshi.jsp</result>
+        </action>
 	</package>
 </struts>
 

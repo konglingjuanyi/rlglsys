@@ -12,10 +12,145 @@
              </result>
             <result name="success">/WEB-INF/jsp/rlgl010306.jsp</result>
         </action>
+        <action name="rlgl010306Zige" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ZigeAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Zige</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_zige.jsp</result>
+        </action>
+         <action name="rlgl010306Zhiye" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ZhiyeAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Zhiye</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_zhiye.jsp</result>
+        </action>
+        <action name="rlgl010306Jishu" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JishuAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Jishu</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_jishu.jsp</result>
+        </action>
+         <action name="rlgl010306Xingzheng" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306XingzhengAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Xingzheng</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_xingzheng.jsp</result>
+        </action>
+        <action name="rlgl010306Shehui" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ShehuiAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">"rlgl010305Shehui"</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_shehui.jsp</result>
+        </action>
+        <action name="rlgl010306Jiaoyu" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JiaoyuAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Jiaoyu</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_jiaoyu.jsp</result>
+        </action>
+        <action name="rlgl010306Gongzuo" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306GongzuoAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Gongzuo</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_gongzuo.jsp</result>
+        </action>
+        <action name="rlgl010306Dangpai" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306DangpaiAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Dangpai</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_dangpai.jsp</result>
+        </action>
+        <action name="rlgl010306Daoshi" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306DaoshiAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Daoshi</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_daoshi.jsp</result>
+        </action>
         <action name="rlgl010306Add" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306AddAction"
             method="execute">
             <result name="success"  type="redirectAction">
                <param name="actionName">rlgl010305Init</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306ZigeAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ZigeAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Zige</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306ZhiyeAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ZhiyeAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Zhiye</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306JishuAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JishuAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Jishu</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306XingzhengAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306XingzhengAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Xingzheng</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306ShehuiAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ShehuiAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Shehui</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306JiaoyuAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JiaoyuAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Jiaoyu</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306GongzuoAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306GongzuoAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Gongzuo</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306DangpaiAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306DangpaiAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Dangpai</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306DaoshiAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306DaoshiAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Daoshi</param>
 				<param name="personnel_id">${personnelId}</param>
              </result>
         </action>

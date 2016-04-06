@@ -81,7 +81,7 @@
 			AND M1.CREDIT_CATEGORY = #{credit_category}
 		</if>
 		AND M1.IsApply = '1'
-		UNION
+		UNION ALL
 		SELECT
 		CREDIT,
 		USER_ID

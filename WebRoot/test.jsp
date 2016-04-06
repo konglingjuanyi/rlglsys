@@ -15,7 +15,7 @@
  
  location.href="${pageContext.request.contextPath}/doRedirect.action?selectPage=loginpage3&selectTitle=tit_3.png&sysUrl=${pageContext.request.contextPath}"; 
   
-    
+     
 </script>
  
 </head>

@@ -99,7 +99,9 @@ public class Rlgl000202InitAction extends BaseAction {
         	if (super.getSession("selectPage") != null)
         	{
         		selectPage = (String)super.getSession("selectPage");
+        		System.out.println("selectPage:"+selectPage);
         	}
+        	
         	 // 入口判断标记
             String entrance = null;
             // 医疗卫生机构入口的场合
@@ -141,13 +143,24 @@ public class Rlgl000202InitAction extends BaseAction {
             {
                 roleactionInfo.setEntrance(entrance);
                 menuList1 = menuService.getMenuInfoByUserList(roleactionInfo);
+                for(int i = 0; i < menuList1.size(); i++){
+                	   System.out.println("======0000000000=====menu:"+menuList1.get(i).getMenu_name());
+                   }
             } else {
             	menuList1 = menuService.getMenuInfoList("");
+            	for(int i = 0; i < menuList1.size(); i++){
+                	   System.out.println("======3333333=====menu:"+menuList1.get(i).getMenu_name());
+                   }
             }
+            
+            
             if (!"loginpage3".equals(selectPage))
             {
             	menuList1 = this.filteMenuList(menuList1, unitStatus, selectPage);
             }
+            for(int i = 0; i < menuList1.size(); i++){
+            	   System.out.println("======44444444=====menu:"+menuList1.get(i).getMenu_name());
+               }
 //            // 个人菜单过滤
 //            if ("loginpage3".equals(selectPage) || "loginpage4".equals(selectPage))
 //            {
@@ -158,8 +171,15 @@ public class Rlgl000202InitAction extends BaseAction {
             // 个人菜单过滤
             if ("loginpage3".equals(selectPage))
             {
+            	for(int i = 0; i < menuList1.size(); i++){
+               	   System.out.println("======1111=====menu:"+menuList1.get(i).getMenu_name());
+                  }
                 // 过滤
                menuList1 = this.filteMenuList3(menuList1);
+               
+               for(int i = 0; i < menuList1.size(); i++){
+            	   System.out.println("=====2222======menu:"+menuList1.get(i).getMenu_name());
+               }
             }
 
             // 实例化MenuList
@@ -331,7 +351,8 @@ public class Rlgl000202InitAction extends BaseAction {
                 	{
                 		Mtb03Menu menu = (Mtb03Menu)menuList1.get(i);
                 		// 基本信息完善
-                		if (!"0264".equals(menu.getMenu_id()) && !"0078".equals(menu.getMenu_id()))
+                		//if (!"0264".equals(menu.getMenu_id()) && !"0078".equals(menu.getMenu_id()))
+                		if (!"0078".equals(menu.getMenu_id()))
                 		{
                 			newMenuList.add(menu);
                 		}
@@ -345,7 +366,7 @@ public class Rlgl000202InitAction extends BaseAction {
 //                		if (!"0027".equals(menu.getMenu_id()) && !"0029".equals(menu.getMenu_id()) && !"0030".equals(menu.getMenu_id())
 //                				&& !"0261".equals(menu.getMenu_id()) && !"0262".equals(menu.getMenu_id()) && !"0263".equals(menu.getMenu_id()))
                 		if (!"0027".equals(menu.getMenu_id()) && !"0029".equals(menu.getMenu_id()) && !"0030".equals(menu.getMenu_id())
-                    			&& !"0261".equals(menu.getMenu_id()) && !"0262".equals(menu.getMenu_id()))
+                    			&& !"0261".equals(menu.getMenu_id()))
                 		{
                 			newMenuList.add(menu);
                 		}

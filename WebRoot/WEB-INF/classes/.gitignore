@@ -1,4 +1,3 @@
-/com/
 /conf/
 /log4j.properties
 /message_zh_CN.properties
@@ -6,6 +5,7 @@
 /pagecount.properties
 /spring/
 /struts/
+/com/
 /struts.properties
 /struts.xml
 /systemMessage.properties

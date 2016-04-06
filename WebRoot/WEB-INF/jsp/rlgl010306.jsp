@@ -199,7 +199,7 @@ response.addHeader("Cache-Control", "no-cache");
 				return count;
 		    }
 		    // 【提交】按钮的事件定义
-		    function doSaveAction(user_id) {
+		    function doSaveAction() {
 		      		if(checkItems() == true){
    				    	$("#objectArray").val(objectArray);
 						$("#changedObject").val(objectArray);
@@ -326,6 +326,7 @@ response.addHeader("Cache-Control", "no-cache");
 		    //check输入框的值是否为空的js
 		 function checkValue(kongjianId){
             var kjValue = $("#"+kongjianId).val();
+            return false;
             if(kjValue == null || kjValue==''){
                return false;
             }else{
@@ -668,7 +669,7 @@ response.addHeader("Cache-Control", "no-cache");
 			    return true;
 		    }
 		    
-	/*function onelevelChange(onelevel,twolevel,threelevel){
+	function onelevelChange(onelevel,twolevel,threelevel){
 		$("#"+onelevel).change(function(){
           var value=$(this).val();
           comboxLinkageStructure.url = "ComboxContextFromAdmForGrade.action";
@@ -687,7 +688,7 @@ response.addHeader("Cache-Control", "no-cache");
           comboxLinkageStructure.urlParams ="027,,"+value;
           comboxChanged();
       	});
-	}*/
+	}
 
 	function pratypeChange(onelevel,twolevel){
 		$("#"+onelevel).change(function(){
@@ -807,11 +808,11 @@ response.addHeader("Cache-Control", "no-cache");
           comboxChanged();
       });
 		
-     	//var i=0;
-      	//for(i=0;i<100;i++){
-      	//onelevelChange("onelevel_" + i,"twolevel_" + i,"threelevel_" + i);
-      	//twolevelChange("onelevel_" + i,"twolevel_" + i,"threelevel_" + i);
-		//}
+     	var i=0;
+      	for(i=0;i<100;i++){
+      	onelevelChange("onelevel_" + i,"twolevel_" + i,"threelevel_" + i);
+      	twolevelChange("onelevel_" + i,"twolevel_" + i,"threelevel_" + i);
+		}
 		
  });
  function backAction() {
@@ -919,20 +920,20 @@ function doMark(){
      <tr>
     	<td align="center">
     	<font color="#0066CC" style="font-size:14px;">
-<!--         <strong>  -->
-<%-- 				<s:if test="%{personnel.personnel_isapproval == '000'}"> --%>
-<!-- 				          您的信息还未提交申请，请提交申请！ -->
-<%--                 </s:if> --%>
-<%--                 <s:if test="%{personnel.personnel_isapproval == '001'}"> --%>
-<!--     				您的信息正在审核中！ -->
-<%--                 </s:if> --%>
-<%--                  <s:if test="%{personnel.personnel_isapproval == '002'}"> --%>
-<!--     				您的信息已通过审核！ -->
-<%--                 </s:if> --%>
-<%--                  <s:if test="%{personnel.personnel_isapproval == '003'}"> --%>
-<!--    					您的信息申请已被驳回！ -->
-<%--                 </s:if> --%>
-<!--    		</strong> -->
+        <strong> 
+				<s:if test="%{personnel.personnel_isapproval == '000'}">
+				          您的信息还未提交申请，请提交申请！
+                </s:if>
+                <s:if test="%{personnel.personnel_isapproval == '001'}">
+    				您的信息正在审核中！
+                </s:if>
+                 <s:if test="%{personnel.personnel_isapproval == '002'}">
+    				您的信息已通过审核！
+                </s:if>
+                 <s:if test="%{personnel.personnel_isapproval == '003'}">
+   					您的信息申请已被驳回！
+                </s:if>
+   		</strong>
         </font>
         </td>
      </tr>
@@ -954,13 +955,9 @@ function doMark(){
                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr align="left"> 
                       <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">姓名</td>
-                      <td width="35%" style="padding-left:5px;font-size:12px;">                      
-                      <s:if test="%{userFlg == 0}">
-                        <s:textfield  name="personnel.personnel_nm"  maxLength="20" readonly="true"></s:textfield>
-                      </s:if>
-                      <s:else>
-                        <s:textfield  name="personnel.personnel_nm"  maxLength="20" ></s:textfield>
-                      </s:else>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:label name="personnel.personnel_nm" ></s:label>
+                      <s:hidden name="personnel.personnel_nm"  />
                       </td>
                       <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">身份证号</td>
                       <td width="35%" style="padding-left:6px;font-size:12px;">
@@ -1092,7 +1089,11 @@ function doMark(){
                 		</td>
                       <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">所在科室</td>
                       <td width="35%" style="padding-left:5px;font-size:12px;">
-                      <s:select name="personnel.personnel_office"  list="mtb22HospitalList" listKey="section_id" listValue="section_name" headerValue="- -" headerKey="" />                     
+                      <s:if test="%{personnel.personnel_office_nm != ''}">
+                      <s:label name="personnel.personnel_office_nm" ></s:label>
+                      </s:if>
+               		  <s:else>未分配</s:else>
+                      <s:hidden name="personnel.personnel_office"  />
                      </td>
                     </tr>
                     <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
@@ -1136,12 +1137,12 @@ function doMark(){
                 <td width="10%" ></td>
               </tr>
             </table>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top:0px; text-align:left;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="display:none;">
               <tr>
                   <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>联系信息</strong></font></td>
               </tr>
               <tr>
-             <td>
+              <td>
               <table width="100%" border="0" cellspacing="2" cellpadding="0" class="userBaseCss">
               <tr>
                 <td  width="10%" class="lc1" style="padding-left:5px;font-size:12px;">电子邮件</td>
@@ -1158,7 +1159,7 @@ function doMark(){
                 </td>
               </tr>
              </table>
- </td>
+            </td>
             </tr>
           </table>
           </td>
@@ -1175,7 +1176,7 @@ function doMark(){
                 <td style="PADDING-TOP: 2px">
             <table cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_zyzgxx" class="tabCss">
             <tr>
-              <th height="28" width="11%" class="thTitleItrn">资格证编号<font color=red>*</font></th>
+              <th height="28" width="11%" class="thTitleItrn">资格证编号</th>
               <th width="11%" class="thTitleItrn">发证机关</th>
               <th width="11%" class="thTitleItrn">发证日期</th>
               <th width="14%"class="thTitleItrn">专业类别</th>
@@ -1194,7 +1195,7 @@ function doMark(){
 			<s:hidden name="addFlag7_%{#st.index }" id="addFlag7_%{#st.index }" value="init_rlgl010306PractitionersInfoList_%{#st.index }__certificate_no,init_rlgl010306PractitionersInfoList_%{#st.index }__issuing_authority,init_rlgl010306PractitionersInfoList_%{#st.index }__issue_time,pratypelist_%{#st.index },pralevellist_%{#st.index },init_rlgl010306PractitionersInfoList_%{#st.index }__area,init_rlgl010306PractitionersInfoList_%{#st.index }__upd_record,init_rlgl010306PractitionersInfoList_%{#st.index }__assess_record" />
 			</s:if>
 			  <!-- 资格证编号 -->
-              <s:textfield  name="rlgl010306PractitionersInfoList[%{#st.index }].certificate_no" id="rlgl010306PractitionersInfoList_certificate_no" maxLength="29" size="9"></s:textfield></td>
+              <s:textfield  name="rlgl010306PractitionersInfoList[%{#st.index }].certificate_no" id="rlgl010306PractitionersInfoList_certificate_no" maxLength="20" size="9"></s:textfield></td>
               <!-- 发证机关 -->
               <td><s:textfield  name="rlgl010306PractitionersInfoList[%{#st.index }].issuing_authority" id="rlgl010306PractitionersInfoList_issuing_authority"  maxLength="20" size="9"></s:textfield></td>
               <!-- 发证日期 -->
@@ -1223,9 +1224,9 @@ function doMark(){
             </s:if>
             <s:else>
             	<tr>
-              <td height="25"><s:textfield  name="rlgl010306PractitionersInfoList[0].certificate_no" id="rlgl010306PractitionersInfoList_certificate_no" value="%{#request.rlgl010306PractitionersInfoList[0].certificate_no}" maxLength="29" size="9"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issuing_authority" id="rlgl010306PractitionersInfoList_issuing_authority" value="%{#request.rlgl010306PractitionersInfoList[0].issuing_authority}" maxLength="20" size="9"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issue_time" id="rlgl010306PractitionersInfoList_issue_time" value="%{#request.rlgl010306PractitionersInfoList[0].issue_time}"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="9"></s:textfield></td>
+              <td height="25"><s:textfield  name="rlgl010306PractitionersInfoList[0].certificate_no" value="%{#request.rlgl010306PractitionersInfoList[0].certificate_no}" maxLength="20" size="9"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issuing_authority" value="%{#request.rlgl010306PractitionersInfoList[0].issuing_authority}" maxLength="20" size="9"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issue_time" value="%{#request.rlgl010306PractitionersInfoList[0].issue_time}"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="9"></s:textfield></td>
               
               <td>
               		<s:select name="rlgl010306PractitionersInfoList[0].type"  cssClass="zg_zylb" id="pratypelist_0"  list="protypelist" listKey="adm_num" listValue="adm_name" headerValue="-请选择类别-" headerKey=""  onChange="pratypeChange('pratypelist_0','pralevellist_0')" />
@@ -1288,7 +1289,7 @@ function doMark(){
 					<s:hidden name="addFlag8_%{#st.index }" id="addFlag8_%{#st.index }" value="init_rlgl010306PracticeInfoList_%{#st.index }__certificate_no,init_rlgl010306PracticeInfoList_%{#st.index }__issuing_authority,init_rlgl010306PracticeInfoList_%{#st.index }__issue_time,practypelist_%{#st.index },praclevellist_%{#st.index },init_rlgl010306PracticeInfoList_%{#st.index }__area,init_rlgl010306PracticeInfoList_%{#st.index }__upd_record,init_rlgl010306PracticeInfoList_%{#st.index }__assess_record" />
 					</s:if>       
               <!-- 执业证编号 -->
-             	 <s:textfield  name="rlgl010306PracticeInfoList[%{#st.index }].certificate_no"  id="zyzbh" maxLength="29" size="4"></s:textfield></td>
+             	 <s:textfield  name="rlgl010306PracticeInfoList[%{#st.index }].certificate_no"  id="zyzbh" maxLength="20" size="4"></s:textfield></td>
               <td>
                 <!-- 发证机关 -->
               	<s:textfield  name="rlgl010306PracticeInfoList[%{#st.index }].issuing_authority"  id="zyzfzjg" maxLength="20" size="4"></s:textfield>
@@ -1314,7 +1315,7 @@ function doMark(){
               </td>
               <td><!-- 执业范围 -->
               		 范围1:<s:select name="rlgl010306PracticeInfoList[%{#st.index }].area1" id ="zyfw1" list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
-      			<br>范围2:<s:select name="rlgl010306PracticeInfoList[%{#st.index }].area2" id ="zyfw2"  list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
+      			<br>范围2:<s:select name="rlgl010306PracticeInfoList[%{#st.index }].area2" d ="zyfw2"  list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
                      </td>
               <td><!-- 执业地点-->
             	  地点1:<s:textfield  name="rlgl010306PracticeInfoList[%{#st.index }].place1"  id="zydd1" maxLength="20" size="4"></s:textfield>
@@ -1332,9 +1333,9 @@ function doMark(){
             </s:if>
             <s:else>
             	<tr>
-              <td height="25"><s:textfield  name="rlgl010306PracticeInfoList[0].certificate_no" id="zyzbh" value="%{#request.rlgl010306PracticeInfoList[0].certificate_no}" maxLength="29" size="4"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issuing_authority" id="zyzfzjg" value="%{#request.rlgl010306PracticeInfoList[0].issuing_authority}" maxLength="20" size="4"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issue_time" id="zyzfzrq" value="%{#request.rlgl010306PracticeInfoList[0].issue_time}"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="4"></s:textfield></td>
+              <td height="25"><s:textfield  name="rlgl010306PracticeInfoList[0].certificate_no" value="%{#request.rlgl010306PracticeInfoList[0].certificate_no}" maxLength="20" size="4"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issuing_authority" value="%{#request.rlgl010306PracticeInfoList[0].issuing_authority}" maxLength="20" size="4"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issue_time" value="%{#request.rlgl010306PracticeInfoList[0].issue_time}"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="4"></s:textfield></td>
               
               <td>
               <s:select name="rlgl010306PracticeInfoList[0].type"  cssClass="zy_zylb" id="practypelist_0"  list="protypelist" listKey="adm_num" listValue="adm_name" headerValue="-请选择类别-" headerKey=""  onChange="pratypeChange('practypelist_0','praclevellist_0')" />
@@ -1343,7 +1344,7 @@ function doMark(){
               <s:select name="rlgl010306PracticeInfoList[0].level" id="praclevellist_0"  list="pralevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择级别-" headerKey="" style="visibility: hidden;"/>
               </td>
               <td>
-              <s:select name="rlgl010306PracticeInfoList[0].pro_type" cssClass="zy_zylx"  id="proctypelist_0"   list="pratypelist" listKey="adm_num" listValue="adm_name" headerValue="-请选择类别-" headerKey=""/>
+              <s:select name="rlgl010306PracticeInfoList[0].pro_type" cssClass="zy_zylx"  id="proctypelist_%{#st.index }"   list="pratypelist" listKey="adm_num" listValue="adm_name" headerValue="-请选择类别-" headerKey=""/>
               </td>
               <td>
               		范围1:<s:select name="rlgl010306PracticeInfoList[0].area1" id ="zyfw1" list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
@@ -1386,34 +1387,34 @@ function doMark(){
             <td style="padding-top:2px;">
             <table cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_zyjszwxx" name="tab_zyjszwxx" class="tabCss">
             <tr>
-              <th height="28" width="20%" class="thTitleItrn">级别</th>
-              <th width="20%" class="thTitleItrn">名称</th>
-              <th width="20%" class="thTitleItrn">审批机关</th>
-              <th width="20%" class="thTitleItrn">取得时间</th>
-              <th width="10%"class="thTitleItrn"><label>对象</label></th>
+              <th height="28" width="35%" class="thTitleItrn">级别</th>
+              <th width="15%" class="thTitleItrn">名称</th>
+              <th width="15%" class="thTitleItrn">审批机关</th>
+              <th width="15%" class="thTitleItrn">取得时间</th>
+              <th width="5%"class="thTitleItrn"><label>对象</label></th>
             </tr>
              <s:if test="%{rlgl010306ProfessionalInfoList!=null&&rlgl010306ProfessionalInfoList.size>0}">
              <s:iterator  value="rlgl010306ProfessionalInfoList" status='st'>
              	<tr>
-	              	<td width="20%"><!-- 级别 -->
+	              	<td width="25%"><!-- 级别 -->
 						<s:if test="%{addFlag == 1}">
 						<s:hidden  name="rlgl010306ProfessionalInfoList[%{#st.index }].addFlag" />
 						<s:hidden name="addFlag1_%{#st.index }" id="addFlag1_%{#st.index }" value="onelevel_%{#st.index },twolevel_%{#st.index },threelevel_%{#st.index },init_rlgl010306ProfessionalInfoList_%{#st.index }__name,init_rlgl010306ProfessionalInfoList_%{#st.index }__original,init_rlgl010306ProfessionalInfoList_%{#st.index }__get_time" />
 						</s:if>
-						<s:select name="rlgl010306ProfessionalInfoList[%{#st.index }].twolevel"   id="twolevel_%{#st.index }"  list="twolevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey="" cssClass="twolevel" />
-	              		<!--<s:select name="rlgl010306ProfessionalInfoList[%{#st.index }].onelevel"  id="onelevel_%{#st.index }"  list="onelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey="" cssClass="onelevel"/>                		
-                		<s:select name="rlgl010306ProfessionalInfoList[%{#st.index }].threelevel" id="threelevel_%{#st.index }" list="threelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等次-" headerKey="" cssClass="threelevel"/>-->
+	              		<s:select name="rlgl010306ProfessionalInfoList[%{#st.index }].onelevel"  id="onelevel_%{#st.index }"  list="onelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey="" cssClass="onelevel"/>
+                		<s:select name="rlgl010306ProfessionalInfoList[%{#st.index }].twolevel"   id="twolevel_%{#st.index }"  list="twolevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey="" cssClass="twolevel" />
+                		<s:select name="rlgl010306ProfessionalInfoList[%{#st.index }].threelevel" id="threelevel_%{#st.index }" list="threelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等次-" headerKey="" cssClass="threelevel"/>
 	              	</td>
-		            <td width="20%"><!-- 名称 -->
+		            <td width="15%"><!-- 名称 -->
 		               <s:textfield  name="rlgl010306ProfessionalInfoList[%{#st.index }].name" id="zyjszw_name" size="12" maxLength="20"  cssClass="zyjszw_name"></s:textfield>
 		             </td>
-		            <td width="20%"><!-- 审批机关 -->
+		            <td width="15%"><!-- 审批机关 -->
 		              	<s:textfield  name="rlgl010306ProfessionalInfoList[%{#st.index }].original" id="zyjszw_spjg" size="12" maxLength="20" cssClass="zyjszw_spjg"></s:textfield>
 		             </td>
-		            <td width="20%"><!-- 取得时间 -->
+		            <td width="15%"><!-- 取得时间 -->
 		             	<s:textfield  name="rlgl010306ProfessionalInfoList[%{#st.index }].get_time" id="zyjszw_qdsj" onClick="WdatePicker();" onBlur="AddMark(this);" size="12" maxLength="8" cssClass="zyjszw_qdsj"></s:textfield>
 		             </td>
-		            <td width="10%">
+		            <td width="5%">
 		             		<input type="checkbox" name="object1" value="" id="object1"/>
 		            </td>
             	</tr>
@@ -1421,22 +1422,22 @@ function doMark(){
               </s:if>
               <s:else>
               <tr>
-              	<td width="20%"> <!-- 级别 -->
-              	    <s:select name="rlgl010306ProfessionalInfoList[0].twolevel"   id="twolevel_0"  list="twolevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey=""  cssClass="twolevel"/>
-	              	<!--<s:select name="rlgl010306ProfessionalInfoList[0].onelevel"  id="onelevel_0"  list="onelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey="" cssClass="onelevel"/>	                
-	                <s:select name="rlgl010306ProfessionalInfoList[0].threelevel" id="threelevel_0" list="threelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等次-" headerKey="" cssClass="threeelevel"/>-->
+              	<td width="25%"> <!-- 级别 -->
+	              	<s:select name="rlgl010306ProfessionalInfoList[0].onelevel"  id="onelevel_0"  list="onelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey="" cssClass="onelevel"/>
+	                <s:select name="rlgl010306ProfessionalInfoList[0].twolevel"   id="twolevel_0"  list="twolevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等级-" headerKey=""  cssClass="twolevel"/>
+	                <s:select name="rlgl010306ProfessionalInfoList[0].threelevel" id="threelevel_0" list="threelevellist" listKey="adm_num" listValue="adm_name" headerValue="-请选择等次-" headerKey="" cssClass="threeelevel"/>
               	</td>
-	            <td width="20%"><!-- 名称 -->
+	            <td width="15%"><!-- 名称 -->
 	            	<s:textfield  name="rlgl010306ProfessionalInfoList[0].name" size="12"  id="zyjszw_name" maxLength="20" cssClass="zyjszw_name"></s:textfield>
 	            </td>
-	            <td width="20%"><!-- 审批机关 -->
+	            <td width="15%"><!-- 审批机关 -->
 	            	<s:textfield  name="rlgl010306ProfessionalInfoList[0].original" size="12"  id="zyjszw_spjg" maxLength="20" cssClass="zyjszw_spjg"></s:textfield>
 	            </td>
-	            <td width="20%"><!-- 取得时间 -->
+	            <td width="15%"><!-- 取得时间 -->
 	            	<s:textfield  name="rlgl010306ProfessionalInfoList[0].get_time" size="12"  id="zyjszw_qdsj" onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" cssClass="zyjszw_qdsj">
 	            	</s:textfield>
 	            </td>
-	            <td width="10%"><input type="checkbox" name="object1" value="" id="object1"/></td>
+	            <td width="5%"><input type="checkbox" name="object1" value="" id="object1"/></td>
             </tr>
               </s:else>
             
@@ -1860,7 +1861,7 @@ function doMark(){
         </table>
       </div>
 
-<div> 
+	<div> 
         <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
           <tr> 
             <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>导师信息</strong></font></td>
@@ -1937,7 +1938,7 @@ function doMark(){
 <tr>
     <td height="50" align="center">
 <input type="button" class="inp_L3 btnClass_${only_search}" value="保存" onclick="doSaveAction()" name="btnSave" id="btnSave"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <input type="button" class="inp_L3 btnClass_${only_search}" width="100" value="提交申请" onclick="commitAction()" name="btnCommit" id="btnCommit"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <s:if test="%{backAction.trim() != ''}">
  <input type="button" class="inp_L3" value="返回" name="btnBack" id="btnBack">
 </s:if>
