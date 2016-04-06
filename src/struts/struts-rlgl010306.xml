@@ -159,6 +159,36 @@
             <result name="error">/WEB-INF/jsp/error.jsp</result>
             <result name="success">/WEB-INF/jsp/rlgl010306.jsp</result>
         </action>
+        <action name="rlgl010306XingzhengChange" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306XingzhengChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_xingzheng.jsp</result>
+        </action>
+        <action name="rlgl010306JishuChange" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JishuChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_jishu.jsp</result>
+        </action>
+        <action name="rlgl010306ShehuiChange" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ShehuiChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_shehui.jsp</result>
+        </action>
+        <action name="rlgl010306JiaoyuChange" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JiaoyuChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_jiaoyu.jsp</result>
+        </action>
+        <action name="rlgl010306GongzuoChange" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306GongzuoChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_gongzuo.jsp</result>
+        </action>
+        <action name="rlgl010306DangpaiChange" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306DangpaiChangeAction"
+            method="execute">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_dangpai.jsp</result>
+        </action>
         <action name="upload" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306AddAction" method="upload">
             <result name="success" type="redirectAction">rlgl010306Init</result>
         </action>

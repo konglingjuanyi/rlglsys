@@ -102,12 +102,10 @@ public class Rlgl010306ZigeAction extends BaseAction {
 		if(personnel_id!=null && !"".equals(personnel_id)){
 			personnelId = personnel_id;
 		}
-		System.out.println("========personnelId==306zigeadd===="+personnelId);
 		mtb39Personnel.setPersonnel_id(personnelId);
 		personnel = rlgl010306Service.searchRlgl010306(mtb39Personnel);
 		// 审核中时不可更改，跳到不可更改画面
 		if(personnel != null && "001".equals(personnel.getPersonnel_isapproval())){
-			System.out.println("============rlgl010305===306zigeadd=========");
 			return "rlgl010305";
 		}
 		// 获得性别下拉列表

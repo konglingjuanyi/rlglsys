@@ -44,7 +44,7 @@ response.addHeader("Cache-Control", "no-cache");
 		    	window.close();
 		    }
 		    function updatePersonnel() {
-			    $("form").attr("action", "rlgl010306Init.action");
+			    $("form").attr("action", "rlgl010306Gongzuo.action");
 				$("form").submit();
 			}
 			
@@ -155,8 +155,5 @@ response.addHeader("Cache-Control", "no-cache");
     </table>
     </div>
     </s:form>
-    <script type="text/javascript" language="javascript"> 
-    $("#showImgFile").attr("src", $("#showImgFile")[0].src+"?rand="+new Date().getTime());
-    </script>
     </body>
 </html>

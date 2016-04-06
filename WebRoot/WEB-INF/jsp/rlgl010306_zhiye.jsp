@@ -204,53 +204,13 @@ response.addHeader("Cache-Control", "no-cache");
    				    	$("#objectArray").val(objectArray);
 						$("#changedObject").val(objectArray);
 					    $("#saveAction").val("1");
-					    $("form").attr("action", "rlgl010306Add.action");
+					    $("form").attr("action", "rlgl010306ZhiyeAdd.action");
 					    $("form").submit();
 		      		}		    			
 		    }
 		    
 		    // 页面上的验证组合
 		    function checkItems(){
-		    	//出生日期
-		    	var personnel_birthday = $("#personnel_birthday").val();
-		    	//参加工作时间 
-		    	var personnel_worktime = $("#personnel_worktime").val();
-		    	//入党时间
-		    	var personnel_joinpartytime = $("#personnel_joinpartytime").val();
-		    	if((personnel_birthday.length!=0 || personnel_birthday!="") && (personnel_worktime.length!=0 || personnel_worktime!="") && personnel_birthday > personnel_worktime){
-		    		alertMessage("AM115");
-		    		return false;
-		    	}else if((personnel_birthday.length!=0 || personnel_birthday!="") && (personnel_joinpartytime.length!=0 || personnel_joinpartytime!="") && personnel_birthday > personnel_joinpartytime){
-		    		alertMessage("AM116");
-		    		return false;
-		    	}
-		    	
-		    	// 资格证编号的值
-		        var zgzbh =  checkValue("rlgl010306PractitionersInfoList_certificate_no");
-		        //资格证编号的值为空的是后，其他的项目如果有值，则提示信息
-		    	if(zgzbh == false){
-		    	   // 发证机关
-		    	   var fzjg = checkValue("rlgl010306PractitionersInfoList_issuing_authority"); 
-		    	   if(fzjg == true){
-			    	   alert("请填写资格证编号信息！");
-			    	   $("#rlgl010306PractitionersInfoList_certificate_no").focus();
-			    	   return false;
-		    	   }
-		    		// 发证日期
-		    	   var fzrq = checkValue("rlgl010306PractitionersInfoList_issue_time"); 
-			    	   if(fzrq == true){
-			    	   alert("请填写资格证编号信息！");
-			    	   $("#rlgl010306PractitionersInfoList_certificate_no").focus();
-			    	   return false;
-		    	   }
-		    	    // 专业类别
-		    	   var zylb= $('.zg_zylb').val(); 
-		    	   if(zylb !=''){
-			    	   alert("请填写资格证编号信息！");
-			    	   $("#rlgl010306PractitionersInfoList_certificate_no").focus();
-		    	   return false;
-		    	   }
-		    	}
 		    	// 执业信息
 		    	// 执业证编号
 		    	var zyzbh = checkValue("zyzbh"); 
@@ -642,7 +602,7 @@ response.addHeader("Cache-Control", "no-cache");
 					$("#objectArray").val(objectArray);
 					$("#changedObject").val(objectArray);
 				    $("#saveAction").val("0");
-				    $("form").attr("action", "rlgl010306Add.action");
+				    $("form").attr("action", "rlgl010306ZhiyeAdd.action");
 				    $("form").submit();
 			 
 			 }
@@ -901,6 +861,12 @@ function doMark(){
     <s:hidden name="personnel.personnel_imgname" id="imgName"/>
      <s:hidden name="personnel_id" id="personnel_id"/>
      <s:hidden name="personnel.personnel_id" id="personnel.personnel_id"/>
+     <s:hidden name="personnel.personnel_nm"  />
+     <s:hidden name="personnel.personnel_card_id"  />
+     <s:hidden name="personnel.personnel_check"  />
+      <s:hidden name="personnel.personnel_unit"  />
+      <s:hidden name="personnel.personnel_office"  />
+      <s:hidden name="personnel.personnel_admintype"  />
      <s:hidden name="inputObject_id" id="inputObject_id"/>
      <s:hidden name="filePath" id="filePath"/>
      <s:hidden name="objectArray" id="objectArray"/> 
@@ -1083,7 +1049,6 @@ function doMark(){
 <s:if test="%{backAction.trim() != ''}">
  <input type="button" class="inp_L3" value="返回" name="btnBack" id="btnBack">
 </s:if>
-
  
 </td>
 </tr>
@@ -1097,8 +1062,5 @@ function doMark(){
     </table>
     </div>
     </s:form>
-    <script type="text/javascript" language="javascript"> 
-    $("#showImgFile").attr("src", $("#showImgFile")[0].src+"?rand="+new Date().getTime());
-    </script>
     </body>
 </html>

@@ -44,7 +44,7 @@ response.addHeader("Cache-Control", "no-cache");
 		    	window.close();
 		    }
 		    function updatePersonnel() {
-			    $("form").attr("action", "rlgl010306Init.action");
+			    $("form").attr("action", "rlgl010306Jishu.action");
 				$("form").submit();
 			}
 			
@@ -71,22 +71,6 @@ response.addHeader("Cache-Control", "no-cache");
     <table width="100%"  border="0" cellspacing="0" cellpadding="0">
     <tr>
             <td align="center"><font color="#0066CC" style="font-size:14px;">
-<!--               <strong>  -->
-<%-- 				<s:if test="%{personnel.personnel_isapproval == '000'}"> --%>
-<!-- 				          您的信息还未提交申请，请提交申请！ -->
-<%--                 </s:if> --%>
-<%--                 <s:if test="%{personnel.personnel_isapproval == '001'}"> --%>
-<!--     				您的信息正在审核中！ -->
-<%--                 </s:if> --%>
-<%--                  <s:if test="%{personnel.personnel_isapproval == '002'}"> --%>
-<!--     				您的信息已通过审核！ -->
-<%--                 </s:if> --%>
-<%--                  <s:if test="%{personnel.personnel_isapproval == '003'}"> --%>
-<!--    					您的信息申请已被驳回！ -->
-<%--                 </s:if> --%>
-<!--     		</strong> -->
-            
-<!--             </font></td> -->
         </tr>
       <tr>
         <td align="center" valign="top">
@@ -152,8 +136,5 @@ response.addHeader("Cache-Control", "no-cache");
     </table>
     </div>
     </s:form>
-    <script type="text/javascript" language="javascript"> 
-    $("#showImgFile").attr("src", $("#showImgFile")[0].src+"?rand="+new Date().getTime());
-    </script>
     </body>
 </html>

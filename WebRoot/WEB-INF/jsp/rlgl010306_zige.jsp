@@ -41,6 +41,72 @@ response.addHeader("Cache-Control", "no-cache");
 				$("form").attr("action", "rlgl010306Change.action");
 				$("form").submit();
 		    }
+		  //专业技术
+			function addNewZyjszwxx(table_id) 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg1");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			} 
+			//行政职务信息
+			function addNewXzzwxx(table_id) 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg2");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			} 
+			//社会关系
+			function addNewShgx(table_id) 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg3");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			}
+			//教育经历
+			function addNewJyjl(table_id) 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg4");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			} 
+			//工作经历
+			function addNewGzjl(table_id) 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg5");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			} 
+			//党派信息
+			function addNewDpxx(table_id) 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg6");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			} 
 			//资格信息
 			function addNewZyzgxx(table_id) 
 			{   if(objectArray==""){
@@ -52,7 +118,17 @@ response.addHeader("Cache-Control", "no-cache");
 				$("form").attr("action", "rlgl010306Change.action");
 				$("form").submit();
 			} 
-		
+			//执业信息
+			function addPractice() 
+			{   if(objectArray==""){
+		        	objectArray=$("#changedObject").val();
+		        }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+				$("#addFlg").val("addFlg8");
+				$("form").attr("action", "rlgl010306Change.action");
+				$("form").submit();
+			} 
 			function back(){
 				confirmMessage("CM015", goBack);
 		    }
