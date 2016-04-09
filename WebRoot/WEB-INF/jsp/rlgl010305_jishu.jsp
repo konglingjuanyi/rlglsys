@@ -5,44 +5,28 @@
   <head>
      <title><s:property value="getText('rlglsys.browserhead.IE')" /></title>
     <%
-response.addHeader("Cache-Control", "no-cache");
+		response.addHeader("Cache-Control", "no-cache");
 	%>
        <script type="text/javascript" language="javascript"> 
 			$(document).ready(function(){
-			// 图片
-				$("[id^=showImgFile]").each(function(e){
-			        var w = $(this).width();
-			        var h = $(this).height();
-			        if( w >=141){
-			            $(this).width(141);
-			        }
-			        if( h >=200){
-			            $(this).height(200);
-			        }
-			      });
-			      $("[id^=showImgFile]").each(function(e){
-			        var w = $(this).width();
-			        var h = $(this).height();
-			        if( w >=141){
-			            $(this).width(141);
-			        }
-			        if( h >=200){
-			            $(this).height(200);
-			        }
-			      });
+			
 			    // 添加待审核状态
 			    createReviewMark($("#reviewElement").val());
 			    // 返回事件的定义
-		        $("#btnBack").click(function(){
-		            confirmMessage("CM005", backAction);
-		        });
+			    $("#btnBack").click(function(){
+			          $("#modal-confirm").text("是否确认返回前画面？");
+						$('#my-confirm').modal({
+					        relatedTarget: this,
+					        onConfirm: function(options) {
+					        	backAction();
+					        },
+					        onCancel: function() {
+					          return;
+					        }
+					      });
+			      });
 			});
-			function close(){
-				confirmMessage("CM015", doClose);
-		    }
-		    function doClose(){
-		    	window.close();
-		    }
+			
 		    function updatePersonnel() {
 			    $("form").attr("action", "rlgl010306Jishu.action");
 				$("form").submit();
@@ -110,7 +94,17 @@ response.addHeader("Cache-Control", "no-cache");
         </td>
       </tr>
     </table></div>
-
+<div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+	  <div class="am-modal-dialog">
+	    <div class="am-modal-hd">提示信息</div>
+	    <div class="am-modal-bd" id="modal-confirm">
+	    </div>
+	    <div class="am-modal-footer">
+	      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+	      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+	    </div>
+	  </div>
+	</div>
 
 <!-- 操作按扭 -->
 <table width="70%" align="center" border="0" cellspacing="1" cellpadding="0">
@@ -118,11 +112,12 @@ response.addHeader("Cache-Control", "no-cache");
     <td height="50" align="center">
 <s:if test="%{updateAction == null}">
 <s:if test="%{personnel.personnel_isapproval.trim() != '001'}"> 
-<input type="button" name="btnUpdate" id="btnUpdate" class="inp_L3" value="修改" onClick="updatePersonnel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" class="am-btn am-btn-danger" onClick="updatePersonnel();"value="修改"  id="btnUpdate" name="btnUpdate"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </s:if>
 </s:if>
 <s:if test="%{backAction.trim() != ''}">
- <input type="button" class="inp_L3" value="返回" name="btnBack" id="btnBack">
+ <input type="button" class="am-btn am-btn-danger"  id="btnBack" value="返回" name="btnBack"/>
 </s:if>
 </td>
 </tr>

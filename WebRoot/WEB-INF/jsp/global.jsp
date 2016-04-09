@@ -14,8 +14,8 @@
   
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.2.6.pack.js"></script>
-<!--<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.boxy.js"></script>-->
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.boxy.js"></script>
+ --%><script type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
 
 <%! private String getHTTPDate() {
     java.text.SimpleDateFormat formatter =

@@ -170,7 +170,6 @@ public class Rlgl010306JishuChangeAction extends BaseAction {
 	}
 	@Override
 	protected String doExecute() throws Exception {
-		System.out.println("==========xingzheng===change================"+personnel.getPersonnel_province());
 		try {
 			// TODO Auto-generated method stub
 						String province =personnel.getPersonnel_province();

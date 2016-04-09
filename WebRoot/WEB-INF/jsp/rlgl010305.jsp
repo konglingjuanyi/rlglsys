@@ -33,16 +33,20 @@ response.addHeader("Cache-Control", "no-cache");
 			    // 添加待审核状态
 			    createReviewMark($("#reviewElement").val());
 			    // 返回事件的定义
-		        $("#btnBack").click(function(){
-		            confirmMessage("CM005", backAction);
-		        });
+			    $("#btnBack").click(function(){
+			          $("#modal-confirm").text("是否确认返回前画面？");
+						$('#my-confirm').modal({
+					        relatedTarget: this,
+					        onConfirm: function(options) {
+					        	backAction();
+					        },
+					        onCancel: function() {
+					          return;
+					        }
+					      });
+			      });
 			});
-			function close(){
-				confirmMessage("CM015", doClose);
-		    }
-		    function doClose(){
-		    	window.close();
-		    }
+			
 		    function updatePersonnel() {
 			    $("form").attr("action", "rlgl010306Init.action");
 				$("form").submit();
@@ -71,22 +75,6 @@ response.addHeader("Cache-Control", "no-cache");
     <table width="100%"  border="0" cellspacing="0" cellpadding="0">
     <tr>
             <td align="center"><font color="#0066CC" style="font-size:14px;">
-<!--               <strong>  -->
-<%-- 				<s:if test="%{personnel.personnel_isapproval == '000'}"> --%>
-<!-- 				          您的信息还未提交申请，请提交申请！ -->
-<%--                 </s:if> --%>
-<%--                 <s:if test="%{personnel.personnel_isapproval == '001'}"> --%>
-<!--     				您的信息正在审核中！ -->
-<%--                 </s:if> --%>
-<%--                  <s:if test="%{personnel.personnel_isapproval == '002'}"> --%>
-<!--     				您的信息已通过审核！ -->
-<%--                 </s:if> --%>
-<%--                  <s:if test="%{personnel.personnel_isapproval == '003'}"> --%>
-<!--    					您的信息申请已被驳回！ -->
-<%--                 </s:if> --%>
-<!--     		</strong> -->
-            
-<!--             </font></td> -->
         </tr>
       <tr>
         <td align="center" valign="top">
@@ -299,345 +287,29 @@ response.addHeader("Cache-Control", "no-cache");
           </td>
         </tr>
       </table>
-    
-      <div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>资格信息</strong></font></td>
-          </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <table cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_zyzgxx" class="tabCss">
-            <tr>
-              <th height="28" width="11%" class="thTitleItrn">资格证编号</th>
-              <th width="11%" class="thTitleItrn">发证机关</th>
-              <th width="11%" class="thTitleItrn">发证日期</th>
-              <th width="11%"class="thTitleItrn">专业类别</th>
-              <th width="11%"class="thTitleItrn">专业级别</th>
-              <th width="11%"class="thTitleItrn" style="display:none">执业范围</th>
-              <th width="11%"class="thTitleItrn" style="display:none">变更记录</th>
-              <th width="11%"class="thTitleItrn" style="display:none">执业考核记录</th>
-            </tr>
-            <s:iterator value="rlgl010302PractitionersInfoList" status='st'>
-            <tr>
-              <td height="25"><s:label id="init_rlgl010306PractitionersInfoList_%{#st.index }__certificate_no"><s:property value="certificate_no"/></s:label></td>
-              <td><s:label id="init_rlgl010306PractitionersInfoList_%{#st.index }__issuing_authority"><s:property value="issuing_authority"/></s:label></td>
-              <td><s:label id="init_rlgl010306PractitionersInfoList_%{#st.index }__issue_time"><s:property value="issue_time"/></s:label></td>
-              <td><s:label id="pratypelist_%{#st.index }"><s:property value="type"/></s:label></td>
-              <td><s:label id="pralevellist_%{#st.index }"><s:property value="level"/></s:label></td>
-              <td style="display:none"><s:label id="init_rlgl010306PractitionersInfoList_%{#st.index }__area"><s:property value="area"/></s:label></td>
-              <td style="display:none"><s:label id="init_rlgl010306PractitionersInfoList_%{#st.index }__upd_record"><s:property value="upd_record"/></s:label></td>
-              <td style="display:none"><s:label id="init_rlgl010306PractitionersInfoList_%{#st.index }__assess_record"><s:property value="assess_record"/></s:label></td>
-            </tr> 
-             </s:iterator>
-          </table>
-                </TD>
-            </TR>
-        </table>
-      </div>
-      <div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>执业信息</strong></font></td>
-          </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <table cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_practice" class="tabCss">
-            <tr>
-              <th height="28" width="11%" class="thTitleItrn">执业证编号</th>
-              <th width="11%" class="thTitleItrn">发证机关</th>
-              <th width="9%" class="thTitleItrn">发证日期</th>
-              <th width="11%"class="thTitleItrn">专业类别</th>
-              <th width="11%"class="thTitleItrn">专业级别</th>
-              <th width="11%"class="thTitleItrn">执业类别</th>
-              <th width="11%"class="thTitleItrn">执业范围</th>
-              <th width="11%"class="thTitleItrn">执业地点</th>
-              <th width="9%"class="thTitleItrn" style="display:none">变更记录</th>
-              <th width="9%"class="thTitleItrn" style="display:none">执业考核记录</th>
-            </tr>
-            <s:iterator value="rlgl010302PracticeInfoList" status='st'>
-            <tr>
-              <td height="25"><s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__certificate_no"><s:property value="certificate_no"/></s:label></td>
-              <td><s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__issuing_authority"><s:property value="issuing_authority"/></s:label></td>
-              <td><s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__issue_time"><s:property value="issue_time"/></s:label></td>
-              <td><s:label id="practypelist_%{#st.index }"><s:property value="type"/></s:label></td>
-              <td><s:label id="pralevellist_%{#st.index }"><s:property value="level"/></s:label></td>
-              <td><s:label id="proctypelist_%{#st.index }"><s:property value="pro_type"/></s:label></td>
-              <td>范围1:<s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__area1"><s:property value="area1"/></s:label>
-              <br>范围2:<s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__area2"><s:property value="area2"/></s:label>
-              </td>
-              <td>
-              地点1:<s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__place1"><s:property value="place1"/></s:label>
-              <br>地点2:<s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__place2"><s:property value="place2"/></s:label>
-              </td>
-              <td style="display:none"><s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__upd_record"><s:property value="upd_record"/></s:label></td>
-              <td style="display:none"><s:label id="init_rlgl010306PracticeInfoList_%{#st.index }__assess_record"><s:property value="assess_record"/></s:label></td>
-            </tr> 
-             </s:iterator>
-          </table>
-                </TD>
-            </TR>
-        </table>
-      </div>
-    <div>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table11">
-        <tr>
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>专业技术职务信息</strong></font></td>
-        </tr>
-        <tr>
-            <td style="padding-top:2px;">
-            <table cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_zyjszwxx" name="tab_zyjszwxx" class="tabCss">
-            <tr>
-              <th height="28" width="25%" class="thTitleItrn">级别</th>
-              <th width="15%" class="thTitleItrn">名称</th>
-              <th width="15%" class="thTitleItrn">审批机关</th>
-              <th width="15%" class="thTitleItrn">取得时间</th>
-            </tr>
-            <tr>
-   <s:iterator value="rlgl010302ProfessionalInfoList" status='st'>
-            <tr>
-            <td width="15%">
-            <s:label id="onelevel_%{#st.index }"><s:property value="onelevel"/></s:label>
-            <s:label id="twolevel_%{#st.index }"><s:property value="twolevel"/></s:label>
-            <s:label id="threelevel_%{#st.index }"><s:property value="threelevel"/></s:label>
-            </td>
-            <td width="15%"><s:label id="init_rlgl010306ProfessionalInfoList_%{#st.index }__name"><s:property value="name"/></s:label></td>
-            <td width="15%"><s:label id="init_rlgl010306ProfessionalInfoList_%{#st.index }__original"><s:property value="original"/></s:label></td>
-            <td width="15%"><s:label id="init_rlgl010306ProfessionalInfoList_%{#st.index }__get_time"><s:property value="get_time"/></s:label></td>
-            </tr>
-        </s:iterator>
-            </tr>
-        </table>
-        </td>
-      </tr>
-    </table></div>
-
-    <div >
-        <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" ID="tab_xzzw">
-            <tr><td style="padding-top:5px;" height="28" align="left"><FONT color="#1F6087" style="font-size:14px;"><STRONG>行政职务信息</STRONG></FONT></td>
-            </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-                
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_xzzwxx" class="tabCss">
-            <tr>
-              <th height="28" width="15%" class="thTitleItrn">职务名称</th>
-              <th width="15%" class="thTitleItrn">任职方式</th>
-              <th width="15%" class="thTitleItrn">职务类别</th>
-              <th width="15%" class="thTitleItrn">职务级别</th>
-              <th width="15%" class="thTitleItrn">任职日期</th>
-              <th width="15%" class="thTitleItrn">任职文号</th>
-            </tr>
-			<s:iterator value="rlgl010302JobInfoList" status='st'>
-            <tr>
-              <td height="25" width="15%">
-             <s:label id="init_rlgl010306JobInfoList_%{#st.index }__position_nm"><s:property value="position_nm"/>
-              </s:label>
-              </td>
-              <td width="15%">
-              <s:label id="init_rlgl010306JobInfoList_%{#st.index }__mode">
-              <s:property value="mode"/>
-              </s:label>
-              </td>
-              <td width="15%">
-              <s:label id="init_rlgl010306JobInfoList_%{#st.index }__type"><s:property value="type"/></s:label>
-              </td>
-              <td width="15%">
-              <s:label id="init_rlgl010306JobInfoList_%{#st.index }__level"><s:property value="level"/></s:label>
-              </td>
-              <td width="15%">
-              <s:label id="init_rlgl010306JobInfoList_%{#st.index }__appoint_time"><s:property value="appoint_time"/></s:label>
-              </td>
-              <td width="15%">
-              <s:label id="init_rlgl010306JobInfoList_%{#st.index }__appoint_no"><s:property value="appoint_no"/></s:label>
-              </td>
-            </tr>
- 			</s:iterator>
-        </table>
-                </td>
-            </tr>
-        </TABLE>
-    </div>
-    
-        <div>
-        <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" ID="">
-            <tr><td style="padding-top:5px;" height="28" align="left"><FONT color="#1F6087" style="font-size:14px;"><STRONG>社会关系</STRONG></FONT></td>
-            </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_shgl" class="tabCss">
-            <tr>
-              <th height="28" width="14%" class="thTitleItrn">与本人关系</th>
-              <th width="14%" class="thTitleItrn">姓名</th>
-              <th width="14%" class="thTitleItrn">出生日期</th>
-              <th width="13%" class="thTitleItrn">政治面貌</th>
-              <th width="15%" class="thTitleItrn">工作单位</th>
-              <th width="10%" class="thTitleItrn">职务</th>
-              <th width="10%" class="thTitleItrn">电话</th>
-            </tr>
-<s:iterator value="rlgl010302SocialInfoList" status='st'>
-            <tr>
-              <td height="25" width="14%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__relationship"><s:property value="relationship"/></s:label></td>
-              <td width="14%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__name"><s:property value="name"/></s:label></td>
-              <td width="14%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__birthday"><s:property value="birthday"/></s:label></td>
-              <td width="13%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__political_landscape"><s:property value="political_landscape"/></s:label></td>
-              <td width="15%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__workunit"><s:property value="workunit"/></s:label></td>
-              <td width="10%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__position"><s:property value="position"/></s:label></td>
-              <td width="10%"><s:label id="init_rlgl010306SocialInfoList_%{#st.index }__tel"><s:property value="tel"/></s:label></td>
-            </tr>
- </s:iterator>
-        </table>
-                </td>
-            </tr>
-        </TABLE>
-    </div>
-    
-    
-    <div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table15">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>教育经历</strong></font></td>
-          </tr>
-          
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_jyjl" class="tabCss">
-            <tr>
-              <th height="28" width="10%" class="thTitleItrn">学习形式</th>
-              <th width="10%" class="thTitleItrn">入学时间</th>
-              <th width="10%" class="thTitleItrn">毕业时间</th>
-              <th width="10%" class="thTitleItrn">毕业学校</th>
-              <th width="10%" class="thTitleItrn">院校类型</th>
-              <th width="10%" class="thTitleItrn">所学专业</th>
-              <th width="10%" class="thTitleItrn">证明人</th>
-              <th width="10%" class="thTitleItrn">学历</th>
-              <th width="10%" class="thTitleItrn">学位</th>
-            </tr>
-<s:iterator value="rlgl010302EduInfoList" status='st'>
-            <tr>
-              <td height="25"><s:label id="init_rlgl010306EduInfoList_%{#st.index }__learning_format"><s:property value="learning_format"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__admission_time"><s:property value="admission_time"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__graduation_time"><s:property value="graduation_time"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__school"><s:property value="school"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__college_type"><s:property value="college_type"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__profession"><s:property value="profession"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__proof_people"><s:property value="proof_people"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__educational_bg"><s:property value="educational_bg"/></s:label></td>
-              <td><s:label id="init_rlgl010306EduInfoList_%{#st.index }__degree"><s:property value="degree"/></s:label></td>
-            </tr>
- </s:iterator>
-        </table>
-        
-                </td>
-            </tr>
-        </table>
-      </div>
-
-      <div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>工作经历</strong></font></td>
-          </tr>        
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_gzjl" class="tabCss">
-            <tr>
-              <th height="28" width="16%" class="thTitleItrn">开始时间</th>
-              <th width="16%" class="thTitleItrn">结束时间</th>
-              <th width="16%" class="thTitleItrn">工作单位</th>
-              <th width="16%" class="thTitleItrn">证明人</th>
-              <th width="16%" class="thTitleItrn">职务</th>
-              <th width="16%" class="thTitleItrn">电话</th>
-            </tr>
-<s:iterator value="rlgl010302WorkInfoList" status='st'>
-            <tr>
-              <td height="25">
-              <s:label id="init_rlgl010306WorkInfoList_%{#st.index }__starttime">
-              <s:property value="starttime"/>
-              </s:label>
-              </td>
-              <td><s:label id="init_rlgl010306WorkInfoList_%{#st.index }__endtime"><s:property value="endtime"/></s:label></td>
-              <td><s:label id="init_rlgl010306WorkInfoList_%{#st.index }__workunit"><s:property value="workunit"/></s:label></td>
-              <td><s:label id="init_rlgl010306WorkInfoList_%{#st.index }__proofpeople"><s:property value="proofpeople"/></s:label></td>
-              <td><s:label id="init_rlgl010306WorkInfoList_%{#st.index }__position"><s:property value="position"/></s:label></td>
-              <td><s:label id="init_rlgl010306WorkInfoList_%{#st.index }__tel"><s:property value="tel"/></s:label></td>
-            </tr> 
- </s:iterator>
-          </table>
-       
-                </td>
-            </tr>
-        </table>
-      </div>
-      <div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>党派信息</strong></font></td>
-          </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_dpxx" class="tabCss">
-            <tr>
-              <th height="28" width="30%" class="thTitleItrn">加入时间</th>
-              <th width="30%" class="thTitleItrn">党派名称</th>
-              <th width="30%" class="thTitleItrn">预备/正式</th>
-            </tr>
-<s:iterator value="rlgl010302PartisanInfoList" status='st'>
-            <tr>
-              <td><s:label id="init_rlgl010306PartisanInfoList_%{#st.index }__jointime"><s:property value="jointime"/></s:label></td>
-              <td><s:label id="init_rlgl010306PartisanInfoList_%{#st.index }__partisan_nm"><s:property value="partisan_nm"/></s:label></td>
-              <td><s:label id="init_rlgl010306PartisanInfoList_%{#st.index }__prep_or_officially"><s:property value="prep_or_officially"/></s:label></td>
-            </tr> 
- </s:iterator>
-          </table>
-                </td>
-            </tr>
-        </table>
-      </div>
-
-<div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>导师信息</strong></font></td>
-          </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_dpxx" class="tabCss">
-            <tr>
-            <th height="28" width="20%" class="thTitleItrn">导师类别</th>
-              <th height="28" width="20%" class="thTitleItrn">导师姓名</th>
-              <th width="20%" class="thTitleItrn">所在大学</th>
-              <th width="20%" class="thTitleItrn">研究方向</th>
-            </tr>
-<s:iterator value="rlgl010302TutorInfoList" status='st'>
-            <tr>
-            <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__teachertype"><s:property value="teachertype"/></s:label></td>
-              
-              <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__name"><s:property value="name"/></s:label></td>
-              <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__school"><s:property value="school"/></s:label></td>
-              <td>
-              <s:label id="init_rlgl010306TutorInfoList_%{#st.index }__researcharea">
-              <s:property value="researcharea"/>
-              </s:label></td>
-            </tr> 
- </s:iterator>
-          </table>
-                </td>
-            </tr>
-        </table>
-      </div>
-
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+	  <div class="am-modal-dialog">
+	    <div class="am-modal-hd">提示信息</div>
+	    <div class="am-modal-bd" id="modal-confirm">
+	    </div>
+	    <div class="am-modal-footer">
+	      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+	      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+	    </div>
+	  </div>
+	</div>
 <!-- 操作按扭 -->
 <table width="70%" align="center" border="0" cellspacing="1" cellpadding="0">
 <tr>
     <td height="50" align="center">
 <s:if test="%{updateAction == null}">
 <s:if test="%{personnel.personnel_isapproval.trim() != '001'}"> 
-<input type="button" name="btnUpdate" id="btnUpdate" class="inp_L3" value="修改" onClick="updatePersonnel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" class="am-btn am-btn-danger" onClick="updatePersonnel();"value="修改"  id="btnUpdate" name="btnUpdate"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </s:if>
 </s:if>
 <s:if test="%{backAction.trim() != ''}">
- <input type="button" class="inp_L3" value="返回" name="btnBack" id="btnBack">
+ <input type="button" class="am-btn am-btn-danger"  id="btnBack" value="返回" name="btnBack"/>
 </s:if>
 </td>
 </tr>

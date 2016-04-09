@@ -41,61 +41,7 @@ response.addHeader("Cache-Control", "no-cache");
 				$("form").attr("action", "rlgl010306Change.action");
 				$("form").submit();
 		    }
-			//专业技术
-			function addNewZyjszwxx(table_id) 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg1");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			} 
-			//行政职务信息
-			function addNewXzzwxx(table_id) 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg2");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			} 
-			//社会关系
-			function addNewShgx(table_id) 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg3");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			}
-			//教育经历
-			function addNewJyjl(table_id) 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg4");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			} 
-			//工作经历
-			function addNewGzjl(table_id) 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg5");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			} 
+			
 			//党派信息
 			function addNewDpxx(table_id) 
 			{   if(objectArray==""){
@@ -107,89 +53,85 @@ response.addHeader("Cache-Control", "no-cache");
 				$("form").attr("action", "rlgl010306DangpaiChange.action");
 				$("form").submit();
 			} 
-			//资格信息
-			function addNewZyzgxx(table_id) 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg7");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			} 
-			//执业信息
-			function addPractice() 
-			{   if(objectArray==""){
-		        	objectArray=$("#changedObject").val();
-		        }
-				$("#objectArray").val(objectArray);
-				$("#changedObject").val(objectArray);
-				$("#addFlg").val("addFlg8");
-				$("form").attr("action", "rlgl010306Change.action");
-				$("form").submit();
-			} 
+			
 			function back(){
-				confirmMessage("CM015", goBack);
+				$("#modal-confirm").text(" 是否确认退出该页面？");
+				$('#my-confirm').modal({
+			        relatedTarget: this,
+			        onConfirm: function(options) {
+			        	history.go(-1);
+			        },
+			        onCancel: function() {
+			          return;
+			        }
+			      });
 		    }
-		    function goBack(){
-		    	history.go(-1);
-		    }
+		    
 		    function delet(object,tableid){
 			    var delFlg=false;
 			    var iRow=0;
 			    var checked = $("input[type='checkbox'][name='" + object + "']"); 
 				$(checked).each(function(){ 
 					iRow++;
-						if($(this).attr("checked")==true)
-						{ 
-							delFlg=true; 
-						} 
-					});
+					if($(this).is(':checked')==true)
+					{ 
+						delFlg=true; 
+					} 
+				});
 				
 				if(iRow==1){
-					alertMessage("AM045");
+					$("#modal-alert").text("请至少保留一行！");
+					$('#my-alert').modal();
 					return;
 				}
 				if (delFlg==false) {
-				alertMessage("AM042");
+				$("#modal-alert").text("请选择对象！");
+				$('#my-alert').modal();
 				return;
 				}
 				var ids="";
 				var idsArray=new Array();
-				var doDelet = function (){
-				    checked = $("input[type='checkbox'][name='" + object + "']"); 
-					$(checked).each(function(){ 
-					if($(this).attr("checked")==true)
-					{ 
-						ids = $(this).parent().parent().find("input").map(function(){
-	                    return this.id;
-	                	}).get().join(",");
+				
+				$("#modal-confirm").text(" 是否确认删除这条信息？");
+				$('#my-confirm').modal({
+			        relatedTarget: this,
+			        onConfirm: function(options) {
+			        	checked = $("input[type='checkbox'][name='" + object + "']"); 
+						$(checked).each(function(){ 
+						if($(this).is(':checked')==true)
+						{ 
+							ids = $(this).parent().parent().find("input").map(function(){
+		                    return this.id;
+		                	}).get().join(",");
 
-	                	idsArray=ids.split(",");
-	                	for(var i=0;i<idsArray.length;i++){
-				      		if(objectArray.contains(idsArray[i])){
-				      			objectArray.remove(idsArray[i]);
-				      		}
+		                	idsArray=ids.split(",");
+		                	for(var i=0;i<idsArray.length;i++){
+					      		if(objectArray.contains(idsArray[i])){
+					      			objectArray.remove(idsArray[i]);
+					      		}
+							}
+		                	ids = $(this).parent().parent().find("select").map(function(){
+		                    	return this.id;
+		                	}).get().join(",");
+		                	
+							idsArray=ids.split(",");
+		                	for(var i=0;i<idsArray.length;i++){
+					      		if(objectArray.contains(idsArray[i])){
+					      			objectArray.remove(idsArray[i]);
+					      		}
+							}
+							$("#objectArray").val(objectArray);
+							$("#changedObject").val(objectArray);
+							$(this).parent().parent().remove(); 
 						}
-	                	ids = $(this).parent().parent().find("select").map(function(){
-	                    return this.id;
-	                	}).get().join(",");
-	                	
-						idsArray=ids.split(",");
-	                	for(var i=0;i<idsArray.length;i++){
-				      		if(objectArray.contains(idsArray[i])){
-				      			objectArray.remove(idsArray[i]);
-				      		}
-						}
-						$("#objectArray").val(objectArray);
-						$("#changedObject").val(objectArray);
-						$(this).parent().parent().remove(); 
-					}
-					}); 
-				};
-				confirmMessage("CM016", doDelet);
+						});
+			        },
+			        onCancel: function() {
+			          return;
+			        }
+			      });
 		    }
+		    
 		    function getRowCount(object){
 		    var count=0;
 		    var checked = $("input[type='checkbox'][name='" + object + "']"); 
@@ -200,39 +142,21 @@ response.addHeader("Cache-Control", "no-cache");
 		    }
 		    // 【提交】按钮的事件定义
 		    function doSaveAction() {
-		      		if(checkItems() == true){
-   				    	$("#objectArray").val(objectArray);
-						$("#changedObject").val(objectArray);
-					    $("#saveAction").val("1");
-					    $("form").attr("action", "rlgl010306DangpaiAdd.action");
-					    $("form").submit();
-		      		}		    			
+	      		if(checkItems() == true){
+  				    	$("#objectArray").val(objectArray);
+					$("#changedObject").val(objectArray);
+				    $("#saveAction").val("1");
+				    $("form").attr("action", "rlgl010306DangpaiAdd.action");
+				    $("form").submit();
+	      		}		    			
 		    }
 		    
 		    // 页面上的验证组合
 		    function checkItems(){
-		    	// 专业技术职务信息 验证
-		    	if(tab_zyjuzz()==true){
-		    		// 行政职务信息 验证
-			    	if(xzzw_check() == true){
-			    	    //社会关系 验证
-		    			if(shgx_check() == true){
-				    		// 教育经历——check
-					    	if(jyjl_check() == true){
-						    	if(gzjl_check() == true){
-							    	if(dpxx_check() == true){
-								    	// 导师信息——check
-								    	if(dsxx_check()==true){
-								    	   return true;
-								    	}
-							    	}
-						    	}
-					    	}
-				    	}
-		    		}
-		    	}	
-		    	
-		    
+		    	// 党派信息 验证
+		    	if(dpxx_check() == true){
+			    	   return true;
+			    	}
 		    }
 		    //check输入框的值是否为空的js
 		 function checkValue(kongjianId){
@@ -244,245 +168,7 @@ response.addHeader("Cache-Control", "no-cache");
             }
             
          }
-         // 循环多行表格（专业技术职务信息），进行数据的验证
-         function tab_zyjuzz(){
-             for(var i = 0; i < $('.zyjszw_name').size(); i++){
-             // 名字
-             if($('.onelevel').eq(i).val()==''){
-               	    if($('.zyjszw_name').eq(i).val() != ''){
-                    alert("请选择级别信息！");
-                    $('.onelevel').eq(i).focus();
-                    return false;
-                    }
-              }
-               if($('.onelevel').eq(i).val()!='' && $('.twolevel').eq(i).val()=='' &&  $('.zyjszw_name').eq(i).val() != ''){
-                    	alert("请选择级别信息！");
-                    	$('.twolevel').eq(i).focus();
-                    	return false;
-               }
-                 if($('.onelevel').eq(i).val()!='' && $('.twolevel').eq(i).val() !='' 
-                     && $('.threelevel').eq(i).val() =='' &&  $('.zyjszw_name').eq(i).val() != ''){
-                    	alert("请选择级别信息！");
-                    	$('.threelevel').eq(i).focus();
-                    	return false;
-                }
-                
-                
-               // 审批机关
-              if($('.onelevel').eq(i).val()==''){
-               	    if($('.zyjszw_spjg').eq(i).val() != ''){
-                    alert("请选择级别信息！");
-                    $('.onelevel').eq(i).focus();
-                    return false;
-                    }
-              }
-               if($('.onelevel').eq(i).val()!='' && $('.twolevel').eq(i).val()=='' &&  $('.zyjszw_spjg').eq(i).val() != ''){
-                    	alert("请选择级别信息！");
-                    	$('.twolevel').eq(i).focus();
-                    	return false;
-               }
-                 if($('.onelevel').eq(i).val()!='' && $('.twolevel').eq(i).val() !='' 
-                     && $('.threelevel').eq(i).val() =='' &&  $('.zyjszw_spjg').eq(i).val() != ''){
-                    	alert("请选择级别信息！");
-                    	$('.threelevel').eq(i).focus();
-                    	return false;
-                }
-                // 取得日期
-              if($('.onelevel').eq(i).val()==''){
-               	    if($('.zyjszw_qdsj').eq(i).val() != ''){
-                    alert("请选择级别信息！");
-                    $('.onelevel').eq(i).focus();
-                    return false;
-                    }
-              }
-               if($('.onelevel').eq(i).val()!='' && $('.twolevel').eq(i).val()=='' &&  $('.zyjszw_qdsj').eq(i).val() != ''){
-                    	alert("请选择级别信息！");
-                    	$('.twolevel').eq(i).focus();
-                    	return false;
-               }
-                 if($('.onelevel').eq(i).val()!='' && $('.twolevel').eq(i).val() !='' 
-                     && $('.threelevel').eq(i).val() =='' &&  $('.zyjszw_qdsj').eq(i).val() != ''){
-                    	alert("请选择级别信息！");
-                    	$('.threelevel').eq(i).focus();
-                    	return false;
-                }
-            }
-            return true;
-         }
-         
-        // 行政职务信息验证
-        function xzzw_check(){
-            for(var i = 0;i<$('.rzfs').size();i++){
-              if($('.zwmc').eq(i).val()==''){
-                 if($('.rzfs').eq(i).val() !=''){
-                    alert("请选择职务名称信息！");
-                    $('.zwmc').eq(i).focus();
-                    return false;
-                 }
-                 
-                 if($('.zwlb').eq(i).val() !=''){
-                 	alert("请选择职务名称信息！");
-                    $('.zwmc').eq(i).focus();
-                    return false;
-                 }
-                 if($('.zwjb').eq(i).val() !=''){
-                 	alert("请选择职务名称信息！");
-                    $('.zwmc').eq(i).focus();
-                    return false;
-                 }
-                 // 任职日期与任职文号
-                 if($('.rzrq').eq(i).val() !=''){
-                 	alert("请选择职务名称信息！");
-                    $('.zwmc').eq(i).focus();
-                    return false;
-                 }
-                 if($('.rzwh').eq(i).val() !=''){
-                 	alert("请选择职务名称信息！");
-                    $('.zwmc').eq(i).focus();
-                    return false;
-                 }
-              }
-            }
-            return true;
-        }
-        //社会关系——验证
-        function shgx_check(){
-            for(var i = 0;i<$('.ybrgx').size();i++){
-                if($('.ybrgx').eq(i).val() ==''){
-                   if($('.xm').eq(i).val() !=''){
-                   		alert("请填写与本人关系信息！");
-                   		$('.ybrgx').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.csrq').eq(i).val() !=''){
-                   		alert("请填写与本人关系信息！");
-                   		$('.ybrgx').eq(i).focus();
-                   		return false;
-                   }
-
-                   if($('.gzdw').eq(i).val() !=''){
-                   		alert("请填写与本人关系信息！");
-                   		$('.ybrgx').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.zw').eq(i).val() !=''){
-                   		alert("请填写与本人关系信息！");
-                   		$('.ybrgx').eq(i).focus();
-                   		return false;
-                   }
-                }
-                if($('.ybrgx').eq(i).val() !='' && $('.xm').eq(i).val() ==''){
-                	 if($('.csrq').eq(i).val() !=''){
-                   		alert("请填写姓名信息！");
-                   		$('.xm').eq(i).focus();
-                   		return false;
-                   }
-
-                   if($('.gzdw').eq(i).val() !=''){
-                   		alert("请填写姓名信息！");
-                   		$('.xm').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.zw').eq(i).val() !=''){
-                   		alert("请填写姓名信息！");
-                   		$('.xm').eq(i).focus();
-                   		return false;
-                   }
-                
-                }
-            }
-            return true;
-        }
-        // 教育经历——check
-        function jyjl_check(){
-        	for(var i = 0;i<$('.xxxs').size();i++){
-        		if($('.xxxs').eq(i).val() ==''){
-        			 if($('.rxsj').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-        			 if($('.bysj').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.byyx').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.yxlx').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.sxzy').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.zmr').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.xl').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.xw').eq(i).val() !=''){
-                   		alert("请选择学习形式信息！");
-                   		$('.xxxs').eq(i).focus();
-                   		return false;
-                   }
-        		}
-        	}
-        	return true;
-        }
-        // 工作经历
-        function gzjl_check(){
-        	for(var i = 0;i<$('.gz_kssj').size();i++){
-        		if($('.gz_kssj').eq(i).val() ==''){
-        			 if($('.gz_jssj').eq(i).val() !=''){
-                   		alert("请填写开始时间信息！");
-                   		$('.gz_kssj').eq(i).focus();
-                   		return false;
-                   }
-                    if($('.gz_gzdw').eq(i).val() !=''){
-                   		alert("请填写开始时间信息！");
-                   		$('.gz_kssj').eq(i).focus();
-                   		return false;
-                   }
-                    if($('.gz_zmr').eq(i).val() !=''){
-                   		alert("请填写开始时间信息！");
-                   		$('.gz_kssj').eq(i).focus();
-                   		return false;
-                   }
-                   if($('.gz_zw').eq(i).val() !=''){
-                   		alert("请填写开始时间信息！");
-                   		$('.gz_kssj').eq(i).focus();
-                   		return false;
-                   }
-        	}
-        	if($('.gz_kssj').eq(i).val() !='' && $('.gz_jssj').eq(i).val() !=''){
-        	    if($('.gz_gzdw').eq(i).val()==''){
-        	      if($('.gz_zmr').eq(i).val()==''){
-        	      	alert("请填写工作单位信息！");
-        	        $('.gz_gzdw').eq(i).focus();
-        	        return false;
-        	      }
-        	      if($('.gz_zw').eq(i).val()==''){
-        	      	alert("请填写工作单位信息！");
-        	        $('.gz_gzdw').eq(i).focus();
-        	        return false;
-        	      }
-        	    }
-        	}
-         }
-         return true;
-       }
+        
        // 党派信息_check()
        function dpxx_check(){
        		for(var i = 0;i<$('.dp_jrsj').size();i++){
@@ -501,83 +187,52 @@ response.addHeader("Cache-Control", "no-cache");
       		 }
       		 return true;
       		}
-      // 导师信息-check
-      function dsxx_check(){
-      		if($("#dslb").val() ==''){
-      			if($("#dsxm").val() !=''){
-      			 	alert("请选择导师类别信息！");
-      			 	$("#dslb").focus();
-      			 	return false;
-      			}
-      			 if($("#szdx").val() !=''){
-      			 	alert("请选择导师类别信息！");
-      			 	$("#dslb").focus();
-      			 	return false;
-      			}
-      			 if($("#yjfx").val() !=''){
-      			 	alert("请选择导师类别信息！");
-      			 	$("#dslb").focus();
-      			 	return false;
-      			}
-      		}
-      		if($("#dslb").val() !='' && $("#dsxm").val() ==''){
-      		      	if($("#szdx").val() !=''){
-      			 	alert("请填写导师姓名信息！");
-      			 	$("#dsxm").focus();
-      			 	return false;
-      			}
-      			 if($("#yjfx").val() !=''){
-      			 	alert("请填写导师姓名信息！");
-      			 	$("#dsxm").focus();
-      			 	return false;
-      			}
-      		}
-      		return true;
-      }
+      
       // 提交按钮的事件
-			function commitAction() {
-			 if(checkItems() == true){
-					var checkFlg = 0;
-					$("input[id='rlgl010306PractitionersInfoList_certificate_no']").each(function(idx, obj) {
-				        $(this).val(Trim($(this).val()));
-				        if($(this).val() == "")
-				        {
-				            checkFlg++;
-				        }
-				    });
-				    if (checkFlg > 0)
-				    { 
-				        alertMessage("AM021");
-			            return false;
-				    }
-					$("#objectArray").val(objectArray);
-					$("#changedObject").val(objectArray);
-				    $("#saveAction").val("0");
-				    $("form").attr("action", "rlgl010306DangpaiAdd.action");
-				    $("form").submit();
-			 
-			 }
-	
-		    }
+		function commitAction() {
+		 if(checkItems() == true){
+				var checkFlg = 0;
+				$("input[id='rlgl010306PractitionersInfoList_certificate_no']").each(function(idx, obj) {
+			        $(this).val(Trim($(this).val()));
+			        if($(this).val() == "")
+			        {
+			            checkFlg++;
+			        }
+			    });
+			    if (checkFlg > 0)
+			    { 
+			    	$("#modal-alert").text("请填写必须输入项目！");
+					$('#my-alert').modal();
+		            return false;
+			    }
+				$("#objectArray").val(objectArray);
+				$("#changedObject").val(objectArray);
+			    $("#saveAction").val("0");
+			    $("form").attr("action", "rlgl010306DangpaiAdd.action");
+			    $("form").submit();
+		 	}
+	    }
 		    
-		    function commitCheck(){
-		    // 电话号码验证
-			    if(!checkInput($("#rlgl010306Add_personnel_personnel_tel").val())){
-				    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_tel").value)){
-				    	alertMessage("AM017");
-				    	$("#rlgl010306Add_personnel_personnel_tel").focus();
-				    	return false;
-				    }
-			    }
-			    if(!checkInput($("#rlgl010306Add_personnel_personnel_officetel").value)){
-				    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_officetel").value)){
-				    	alertMessage("AM017");
-				    	$("#rlgl010306Add_personnel_personnel_officetel").focus();
-				    	return false;
-				    }
-			    }
-			    return true;
+    function commitCheck(){
+    // 电话号码验证
+	    if(!checkInput($("#rlgl010306Add_personnel_personnel_tel").val())){
+		    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_tel").value)){
+		    	$("#modal-alert").text("请输入正确的电话号码！");
+				$('#my-alert').modal();
+		    	$("#rlgl010306Add_personnel_personnel_tel").focus();
+		    	return false;
 		    }
+	    }
+	    if(!checkInput($("#rlgl010306Add_personnel_personnel_officetel").value)){
+		    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_officetel").value)){
+		    	$("#modal-alert").text("请输入正确的电话号码！");
+				$('#my-alert').modal();
+		    	$("#rlgl010306Add_personnel_personnel_officetel").focus();
+		    	return false;
+		    }
+	    }
+	    return true;
+    }
 		    
 	function onelevelChange(onelevel,twolevel,threelevel){
 		$("#"+onelevel).change(function(){
@@ -647,10 +302,19 @@ response.addHeader("Cache-Control", "no-cache");
 	}
 	 createReviewMark($("#changedObject").val(),"update");
 	 doMark();
-	 // 返回事件的定义
-      $("#btnBack").click(function(){
-          confirmMessage("CM005", backAction);
-      });
+	// 返回事件的定义
+     $("#btnBack").click(function(){
+         $("#modal-confirm").text("是否确认返回前画面？");
+			$('#my-confirm').modal({
+		        relatedTarget: this,
+		        onConfirm: function(options) {
+		        	backAction();
+		        },
+		        onCancel: function() {
+		          return;
+		        }
+		      });
+     });
 	    // 被修改项目ID保存到数组
          $(':text,:file,textarea').change(function(flgl, obj) {
             if ($(this).val() != this.defaultValue) {
@@ -910,10 +574,12 @@ function doMark(){
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
             <td height="30" align="right">
-              <input type="button" name="btn_Add" class="inp_L3" value="行追加" onClick="addNewDpxx('tab_dpxx')"/>&nbsp;&nbsp;&nbsp;&nbsp;
-              <input type="button" name="btn_Delete" class="inp_L3" value="行删除" onClick="delet('object6','tab_dpxx');"/>
-              <s:file style="display:none" name="fileProfessionalInfo" id="file6" label="选择文件" onChange="fileInput('rlgl010306PartisanInfoList',this.value)"></s:file>
-              <input type="button" name="btn_AllAdd" class="inp_L3" value="批量增加" onClick="showFileInput('file6')"/>
+              <input type="button" class="am-btn am-btn-primary" onClick="addNewDpxx('tab_dpxx')" width="100px" value="行追加" name="btn_Add"/>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="button" class="am-btn am-btn-primary" onClick="delet('object6','tab_dpxx');" width="100px" value="行删除" name="btn_Delete"/>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <s:file style="display:none" name="fileProfessionalInfo" id="file6" label="选择文件" onChange="fileInput('rlgl010306PartisanInfoList',this.value)"/>
+              <input type="button" class="am-btn am-btn-primary" onClick="showFileInput('file6')" width="100px" value="批量增加" name="btn_AllAdd"/>
             </td>
             </tr>
         </table>
@@ -921,7 +587,28 @@ function doMark(){
             </tr>
         </table>
       </div>
-     
+     <div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+	  <div class="am-modal-dialog">
+	    <div class="am-modal-hd">提示信息</div>
+	    <div class="am-modal-bd" id="modal-confirm">
+	    </div>
+	    <div class="am-modal-footer">
+	      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+	      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+	  <div class="am-modal-dialog">
+	    <div class="am-modal-hd">提示信息</div>
+	    <div class="am-modal-bd"  id="modal-alert">
+	    </div>
+	    <div class="am-modal-footer">
+	      <span class="am-modal-btn">确定</span>
+	    </div>
+	  </div>
+	</div>
 
 <!-- 操作按扭 -->
 <table width="70%" align="center" border="0" cellspacing="1" cellpadding="0">
@@ -939,14 +626,14 @@ function doMark(){
 </tr>
 <tr>
     <td height="50" align="center">
-<input type="button" class="inp_L3 btnClass_${only_search}" value="保存" onclick="doSaveAction()" name="btnSave" id="btnSave"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- <input type="button" class="inp_L3 btnClass_${only_search}" width="100" value="提交申请" onclick="commitAction()" name="btnCommit" id="btnCommit"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<s:if test="%{backAction.trim() != ''}">
- <input type="button" class="inp_L3" value="返回" name="btnBack" id="btnBack">
-</s:if>
-
- 
-</td>
+		<input type="button" class="am-btn am-btn-danger " onClick="doSaveAction()" width="100px" value="保存" name="btnSave" id="btnSave"/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 		<input type="button" class="am-btn am-btn-danger " onClick="commitAction()" width="100px" value="提交申请" name="btnCommit" id="btnCommit"/>
+ 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<s:if test="%{backAction.trim() != ''}">
+ 			<input type="button" class="am-btn am-btn-primary"  value="返回" name="btnBack" id="btnBack"/>
+		</s:if>
+	</td>
 </tr>
 </table>
 

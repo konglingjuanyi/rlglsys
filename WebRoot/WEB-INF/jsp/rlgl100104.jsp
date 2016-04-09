@@ -22,6 +22,7 @@ $(document).ready(function(){
 	     $("#rlgl100104form").attr("namespace", "/rlgl");
 	     $("#rlgl100104form").submit();
     });
+    
 	$("#select_kbn_check").click(function(){
 		if(this.checked){
 			$("#total").html("120.00");
