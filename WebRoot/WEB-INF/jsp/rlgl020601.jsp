@@ -64,10 +64,8 @@ function applyenter(naviId) {
 							style="position: relative; top: 10px; left: 10px" border="1"
 							cellpadding="2" cellspacing="2">
 							<tr>
-								<td colspan="20" width="100%" align="left"><input
-									type="button" class="inp_L3"
-									onclick="applyenter('<s:property value='naviId'/>')"
-									value="录入申请" name="btnApply" id="btnApply">
+								<td>
+								<input type="button" class="am-btn am-btn-primary" onclick="applyenter('<s:property value='naviId'/>')" value="录入申请" name="btnApply" id="btnApply"/>
 								</td>
 							</tr>
 							<tr>
@@ -113,7 +111,7 @@ function applyenter(naviId) {
 									  <div class="am-modal-dialog">
 									    <div class="am-modal-hd">提示信息</div>
 									    <div class="am-modal-bd">
-									      是否确认删除这条信息？
+									      	是否确认删除这条信息？
 									    </div>
 									    <div class="am-modal-footer">
 									      <span class="am-modal-btn" data-am-modal-cancel>取消</span>

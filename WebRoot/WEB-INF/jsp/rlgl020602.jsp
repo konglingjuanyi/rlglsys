@@ -25,7 +25,8 @@ $(document).ready(function(){
 		});
 	    if (i > 0)
 	    {
-		    alertMessage("AM021");
+	    	$("#modal-alert").text("请填写必须输入项目！");
+			$('#my-alert').modal();
 		    return false;
 	    }
 	    $("#creditForm").attr("action", "rlgl020602Submit.action");
@@ -390,13 +391,23 @@ $(document).ready(function(){
 			</s:iterator>
 			<tr>
 				<td align="center" colspan="2">&nbsp;
-					 <input type="button" class="inp_L3 btnClass_${only_search}" value="提交审核" name="Btnsubmit" id="Btnsubmit">
+					 <input type="button" class="am-btn am-btn-danger"   value="提交审核" name="Btnsubmit" id="Btnsubmit"/>
 					 &nbsp;
-					 <input type="button" class="inp_L3 btnClass_${only_search}" value="返回" name="Btnback" id="Btnback">
+					 <input type="button" class="am-btn am-btn-danger"  value="返回" name="Btnback" id="Btnback"/>
 					 &nbsp;
 				 </td>
 			</tr>
 		</table>
 	</s:form>
+	<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+	  <div class="am-modal-dialog">
+	    <div class="am-modal-hd">提示信息</div>
+	    <div class="am-modal-bd"  id="modal-alert">
+	    </div>
+	    <div class="am-modal-footer">
+	      <span class="am-modal-btn">确定</span>
+	    </div>
+	  </div>
+	</div>
 </body>
 </html>

@@ -12,7 +12,7 @@
        <if test="Mtb60formlist.item_land_flag != ''">
               AND ITEM_LAND_FLAG=#{ Mtb60formlist.item_land_flag}
        </if>
-       ORDER BY ITEM_SORT_FLAG
+       ORDER BY SHOW_SORT_FLAG
     </select>
     <!-- 登录一条新的记录SQL -->
     <insert id="submitForCredit">
