@@ -232,9 +232,12 @@ public class Rlgl010306DaoshiAction extends BaseAction {
 		}
 		
 		// 获得变更记录
+		System.out.println("======3333======"+personnel.getChange_value());
 		saveChangeValue=personnel.getChange_value();
 		objectArray=saveChangeValue;
+		System.out.println("======1111======"+change_value);
 		change_value=objectArray;
+		System.out.println("======2222======"+change_value);
 		addOrInputFlg="";
 		// 获得科室下拉列表
 		ectionlist=mtb48ectionService.getEctionList(personnel.getPersonnel_unit());

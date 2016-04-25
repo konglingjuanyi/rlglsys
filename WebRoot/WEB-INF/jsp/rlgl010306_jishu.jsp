@@ -638,8 +638,8 @@
 	              &nbsp;&nbsp;&nbsp;&nbsp;
 	              <input type="button" class="am-btn am-btn-primary" onClick="delet('object1','tab_zyjszwxx');" width="100px" value="行删除" name="btn_Delete"/>
 	              &nbsp;&nbsp;&nbsp;&nbsp;
-	              <s:file style="display:none" name="fileProfessionalInfo" id="file3" label="选择文件" onChange="fileInput('rlgl010306SocialInfoList',this.value)"/>
-	              <input type="button" class="am-btn am-btn-primary" onClick="showFileInput('file1')" width="100px" value="批量增加" name="btn_AllAdd"/>
+	              <%-- <s:file style="display:none" name="fileProfessionalInfo" id="file3" label="选择文件" onChange="fileInput('rlgl010306SocialInfoList',this.value)"/>
+	              <input type="button" class="am-btn am-btn-primary" onClick="showFileInput('file1')" width="100px" value="批量增加" name="btn_AllAdd"/> --%>
 	            </td>
             </tr>
         </table>

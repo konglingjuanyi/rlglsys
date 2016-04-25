@@ -5,7 +5,7 @@
   <head>
      <title><s:property value="getText('rlglsys.browserhead.IE')" /></title>
     <%
-response.addHeader("Cache-Control", "no-cache");
+		response.addHeader("Cache-Control", "no-cache");
 	%>
        <script type="text/javascript" language="javascript"> 
 			$(document).ready(function(){
@@ -73,7 +73,7 @@ response.addHeader("Cache-Control", "no-cache");
  <div class="content">
     <my:navigation></my:navigation>
     <table width="100%"  border="0" cellspacing="0" cellpadding="0">
-    <tr>
+    	<tr>
             <td align="center"><font color="#0066CC" style="font-size:14px;">
         </tr>
       <tr>

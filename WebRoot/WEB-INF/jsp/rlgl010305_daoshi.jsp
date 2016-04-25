@@ -71,15 +71,15 @@
             <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_dpxx" class="tabCss">
             <tr>
             <th height="28" width="20%" class="thTitleItrn">导师类别</th>
-              <th height="28" width="20%" class="thTitleItrn">导师姓名</th>
+             <!--  <th height="28" width="20%" class="thTitleItrn">导师姓名</th> -->
               <th width="20%" class="thTitleItrn">所在大学</th>
               <th width="20%" class="thTitleItrn">研究方向</th>
             </tr>
-		<s:iterator value="rlgl010302TutorInfoList" status='st'>
+		<s:iterator value="rlgl010302TutorInfoList" status='st'><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__researcharea"></s:label>
             <tr>
             <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__teachertype"><s:property value="teachertype"/></s:label></td>
               
-              <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__name"><s:property value="name"/></s:label></td>
+              <%-- <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__name"><s:property value="name"/></s:label></td> --%>
               <td><s:label id="init_rlgl010306TutorInfoList_%{#st.index }__school"><s:property value="school"/></s:label></td>
               <td>
               <s:label id="init_rlgl010306TutorInfoList_%{#st.index }__researcharea">

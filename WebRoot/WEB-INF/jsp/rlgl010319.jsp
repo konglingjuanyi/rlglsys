@@ -26,8 +26,7 @@ response.addHeader("Cache-Control", "no-cache");
 		    	// 手机号码验证
 			    if(!checkInput($("#rlgl010319Update_personnel_personnel_tel").val())){
 				    if(!checkPhoneNum($("#rlgl010319Update_personnel_personnel_tel").val())){
-				    	$("#modal-alert").text("请输入正确的电话号码！");
-						$('#my-alert').modal();
+				    	alertMessage("AM017");
 				    	$("#rlgl010319Update_personnel_personnel_tel").focus();
 				    	return false;
 				    }
@@ -47,6 +46,7 @@ response.addHeader("Cache-Control", "no-cache");
     <my:navigation></my:navigation>
     <div class="content">
     <my:message></my:message>
+    
     <table width="100%"  border="0" cellspacing="0" cellpadding="0" >
       <tr>
         <td align="center" valign="top">
@@ -122,8 +122,8 @@ response.addHeader("Cache-Control", "no-cache");
 <table width="70%" align="center" border="0" cellspacing="1" cellpadding="0">
 <tr>
     <td height="50" align="center">
- <input type="button" class="am-btn am-btn-danger " onClick="commitAction()" width="100px" value="提交" name="btnCommit" id="btnCommit"/>
- <input type="button" class="am-btn am-btn-danger " onClick="updateAction()" width="100px" value="修改" name="btnUpdate" id="btnUpdate"/>
+<input type="button" class="am-btn am-btn-danger" onClick="commitAction()" width="100px" value="提交" name="btnCommit" id="btnCommit"/>
+ <input type="button" class="am-btn am-btn-danger" onClick="updateAction()" width="100px" value="修改" name="btnUpdate" id="btnUpdate"/>
 
 </td>
 </tr>

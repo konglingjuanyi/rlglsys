@@ -8,7 +8,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/uploadPhotos.js"></script>
      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
     <%
-response.addHeader("Cache-Control", "no-cache");
+		response.addHeader("Cache-Control", "no-cache");
 	%>
        <script type="text/javascript" language="javascript"> 
 			// 被修改项目数组
@@ -159,11 +159,11 @@ response.addHeader("Cache-Control", "no-cache");
       // 导师信息-check
       function dsxx_check(){
       		if($("#dslb").val() ==''){
-      			if($("#dsxm").val() !=''){
+      			/* if($("#dsxm").val() !=''){
       			 	alert("请选择导师类别信息！");
       			 	$("#dslb").focus();
       			 	return false;
-      			}
+      			} */
       			 if($("#szdx").val() !=''){
       			 	alert("请选择导师类别信息！");
       			 	$("#dslb").focus();
@@ -175,7 +175,7 @@ response.addHeader("Cache-Control", "no-cache");
       			 	return false;
       			}
       		}
-      		if($("#dslb").val() !='' && $("#dsxm").val() ==''){
+      		/* if($("#dslb").val() !='' && $("#dsxm").val() ==''){
       		      	if($("#szdx").val() !=''){
       			 	alert("请填写导师姓名信息！");
       			 	$("#dsxm").focus();
@@ -186,7 +186,7 @@ response.addHeader("Cache-Control", "no-cache");
       			 	$("#dsxm").focus();
       			 	return false;
       			}
-      		}
+      		} */
       		return true;
       }
       // 提交按钮的事件
@@ -533,8 +533,8 @@ response.addHeader("Cache-Control", "no-cache");
                 <td style="PADDING-TOP: 2px">
             <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_dpxx" class="tabCss">
             <tr>
-              <th height="28" width="20%" class="thTitleItrn">导师类别</th>
-              <th height="28" width="20%" class="thTitleItrn">导师姓名</th>
+              <th height="28" width="20%" class="thTitleItrn">所在大学任职信息</th>
+              <!-- <th height="28" width="20%" class="thTitleItrn">导师姓名</th> -->
               <th width="20%" class="thTitleItrn">所在大学</th>
               <th width="20%" class="thTitleItrn">研究方向</th>
              
@@ -545,7 +545,7 @@ response.addHeader("Cache-Control", "no-cache");
             	<td>
             		<s:select name="rlgl010306TutorInfoList[%{#st.index }].teachertype"  id="dslb" list="teachertypelist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey=""/>
             	</td>
-              <td><s:textfield  name="rlgl010306TutorInfoList[%{#st.index }].name" id="dsxm" maxLength="20" size="30"></s:textfield></td>
+              <%-- <td><s:textfield  name="rlgl010306TutorInfoList[%{#st.index }].name" id="dsxm" maxLength="20" size="30"></s:textfield></td> --%>
               <td>
               	<s:textfield  name="rlgl010306TutorInfoList[%{#st.index }].school" id="szdx" maxLength="20" size="30"></s:textfield>
               </td>
@@ -561,7 +561,7 @@ response.addHeader("Cache-Control", "no-cache");
             	 <td>
             <s:select name="rlgl010306TutorInfoList[0].teachertype" id="dslb" list="teachertypelist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey=""/>
             </td>
-              <td><s:textfield  name="rlgl010306TutorInfoList[0].name" id="dsxm" value="%{#request.rlgl010306TutorInfoList[0].name}"  maxLength="20" size="30"></s:textfield></td>
+             <%--  <td><s:textfield  name="rlgl010306TutorInfoList[0].name" id="dsxm" value="%{#request.rlgl010306TutorInfoList[0].name}"  maxLength="20" size="30"></s:textfield></td> --%>
               <td><s:textfield  name="rlgl010306TutorInfoList[0].school"  id="szdx" value="%{#request.rlgl010306TutorInfoList[0].school}" maxLength="20" size="30"></s:textfield></td>
               <td><s:textfield  name="rlgl010306TutorInfoList[0].researcharea" id="yjfx" value="%{#request.rlgl010306TutorInfoList[0].researcharea}" maxLength="20" size="30"></s:textfield></td>
              
@@ -574,8 +574,8 @@ response.addHeader("Cache-Control", "no-cache");
             <td height="30" align="right">
               <input type="button" name="btn_Add" class="inp_L3" value="行追加" onClick="addNewDpxx('tab_dpxx')"/>&nbsp;&nbsp;&nbsp;&nbsp;
               <input type="button" name="btn_Delete" class="inp_L3" value="行删除" onClick="delet('object8','tab_dpxx');"/>&nbsp;&nbsp;&nbsp;&nbsp;
-              <s:file style="display:none" name="fileProfessionalInfo" id="file8" label="选择文件" onChange="fileInput('rlgl010306PartisanInfoList',this.value)"></s:file>
-              <input type="button" name="btn_AllAdd" class="inp_L3" value="批量增加" onClick="showFileInput('file8')"/>
+              <%-- <s:file style="display:none" name="fileProfessionalInfo" id="file8" label="选择文件" onChange="fileInput('rlgl010306PartisanInfoList',this.value)"></s:file>
+              <input type="button" name="btn_AllAdd" class="inp_L3" value="批量增加" onClick="showFileInput('file8')"/> --%>
             </td>
             </tr>
         </table>

@@ -651,8 +651,8 @@ response.addHeader("Cache-Control", "no-cache");
               &nbsp;&nbsp;&nbsp;&nbsp;
               <input type="button" class="am-btn am-btn-primary" onClick="delet('object4','tab_jyjl');" width="100px" value="行删除" name="btn_Delete"/>
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <s:file style="display:none" name="fileProfessionalInfo" id="file4" label="选择文件" onChange="fileInput('rlgl010306EduInfoList',this.value)"/>
-              <input type="button" class="am-btn am-btn-primary" onClick="showFileInput('file4')" width="100px" value="批量增加" name="btn_AllAdd"/>
+              <%-- <s:file style="display:none" name="fileProfessionalInfo" id="file4" label="选择文件" onChange="fileInput('rlgl010306EduInfoList',this.value)"/>
+              <input type="button" class="am-btn am-btn-primary" onClick="showFileInput('file4')" width="100px" value="批量增加" name="btn_AllAdd"/> --%>
             </td>
             </tr>
         </table>

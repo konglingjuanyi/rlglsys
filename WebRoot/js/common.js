@@ -568,7 +568,7 @@ function showMessage(msgType) {
         msgTitle = "系统提示信息";
     }
     options = $.extend({title: msgTitle}, options || {});
-    
+    alert($("#message").val());
    // new Boxy("<div><p>" + $("#message").val() + "</p></div>", options);
 }
 

@@ -55,7 +55,7 @@ public class MessageComponent extends Component {
 			context.append("<input type=\"hidden\" id=\"message\" name=\"message\" value=\"");
 			String msg = "";
 			for (int i = 0; i < message.size(); i++) {
-				msg = msg + (i + 1) + "." + message.get(i).getMsg() + "<br />";
+				msg = msg + (i + 1) + "." + message.get(i).getMsg();
 			}
 			context.append(msg);
 			context.append("\">");

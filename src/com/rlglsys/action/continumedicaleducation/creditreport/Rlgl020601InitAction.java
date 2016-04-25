@@ -95,8 +95,7 @@ public class Rlgl020601InitAction extends BaseAction {
         // 第几页
         int pageNo = "".equals(txtInputPage)? 0*pageCount:(Integer.valueOf(txtInputPage) - 1)*pageCount;
 		// 获得数据库数据
-		List<Mtb56creditreportingdetail> applyList = rlgl020601Service
-				.searchUnitinfo(rlgl020601,formList,pageCount,pageNo);
+		List<Mtb56creditreportingdetail> applyList = rlgl020601Service.searchUnitinfo(rlgl020601,formList,pageCount,pageNo);
 		recordCount = rlgl020601Service.getCount(rlgl020601,formList,pageCount,pageNo);;
 
 		// 定义临时变量，用以向列表中填充数据
@@ -239,6 +238,7 @@ public class Rlgl020601InitAction extends BaseAction {
 							payMentFlag ="true";
 					}
 				}
+				
 				// 省/外地继教项目|学术会议
 				if ("navi066".equals(naviId)) {
 					// 时间段
@@ -426,7 +426,6 @@ public class Rlgl020601InitAction extends BaseAction {
 		}
 
 		super.getSession().setAttribute("rlgl020601List", rlgl020601List);
-
 		return SUCCESS;
 	}
 

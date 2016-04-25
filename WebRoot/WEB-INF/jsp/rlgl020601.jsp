@@ -18,9 +18,12 @@ $(document).ready(function(){
 	{
 		$("#btnApply").attr("disabled","disabled");
 	}
-	
-	$('#btnDelete').on('click', function() {
-      	$('#my-confirm').modal({
+});
+
+
+function deleteNo(applyNo) {
+    $("#apply_No").val(applyNo);
+    $('#my-confirm').modal({
         relatedTarget: this,
         onConfirm: function(options) {
         	$("form").attr("action", "rlgl020601Delete.action");
@@ -30,10 +33,6 @@ $(document).ready(function(){
           return;
         }
       });
-    });
-});
-function deleteNo(applyNo) {
-    $("#apply_No").val(applyNo);
 }
 function applyenter(naviId) {
 	$("#navi_Id").val(naviId);
@@ -98,8 +97,13 @@ function applyenter(naviId) {
 											</td>
 										</s:if>
 									</s:iterator>
-									<td height="20" class="lc2"><s:if
-											test="rlgl020601List[#status.index].end_mark == 0">
+									<td height="20" class="lc2">
+										<s:if	test="rlgl020601List[#status.index].credit_category == '001'">I类学分
+										</s:if>
+										<s:else>II类学分</s:else>
+									</td>
+									<td height="20" class="lc2">
+										<s:if test="rlgl020601List[#status.index].end_mark == 0">
 												<button  type="button"  class="am-btn am-btn-warning"  id="btnDelete" onclick="deleteNo('<s:property value='rlgl020601List[#status.index].apply_no'/>')"
 												name="btnDelete">删除</button>
 										</s:if> <s:else>
