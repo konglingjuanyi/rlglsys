@@ -83,10 +83,8 @@ function applyenter(naviId) {
 									</td>
 									<td height="20" class="lc2"><s:property
 											value='rlgl020601List[#status.index].credit' /></td>
-									<td height="20" class="lc2"><a href="javascript:void(0)"
-										onclick="return showApplyInfo('<s:property value='rlgl020601List[#status.index].flow'/>','<s:property value='rlgl020601List[#status.index].stutas'/>')">
-											<s:property
-												value='rlgl020601List[#status.index].check_result' /> </a>
+									<td height="20" class="lc2"><a href="javascript:void(0)" onclick="return alert('<s:property value='rlgl020601List[#status.index].flow'/>','<s:property value='rlgl020601List[#status.index].stutas'/>')">
+											<s:property value='rlgl020601List[#status.index].check_result' /> </a>
 									</td>
 									<s:iterator value="rlgl020601List[#status.index].expandInfo"
 										id="outExpandInfo" status="expandStatus">

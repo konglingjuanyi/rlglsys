@@ -25,7 +25,7 @@ import com.rlglsys.util.Constant;
 import com.rlglsys.util.DateTimeManager;
 import com.rlglsys.util.uploadPhotos;
 
-public class Rlgl010306DangpaiAddAction extends BaseAction {
+public class Rlgl010306JibenAddAction extends BaseAction {
 	private static final long serialVersionUID = 1L;
 	private IRlgl010306Service rlgl010306Service;
 	private IMTb04UnitService mtb04UnitService;

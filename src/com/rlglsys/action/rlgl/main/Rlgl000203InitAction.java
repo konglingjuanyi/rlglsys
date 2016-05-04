@@ -1297,6 +1297,7 @@ public class Rlgl000203InitAction extends BaseAction {
 			// 获得当前学分年度（申请年度）
 			String area_id = mtb02AdmService.getAdmName("237", "01");
 			String credit_year = Integer.toString(common.getNowCreditYear(area_id, rlgl050101Service));
+			System.out.println(area_id+"============当前学分年度============"+credit_year);
 			// 用户对象
 			Mtb01User loginUser = (Mtb01User) super.getSession(Constant.SESSION_KEY_LOGINUSER);
 			userId = loginUser.getPersonnel_id();
@@ -1314,6 +1315,7 @@ public class Rlgl000203InitAction extends BaseAction {
 					// 二类学分统计
 					int II_credit = mtb02AdmService.getCourseCreditSum(userId, credityear, "002");
 					score = score + I_credit + II_credit;
+					System.out.println("年度："+i+"===一类学分===="+I_credit+"======二类学分========"+II_credit);
 					switch (i) {
 					case 0:
 						rlgl400102bean.setIcredit6(I_credit);

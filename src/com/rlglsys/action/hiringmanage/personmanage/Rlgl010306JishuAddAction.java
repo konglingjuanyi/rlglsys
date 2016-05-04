@@ -106,7 +106,7 @@ public class Rlgl010306JishuAddAction extends BaseAction {
                 	}
                 	else
                 	{
-        	            unitNo = unitNo.substring(0, 4);
+        	            unitNo = unitNo.substring(0, 6);
         	            processInfo.setUnit_no(unitNo);
                 	}
 		        }

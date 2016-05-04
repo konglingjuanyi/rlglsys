@@ -176,10 +176,9 @@ response.addHeader("Cache-Control", "no-cache");
 		    	   if(zylb !=''){
 			    	   alert("请填写资格证编号信息！");
 			    	   $("#rlgl010306PractitionersInfoList_certificate_no").focus();
-		    	   return false;
+		    	  	   return false;
 		    	   }
 		    	}
-		     
 		    	
 		    	// 行政职务信息 验证
 		    	if(xzzw_check() == true){
@@ -826,9 +825,9 @@ response.addHeader("Cache-Control", "no-cache");
             </s:if>
             <s:else>
             	<tr>
-              <td height="25"><s:textfield  name="rlgl010306PractitionersInfoList[0].certificate_no" value="%{#request.rlgl010306PractitionersInfoList[0].certificate_no}" maxLength="20" size="9"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issuing_authority" value="%{#request.rlgl010306PractitionersInfoList[0].issuing_authority}" maxLength="20" size="9"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issue_time" value="%{#request.rlgl010306PractitionersInfoList[0].issue_time}"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="9"></s:textfield></td>
+              <td height="25"><s:textfield  name="rlgl010306PractitionersInfoList[0].certificate_no" value="%{#request.rlgl010306PractitionersInfoList[0].certificate_no}" id="rlgl010306PractitionersInfoList_certificate_no" maxLength="20" size="9"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issuing_authority" value="%{#request.rlgl010306PractitionersInfoList[0].issuing_authority}"  id="rlgl010306PractitionersInfoList_issuing_authority" maxLength="20" size="9"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PractitionersInfoList[0].issue_time" value="%{#request.rlgl010306PractitionersInfoList[0].issue_time}"   id="rlgl010306PractitionersInfoList_issue_time" onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="9"></s:textfield></td>
               
               <td>
               		<s:select name="rlgl010306PractitionersInfoList[0].type"  cssClass="zg_zylb" id="pratypelist_0"  list="protypelist" listKey="adm_num" listValue="adm_name" headerValue="-请选择类别-" headerKey=""  onChange="pratypeChange('pratypelist_0','pralevellist_0')" />
@@ -901,8 +900,6 @@ response.addHeader("Cache-Control", "no-cache");
    <td height="50" align="center">
 		<input type="button" class="am-btn am-btn-danger " onClick="doSaveAction()" width="100px" value="保存" name="btnSave" id="btnSave"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 		<input type="button" class="am-btn am-btn-danger " onClick="commitAction()" width="100px" value="提交申请" name="btnCommit" id="btnCommit"/>
- 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<s:if test="%{backAction.trim() != ''}">
  			<input type="button" class="am-btn am-btn-primary"  value="返回" name="btnBack" id="btnBack"/>
 		</s:if>

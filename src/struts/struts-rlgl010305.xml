@@ -8,6 +8,10 @@
             method="execute">
             <result name="success">/WEB-INF/jsp/rlgl010305.jsp</result>
         </action>
+        <action name="rlgl010305Jiben" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305JibenAction"
+            method="execute">
+            <result name="success">/WEB-INF/jsp/rlgl010305_jiben.jsp</result>
+        </action>
         <action name="rlgl010305Zige" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010305ZigeAction"
             method="execute">
             <result name="success">/WEB-INF/jsp/rlgl010305_zige.jsp</result>

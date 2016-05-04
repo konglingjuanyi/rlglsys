@@ -99,7 +99,6 @@ public class Rlgl000202InitAction extends BaseAction {
         	if (super.getSession("selectPage") != null)
         	{
         		selectPage = (String)super.getSession("selectPage");
-        		System.out.println("selectPage:"+selectPage);
         	}
         	
         	 // 入口判断标记
@@ -143,14 +142,9 @@ public class Rlgl000202InitAction extends BaseAction {
             {
                 roleactionInfo.setEntrance(entrance);
                 menuList1 = menuService.getMenuInfoByUserList(roleactionInfo);
-                for(int i = 0; i < menuList1.size(); i++){
-                	   System.out.println("======0000000000=====menu:"+menuList1.get(i).getMenu_name());
-                   }
+               
             } else {
             	menuList1 = menuService.getMenuInfoList("");
-            	for(int i = 0; i < menuList1.size(); i++){
-                	   System.out.println("======3333333=====menu:"+menuList1.get(i).getMenu_name());
-                   }
             }
             
             
@@ -158,9 +152,7 @@ public class Rlgl000202InitAction extends BaseAction {
             {
             	menuList1 = this.filteMenuList(menuList1, unitStatus, selectPage);
             }
-            for(int i = 0; i < menuList1.size(); i++){
-            	   System.out.println("======44444444=====menu:"+menuList1.get(i).getMenu_name());
-               }
+           
 //            // 个人菜单过滤
 //            if ("loginpage3".equals(selectPage) || "loginpage4".equals(selectPage))
 //            {
@@ -171,15 +163,8 @@ public class Rlgl000202InitAction extends BaseAction {
             // 个人菜单过滤
             if ("loginpage3".equals(selectPage))
             {
-            	for(int i = 0; i < menuList1.size(); i++){
-               	   System.out.println("======1111=====menu:"+menuList1.get(i).getMenu_name());
-                  }
                 // 过滤
                menuList1 = this.filteMenuList3(menuList1);
-               
-               for(int i = 0; i < menuList1.size(); i++){
-            	   System.out.println("=====2222======menu:"+menuList1.get(i).getMenu_name());
-               }
             }
 
             // 实例化MenuList

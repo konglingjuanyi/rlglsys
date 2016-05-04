@@ -142,7 +142,7 @@ response.addHeader("Cache-Control", "no-cache");
 		    // 【提交】按钮的事件定义
 		    function doSaveAction() {
 	      		if(checkItems() == true){
-  				    	$("#objectArray").val(objectArray);
+  				    $("#objectArray").val(objectArray);
 					$("#changedObject").val(objectArray);
 				    $("#saveAction").val("1");
 				    $("form").attr("action", "rlgl010306ZhiyeAdd.action");
@@ -595,7 +595,7 @@ response.addHeader("Cache-Control", "no-cache");
               </td>
               <td><!-- 执业范围 -->
               		 范围1:<s:select name="rlgl010306PracticeInfoList[%{#st.index }].area1" id ="zyfw1" list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
-      			<br>范围2:<s:select name="rlgl010306PracticeInfoList[%{#st.index }].area2" d ="zyfw2"  list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
+      			<br>范围2:<s:select name="rlgl010306PracticeInfoList[%{#st.index }].area2" id ="zyfw2"  list="proArealist" listKey="adm_num" listValue="adm_name" headerValue="-请选择-" headerKey="" />
                      </td>
               <td><!-- 执业地点-->
             	  地点1:<s:textfield  name="rlgl010306PracticeInfoList[%{#st.index }].place1"  id="zydd1" maxLength="20" size="4"></s:textfield>
@@ -613,9 +613,9 @@ response.addHeader("Cache-Control", "no-cache");
             </s:if>
             <s:else>
             	<tr>
-              <td height="25"><s:textfield  name="rlgl010306PracticeInfoList[0].certificate_no" value="%{#request.rlgl010306PracticeInfoList[0].certificate_no}" maxLength="20" size="4"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issuing_authority" value="%{#request.rlgl010306PracticeInfoList[0].issuing_authority}" maxLength="20" size="4"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issue_time" value="%{#request.rlgl010306PracticeInfoList[0].issue_time}"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="4"></s:textfield></td>
+              <td height="25"><s:textfield  name="rlgl010306PracticeInfoList[0].certificate_no" value="%{#request.rlgl010306PracticeInfoList[0].certificate_no}"  id="zyzbh"  maxLength="20" size="4"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issuing_authority" value="%{#request.rlgl010306PracticeInfoList[0].issuing_authority}"  id="zyzfzjg" maxLength="20" size="4"></s:textfield></td>
+              <td><s:textfield  name="rlgl010306PracticeInfoList[0].issue_time" value="%{#request.rlgl010306PracticeInfoList[0].issue_time}"   id="zyzfzrq"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" size="4"></s:textfield></td>
               
               <td>
               <s:select name="rlgl010306PracticeInfoList[0].type"  cssClass="zy_zylb" id="practypelist_0"  list="protypelist" listKey="adm_num" listValue="adm_name" headerValue="-请选择类别-" headerKey=""  onChange="pratypeChange('practypelist_0','praclevellist_0')" />
@@ -699,8 +699,6 @@ response.addHeader("Cache-Control", "no-cache");
     <td height="50" align="center">
 		<input type="button" class="am-btn am-btn-danger " onClick="doSaveAction()" width="100px" value="保存" name="btnSave" id="btnSave"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 		<input type="button" class="am-btn am-btn-danger " onClick="commitAction()" width="100px" value="提交申请" name="btnCommit" id="btnCommit"/>
- 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<s:if test="%{backAction.trim() != ''}">
  			<input type="button" class="am-btn am-btn-primary"  value="返回" name="btnBack" id="btnBack"/>
 		</s:if>

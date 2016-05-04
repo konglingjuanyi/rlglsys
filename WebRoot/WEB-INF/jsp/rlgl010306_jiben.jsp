@@ -129,66 +129,45 @@
 		    }
 		    // 【提交】按钮的事件定义
 		    function doSaveAction() {
-		      		if(checkItems() == true){
-   				    	$("#objectArray").val(objectArray);
-						$("#changedObject").val(objectArray);
-					    $("#saveAction").val("1");
-					    $("form").attr("action", "rlgl010306DaoshiAdd.action");
-					    $("form").submit();
-		      		}		    			
+	      		if(checkItems() == true){
+  				    	$("#objectArray").val(objectArray);
+					$("#changedObject").val(objectArray);
+				    $("#saveAction").val("1");
+				    $("form").attr("action", "rlgl010306JibenAdd.action");
+				    $("form").submit();
+	      		}		    			
 		    }
 		    
 		    // 页面上的验证组合
 		    function checkItems(){
-		    	// 导师信息——check
-		    	if(dsxx_check()==true){
-		    	   return true;
+		    	//出生日期
+		    	var personnel_birthday = $("#personnel_birthday").val();
+		    	//参加工作时间 
+		    	var personnel_worktime = $("#personnel_worktime").val();
+		    	//入党时间
+		    	var personnel_joinpartytime = $("#personnel_joinpartytime").val();
+		    	if((personnel_birthday.length!=0 || personnel_birthday!="") && (personnel_worktime.length!=0 || personnel_worktime!="") && personnel_birthday > personnel_worktime){
+		    		$("#modal-alert").text("参加工作时间必须大于出生日期！");
+					$('#my-alert').modal();
+		    		return false;
+		    	}else if((personnel_birthday.length!=0 || personnel_birthday!="") && (personnel_joinpartytime.length!=0 || personnel_joinpartytime!="") && personnel_birthday > personnel_joinpartytime){
+		    		$("#modal-alert").text("入党(团)时间必须大于出生日期！");
+					$('#my-alert').modal();
+		    		return false;
 		    	}
+		    	 return true;
 		    }
 		    //check输入框的值是否为空的js
 		 function checkValue(kongjianId){
             var kjValue = $("#"+kongjianId).val();
+            return false;
             if(kjValue == null || kjValue==''){
                return false;
             }else{
                return true;
             }
-            
          }
-         
-      // 导师信息-check
-      function dsxx_check(){
-      		if($("#dslb").val() ==''){
-      			/* if($("#dsxm").val() !=''){
-      			 	alert("请选择导师类别信息！");
-      			 	$("#dslb").focus();
-      			 	return false;
-      			} */
-      			 if($("#szdx").val() !=''){
-      			 	alert("请选择导师类别信息！");
-      			 	$("#dslb").focus();
-      			 	return false;
-      			}
-      			 if($("#yjfx").val() !=''){
-      			 	alert("请选择导师类别信息！");
-      			 	$("#dslb").focus();
-      			 	return false;
-      			}
-      		}
-      		/* if($("#dslb").val() !='' && $("#dsxm").val() ==''){
-      		      	if($("#szdx").val() !=''){
-      			 	alert("请填写导师姓名信息！");
-      			 	$("#dsxm").focus();
-      			 	return false;
-      			}
-      			 if($("#yjfx").val() !=''){
-      			 	alert("请填写导师姓名信息！");
-      			 	$("#dsxm").focus();
-      			 	return false;
-      			}
-      		} */
-      		return true;
-      }
+        
       // 提交按钮的事件
 		function commitAction() {
 		 if(checkItems() == true){
@@ -202,38 +181,37 @@
 			    });
 			    if (checkFlg > 0)
 			    { 
-			    	$("#modal-alert").text("请填写必须输入项目！");
-					$('#my-alert').modal();
+			        alertMessage("AM021");
 		            return false;
 			    }
 				$("#objectArray").val(objectArray);
 				$("#changedObject").val(objectArray);
 			    $("#saveAction").val("0");
-			    $("form").attr("action", "rlgl010306DaoshiAdd.action");
+			    $("form").attr("action", "rlgl010306JibenAdd.action");
 			    $("form").submit();
 		 	}
 	    }
 		    
-	    function commitCheck(){
-	    // 电话号码验证
-		    if(!checkInput($("#rlgl010306Add_personnel_personnel_tel").val())){
-			    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_tel").value)){
-			    	$("#modal-alert").text("请输入正确的电话号码！");
-					$('#my-alert').modal();
-			    	$("#rlgl010306Add_personnel_personnel_tel").focus();
-			    	return false;
+		    function commitCheck(){
+		    // 电话号码验证
+			    if(!checkInput($("#rlgl010306Add_personnel_personnel_tel").val())){
+				    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_tel").value)){
+				    	$("#modal-alert").text("请输入正确的电话号码！");
+						$('#my-alert').modal();
+				    	$("#rlgl010306Add_personnel_personnel_tel").focus();
+				    	return false;
+				    }
 			    }
-		    }
-		    if(!checkInput($("#rlgl010306Add_personnel_personnel_officetel").value)){
-			    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_officetel").value)){
-			    	$("#modal-alert").text("请输入正确的电话号码！");
-					$('#my-alert').modal();
-			    	$("#rlgl010306Add_personnel_personnel_officetel").focus();
-			    	return false;
+			    if(!checkInput($("#rlgl010306Add_personnel_personnel_officetel").value)){
+				    if(!checkPhoneNum($("#rlgl010306Add_personnel_personnel_officetel").value)){
+				    	$("#modal-alert").text("请输入正确的电话号码！");
+						$('#my-alert').modal();
+				    	$("#rlgl010306Add_personnel_personnel_officetel").focus();
+				    	return false;
+				    }
 			    }
+			    return true;
 		    }
-		    return true;
-	    }
 		    
 	function onelevelChange(onelevel,twolevel,threelevel){
 		$("#"+onelevel).change(function(){
@@ -407,7 +385,7 @@
                  removeUpdateMark(object.id);
              }
          }
-	}
+}
 	function doMark(){
 		beforeObjectArray=$("#changedObject").val().split(",");
 		if($("#addOrInputFlg").val().length < 4){
@@ -471,18 +449,12 @@
 
     </HEAD>
     <body>
-    <s:form  name="init" id="init" action="rlgl010306Init"  method="post" nameSpace="/rlgl" enctype="multipart/form-data">
+    <s:form  name="init" id="init" action="rlgl010305Jiben"  method="post" nameSpace="/rlgl" enctype="multipart/form-data">
     <s:hidden name="navigationId" id="navigationId"/>
     <s:hidden name="screenId" id="screenId"/>
     <s:hidden name="personnel.personnel_imgname" id="imgName"/>
      <s:hidden name="personnel_id" id="personnel_id"/>
      <s:hidden name="personnel.personnel_id" id="personnel.personnel_id"/>
-       <s:hidden name="personnel.personnel_nm"  />
-     <s:hidden name="personnel.personnel_card_id"  />
-     <s:hidden name="personnel.personnel_check"  />
-      <s:hidden name="personnel.personnel_unit"  />
-      <s:hidden name="personnel.personnel_office"  />
-      <s:hidden name="personnel.personnel_admintype"  />
      <s:hidden name="inputObject_id" id="inputObject_id"/>
      <s:hidden name="filePath" id="filePath"/>
      <s:hidden name="objectArray" id="objectArray"/> 
@@ -523,67 +495,232 @@
         <table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">
           <tr>
             <td>
-
-     <div> 
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
-          <tr> 
-            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>导师信息</strong></font></td>
-          </tr>
-            <tr>
-                <td style="PADDING-TOP: 2px">
-            <TABLE cellSpacing="0" cellPadding="1" width="100%" border="1" ID="tab_dpxx" class="tabCss">
-            <tr>
-              <th height="28" width="20%" class="thTitleItrn">所在大学任职信息</th>
-              <!-- <th height="28" width="20%" class="thTitleItrn">导师姓名</th> -->
-              <th width="20%" class="thTitleItrn">所在大学</th>
-              <th width="20%" class="thTitleItrn">研究方向</th>
-             
-            </tr>
-            <s:if test="%{rlgl010306TutorInfoList!=null&&rlgl010306TutorInfoList.size>0}">
-            	<s:iterator  value="rlgl010306TutorInfoList" status='st'>
-            <tr>
-            	<td>
-            		<s:select name="rlgl010306TutorInfoList[%{#st.index }].teachertype"  id="dslb" list="teachertypelist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey=""/>
-            	</td>
-              <%-- <td><s:textfield  name="rlgl010306TutorInfoList[%{#st.index }].name" id="dsxm" maxLength="20" size="30"></s:textfield></td> --%>
-              <td>
-              	<s:textfield  name="rlgl010306TutorInfoList[%{#st.index }].school" id="szdx" maxLength="20" size="30"></s:textfield>
-              </td>
-              <td>
-                <s:textfield  name="rlgl010306TutorInfoList[%{#st.index }].researcharea" id="yjfx" maxLength="20" size="30"></s:textfield>
-              </td>
-           
-            </tr> 
-            	</s:iterator>
-            </s:if>
-            <s:else>
-            	<tr>
-            	 <td>
-            <s:select name="rlgl010306TutorInfoList[0].teachertype" id="dslb" list="teachertypelist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey=""/>
-            </td>
-             <%--  <td><s:textfield  name="rlgl010306TutorInfoList[0].name" id="dsxm" value="%{#request.rlgl010306TutorInfoList[0].name}"  maxLength="20" size="30"></s:textfield></td> --%>
-              <td><s:textfield  name="rlgl010306TutorInfoList[0].school"  id="szdx" value="%{#request.rlgl010306TutorInfoList[0].school}" maxLength="20" size="30"></s:textfield></td>
-              <td><s:textfield  name="rlgl010306TutorInfoList[0].researcharea" id="yjfx" value="%{#request.rlgl010306TutorInfoList[0].researcharea}" maxLength="20" size="30"></s:textfield></td>
-             
-            </tr> 
-            </s:else>
-            
-          </table>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="display:none">
-            <tr>
-            <td height="30" align="right">
-              <input type="button" name="btn_Add" class="inp_L3" value="行追加" onClick="addNewDpxx('tab_dpxx')"/>&nbsp;&nbsp;&nbsp;&nbsp;
-              <input type="button" name="btn_Delete" class="inp_L3" value="行删除" onClick="delet('object8','tab_dpxx');"/>&nbsp;&nbsp;&nbsp;&nbsp;
-              <%-- <s:file style="display:none" name="fileProfessionalInfo" id="file8" label="选择文件" onChange="fileInput('rlgl010306PartisanInfoList',this.value)"></s:file>
-              <input type="button" name="btn_AllAdd" class="inp_L3" value="批量增加" onClick="showFileInput('file8')"/> --%>
-            </td>
-            </tr>
-        </table>
+    <!-- 基本信息 -->
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+        <tr>
+            <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>基本信息</strong></font></td>
+        </tr>
+        <tr>
+            <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="userBaseCss" style="border-bottom:0px">
+                <tr valign="top">
+                <td width="80%">
+                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">姓名</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:label name="personnel.personnel_nm" ></s:label>
+                      <s:hidden name="personnel.personnel_nm"  />
+                      </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">身份证号</td>
+                      <td width="35%" style="padding-left:6px;font-size:12px;">
+                      <s:label name="personnel.personnel_card_id" ></s:label>
+                      <s:hidden name="personnel.personnel_card_id"  />
+                      </td>
+                    </tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">曾用名</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_beforename"  maxLength="20" ></s:textfield>
+                      </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">性别</td>
+                      <td width="35%" style="padding-left:6px;font-size:12px;">
+                      <s:select name="personnel.personnel_gender" list="genderAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                      </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">出生日期</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_birthday" onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" id="personnel_birthday"></s:textfield>
+                      </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">籍贯</td>
+                      <td width="35%" style="padding-left:6px;font-size:12px;"><s:textfield  name="personnel.personnel_hometown"  maxLength="50" ></s:textfield></td>
+                    
+			</tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">民族</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                       <s:select name="personnel.personnel_ethnic"  list="ethnicAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                      </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">参加工作时间</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;"><s:textfield  name="personnel.personnel_worktime" id="personnel_worktime"  onClick="WdatePicker();" onBlur="AddMark(this);" maxLength="8" ></s:textfield></td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                     <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">户口所在地</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_account_location" maxLength="100" ></s:textfield>
+                      </td>
+                     <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">健康状况</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                      <s:select name="personnel.personnel_health_status"  list="healthAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                       </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                     <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">个人身份</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                      <s:select name="personnel.personnel_personal_identification"  list="identificationAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                         
+                        </td>
+                       <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">用工形式</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                      <s:select name="personnel.personnel_employment_forms"  list="formsAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                         
+                       </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">政治面貌</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                       <s:select name="personnel.personnel_political_landscape" list="landscapeAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                       </td>
+                      
+                       <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">入党(团)时间</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_joinpartytime" id="personnel_joinpartytime" maxLength="8"  onClick="WdatePicker();" onBlur="AddMark(this);" ></s:textfield>
+                       </td> 
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                     <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">婚姻状况</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                      <s:select name="personnel.personnel_marital_status"  list="maritalAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                       
+                       </td>
+                     <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">爱好特长</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_hobbies"  maxLength="50" ></s:textfield>
+                      </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                     <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">外语水平</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_foreignlanguage_level"  maxLength="20" ></s:textfield>
+                      </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">在编状态</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:select name="personnel.personnel_regular"  list="regularlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                       </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                     <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">存档单位</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_archive_unit"  maxLength="50" ></s:textfield>
+                      </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">档案位置</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:textfield  name="personnel.personnel_filelocation"  maxLength="50" ></s:textfield>
+                      </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">岗位状态</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                      <s:select name="personnel.personnel_status"  list="statusAdmlist" listKey="adm_num" listValue="adm_name" headerValue="- -" headerKey="" />
+                       
+                        </td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">年度审核判定</td>
+                      <td style="padding-left:6px;font-size:12px;">
+                       <s:if test="%{personnel.personnel_check.trim() != ''}">
+                      <s:label name="personnel.personnel_check" ></s:label>
+                      </s:if>
+               		  <s:else>未审</s:else>
+                      <s:hidden name="personnel.personnel_check"  />
+                       </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">所在单位</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:label name="personnel.personnel_unit_nm" ></s:label>
+                      <s:hidden name="personnel.personnel_unit"  />
+                		</td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">所在科室</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:if test="%{personnel.personnel_office_nm != ''}">
+                      <s:label name="personnel.personnel_office_nm" ></s:label>
+                      </s:if>
+               		  <s:else>未分配</s:else>
+                      <s:hidden name="personnel.personnel_office"  />
+                     </td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                    <tr align="left"> 
+                      <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">岗位类别</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;">
+                      <s:if test="%{personnel.personnel_admintype != ''}">
+                      <s:label name="personnel.personnel_admintype" ></s:label>
+                      </s:if>
+               		  <s:else>未分配</s:else>
+                      <s:hidden name="personnel.personnel_admintype"  />
+                		</td>
+                      <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">是否继续教育</td>
+                      <td width="35%" style="padding-left:5px;font-size:12px;"> 是</td>
+                    </tr>
+                    <tr><td colspan="4" height="1" bgcolor="#eaeaea"></td></tr>
+                  </table>
                 </td>
+                <td width="20%" align="center" style="padding-top:14px;">
+                <!-- 个人照片 -->
+                    <s:if test="%{personnel.personnel_imgname != ''}">
+                <img src="${pageContext.request.contextPath}/upload/${personnel.personnel_imgname}" id="showImgFile" width="141" height="200" border="0">
+                </s:if>
+                <s:else>
+                <img src="${pageContext.request.contextPath}/images/picture.jpg" id="showImgFile"  width="141" height="200" border="0">
+                </s:else><br>
+            	<s:file name="imgFile" id="imgFile" label="图片" onChange="previewChange('imgFile','${personnel.personnel_card_id}','showImgFile','imgName','temporary')"></s:file>
+                  </td>
+                </tr>
+            </table>
+            
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="userBaseCss" style="border-top:0px; text-align:left;">
+               <tr > 
+                <td width="12%" class="lc1" style="padding-left:5px;font-size:12px;">家庭住址</td>
+                <td width="78%" style="padding-left:5px;font-size:12px;">
+                <s:select name="personnel.personnel_province"  id="province"   list="provincelist" listKey="area_id" listValue="province" headerValue="- -" headerKey="" />
+                <s:select name="personnel.personnel_city"   id="city" list="citylist" listKey="area_id" listValue="city" headerValue="- -" headerKey=""  />
+                <s:select name="personnel.personnel_zone" id="zone" list="zonelist" listKey="area_id" listValue="zone" headerValue="- -" headerKey=""/>
+                <s:textfield  name="personnel.personnel_address" maxLength="100" size="40"></s:textfield>
+                </td>
+                <td width="10%" ></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="display:none;">
+              <tr>
+                  <td height="28" style="padding-top:5px;" align="left"><font color="#1F6087" style="font-size:14px;"><strong>联系信息</strong></font></td>
+              </tr>
+              <tr>
+              <td>
+              <table width="100%" border="0" cellspacing="2" cellpadding="0" class="userBaseCss">
+              <tr>
+                <td  width="10%" class="lc1" style="padding-left:5px;font-size:12px;">电子邮件</td>
+                <td width="20%" style="padding-left:5px;font-size:12px;">
+                <s:textfield  name="personnel.personnel_email"  maxLength="50" ></s:textfield>
+                </td>
+                <td width="10%" class="lc1" style="padding-left:6px;font-size:12px;">移动电话</td>
+                <td width="20%" style="padding-left:6px;font-size:12px;">
+                <s:textfield  name="personnel.personnel_tel"  maxLength="11" ></s:textfield>
+                </td>
+                <td width="10%" class="lc1" style="padding-left:6px;font-size:12px;">单位电话</td>
+                <td width="20%" style="padding-left:6px;font-size:12px;">
+                <s:textfield  name="personnel.personnel_officetel"  maxLength="50" ></s:textfield>
+                </td>
+              </tr>
+             </table>
+            </td>
             </tr>
-        </table>
-      </div>
-     <div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+          </table>
+          </td>
+        </tr>
+      </table>
+     <br/><br/>
+     
+      <div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
 	  <div class="am-modal-dialog">
 	    <div class="am-modal-hd">提示信息</div>
 	    <div class="am-modal-bd" id="modal-confirm">
@@ -605,8 +742,7 @@
 	    </div>
 	  </div>
 	</div>
-     
-
+	
 <!-- 操作按扭 -->
 <table width="70%" align="center" border="0" cellspacing="1" cellpadding="0">
 <tr>
@@ -640,5 +776,8 @@
     </table>
     </div>
     </s:form>
+    <script type="text/javascript" language="javascript"> 
+    $("#showImgFile").attr("src", $("#showImgFile")[0].src+"?rand="+new Date().getTime());
+    </script>
     </body>
 </html>

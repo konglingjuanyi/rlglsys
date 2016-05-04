@@ -411,20 +411,17 @@ public class Rlgl020601InitAction extends BaseAction {
 				String scale = unitinfo.getUnit_level();
 				String flow = "";
 				String stutas = "";
-
 				// 审核流程状态
 				CheckFlow checkFlow = new CheckFlow();
-				Map<String, String> checkInfoMap = checkFlow.getPersonalFlow(
-						ednMark, scale, nowMark, result);
+				Map<String, String> checkInfoMap = checkFlow.getPersonalFlow(ednMark, scale, nowMark, result);
 				flow = checkInfoMap.get("flow");
 				rlgl020601.setFlow(flow);
 				stutas = checkInfoMap.get("stutas");
 				rlgl020601.setStutas(stutas);
-
 				rlgl020601List.add(rlgl020601);
 			}
 		}
-
+		
 		super.getSession().setAttribute("rlgl020601List", rlgl020601List);
 		return SUCCESS;
 	}

@@ -49,7 +49,6 @@ public class Rlgl020602SubmitAction extends BaseAction {
 
 	@Override
 	protected String doExecute() throws Exception {
-
 		String apply_no = "";
 		String endMark = "";
 		String nowdate = "";
@@ -161,17 +160,15 @@ public class Rlgl020602SubmitAction extends BaseAction {
             	}
             	else
             	{
-            		unitNo = unitNo.substring(0, 4);
+            		unitNo = unitNo.substring(0, 6);
     	            processInfo.setUnit_no(unitNo);
             	}
             }
 			processGetInfo = approvalProcessService.getProcessInfo(processInfo);
-			System.out.println("=========processGetInfo========="+processGetInfo);
 			if (processGetInfo != null) {
 				// 终审节点
 				endMark = processGetInfo.getEnd_mark();
 			}
-			System.out.println("=========endMark========="+endMark);
 			Mtb29PersonalApply tb29Info = new Mtb29PersonalApply();
 			TTb01AutoGetNum noInfo = new TTb01AutoGetNum();
 			noInfo.setTable_id("m_tb29");

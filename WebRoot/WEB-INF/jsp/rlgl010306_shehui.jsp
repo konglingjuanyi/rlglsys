@@ -668,8 +668,6 @@ response.addHeader("Cache-Control", "no-cache");
     <td height="50" align="center">
 		<input type="button" class="am-btn am-btn-danger " onClick="doSaveAction()" width="100px" value="保存" name="btnSave" id="btnSave"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" class="am-btn am-btn-danger " onClick="commitAction()" width="100px" value="提交申请" name="btnCommit" id="btnCommit"/>
-		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<s:if test="%{backAction.trim() != ''}">
 		 <input type="button" class="am-btn am-btn-primary"  value="返回" name="btnBack" id="btnBack"/>
 		</s:if>

@@ -106,7 +106,7 @@ public class Rlgl010306GongzuoAddAction extends BaseAction {
                 	}
                 	else
                 	{
-        	            unitNo = unitNo.substring(0, 4);
+        	            unitNo = unitNo.substring(0, 6);
         	            processInfo.setUnit_no(unitNo);
                 	}
 		        }
@@ -131,7 +131,6 @@ public class Rlgl010306GongzuoAddAction extends BaseAction {
 		        // 申请事项
 		        tb29Info.setApply_kbn("013");
 		        // 申请人ID
-		        System.out.println(personnel.getPersonnel_card_id()+"====306ZigeAdd===="+personnel.getPersonnel_id());
 		        tb29Info.setPersonal_id(personnel.getPersonnel_card_id());
 		        // 申请人姓名
 		        tb29Info.setPersonal_nm(personnel.getPersonnel_nm());

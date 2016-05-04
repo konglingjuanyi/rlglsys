@@ -12,6 +12,14 @@
              </result>
             <result name="success">/WEB-INF/jsp/rlgl010306.jsp</result>
         </action>
+        <action name="rlgl010306Jiben" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JibenAction"
+            method="execute">
+            <result name="rlgl010305"  type="redirectAction">
+               <param name="actionName">rlgl010305Jiben</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+            <result name="success">/WEB-INF/jsp/rlgl010306_jiben.jsp</result>
+        </action>
         <action name="rlgl010306Zige" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306ZigeAction"
             method="execute">
             <result name="rlgl010305"  type="redirectAction">
@@ -88,6 +96,13 @@
             method="execute">
             <result name="success"  type="redirectAction">
                <param name="actionName">rlgl010305Init</param>
+				<param name="personnel_id">${personnelId}</param>
+             </result>
+        </action>
+        <action name="rlgl010306JibenAdd" class="com.rlglsys.action.hiringmanage.personmanage.Rlgl010306JibenAddAction"
+            method="execute">
+            <result name="success"  type="redirectAction">
+               <param name="actionName">rlgl010305Jiben</param>
 				<param name="personnel_id">${personnelId}</param>
              </result>
         </action>
