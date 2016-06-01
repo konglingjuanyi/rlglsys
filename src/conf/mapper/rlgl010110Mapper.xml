@@ -127,6 +127,7 @@
       and
         DEL_KBN = 0
     </select>
+    
     <!-- 通过用户ID删除单位管理员信息 -->
     <delete id="deleteUnitAdministratorInfoByUserID">
       delete from 

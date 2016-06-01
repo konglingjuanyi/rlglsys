@@ -492,11 +492,6 @@ response.addHeader("Cache-Control", "no-cache");
     <s:hidden name="personnel.personnel_imgname" id="imgName"/>
      <s:hidden name="personnel_id" id="personnel_id"/>
      <s:hidden name="personnel.personnel_id" id="personnel.personnel_id"/>
-     <s:hidden name="personnel.personnel_nm"  />
-     <s:hidden name="personnel.personnel_card_id"  />
-     <s:hidden name="personnel.personnel_check"  />
-      <s:hidden name="personnel.personnel_unit"  />
-      <s:hidden name="personnel.personnel_office"  />
       <s:hidden name="personnel.personnel_admintype"  />
      <s:hidden name="inputObject_id" id="inputObject_id"/>
      <s:hidden name="filePath" id="filePath"/>
@@ -538,7 +533,7 @@ response.addHeader("Cache-Control", "no-cache");
         <table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">
           <tr>
             <td>
-
+	
      <div> 
         <table width="100%" border="0" cellspacing="0" cellpadding="0" ID="Table20">
           <tr> 

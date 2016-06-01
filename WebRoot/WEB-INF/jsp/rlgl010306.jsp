@@ -8,7 +8,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/uploadPhotos.js"></script>
      <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
     <%
-response.addHeader("Cache-Control", "no-cache");
+		response.addHeader("Cache-Control", "no-cache");
 	%>
        <script type="text/javascript" language="javascript"> 
 			// 被修改项目数组
@@ -754,7 +754,7 @@ response.addHeader("Cache-Control", "no-cache");
 	if($("#changedObject").length>0){
 	 objectArray=$("#changedObject").val().split(",");
 	}
-	 createReviewMark($("#changedObject").val(),"update");
+	createReviewMark($("#changedObject").val(),"update");//此处增加红色修改标记
 	 doMark();
 	 // 返回事件的定义
       $("#btnBack").click(function(){
@@ -996,7 +996,7 @@ function doMark(){
                     <tr align="left"> 
                       <td width="15%" class="lc1" style="padding-left:5px;font-size:12px;">曾用名</td>
                       <td width="35%" style="padding-left:5px;font-size:12px;">
-                      <s:textfield  name="personnel.personnel_beforename"  maxLength="20" ></s:textfield>
+                      <s:textfield  name="personnel.personnel_beforename" maxLength="20" readonly="readonly"></s:textfield>
                       </td>
                       <td width="15%" class="lc1" style="padding-left:6px;font-size:12px;">性别</td>
                       <td width="35%" style="padding-left:6px;font-size:12px;">

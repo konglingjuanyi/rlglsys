@@ -495,12 +495,6 @@ response.addHeader("Cache-Control", "no-cache");
     <s:hidden name="personnel.personnel_imgname" id="imgName"/>
      <s:hidden name="personnel_id" id="personnel_id"/>
      <s:hidden name="personnel.personnel_id" id="personnel.personnel_id"/>
-     <s:hidden name="personnel.personnel_nm"  />
-     <s:hidden name="personnel.personnel_card_id"  />
-     <s:hidden name="personnel.personnel_check"  />
-      <s:hidden name="personnel.personnel_unit"  />
-      <s:hidden name="personnel.personnel_office"  />
-      <s:hidden name="personnel.personnel_admintype"  />
      <s:hidden name="inputObject_id" id="inputObject_id"/>
      <s:hidden name="filePath" id="filePath"/>
      <s:hidden name="objectArray" id="objectArray"/> 
@@ -541,7 +535,7 @@ response.addHeader("Cache-Control", "no-cache");
         <table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">
           <tr>
             <td>
-    
+    		
         <div>
         <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" ID="">
             <tr><td style="padding-top:5px;" height="28" align="left"><FONT color="#1F6087" style="font-size:14px;"><STRONG>社会关系</STRONG></FONT></td>

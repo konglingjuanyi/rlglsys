@@ -48,7 +48,7 @@
 			});
 			
 		    function updatePersonnel() {
-			    $("form").attr("action", "rlgl010306Init.action");
+			    $("form").attr("action", "rlgl010306Jiben.action");
 				$("form").submit();
 			}
 			

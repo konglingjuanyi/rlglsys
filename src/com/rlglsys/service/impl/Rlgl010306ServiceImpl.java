@@ -62,7 +62,6 @@ public class Rlgl010306ServiceImpl implements IRlgl010306Service {
 			int count1 = 0;
 			rlgl010306Mapper.deleteRlgl010306(mtb39Personnel);
 			// 申请用户表登录
-			System.out.println("=====changeValue====="+mtb39Personnel.getChange_value());
 			count1 = rlgl010306Mapper.doSaveRlgl010306(mtb39Personnel);
 			if (count1 == 0) {
 				throw new Exception();

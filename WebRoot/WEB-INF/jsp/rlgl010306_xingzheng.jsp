@@ -494,12 +494,6 @@
     <s:hidden name="personnel.personnel_imgname" id="imgName"/>
      <s:hidden name="personnel_id" id="personnel_id"/>
      <s:hidden name="personnel.personnel_id" id="personnel.personnel_id"/>
-     <s:hidden name="personnel.personnel_nm"  />
-     <s:hidden name="personnel.personnel_card_id"  />
-     <s:hidden name="personnel.personnel_check"  />
-      <s:hidden name="personnel.personnel_unit"  />
-      <s:hidden name="personnel.personnel_office"  />
-      <s:hidden name="personnel.personnel_admintype"  />
      <s:hidden name="inputObject_id" id="inputObject_id"/>
      <s:hidden name="filePath" id="filePath"/>
      <s:hidden name="objectArray" id="objectArray"/> 
@@ -541,7 +535,6 @@
           <tr>
             <td>
 
-     
     <div >
         <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" ID="tab_xzzw">
             <tr><td style="padding-top:5px;" height="28" align="left"><FONT color="#1F6087" style="font-size:14px;"><STRONG>行政职务信息</STRONG></FONT></td>
