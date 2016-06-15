@@ -237,4 +237,46 @@ public class Rlgl100101ServiceImpl implements IRlgl100101Service {
 		}
 	}
 
+	@Override
+	public int insertcardoneData(Rlgl500102Bean rlgl500102Bean) throws Exception {
+		try {
+			return rlgl100101Mapper.insertcardoneData(rlgl500102Bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	@Override
+	public int updatecardoneData(Rlgl500103Bean rlgl500103Bean) {
+		try {
+			return rlgl100101Mapper.updatecardoneData(rlgl500103Bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	@Override
+	public int updatecardtowData(Rlgl500103Bean rlgl500103Bean) {
+		try {
+			return rlgl100101Mapper.updatecardtowData(rlgl500103Bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	@Override
+	public int insertcardtowData(Rlgl500102Bean rlgl500102Bean) {
+		try {
+			return rlgl100101Mapper.insertcardtowData(rlgl500102Bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	
+
 }

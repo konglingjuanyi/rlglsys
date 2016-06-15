@@ -4,9 +4,12 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.struts2.components.If;
+
 import com.rlglsys.base.BaseAction;
 import com.rlglsys.bean.Rlgl100101_1Bean;
 import com.rlglsys.bean.Rlgl500102Bean;
+import com.rlglsys.bean.Rlgl500103Bean;
 import com.rlglsys.entity.DBCommon;
 import com.rlglsys.service.IRlgl100101Service;
 import com.rlglsys.util.BeanFactory;
@@ -29,7 +32,7 @@ public class UpdateAliPayAction extends BaseAction {
 	private String trade_status=""; //交易状态
 	private String notify_time="";// 交易日期
 	
-
+	
 	
 	
 	public int getFla() {
@@ -98,7 +101,6 @@ public class UpdateAliPayAction extends BaseAction {
 		this.trade_status = trade_status;
 	}
 
-	
 
 
 
@@ -131,12 +133,24 @@ public class UpdateAliPayAction extends BaseAction {
 		this.rlgl100101Service = rlgl100101Service;
 	}
 	private Rlgl100101_1Bean rlgl100101_1Bean;
+	private Rlgl500103Bean rlgl500103Bean;
+
+
 	
 	 
 	
 
+	public Rlgl500103Bean getRlgl500103Bean() {
+		return rlgl500103Bean;
+	}
+
+	public void setRlgl500103Bean(Rlgl500103Bean rlgl500103Bean) {
+		this.rlgl500103Bean = rlgl500103Bean;
+	}
+
 	@Override
 	protected String doExecute() throws Exception {
+		
 		if("".equals(body) || body==null)
 		{
 			return "false";
@@ -156,6 +170,7 @@ public class UpdateAliPayAction extends BaseAction {
 		if(trade_status.equals("TRADE_SUCCESS")){
 			
 			rlgl100101_1Bean.setSucceed("1");
+			
 		}else{
 			
 			rlgl100101_1Bean.setSucceed("0");	
@@ -216,10 +231,17 @@ public class UpdateAliPayAction extends BaseAction {
 		
 		rlgl500102Bean.setUpdate_user_id(body);
 		
-		fla = rlgl100101Service.updateBalance(rlgl500102Bean);
-		fla = rlgl100101Service.insertBalanceData(rlgl500102Bean);
-	
 		
+	if (total_fee =="120") {
+		fla = rlgl100101Service.updatecardoneData(rlgl500103Bean);
+		fla = rlgl100101Service.insertcardoneData(rlgl500102Bean);
 		return "success";
+	} else if(total_fee =="20") {
+		fla = rlgl100101Service.updatecardtowData(rlgl500103Bean);
+		fla = rlgl100101Service.insertcardtowData(rlgl500102Bean);
+		return "success";
+	}
+		
+	return "0";
 	}
 }

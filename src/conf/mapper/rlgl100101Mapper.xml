@@ -56,7 +56,7 @@
 		#{rlgl100101_1Bean.update_date}
 		)
 	</insert>
-	<!--插入余额信息 -->
+	<!--插入信息 -->
 	<insert id="insertBalanceData" parameterType="com.rlglsys.bean.Rlgl500102Bean">
 		INSERT INTO
 		t_tb04_Balance (
@@ -286,4 +286,205 @@
 		PERSONNEL_ID=#{user_id}
 		AND PERSONNEL_EMAIL = #{email}
 	</select>
+	<insert id="insertcardoneData" parameterType="com.rlglsys.bean.Rlgl500102Bean">
+		INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016001',
+		#{rlgl500102Bean.user_id},
+		'项目学习',
+		'001',
+		'2016-01-01',
+		'2016-12-31',
+		'',
+    '',
+    '001',	
+		'37',
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016001',
+	#{rlgl500102Bean.user_id},
+		'项目学习',
+		'001',
+		'2016-01-01',
+		'2016-12-31',
+		'',
+    '',
+    '001',	
+		'37' ,
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016001',
+	#{rlgl500102Bean.user_id},
+		'公共课程考试1',
+		'002',
+		'2016-01-01',
+		'2016-12-31',
+		'',
+    '',
+    '001',	
+		'37' ,
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016001',
+#{rlgl500102Bean.user_id},
+		'公共课程考试2',
+		'002',
+		'2016-01-01',
+		'2016-12-31',
+		'',
+    '',
+    '001',	
+		'37',
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016001',
+	#{rlgl500102Bean.user_id},
+		'公共课程考试3',
+		'002',
+		'2017-01-01',
+		'2017-12-31',
+		'',
+    '',
+    '001',	
+		'37' ,
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016001',
+#{rlgl500102Bean.user_id},
+		'公共课程考试4',
+		'002',
+		'2017-01-01',
+		'2017-12-31',
+		'',
+    '',
+    '001',	
+		'37' ,
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+	
+	INSERT INTO t_tb14_purchasecard
+(
+CARD_ID,
+CARD_NAME,
+CARD_NB,
+PRICE,
+BUY_YEAR,
+USER_ID,
+LOGIN_USER_ID,
+LOGIN_DATE,
+UPDATE_USER_ID,	
+UPDATE_DATE)
+VALUES
+(
+'20160001',
+'120元卡',
+#{rlgl500102Bean.update_date}#{rlgl500102Bean.user_id}#{rlgl500102Bean.login_date},
+'120',
+#{rlgl100101_1Bean.clum006},
+#{rlgl500102Bean.user_id},
+'37',
+#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+
+	</insert>
+	<insert id="insertcardtowData" parameterType="int">
+		INSERT INTO t_tb13_card_details
+VALUES
+	(
+		'2016002',
+		#{rlgl500102Bean.user_id},
+		'项目学习',
+		'001',
+		'2016-01-01',
+		'2016-12-31',
+		'',
+    '',
+    '001',	
+		'37',
+		#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+INSERT INTO t_tb14_purchasecard
+(
+CARD_ID,
+CARD_NAME,
+CARD_NB,
+PRICE,
+BUY_YEAR,
+USER_ID,
+LOGIN_USER_ID,
+LOGIN_DATE,
+UPDATE_USER_ID,	
+UPDATE_DATE)
+VALUES
+(
+'20160002',
+'20元卡',
+#{rlgl500102Bean.update_date}#{rlgl500102Bean.user_id}#{rlgl500102Bean.login_date},
+'20',
+#{rlgl100101_1Bean.clum006},
+#{rlgl500102Bean.user_id},
+'37',
+#{rlgl500102Bean.login_date} ,
+		#{rlgl500102Bean.update_user_id} ,
+		#{rlgl500102Bean.update_date}
+	);
+
+	</insert>
+	<update id="updatecardoneData" parameterType="com.rlglsys.bean.Rlgl500103Bean">
+		UPDATE t_tb13_card_details
+SET USAGE_STATE = '已使用',
+  COURSE_ID =#{rlgl500103Bean.COURSE_ID},
+  COURSE_NAME=#{rlgl500103Bean.Name}
+WHERE
+ USER_ID =#{rlgl500103Bean.user_id},
+  AND CATEGORIES= '001'
+  AND USAGE_STATE = '未使用'
+  
+  
+  
+		
+		
+	</update>
+	<update id="updatecardtowData" parameterType="com.rlglsys.bean.Rlgl500103Bean">
+		UPDATE t_tb13_card_details
+SET USAGE_STATE = '已使用',
+  COURSE_ID =#{rlgl500103Bean.COURSE_ID},
+  COURSE_NAME=#{rlgl500103Bean.Name}
+WHERE
+ USER_ID =#{rlgl500103Bean.user_id},
+  AND CATEGORIES= '002'
+  AND USAGE_STATE = '未使用'
+	</update>
 </mapper>

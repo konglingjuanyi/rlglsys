@@ -55,5 +55,13 @@ public interface IRlgl100101Service {
 	
 	//查找数据
 	public int getUserData(String user_id, String email)throws Exception;
+  // 添加120元卡内容
+	public int insertcardoneData(Rlgl500102Bean rlgl500102Bean)throws Exception;
+//更新用户购买的120元卡
+	public int updatecardoneData(Rlgl500103Bean rlgl500103Bean)throws Exception;
+	//更新用户购买的20元卡
+	public int updatecardtowData(Rlgl500103Bean rlgl500103Bean)throws Exception;
+	 // 添加20元卡内容
+	public int insertcardtowData(Rlgl500102Bean rlgl500102Bean)throws Exception;
 
 }

@@ -12,17 +12,23 @@
 $(document).ready(function(){ 
      //提交
      $("#btnPrepay").click(function(){
-    	 
-    	 if($("#Payment").val()==null ||$("#Payment").val()=="" )
-    	 {
-    		 alert("请输交费金额");
-    		 return ;
-    	 }
-    	 var idcard=$("#Payment").val();
-    	 var amount=document.getElementById("clum003").innerHTML.trim();
+    	 var idcard =document.getElementsByName("Payment");
+         for(var i=0;i<idcard.length;i++)
+         {
+             if(idcard[i].checked==true)
+             {
+            	 var amount=document.getElementById("clum003").innerHTML.trim();
+            	 
+            	 window.open('http://118.192.147.9:8080/alipay/index.jsp?a='+idcard[i].value+'&b='+amount);
+            	 
+             }
+         }
+     
+
     	
     	
-    	 window.open('http://118.192.147.9:8080/alipay/index.jsp?a='+idcard+'&b='+amount);
+    	
+    	
     	 
      });
 });
@@ -60,9 +66,11 @@ $(document).ready(function(){
            
           <tr>
             <td width="15%" class="lc1">交费金额</td>
-            <td>
-              <s:textfield id="Payment" name="Payment" maxLength="4" width="8" />
-              <font color="red">默认金额是20元，可以自行修改充值金额！</font>
+            <td>            
+            <input type="radio" name="Payment" value="20" /> 20元
+            
+				 <input type="radio" name="Payment" value="120"  checked="true" /> 120元
+
             <br></td>
             
           </tr>
@@ -74,6 +82,12 @@ $(document).ready(function(){
           </tr>
         </table>
       </div>
+      
+      
+      
+      
+      
+      
        <div class="am-panel am-panel-danger am-margin">
          <header class="am-panel-hd">
     <h3 class="am-panel-title">Tips</h3>

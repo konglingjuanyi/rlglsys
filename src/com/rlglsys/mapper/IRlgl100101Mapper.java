@@ -112,5 +112,34 @@ public interface IRlgl100101Mapper {
 	 */
 	public String getUserData(@Param(value = "user_id")String user_id,@Param(value = "email")String email);
 	
+	/**
+	 * 插入120元卡内容
+	 * @param user_id
+	 * @param email
+	 * @return
+	 */
+	public int insertcardoneData(@Param(value = "rlgl500102Bean")Rlgl500102Bean rlgl500102Bean);
+	/**
+	 * 更新120元卡内容
+	 * @param user_id
+	 * @param email
+	 * @return
+	 */
+	public int updatecardoneData(@Param(value = "rlgl500103Bean")Rlgl500103Bean rlgl500103Bean);
+	/**
+	 * 更新20元卡内容
+	 * @param user_id
+	 * @param email
+	 * @return
+	 */
+	public int updatecardtowData(@Param(value = "rlgl500103Bean")Rlgl500103Bean rlgl500103Bean);
+	/**
+	 * 插入20元卡内容
+	 * @param user_id
+	 * @param email
+	 * @return
+	 */
+	public int insertcardtowData(@Param(value = "rlgl500102Bean")Rlgl500102Bean rlgl500102Bean);
+	
 	
 }
